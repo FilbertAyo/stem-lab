@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="{{ asset('client/assets/css/bootstrap.css') }}">
         <link rel="stylesheet" href="{{ asset('client/assets/vendors/iconly/bold.css') }}">
         <link rel="stylesheet" href="{{ asset('client/assets/vendors/perfect-scrollbar/perfect-scrollbar.css') }}">
-        <link rel="stylesheet" href="{{ asset('client/vendors/bootstrap-icons/bootstrap-icons.css') }}">
+        <link rel="stylesheet" href="{{ asset('client/assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
         <link rel="stylesheet" href="{{ asset('client/assets/css/app.css') }}">
         <link rel="shortcut icon" href="{{ asset('client/assets/images/favicon.svg') }}" type="image/x-icon">
 

@@ -4,7 +4,7 @@
             <div class="d-flex justify-content-between">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}">
-                        <img src="{{ asset('images/logo/logo-dark.png') }}" alt="Logo" style='height=50px;width=50px'>
+                        <img src="{{ asset('images/logo/logo-dark.png') }}" alt="Logo" style="height: 60px;">
                     </a>
                 </div>
                 <div class="toggler">
@@ -17,16 +17,16 @@
         <div class="sidebar-menu">
             <ul class="menu">
 
-                <li class="sidebar-item active">
-                    <a href="#" class="sidebar-link">
+                <li class="sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard') }}" class="sidebar-link">
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
 
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="bi bi-cube"></i>
+                <li class="sidebar-item {{ request()->routeIs('client.models.3d.*') ? 'active' : '' }}">
+                    <a href="{{ route('client.models.3d.index') }}" class="sidebar-link">
+                        <i class="bi bi-box"></i>
                         <span>3D Model</span>
                     </a>
                 </li>
@@ -59,15 +59,7 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item">
-                    <form method="POST" action="{{ route('logout') }}" class="sidebar-link p-0 border-0 bg-transparent">
-                        @csrf
-                        <button type="submit" class="d-flex align-items-center gap-2 w-100 border-0 bg-transparent text-start">
-                            <i class="bi bi-box-arrow-right"></i>
-                            <span>Logout</span>
-                        </button>
-                    </form>
-                </li>
+
             </ul>
         </div>
         <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
