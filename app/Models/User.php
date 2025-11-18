@@ -46,4 +46,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get all model question answers for this user.
+     */
+    public function modelQuestionAnswers()
+    {
+        return $this->hasMany(ModelQuestionAnswer::class);
+    }
 }

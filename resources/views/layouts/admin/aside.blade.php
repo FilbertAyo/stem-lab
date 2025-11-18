@@ -1,11 +1,10 @@
 
 <nav class="pc-sidebar">
     <div class="navbar-wrapper">
-      <div class="m-header">
-        <a href="{{ route('admin.dashboard') }}" class="text-primary" style="padding: 0px 26px;">
-          <img src="{{ asset('images/logo/logo-dark.png') }}" class="img-fluid logo-lg" alt="Adilisha STEM Lab">
+        <a href="{{ route('admin.dashboard') }}" class="text-primary">
+          <img src="{{ asset('images/logo/logo-dark.png') }}" class="img-fluid logo-lg" alt="Adilisha STEM Lab" style="height: 60px;padding: 5px 26px;">
         </a>
-      </div>
+
       <div class="navbar-content">
         <ul class="pc-navbar">
           <li class="pc-item">
@@ -35,6 +34,26 @@
             <a href="#" class="pc-link">
               <span class="pc-micon"><i class="ti ti-link"></i></span>
               <span class="pc-mtext">Experiments</span>
+            </a>
+          </li>
+
+          <li class="pc-item pc-caption">
+            <label>Progress&Tracking</label>
+            <i class="ti ti-chart-bar"></i>
+          </li>
+
+          <li class="pc-item">
+            <a href="{{ route('admin.progress.index') }}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-box"></i></span>
+              <span class="pc-mtext">3D Model Questions</span>
+            </a>
+          </li>
+        
+          <li class="pc-item">
+            <a href="#" class="pc-link">
+                <span class="pc-micon"><i class="ti ti-flask"></i></span>
+              <span class="pc-mtext">VR Experiments</span>
+              <span class="pc-badge">Coming Soon</span>
             </a>
           </li>
 

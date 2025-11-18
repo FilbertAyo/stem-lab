@@ -6,18 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Adiisha STEM Lab &mdash; Administrative Use</title>
+    <title>Adiisha STEM Lab </title>
 
-    <link rel="icon" href="assets/images/favicon.svg" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/logo/favicon.png') }}" type="image/x-icon">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
         id="main-font-link">
-    <link rel="stylesheet" href="{{ asset('admin/assets/fonts/tabler-icons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/assets/fonts/feather.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/assets/fonts/fontawesome.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/assets/fonts/material.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}" id="main-style-link">
-    <link rel="stylesheet" href="{{ asset('admin/assets/css/style-preset.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/fonts/tabler-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/fonts/feather.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/fonts/fontawesome.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/fonts/material.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}" id="main-style-link">
+    <link rel="stylesheet" href="{{ asset('admin/css/style-preset.css') }}">
 
 </head>
 
@@ -44,7 +44,7 @@
                     </div>
                     <div class="col-auto my-1">
                         <ul class="list-inline footer-link mb-0">
-                            <li class="list-inline-item"><a href="#">Home</a></li>
+                            <li class="list-inline-item"><a href="{{ url('/') }}">Home</a></li>
                         </ul>
                     </div>
                 </div>
@@ -53,14 +53,14 @@
         </div>
     </div>
 
-    <script src="{{ asset('admin/assets/js/plugins/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/pages/dashboard-default.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/plugins/popper.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/plugins/simplebar.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/plugins/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/fonts/custom-font.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/pcoded.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/plugins/feather.min.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('admin/js/pages/dashboard-default.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/popper.min.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/simplebar.min.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('admin/js/fonts/custom-font.js') }}"></script>
+    <script src="{{ asset('admin/js/pcoded.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/feather.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeo5GpG9fDgfz5xWsyhZPJfX2kwQ2vI5DkRtZB1z9+nJoZ+n" crossorigin="anonymous">
     </script>

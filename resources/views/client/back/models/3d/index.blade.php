@@ -94,9 +94,9 @@
                                             {{ Str::limit($model->description ?? 'No description provided yet.', 110) }}
                                         </p>
                                         <div class="mt-auto d-flex justify-content-between align-items-center">
-                                            <span class="text-muted small">
+                                            <a href="#" target="_blank" class="text-muted small">
                                                 <i class="bi bi-box-arrow-up-right me-1"></i>Interactive model
-                                            </span>
+                                            </a>
                                             <a href="{{ route('client.models.3d.show', $model) }}" class="btn btn-primary btn-sm">
                                                 View model
                                             </a>

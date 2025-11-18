@@ -17,7 +17,7 @@ class Model3dController extends Controller
      */
     public function index(): View
     {
-        $model3ds = Model3d::with('subject')->latest()->get();
+        $model3ds = Model3d::with('subject')->withCount('questions')->latest()->get();
         return view('admin.models.3d.index', compact('model3ds'));
     }
 

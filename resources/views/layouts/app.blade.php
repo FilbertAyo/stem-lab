@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="{{ asset('client/assets/vendors/perfect-scrollbar/perfect-scrollbar.css') }}">
         <link rel="stylesheet" href="{{ asset('client/assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
         <link rel="stylesheet" href="{{ asset('client/assets/css/app.css') }}">
-        <link rel="shortcut icon" href="{{ asset('client/assets/images/favicon.svg') }}" type="image/x-icon">
+        <link rel="shortcut icon" href="{{ asset('images/logo/favicon.png') }}" type="image/x-icon">
 
         @stack('styles')
     </head>
@@ -22,7 +22,7 @@
         <div id="app">
             @include('layouts.aside')
 
-            <div id="main">
+            <div id="main" class="bg-light">
                 @include('layouts.navigation')
 
                 {{ $slot }}

@@ -27,6 +27,7 @@
                                     <th>Subject</th>
                                     <th>Description</th>
                                     <th>Tags</th>
+                                    <th>Questions</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -39,16 +40,24 @@
                                         <td>{{ Str::limit($model->description ?? 'N/A', 50) }}</td>
                                         <td>{{ Str::limit($model->tags ?? 'N/A', 30) }}</td>
                                         <td>
+                                            <span class="badge bg-warning">{{ $model->questions_count }}</span>
+                                        </td>
+                                        <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.models.3d.show', $model) }}"
                                                    class="btn btn-sm btn-info"
                                                    title="View Details">
-                                                    <i class="ti ti-eye"></i> View
+                                                    <i class="ti ti-eye"></i>
+                                                </a>
+                                                <a href="{{ route('admin.models.3d.questions.index', $model) }}"
+                                                   class="btn btn-sm btn-warning"
+                                                   title="Manage Questions">
+                                                    <i class="ti ti-question-mark"></i>
                                                 </a>
                                                 <a href="{{ route('admin.models.3d.edit', $model) }}"
                                                    class="btn btn-sm btn-primary"
                                                    title="Edit">
-                                                    <i class="ti ti-edit"></i> Edit
+                                                    <i class="ti ti-edit"></i>
                                                 </a>
                                                 <form action="{{ route('admin.models.3d.destroy', $model) }}"
                                                       method="POST"
@@ -59,7 +68,7 @@
                                                     <button type="submit"
                                                             class="btn btn-sm btn-danger"
                                                             title="Delete">
-                                                        <i class="ti ti-trash"></i> Delete
+                                                        <i class="ti ti-trash"></i>
                                                     </button>
                                                 </form>
                                             </div>
@@ -67,7 +76,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">No 3D models found. <a href="{{ route('admin.models.3d.create') }}">Create one now</a>.</td>
+                                        <td colspan="7" class="text-center">No 3D models found. <a href="{{ route('admin.models.3d.create') }}">Create one now</a>.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

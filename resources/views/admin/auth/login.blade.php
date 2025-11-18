@@ -36,9 +36,9 @@
                         >
                         <label class="form-check-label text-muted" for="customCheckc1">Keep me sign in</label>
                     </div>
-                    <h5 class="text-secondary f-w-400">
+                    {{-- <h5 class="text-secondary f-w-400">
                         <a href="{{ route('password.request') }}" class="text-secondary text-decoration-none">Forgot Password?</a>
-                    </h5>
+                    </h5> --}}
                 </div>
                 <div class="d-grid mt-4">
                     <button type="submit" class="btn btn-primary">Login</button>

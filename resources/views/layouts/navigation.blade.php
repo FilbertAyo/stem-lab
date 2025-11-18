@@ -28,6 +28,11 @@
             </li>
             <li><hr class="dropdown-divider"></li>
             <li>
+                <a href="{{ route('profile.edit') }}" class='dropdown-item d-flex align-items-center'>
+                    <i class='bi bi-account me-2'></i>Profile
+                </a>
+            </li>
+            <li>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="dropdown-item d-flex align-items-center">

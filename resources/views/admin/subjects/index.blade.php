@@ -48,16 +48,16 @@
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('subjects.show', $subject) }}" class="btn btn-sm btn-info" title="View Details">
-                                                    <i class="ti ti-eye"></i> View
+                                                    <i class="ti ti-eye"></i> 
                                                 </a>
                                                 <a href="{{ route('subjects.edit', $subject) }}" class="btn btn-sm btn-primary" title="Edit">
-                                                    <i class="ti ti-edit"></i> Edit
+                                                    <i class="ti ti-edit"></i>
                                                 </a>
                                                 <form action="{{ route('subjects.destroy', $subject) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this subject?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger" title="Delete">
-                                                        <i class="ti ti-trash"></i> Delete
+                                                        <i class="ti ti-trash"></i>
                                                     </button>
                                                 </form>
                                             </div>

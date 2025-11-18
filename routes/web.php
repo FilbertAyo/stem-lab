@@ -27,6 +27,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('models/3d')->name('client.models.3d.')->group(function () {
         Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
         Route::get('/{model3d}', [ClientModel3dController::class, 'show'])->name('show');
+        
+        // Question routes
+        Route::get('/{model3d}/questions', [\App\Http\Controllers\Client\ModelQuestionController::class, 'getQuestions'])->name('questions.get');
+        Route::post('/{model3d}/questions/submit', [\App\Http\Controllers\Client\ModelQuestionController::class, 'submitAnswers'])->name('questions.submit');
     });
 });
 
@@ -43,6 +47,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+        
+        // Progress & Tracking routes
+        Route::get('progress', [\App\Http\Controllers\Admin\ProgressController::class, 'index'])->name('progress.index');
+        Route::get('progress/student/{user}', [\App\Http\Controllers\Admin\ProgressController::class, 'showStudent'])->name('progress.student');
+        Route::get('progress/model/{model3d}', [\App\Http\Controllers\Admin\ProgressController::class, 'showModel'])->name('progress.model');
+        Route::get('progress/student/{user}/model/{model3d}', [\App\Http\Controllers\Admin\ProgressController::class, 'showDetail'])->name('progress.detail');
     });
 });
 
@@ -59,6 +69,15 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::get('3d/{model3d}/edit', [AdminModel3dController::class, 'edit'])->name('3d.edit');
         Route::put('3d/{model3d}', [AdminModel3dController::class, 'update'])->name('3d.update');
         Route::delete('3d/{model3d}', [AdminModel3dController::class, 'destroy'])->name('3d.destroy');
+        
+        // Questions routes
+        Route::get('3d/{model3d}/questions', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'index'])->name('3d.questions.index');
+        Route::get('3d/{model3d}/questions/create', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'create'])->name('3d.questions.create');
+        Route::post('3d/{model3d}/questions', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'store'])->name('3d.questions.store');
+        Route::get('3d/{model3d}/questions/{question}/edit', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'edit'])->name('3d.questions.edit');
+        Route::put('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'update'])->name('3d.questions.update');
+        Route::delete('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'destroy'])->name('3d.questions.destroy');
+        Route::post('3d/{model3d}/questions/order', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'updateOrder'])->name('3d.questions.order');
     });
 });
 
