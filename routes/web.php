@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\ClassController;
+use App\Http\Controllers\Admin\ClubController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\Model3dController as AdminModel3dController;
 use App\Http\Controllers\Admin\SubjectController;
@@ -49,6 +51,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
         
+        Route::prefix('classes')->name('classes.')->group(function () {
+            Route::get('/', [ClassController::class, 'index'])->name('index');
+            Route::post('/', [ClassController::class, 'store'])->name('store');
+            Route::put('/{schoolClass}', [ClassController::class, 'update'])->name('update');
+            Route::post('/{schoolClass}/toggle-status', [ClassController::class, 'toggleStatus'])->name('toggle-status');
+        });
+
+        Route::prefix('clubs')->name('clubs.')->group(function () {
+            Route::get('/', [ClubController::class, 'index'])->name('index');
+            Route::post('/', [ClubController::class, 'store'])->name('store');
+            Route::put('/{club}', [ClubController::class, 'update'])->name('update');
+            Route::post('/{club}/toggle-status', [ClubController::class, 'toggleStatus'])->name('toggle-status');
+        });
+
         // Progress & Tracking routes
         Route::get('progress', [\App\Http\Controllers\Admin\ProgressController::class, 'index'])->name('progress.index');
         Route::get('progress/student/{user}', [\App\Http\Controllers\Admin\ProgressController::class, 'showStudent'])->name('progress.student');

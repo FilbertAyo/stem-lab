@@ -18,10 +18,29 @@
             <label>Managements</label>
             <i class="ti ti-dashboard"></i>
           </li>
-          <li class="pc-item">
-            <a href="{{ route('subjects.index') }}" class="pc-link">
+          <li class="pc-item pc-hasmenu">
+            <a href="#!" class="pc-link">
               <span class="pc-micon"><i class="ti ti-book"></i></span>
-              <span class="pc-mtext">Subjects</span>
+              <span class="pc-mtext">Classes & Subjects</span>
+              <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
+            </a>
+            <ul class="pc-submenu">
+              <li class="pc-item">
+                <a href="{{ route('admin.classes.index') }}" class="pc-link">
+                  <span class="pc-mtext">Classes</span>
+                </a>
+              </li>
+              <li class="pc-item">
+                <a href="{{ route('subjects.index') }}" class="pc-link">
+                  <span class="pc-mtext">Subjects</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="pc-item">
+            <a href="{{ route('admin.clubs.index') }}" class="pc-link">
+            <span class="pc-micon"> <i class="ti ti-school"></i></span>
+            <span class="pc-mtext">School Clubs</span>
             </a>
           </li>
           <li class="pc-item">

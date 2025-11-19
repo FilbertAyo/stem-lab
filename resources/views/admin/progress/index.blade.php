@@ -169,7 +169,7 @@
                                             <a href="{{ route('admin.progress.detail', [$progress->user, $progress->model3d]) }}"
                                                class="btn btn-sm btn-primary"
                                                title="View Details">
-                                                <i class="ti ti-eye"></i> View
+                                                <i class="ti ti-eye"></i> 
                                             </a>
                                             <a href="{{ route('admin.progress.student', $progress->user) }}"
                                                class="btn btn-sm btn-info"
