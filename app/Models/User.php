@@ -56,4 +56,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(ModelQuestionAnswer::class);
     }
+
+    /**
+     * Get the clubs that this teacher belongs to.
+     */
+    public function clubs()
+    {
+        return $this->belongsToMany(Club::class, 'teacher_clubs')
+            ->withPivot(['school_name', 'school_address', 'school_phone', 'school_email', 'school_district', 'school_region'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the teacher-club pivot records.
+     */
+    public function teacherClubs()
+    {
+        return $this->hasMany(TeacherClub::class);
+    }
 }

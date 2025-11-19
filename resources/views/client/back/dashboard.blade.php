@@ -11,7 +11,7 @@
                             <div class="card-body px-3 py-4-5">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="stats-icon purple">
+                                        <div class="stats-icon">
                                             <i class="iconly-boldShow"></i>
                                         </div>
                                     </div>

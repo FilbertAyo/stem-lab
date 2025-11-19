@@ -24,6 +24,21 @@
                     </a>
                 </li>
 
+                @if(auth()->user()->role === 'teacher')
+                    <li class="sidebar-item {{ request()->routeIs('client.clubs.*') ? 'active' : '' }}">
+                        <a href="{{ route('client.clubs.index') }}" class="sidebar-link">
+                            <i class="bi bi-house"></i>
+                            <span>Clubs</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item {{ request()->routeIs('client.students.*') ? 'active' : '' }}">
+                        <a href="{{ route('client.students.index') }}" class="sidebar-link">
+                            <i class="bi bi-people"></i>
+                            <span>Students</span>
+                        </a>
+                    </li>
+                @endif
+
                 <li class="sidebar-item {{ request()->routeIs('client.models.3d.*') ? 'active' : '' }}">
                     <a href="{{ route('client.models.3d.index') }}" class="sidebar-link">
                         <i class="bi bi-box"></i>

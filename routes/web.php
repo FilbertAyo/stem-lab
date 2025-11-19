@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\Model3dController as AdminModel3dController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Client\ClubController as ClientClubController;
 use App\Http\Controllers\Client\Model3dController as ClientModel3dController;
+use App\Http\Controllers\Client\StudentController as ClientStudentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Model3d;
@@ -34,6 +36,17 @@ Route::middleware('auth')->group(function () {
         // Question routes
         Route::get('/{model3d}/questions', [\App\Http\Controllers\Client\ModelQuestionController::class, 'getQuestions'])->name('questions.get');
         Route::post('/{model3d}/questions/submit', [\App\Http\Controllers\Client\ModelQuestionController::class, 'submitAnswers'])->name('questions.submit');
+    });
+
+    // Teacher-only routes
+    Route::middleware('teacher')->group(function () {
+        Route::get('/clubs', [ClientClubController::class, 'index'])->name('client.clubs.index');
+        Route::get('/clubs/{club}/join', [ClientClubController::class, 'showJoinForm'])->name('client.clubs.join.form');
+        Route::post('/clubs/{club}/join', [ClientClubController::class, 'join'])->name('client.clubs.join');
+        
+        // Student registration routes
+        Route::get('/students', [ClientStudentController::class, 'index'])->name('client.students.index');
+        Route::post('/students', [ClientStudentController::class, 'store'])->name('client.students.store');
     });
 });
 
