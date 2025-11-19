@@ -15,7 +15,7 @@
           </li>
 
           <li class="pc-item pc-caption">
-            <label>Settings</label>
+            <label>Managements</label>
             <i class="ti ti-dashboard"></i>
           </li>
           <li class="pc-item">
@@ -48,13 +48,40 @@
               <span class="pc-mtext">3D Model Questions</span>
             </a>
           </li>
-        
+
           <li class="pc-item">
             <a href="#" class="pc-link">
                 <span class="pc-micon"><i class="ti ti-flask"></i></span>
               <span class="pc-mtext">VR Experiments</span>
               <span class="pc-badge">Coming Soon</span>
             </a>
+          </li>
+
+          <li class="pc-item pc-caption">
+            <label>Settings</label>
+            <i class="ti ti-settings"></i>
+          </li>
+
+          <li class="pc-item pc-hasmenu">
+            <a href="#!" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-users"></i></span>
+              <span class="pc-mtext">User Management</span>
+              <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
+            </a>
+            <ul class="pc-submenu">
+              <li class="pc-item">
+                <a href="{{ route('admin.users.index') }}" class="pc-link">
+                  <span class="pc-micon"><i class="ti ti-user"></i></span>
+                  <span class="pc-mtext">Admin Users</span>
+                </a>
+              </li>
+              <li class="pc-item">
+                <a href="{{ route('admin.users.students') }}" class="pc-link">
+                  <span class="pc-micon"><i class="ti ti-school"></i></span>
+                  <span class="pc-mtext">Students & Teachers</span>
+                </a>
+              </li>
+            </ul>
           </li>
 
         </ul>
