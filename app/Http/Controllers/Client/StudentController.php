@@ -21,11 +21,11 @@ class StudentController extends Controller
         $user = Auth::user();
 
         $teacherClubs = TeacherClub::where('user_id', $user->id)
-            ->with('club')
+            ->with(['club', 'school'])
             ->get();
 
         $students = Student::whereIn('teacher_club_id', $teacherClubs->pluck('id'))
-            ->with(['schoolClass', 'teacherClub.club'])
+            ->with(['schoolClass', 'teacherClub.club', 'teacherClub.school'])
             ->orderBy('name')
             ->get();
 

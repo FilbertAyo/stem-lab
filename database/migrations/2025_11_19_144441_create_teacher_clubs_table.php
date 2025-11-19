@@ -15,17 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('club_id')->constrained('clubs')->onDelete('cascade');
-            
-            // School details
-            $table->string('school_name');
-            $table->text('school_address')->nullable();
-            $table->string('school_phone')->nullable();
-            $table->string('school_email')->nullable();
-            $table->string('school_district')->nullable();
-            $table->string('school_region')->nullable();
-            
+            $table->foreignId('school_id')->nullable()->constrained('schools')->onDelete('cascade');
+
             $table->timestamps();
-            
+
             // Ensure a teacher can only join a club once
             $table->unique(['user_id', 'club_id']);
         });

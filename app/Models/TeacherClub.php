@@ -12,12 +12,7 @@ class TeacherClub extends Model
     protected $fillable = [
         'user_id',
         'club_id',
-        'school_name',
-        'school_address',
-        'school_phone',
-        'school_email',
-        'school_district',
-        'school_region',
+        'school_id',
     ];
 
     /**
@@ -34,6 +29,14 @@ class TeacherClub extends Model
     public function club(): BelongsTo
     {
         return $this->belongsTo(Club::class);
+    }
+
+    /**
+     * Get the school that belongs to this record.
+     */
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(School::class);
     }
 
     /**

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\ClubController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\Model3dController as AdminModel3dController;
+use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Client\ClubController as ClientClubController;
@@ -76,6 +77,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/', [ClubController::class, 'store'])->name('store');
             Route::put('/{club}', [ClubController::class, 'update'])->name('update');
             Route::post('/{club}/toggle-status', [ClubController::class, 'toggleStatus'])->name('toggle-status');
+        });
+
+        Route::prefix('schools')->name('schools.')->group(function () {
+            Route::get('/', [SchoolController::class, 'index'])->name('index');
+            Route::post('/', [SchoolController::class, 'store'])->name('store');
+            Route::put('/{school}', [SchoolController::class, 'update'])->name('update');
+            Route::post('/{school}/toggle-status', [SchoolController::class, 'toggleStatus'])->name('toggle-status');
         });
 
         // Progress & Tracking routes

@@ -11,7 +11,7 @@
             <div class="col-12 col-lg-12 col-xl-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
-                     
+
                         <div class="mb-4">
                             <h5 class="fw-semibold mb-2">{{ $club->name }}</h5>
                             @if($club->description)
@@ -21,84 +21,141 @@
 
                         <hr class="my-4">
 
-                        <form method="POST" action="{{ route('client.clubs.join', $club) }}">
+                        <form method="POST" action="{{ route('client.clubs.join', $club) }}" id="joinClubForm">
                             @csrf
 
-                            <div class="mb-3">
-                                <label for="school_name" class="form-label">
-                                    School Name <span class="text-danger">*</span>
-                                </label>
-                                <input type="text"
-                                       class="form-control @error('school_name') is-invalid @enderror"
-                                       id="school_name"
-                                       name="school_name"
-                                       value="{{ old('school_name') }}"
-                                       required>
-                                @error('school_name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                            @if($existingSchool)
+                                {{-- Teacher already has a school --}}
+                                <div class="alert alert-info mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-info-circle me-2 fs-5"></i>
+                                        <div>
+                                            <strong>Your School:</strong> {{ $existingSchool->name }}
+                                            @if($existingSchool->district || $existingSchool->region)
+                                                <span class="text-muted">
+                                                    ({{ trim(($existingSchool->district ?? '') . ($existingSchool->district && $existingSchool->region ? ', ' : '') . ($existingSchool->region ?? '')) }})
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <p class="mb-0 mt-2 small">You will join this club using your existing school registration.</p>
+                                </div>
+                                <input type="hidden" name="use_existing_school" value="1">
+                            @else
+                                {{-- Teacher needs to select or register a school --}}
+                                <div class="mb-4">
+                                    <label for="school_id" class="form-label">
+                                        Select School <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="form-select @error('school_id') is-invalid @enderror"
+                                            id="school_id"
+                                            name="school_id"
+                                            required>
+                                        <option value="">-- Select a school --</option>
+                                        @foreach($schools as $school)
+                                            <option value="{{ $school->id }}" {{ old('school_id') == $school->id ? 'selected' : '' }}>
+                                                {{ $school->name }}
+                                                @if($school->district || $school->region)
+                                                    ({{ trim(($school->district ?? '') . ($school->district && $school->region ? ', ' : '') . ($school->region ?? '')) }})
+                                                @endif
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('school_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="text-muted">If your school is not in the list, check "Add new school" below.</small>
+                                </div>
 
-                            <div class="mb-3">
-                                <label for="school_address" class="form-label">School Address</label>
-                                <textarea class="form-control @error('school_address') is-invalid @enderror"
-                                          id="school_address"
-                                          name="school_address"
-                                          rows="3">{{ old('school_address') }}</textarea>
-                                @error('school_address')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="is_new_school" name="is_new_school" value="1" {{ old('is_new_school') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="is_new_school">
+                                            Add new school
+                                        </label>
+                                    </div>
+                                </div>
+                            @endif
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="school_phone" class="form-label">School Phone</label>
+                            <div id="newSchoolFields" style="display: none;">
+                                <hr class="my-4">
+                                <h6 class="mb-3">New School Information</h6>
+
+                                <div class="mb-3">
+                                    <label for="school_name" class="form-label">
+                                        School Name <span class="text-danger">*</span>
+                                    </label>
                                     <input type="text"
-                                           class="form-control @error('school_phone') is-invalid @enderror"
-                                           id="school_phone"
-                                           name="school_phone"
-                                           value="{{ old('school_phone') }}">
-                                    @error('school_phone')
+                                           class="form-control @error('school_name') is-invalid @enderror"
+                                           id="school_name"
+                                           name="school_name"
+                                           value="{{ old('school_name') }}">
+                                    @error('school_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label for="school_email" class="form-label">School Email</label>
-                                    <input type="email"
-                                           class="form-control @error('school_email') is-invalid @enderror"
-                                           id="school_email"
-                                           name="school_email"
-                                           value="{{ old('school_email') }}">
-                                    @error('school_email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="school_district" class="form-label">District</label>
-                                    <input type="text"
-                                           class="form-control @error('school_district') is-invalid @enderror"
-                                           id="school_district"
-                                           name="school_district"
-                                           value="{{ old('school_district') }}">
-                                    @error('school_district')
+                                <div class="mb-3">
+                                    <label for="school_address" class="form-label">School Address</label>
+                                    <textarea class="form-control @error('school_address') is-invalid @enderror"
+                                              id="school_address"
+                                              name="school_address"
+                                              rows="3">{{ old('school_address') }}</textarea>
+                                    @error('school_address')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label for="school_region" class="form-label">Region</label>
-                                    <input type="text"
-                                           class="form-control @error('school_region') is-invalid @enderror"
-                                           id="school_region"
-                                           name="school_region"
-                                           value="{{ old('school_region') }}">
-                                    @error('school_region')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="school_phone" class="form-label">School Phone</label>
+                                        <input type="text"
+                                               class="form-control @error('school_phone') is-invalid @enderror"
+                                               id="school_phone"
+                                               name="school_phone"
+                                               value="{{ old('school_phone') }}">
+                                        @error('school_phone')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="school_email" class="form-label">School Email</label>
+                                        <input type="email"
+                                               class="form-control @error('school_email') is-invalid @enderror"
+                                               id="school_email"
+                                               name="school_email"
+                                               value="{{ old('school_email') }}">
+                                        @error('school_email')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="school_district" class="form-label">District</label>
+                                        <input type="text"
+                                               class="form-control @error('school_district') is-invalid @enderror"
+                                               id="school_district"
+                                               name="school_district"
+                                               value="{{ old('school_district') }}">
+                                        @error('school_district')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="school_region" class="form-label">Region</label>
+                                        <input type="text"
+                                               class="form-control @error('school_region') is-invalid @enderror"
+                                               id="school_region"
+                                               name="school_region"
+                                               value="{{ old('school_region') }}">
+                                        @error('school_region')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
 
@@ -118,5 +175,65 @@
             </div>
         </section>
     </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const schoolSelect = document.getElementById('school_id');
+                const isNewSchoolCheckbox = document.getElementById('is_new_school');
+                const newSchoolFields = document.getElementById('newSchoolFields');
+                const schoolNameInput = document.getElementById('school_name');
+                const form = document.getElementById('joinClubForm');
+
+                // Only initialize if school selection fields exist (teacher doesn't have existing school)
+                if (schoolSelect && isNewSchoolCheckbox) {
+                    function toggleNewSchoolFields() {
+                        if (isNewSchoolCheckbox.checked) {
+                            newSchoolFields.style.display = 'block';
+                            schoolSelect.disabled = true;
+                            schoolSelect.removeAttribute('required');
+                            if (schoolNameInput) {
+                                schoolNameInput.setAttribute('required', 'required');
+                            }
+                        } else {
+                            newSchoolFields.style.display = 'none';
+                            schoolSelect.disabled = false;
+                            schoolSelect.setAttribute('required', 'required');
+                            if (schoolNameInput) {
+                                schoolNameInput.removeAttribute('required');
+                            }
+                        }
+                    }
+
+                    // Initialize on page load
+                    toggleNewSchoolFields();
+
+                    // Toggle when checkbox changes
+                    isNewSchoolCheckbox.addEventListener('change', toggleNewSchoolFields);
+
+                    // Form validation
+                    form.addEventListener('submit', function (e) {
+                        if (isNewSchoolCheckbox.checked) {
+                            // If adding new school, validate new school fields
+                            if (schoolNameInput && !schoolNameInput.value.trim()) {
+                                e.preventDefault();
+                                alert('Please enter a school name.');
+                                schoolNameInput.focus();
+                                return false;
+                            }
+                        } else {
+                            // If selecting existing school, validate school selection
+                            if (schoolSelect && !schoolSelect.value) {
+                                e.preventDefault();
+                                alert('Please select a school or check "Add new school" to register a new one.');
+                                schoolSelect.focus();
+                                return false;
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
+    @endpush
 </x-app-layout>
 

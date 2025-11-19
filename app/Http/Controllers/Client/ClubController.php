@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Club;
+use App\Models\School;
 use App\Models\SchoolClass;
 use App\Models\TeacherClub;
 use Illuminate\Http\RedirectResponse;
@@ -30,7 +31,7 @@ class ClubController extends Controller
 
         // Teacher's club records with students
         $teacherClubs = $user->teacherClubs()
-            ->with(['club', 'students.schoolClass'])
+            ->with(['club', 'school', 'students.schoolClass'])
             ->get();
 
         $requestedTeacherClubId = $request->input('teacherClub');
@@ -68,7 +69,16 @@ class ClubController extends Controller
             abort(403, 'You have already joined this club.');
         }
 
-        return view('client.back.clubs.join', compact('club'));
+        // Check if teacher already has a school (from any existing teacher_club)
+        $existingTeacherClub = $user->teacherClubs()->with('school')->first();
+        $existingSchool = $existingTeacherClub?->school;
+
+        // Get all active schools for dropdown (only if teacher doesn't have a school yet)
+        $schools = $existingSchool 
+            ? collect() 
+            : School::where('is_active', true)->orderBy('name')->get();
+
+        return view('client.back.clubs.join', compact('club', 'schools', 'existingSchool'));
     }
 
     /**
@@ -84,24 +94,75 @@ class ClubController extends Controller
                 ->with('error', 'You have already joined this club.');
         }
 
-        $validated = $request->validate([
-            'school_name' => ['required', 'string', 'max:255'],
-            'school_address' => ['nullable', 'string', 'max:500'],
-            'school_phone' => ['nullable', 'string', 'max:50'],
-            'school_email' => ['nullable', 'email', 'max:255'],
-            'school_district' => ['nullable', 'string', 'max:255'],
-            'school_region' => ['nullable', 'string', 'max:255'],
-        ]);
+        // Check if teacher already has a school
+        $existingTeacherClub = $user->teacherClubs()->with('school')->first();
+        $existingSchool = $existingTeacherClub?->school;
 
-        // Create the teacher-club relationship with school details
-        $teacherClub = TeacherClub::create([
-            'user_id' => $user->id,
-            'club_id' => $club->id,
-            ...$validated,
-        ]);
+        // If teacher already has a school, use it automatically
+        if ($existingSchool) {
+            $teacherClubData = [
+                'user_id' => $user->id,
+                'club_id' => $club->id,
+                'school_id' => $existingSchool->id,
+            ];
+        } else {
+            // Teacher doesn't have a school yet, process school selection/creation
+            $schoolId = $request->input('school_id');
+            $isNewSchool = $request->boolean('is_new_school', false);
+
+            if ($isNewSchool) {
+                // Validate and create new school (as inactive for admin review)
+                $validated = $request->validate([
+                    'school_name' => ['required', 'string', 'max:255', 'unique:schools,name'],
+                    'school_address' => ['nullable', 'string', 'max:500'],
+                    'school_phone' => ['nullable', 'string', 'max:50'],
+                    'school_email' => ['nullable', 'email', 'max:255'],
+                    'school_district' => ['nullable', 'string', 'max:255'],
+                    'school_region' => ['nullable', 'string', 'max:255'],
+                ]);
+
+                // Create new school as inactive (admin needs to approve)
+                $school = School::create([
+                    'name' => $validated['school_name'],
+                    'address' => $validated['school_address'] ?? null,
+                    'phone' => $validated['school_phone'] ?? null,
+                    'email' => $validated['school_email'] ?? null,
+                    'district' => $validated['school_district'] ?? null,
+                    'region' => $validated['school_region'] ?? null,
+                    'is_active' => false, // Inactive until admin approves
+                ]);
+
+                // Create teacher_club with school_id
+                $teacherClubData = [
+                    'user_id' => $user->id,
+                    'club_id' => $club->id,
+                    'school_id' => $school->id,
+                ];
+            } else {
+                // Use existing school - validate school_id is provided
+                $validated = $request->validate([
+                    'school_id' => ['required', 'exists:schools,id'],
+                ]);
+
+                // Create teacher_club with school_id
+                $teacherClubData = [
+                    'user_id' => $user->id,
+                    'club_id' => $club->id,
+                    'school_id' => $validated['school_id'],
+                ];
+            }
+        }
+
+        // Create the teacher-club relationship with school_id
+        $teacherClub = TeacherClub::create($teacherClubData);
+
+        $message = "Successfully joined {$club->name}!";
+        if ($isNewSchool) {
+            $message .= " Your school registration is pending admin approval.";
+        }
 
         return redirect()->route('client.clubs.index', ['teacherClub' => $teacherClub->id])
-            ->with('status', "Successfully joined {$club->name}! You can now register students.");
+            ->with('status', $message);
     }
 }
 

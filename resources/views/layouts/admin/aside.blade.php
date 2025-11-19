@@ -38,9 +38,15 @@
             </ul>
           </li>
           <li class="pc-item">
+            <a href="{{ route('admin.schools.index') }}" class="pc-link">
+            <span class="pc-micon"> <i class="ti ti-home"></i></span>
+            <span class="pc-mtext">Schools</span>
+            </a>
+          </li>
+          <li class="pc-item">
             <a href="{{ route('admin.clubs.index') }}" class="pc-link">
-            <span class="pc-micon"> <i class="ti ti-school"></i></span>
-            <span class="pc-mtext">School Clubs</span>
+              <span class="pc-micon"><i class="ti ti-school"></i></span>
+              <span class="pc-mtext">Clubs</span>
             </a>
           </li>
           <li class="pc-item">

@@ -63,7 +63,7 @@
                                                     <td><span class="badge bg-secondary">{{ ucfirst($student->gender) }}</span></td>
                                                     <td>{{ $student->schoolClass->name ?? '—' }}</td>
                                                     <td>{{ $student->teacherClub->club->name ?? '—' }}</td>
-                                                    <td>{{ $student->teacherClub->school_name ?? '—' }}</td>
+                                                    <td>{{ $student->teacherClub->school->name ?? '—' }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -104,7 +104,7 @@
                                         <option value="">Choose a club and school...</option>
                                         @foreach($teacherClubs as $tc)
                                             <option value="{{ $tc->id }}" {{ old('teacher_club_id') == $tc->id ? 'selected' : '' }}>
-                                                {{ $tc->club->name }} - {{ $tc->school_name }}
+                                                {{ $tc->club->name }} - {{ $tc->school->name ?? 'N/A' }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -118,7 +118,7 @@
                                 <div class="alert alert-info mb-3">
                                     <i class="bi bi-info-circle me-2"></i>
                                     <strong>Club:</strong> {{ $teacherClubs->first()->club->name }}<br>
-                                    <strong>School:</strong> {{ $teacherClubs->first()->school_name }}
+                                    <strong>School:</strong> {{ $teacherClubs->first()->school->name ?? 'N/A' }}
                                 </div>
                             @endif
 
