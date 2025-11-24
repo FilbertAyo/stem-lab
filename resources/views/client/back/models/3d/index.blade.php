@@ -90,8 +90,8 @@
                                         </div>
 
                                         <h5 class="fw-semibold">{{ $model->name }}</h5>
-                                        <p class="text-muted small mb-3">
-                                            {{ Str::limit($model->description ?? 'No description provided yet.', 110) }}
+                                        <p class="text-muted small">
+                                            {{ Str::limit($model->description ?? 'No description provided yet.', 60) }}
                                         </p>
                                         <div class="mt-auto d-flex justify-content-between align-items-center">
                                             <a href="#" target="_blank" class="text-muted small">

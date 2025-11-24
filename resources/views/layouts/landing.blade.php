@@ -102,6 +102,9 @@
                             <li>
                                 <a href="{{ url('/#support') }}" class="xl">Support</a>
                             </li>
+                            <li>
+                                <a href="{{ route('donate') }}" class="xl">Donate</a>
+                            </li>
                         </ul>
                     </nav>
                     <div class="tc wf ig pb no gap-2">

@@ -19,6 +19,10 @@ Route::get('/', function () {
     return view('client.front.welcome');
 });
 
+Route::get('/donate', function () {
+    return view('client.front.donate');
+})->name('donate');
+
 Route::get('/dashboard', function () {
     $latestModels = Model3d::with('subject')->latest()->take(6)->get();
 
