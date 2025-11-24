@@ -16,7 +16,7 @@
 
       <!-- About Content -->
       <div class="animate_right jn/2">
-        <h4 class="ek yj mk gb">Who We Are</h4>
+        <h4 class="ek yj mk gb">About STEM</h4>
         <h2 class="fk vj zp pr kk wm qb">Empowering girls to create, question and lead with technology.</h2>
         <p class="uo">
           Since 1999 Adilisha has worked to break stereotypes, amplify women's voices in technology,
@@ -29,10 +29,9 @@
             <span class="nf h vc yc vd rg gh qk -ud-z-1"></span>
             <img src="{{ asset('images/icon-play.svg') }}" alt="Play" />
           </span>
-          <span class="kk">Discover the Adilisha story</span>
+          <span class="kk">Discover how to use the platform</span>
         </a>
       </div>
     </div>
   </div>
 </section>
-

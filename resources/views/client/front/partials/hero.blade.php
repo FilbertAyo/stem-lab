@@ -36,13 +36,14 @@
 
         <div class="tc tf yo zf mb">
           <a href="#!" class="ek jk lk gh gi hi rg ml il vc _d _l">Explore the Lab</a>
-          <a href="{{ route('donate') }}" class="ek jk lk sh gi hi rg ml il vc _d _l">Donate Now</a>
 
-
+          <span class="tc sf">
+            <a href="#!" class="inline-block ek xj kk wm"> Call us +255 689 780 000 </a>
+            <span class="inline-block">Let's co-create the future of STEM education</span>
+          </span>
         </div>
       </div>
     </div>
   </div>
 </section>
-<!-- ===== Hero End ===== -->
 

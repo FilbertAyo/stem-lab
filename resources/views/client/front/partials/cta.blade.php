@@ -14,8 +14,8 @@
         </p>
       </div>
       <div class="animate_right bf">
-        <a href="{{ route('donate') }}" class="vc ek kk hh rg ol il cm gi hi">
-          Donate Now
+        <a href="#!" class="vc ek kk hh rg ol il cm gi hi">
+          Get Started
         </a>
       </div>
     </div>
