@@ -46,24 +46,18 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="bi bi-square"></i>
-                        <span>2D Experiment</span>
-                    </a>
-                </li>
 
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
+                <li class="sidebar-item {{ request()->routeIs('client.vr-experiments.*') ? 'active' : '' }}">
+                    <a href="{{ route('client.vr-experiments.index') }}" class="sidebar-link">
                         <i class="bi bi-vr"></i>
-                        <span>VR Experiment</span>
+                        <span>VR Experiments</span>
                     </a>
                 </li>
 
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
+                <li class="sidebar-item {{ request()->routeIs('client.vr-assessments.*') ? 'active' : '' }}">
+                    <a href="{{ route('client.vr-assessments.index') }}" class="sidebar-link">
                         <i class="bi bi-question-circle"></i>
-                        <span>Quizez</span>
+                        <span>VR Quizzes</span>
                     </a>
                 </li>
 

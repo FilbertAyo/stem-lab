@@ -39,7 +39,7 @@
                                     <th>Region</th>
                                     <th>Status</th>
                                     <th>Last Updated</th>
-                                    <th class="text-center" style="width: 160px;">Actions</th>
+                                    <th class="text-center" style="width: 180px;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,6 +72,13 @@
                                         <td>{{ $school->updated_at?->format('d M Y, H:i') }}</td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
+                                                <a
+                                                    href="{{ route('admin.schools.show', $school) }}"
+                                                    class="btn btn-sm btn-outline-info"
+                                                    title="View Details"
+                                                >
+                                                    <i class="ti ti-eye"></i>
+                                                </a>
                                                 <button
                                                     class="btn btn-sm btn-outline-primary"
                                                     data-bs-toggle="modal"
@@ -84,6 +91,7 @@
                                                     data-district="{{ $school->district }}"
                                                     data-region="{{ $school->region }}"
                                                     data-active="{{ $school->is_active ? '1' : '0' }}"
+                                                    title="Edit"
                                                 >
                                                     <i class="ti ti-edit"></i>
                                                 </button>
@@ -94,6 +102,7 @@
                                                     data-action="{{ route('admin.schools.toggle-status', $school) }}"
                                                     data-name="{{ $school->name }}"
                                                     data-status="{{ $school->is_active ? 'disable' : 'enable' }}"
+                                                    title="{{ $school->is_active ? 'Disable' : 'Enable' }}"
                                                 >
                                                     <i class="ti {{ $school->is_active ? 'ti-ban' : 'ti-check' }}"></i>
                                                 </button>

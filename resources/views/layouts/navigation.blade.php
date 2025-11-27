@@ -29,7 +29,7 @@
             <li><hr class="dropdown-divider"></li>
             <li>
                 <a href="{{ route('profile.edit') }}" class='dropdown-item d-flex align-items-center'>
-                    <i class='bi bi-account me-2'></i>Profile
+                    <i class='bi bi-person-circle me-2'></i>Profile
                 </a>
             </li>
             <li>

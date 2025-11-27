@@ -1,25 +1,98 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-
-           
+    <div class="page-heading d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h3 class="mb-1">My Profile</h3>
+            <p class="text-muted mb-0">Manage your account settings and preferences</p>
         </div>
+    </div>
+
+    <div class="page-content">
+        <section class="row">
+            <!-- Profile Overview Column -->
+            <div class="col-lg-4 col-12 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center py-4">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                            <span class="text-primary fw-bold" style="font-size: 2.5rem;">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                            </span>
+                        </div>
+                        <h4 class="fw-semibold mb-1">{{ $user->name }}</h4>
+                        <p class="text-muted mb-2">{{ $user->email }}</p>
+                        <span class="badge {{ $user->role === 'teacher' ? 'bg-success' : ($user->role === 'student' ? 'bg-info' : 'bg-secondary') }} px-3 py-2">
+                            <i class="bi {{ $user->role === 'teacher' ? 'bi-mortarboard' : 'bi-person' }} me-1"></i>
+                            {{ ucfirst($user->role) }}
+                        </span>
+                    </div>
+                    <div class="card-footer bg-light">
+                        <div class="row text-center">
+                            <div class="col-6 border-end">
+                                <span class="text-muted small d-block">Status</span>
+                                <span class="badge {{ $user->is_active ? 'bg-success' : 'bg-danger' }}">
+                                    {{ $user->is_active ? 'Active' : 'Inactive' }}
+                                </span>
+                            </div>
+                            <div class="col-6">
+                                <span class="text-muted small d-block">Member Since</span>
+                                <span class="fw-semibold small">{{ $user->created_at->format('M Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if($user->role === 'teacher' && $user->teacherClubs->count() > 0)
+                    <div class="card border-0 shadow-sm mt-4">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0"><i class="bi bi-house me-2"></i>My Clubs</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush">
+                                @foreach($user->teacherClubs as $teacherClub)
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="fw-semibold">{{ $teacherClub->club->name ?? 'Unknown Club' }}</span>
+                                            @if($teacherClub->school)
+                                                <small class="text-muted d-block">{{ $teacherClub->school->name }}</small>
+                                            @endif
+                                        </div>
+                                        <span class="badge bg-primary rounded-pill">
+                                            {{ $teacherClub->students->count() }} students
+                                        </span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Settings Column -->
+            <div class="col-lg-8 col-12">
+                <!-- Profile Information Card -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white d-flex align-items-center">
+                        <i class="bi bi-person-circle fs-5 me-2 text-primary"></i>
+                        <h5 class="mb-0">Profile Information</h5>
+                    </div>
+                    <div class="card-body">
+                        @include('profile.partials.update-profile-information-form')
+                    </div>
+                </div>
+
+                <!-- Update Password Card -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white d-flex align-items-center">
+                        <i class="bi bi-shield-lock fs-5 me-2 text-primary"></i>
+                        <h5 class="mb-0">Update Password</h5>
+                    </div>
+                    <div class="card-body">
+                        @include('profile.partials.update-password-form')
+                    </div>
+                </div>
+
+                <!-- Delete Account Card -->
+              
+            </div>
+        </section>
     </div>
 </x-app-layout>

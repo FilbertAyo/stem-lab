@@ -4,7 +4,7 @@
   <div class="xc fn zd/2 2xl:ud-w-187.5 bd 2xl:ud-h-171.5 h q r">
     <img src="{{ asset('images/shape-04.svg') }}" alt="shape" class="h q r" />
     <model-viewer
-      src="{{ asset('images/heart.glb') }}"
+      src="{{ asset('images/microscope.glb') }}"
       alt="Interactive heart model"
       auto-rotate
       camera-controls

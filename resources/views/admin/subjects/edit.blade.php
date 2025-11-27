@@ -38,11 +38,11 @@
                                 </div>
                             @endif
                             <input type="file" class="form-control @error('icon') is-invalid @enderror" 
-                                   id="icon" name="icon" accept="image/*">
+                                   id="icon" name="icon" accept="image/jpeg,image/png,image/gif,image/svg+xml,image/webp">
                             @error('icon')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <small class="form-text text-muted">Upload a new icon to replace the current one (jpeg, png, jpg, gif, svg). Max size: 2MB</small>
+                            <small class="form-text text-muted">Upload a new icon to replace the current one (jpeg, png, jpg, gif, svg, webp). Max size: 2MB</small>
                         </div>
 
                         <div class="mb-3">
@@ -55,11 +55,11 @@
                                 </div>
                             @endif
                             <input type="file" class="form-control @error('image') is-invalid @enderror" 
-                                   id="image" name="image" accept="image/*">
+                                   id="image" name="image" accept="image/jpeg,image/png,image/gif,image/svg+xml,image/webp">
                             @error('image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <small class="form-text text-muted">Upload a new image to replace the current one (jpeg, png, jpg, gif, svg). Max size: 2MB</small>
+                            <small class="form-text text-muted">Upload a new image to replace the current one (jpeg, png, jpg, gif, svg, webp). Max size: 2MB</small>
                         </div>
 
                         <div class="mb-3">

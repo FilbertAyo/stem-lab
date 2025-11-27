@@ -7,9 +7,11 @@ use App\Http\Controllers\Admin\Model3dController as AdminModel3dController;
 use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\VrExperimentController;
 use App\Http\Controllers\Client\ClubController as ClientClubController;
 use App\Http\Controllers\Client\Model3dController as ClientModel3dController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
+use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Model3d;
@@ -37,6 +39,23 @@ Route::middleware('auth')->group(function () {
         // Question routes
         Route::get('/{model3d}/questions', [\App\Http\Controllers\Client\ModelQuestionController::class, 'getQuestions'])->name('questions.get');
         Route::post('/{model3d}/questions/submit', [\App\Http\Controllers\Client\ModelQuestionController::class, 'submitAnswers'])->name('questions.submit');
+    });
+
+    // VR Experiments routes
+    Route::prefix('vr-experiments')->name('client.vr-experiments.')->group(function () {
+        Route::get('/', [ClientVrExperimentController::class, 'index'])->name('index');
+        Route::get('/{vrExperiment}', [ClientVrExperimentController::class, 'show'])->name('show');
+    });
+
+    // VR Assessment/Quiz routes
+    Route::prefix('vr-quizzes')->name('client.vr-assessments.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Client\VrAssessmentController::class, 'index'])->name('index');
+        Route::get('/{questionBank}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'show'])->name('show');
+        Route::post('/{questionBank}/start', [\App\Http\Controllers\Client\VrAssessmentController::class, 'start'])->name('start');
+        Route::get('/attempt/{attempt}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'take'])->name('take');
+        Route::post('/attempt/{attempt}/save-answer', [\App\Http\Controllers\Client\VrAssessmentController::class, 'saveAnswer'])->name('save-answer');
+        Route::post('/attempt/{attempt}/submit', [\App\Http\Controllers\Client\VrAssessmentController::class, 'submit'])->name('submit');
+        Route::get('/attempt/{attempt}/results', [\App\Http\Controllers\Client\VrAssessmentController::class, 'results'])->name('results');
     });
 
     // Teacher-only routes
@@ -81,6 +100,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::prefix('schools')->name('schools.')->group(function () {
             Route::get('/', [SchoolController::class, 'index'])->name('index');
+            Route::get('/{school}', [SchoolController::class, 'show'])->name('show');
             Route::post('/', [SchoolController::class, 'store'])->name('store');
             Route::put('/{school}', [SchoolController::class, 'update'])->name('update');
             Route::post('/{school}/toggle-status', [SchoolController::class, 'toggleStatus'])->name('toggle-status');
@@ -125,6 +145,47 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::put('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'update'])->name('3d.questions.update');
         Route::delete('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'destroy'])->name('3d.questions.destroy');
         Route::post('3d/{model3d}/questions/order', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'updateOrder'])->name('3d.questions.order');
+    });
+
+    // VR Experiments routes
+    Route::prefix('vr-experiments')->name('admin.vr-experiments.')->group(function () {
+        Route::get('/', [VrExperimentController::class, 'index'])->name('index');
+        Route::get('/create', [VrExperimentController::class, 'create'])->name('create');
+        Route::post('/', [VrExperimentController::class, 'store'])->name('store');
+        Route::get('/{vrExperiment}/edit', [VrExperimentController::class, 'edit'])->name('edit');
+        Route::put('/{vrExperiment}', [VrExperimentController::class, 'update'])->name('update');
+        Route::delete('/{vrExperiment}', [VrExperimentController::class, 'destroy'])->name('destroy');
+    });
+
+    // VR Assessment routes
+    Route::prefix('vr-assessments')->name('admin.vr-assessments.')->group(function () {
+        // Question Banks routes
+        Route::prefix('question-banks')->name('question-banks.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'store'])->name('store');
+            Route::get('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'show'])->name('show');
+            Route::get('/{questionBank}/edit', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'edit'])->name('edit');
+            Route::put('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'update'])->name('update');
+            Route::delete('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'destroy'])->name('destroy');
+            Route::post('/{questionBank}/toggle-status', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'toggleStatus'])->name('toggle-status');
+        });
+
+        // Questions routes (nested under question banks)
+        Route::prefix('question-banks/{questionBank}/questions')->name('questions.')->group(function () {
+            Route::get('/create', [\App\Http\Controllers\Admin\VrQuestionController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\VrQuestionController::class, 'store'])->name('store');
+            Route::get('/{question}/edit', [\App\Http\Controllers\Admin\VrQuestionController::class, 'edit'])->name('edit');
+            Route::put('/{question}', [\App\Http\Controllers\Admin\VrQuestionController::class, 'update'])->name('update');
+            Route::delete('/{question}', [\App\Http\Controllers\Admin\VrQuestionController::class, 'destroy'])->name('destroy');
+            Route::post('/order', [\App\Http\Controllers\Admin\VrQuestionController::class, 'updateOrder'])->name('order');
+        });
+
+        // Assessment Results routes
+        Route::prefix('results')->name('results.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\VrAssessmentResultController::class, 'index'])->name('index');
+            Route::get('/{attempt}', [\App\Http\Controllers\Admin\VrAssessmentResultController::class, 'show'])->name('show');
+        });
     });
 });
 

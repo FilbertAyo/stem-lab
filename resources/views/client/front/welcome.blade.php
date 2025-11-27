@@ -10,7 +10,6 @@
     @include('client.front.partials.about')
     @include('client.front.partials.subjects')
     @include('client.front.partials.learning-pathways')
-    @include('client.front.partials.testimonials')
     @include('client.front.partials.stats')
     @include('client.front.partials.cta')
   </main>

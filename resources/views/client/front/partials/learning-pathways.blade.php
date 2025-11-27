@@ -19,7 +19,11 @@
   <!-- Learning Pathways -->
   <div class="bb ze i va ki xn yq bc">
     <div class="wc qf pn xo jg">
-      <div class="animate_top rj sg hh sm vk xm hi nj oj">
+      <div class="animate_top i rj sg hh sm vk xm hi nj oj">
+        <!-- Border Shape -->
+        <span class="rc je md/2 gh xg h q r"></span>
+        <span class="rc je md/2 mh yg h q p"></span>
+
         <h4 class="wj kk wm fb">Primary Explorer (Standards 1-7)</h4>
         <p class="ur dc">
           Ignite curiosity with playful science storytelling, numeracy adventures and local role models.
@@ -29,9 +33,13 @@
           <li>Foundational coding puzzles and maker activities</li>
           <li>Teacher and caregiver guides for continued learning</li>
         </ul>
-
       </div>
-      <div class="animate_top rj sg hh sm vk xm hi nj oj">
+
+      <div class="animate_top i rj sg hh sm vk xm hi nj oj">
+        <!-- Border Shape -->
+        <span class="rc je md/2 gh xg h q r"></span>
+        <span class="rc je md/2 mh yg h q p"></span>
+
         <h4 class="wj kk wm fb">Secondary Innovator (Forms 1-4)</h4>
         <p class="ur dc">
           Deepen understanding through curriculum-aligned labs, robotics missions and mentor circles.
@@ -41,9 +49,13 @@
           <li>Introductory aviation, robotics and coding challenges</li>
           <li>Guidance from women pioneers in STEM</li>
         </ul>
-
       </div>
-      <div class="animate_top rj sg hh sm vk xm hi nj oj">
+
+      <div class="animate_top i rj sg hh sm vk xm hi nj oj">
+        <!-- Border Shape -->
+        <span class="rc je md/2 gh xg h q r"></span>
+        <span class="rc je md/2 mh yg h q p"></span>  
+
         <h4 class="wj kk wm fb">Advanced Creator (A-Level & Youth Clubs)</h4>
         <p class="ur dc">
           Prototype solutions, build portfolios and prepare for STEM careers or higher education.
@@ -53,7 +65,6 @@
           <li>Design thinking sprints and community innovation challenges</li>
           <li>Career navigation, scholarships and internship pathways</li>
         </ul>
-
       </div>
     </div>
   </div>

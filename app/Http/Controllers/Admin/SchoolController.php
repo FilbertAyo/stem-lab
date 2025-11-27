@@ -18,6 +18,30 @@ class SchoolController extends Controller
         return view('admin.schools.index', compact('schools'));
     }
 
+    public function show(School $school): View
+    {
+        // Load teachers with their clubs and students
+        $school->load([
+            'teacherClubs.user',
+            'teacherClubs.club',
+            'teacherClubs.students.schoolClass',
+        ]);
+
+        // Get unique teachers for this school
+        $teachers = $school->teacherClubs
+            ->pluck('user')
+            ->unique('id')
+            ->values();
+
+        // Get all students for this school
+        $students = $school->teacherClubs
+            ->flatMap(fn ($tc) => $tc->students)
+            ->unique('id')
+            ->values();
+
+        return view('admin.schools.show', compact('school', 'teachers', 'students'));
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([

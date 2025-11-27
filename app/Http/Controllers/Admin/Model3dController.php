@@ -41,7 +41,7 @@ class Model3dController extends Controller
             'file' => [
                 'required',
                 'file',
-                'max:102400', // Max 100MB for GLB files
+                'max:512000', // Max 100MB for GLB files
                 function ($attribute, $value, $fail) {
                     if ($value && $value->isValid()) {
                         $extension = strtolower($value->getClientOriginalExtension());

@@ -37,8 +37,8 @@ class SubjectController extends Controller
         $validated = $request->validate([
             'subject_name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'icon' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'icon' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
             'display_order' => [
                 'nullable',
                 'integer',
@@ -96,8 +96,8 @@ class SubjectController extends Controller
         $validated = $request->validate([
             'subject_name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'icon' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'icon' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
             'display_order' => [
                 'nullable',
                 'integer',

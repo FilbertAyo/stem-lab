@@ -37,48 +37,82 @@
               </li>
             </ul>
           </li>
-          <li class="pc-item">
-            <a href="{{ route('admin.schools.index') }}" class="pc-link">
-            <span class="pc-micon"> <i class="ti ti-home"></i></span>
-            <span class="pc-mtext">Schools</span>
+          <li class="pc-item pc-hasmenu">
+            <a href="#!" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-home"></i></span>
+              <span class="pc-mtext">Schools & Clubs</span>
+              <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
             </a>
+            <ul class="pc-submenu">
+            <li class="pc-item">
+                <a href="{{ route('admin.clubs.index') }}" class="pc-link">
+                  <span class="pc-mtext">Clubs</span>
+                </a>
+              </li>
+              <li class="pc-item">
+                <a href="{{ route('admin.schools.index') }}" class="pc-link">
+                  <span class="pc-mtext">Schools</span>
+                </a>
+              </li>
+             
+            </ul>
           </li>
-          <li class="pc-item">
-            <a href="{{ route('admin.clubs.index') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-school"></i></span>
-              <span class="pc-mtext">Clubs</span>
-            </a>
-          </li>
-          <li class="pc-item">
-                <a href="{{ route('admin.models.3d.index') }}" class="pc-link">
+          <li class="pc-item pc-hasmenu">
+            <a href="#!" class="pc-link">
               <span class="pc-micon"><i class="ti ti-package"></i></span>
-              <span class="pc-mtext">3D Models</span>
+              <span class="pc-mtext">3D & VR Resources</span>
+              <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
             </a>
-          </li>
-           <li class="pc-item">
-            <a href="#" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-link"></i></span>
-              <span class="pc-mtext">Experiments</span>
-            </a>
+            <ul class="pc-submenu">
+              <li class="pc-item">
+                <a href="{{ route('admin.models.3d.index') }}" class="pc-link">
+                  <span class="pc-mtext">3D Models</span>
+                </a>
+              </li>
+              <li class="pc-item">
+                <a href="{{ route('admin.vr-experiments.index') }}" class="pc-link">
+                  <span class="pc-mtext">VR Experiments</span>
+                </a>
+              </li>
+            </ul>
           </li>
 
           <li class="pc-item pc-caption">
-            <label>Progress&Tracking</label>
+            <label>Assessment & Competition</label>
             <i class="ti ti-chart-bar"></i>
           </li>
 
-          <li class="pc-item">
-            <a href="{{ route('admin.progress.index') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-box"></i></span>
-              <span class="pc-mtext">3D Model Questions</span>
+          <li class="pc-item pc-hasmenu">
+            <a href="#!" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-clipboard-check"></i></span>
+              <span class="pc-mtext">VR Assessment</span>
+              <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
             </a>
+            <ul class="pc-submenu">
+              <li class="pc-item">
+                <a href="{{ route('admin.vr-assessments.question-banks.index') }}" class="pc-link">
+                  <span class="pc-mtext">Question Banks</span>
+                </a>
+              </li>
+              <li class="pc-item">
+                <a href="{{ route('admin.vr-assessments.results.index') }}" class="pc-link">
+                  <span class="pc-mtext">Assessment Results</span>
+                </a>
+              </li>
+            </ul>
           </li>
 
           <li class="pc-item">
             <a href="#" class="pc-link">
                 <span class="pc-micon"><i class="ti ti-flask"></i></span>
-              <span class="pc-mtext">VR Experiments</span>
-              <span class="pc-badge">Coming Soon</span>
+              <span class="pc-mtext">Competition</span>
+            </a>
+          </li>
+
+          <li class="pc-item">
+            <a href="{{ route('admin.progress.index') }}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-box"></i></span>
+              <span class="pc-mtext">3D Model Results</span>
             </a>
           </li>
 

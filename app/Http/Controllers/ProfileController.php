@@ -16,8 +16,15 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+
+        // Load teacher-specific data if user is a teacher
+        if ($user->role === 'teacher') {
+            $user->load(['teacherClubs.club', 'teacherClubs.school', 'teacherClubs.students']);
+        }
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
         ]);
     }
 

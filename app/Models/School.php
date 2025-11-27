@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class School extends Model
 {
@@ -22,4 +24,20 @@ class School extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Get the teacher-club records for this school.
+     */
+    public function teacherClubs(): HasMany
+    {
+        return $this->hasMany(TeacherClub::class);
+    }
+
+    /**
+     * Get the students registered under this school (through teacher clubs).
+     */
+    public function students(): HasManyThrough
+    {
+        return $this->hasManyThrough(Student::class, TeacherClub::class);
+    }
 }
