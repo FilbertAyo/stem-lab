@@ -102,11 +102,29 @@
             </ul>
           </li>
 
-          <li class="pc-item">
-            <a href="#" class="pc-link">
-                <span class="pc-micon"><i class="ti ti-flask"></i></span>
-              <span class="pc-mtext">Competition</span>
+          <li class="pc-item pc-hasmenu">
+            <a href="#!" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-trophy"></i></span>
+              <span class="pc-mtext">Competitions</span>
+              <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
             </a>
+            <ul class="pc-submenu">
+              <li class="pc-item">
+                <a href="{{ route('admin.competitions.index') }}" class="pc-link">
+                  <span class="pc-mtext">All Competitions</span>
+                </a>
+              </li>
+              <li class="pc-item">
+                <a href="{{ route('admin.competitions.create') }}" class="pc-link">
+                  <span class="pc-mtext">Create Competition</span>
+                </a>
+              </li>
+              <li class="pc-item">
+                <a href="{{ route('admin.competitions.all-participants') }}" class="pc-link">
+                  <span class="pc-mtext">Manage Participants</span>
+                </a>
+              </li>
+            </ul>
           </li>
 
           <li class="pc-item">
@@ -141,6 +159,13 @@
                 </a>
               </li>
             </ul>
+          </li>
+
+          <li class="pc-item">
+            <a href="{{ route('admin.database-backup.index') }}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-database-export"></i></span>
+              <span class="pc-mtext">Database Backup</span>
+            </a>
           </li>
 
         </ul>

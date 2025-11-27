@@ -61,12 +61,14 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="bi bi-trophy"></i>
-                        <span>Competition</span>
-                    </a>
-                </li>
+                @if(auth()->user()->role === 'teacher')
+                    <li class="sidebar-item {{ request()->routeIs('client.competitions.*') ? 'active' : '' }}">
+                        <a href="{{ route('client.competitions.index') }}" class="sidebar-link">
+                            <i class="bi bi-trophy"></i>
+                            <span>Competitions</span>
+                        </a>
+                    </li>
+                @endif
 
 
             </ul>

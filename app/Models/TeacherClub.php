@@ -46,4 +46,22 @@ class TeacherClub extends Model
     {
         return $this->hasMany(Student::class);
     }
+
+    /**
+     * Get competition participations for this teacher-club.
+     */
+    public function competitionParticipants()
+    {
+        return $this->hasMany(CompetitionParticipant::class);
+    }
+
+    /**
+     * Get competitions this teacher-club is participating in.
+     */
+    public function competitions()
+    {
+        return $this->belongsToMany(Competition::class, 'competition_participants')
+            ->withPivot(['status', 'team_name', 'registered_at', 'final_score', 'rank'])
+            ->withTimestamps();
+    }
 }

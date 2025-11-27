@@ -37,5 +37,21 @@ class Club extends Model
     {
         return $this->hasMany(TeacherClub::class);
     }
+
+    /**
+     * Get the competitions for this club.
+     */
+    public function competitions()
+    {
+        return $this->hasMany(Competition::class);
+    }
+
+    /**
+     * Get active competitions for this club.
+     */
+    public function activeCompetitions()
+    {
+        return $this->competitions()->active()->published();
+    }
 }
 

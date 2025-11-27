@@ -30,4 +30,22 @@ class Student extends Model
     {
         return $this->belongsTo(SchoolClass::class);
     }
+
+    /**
+     * Get competition participations for this student.
+     */
+    public function competitionParticipations()
+    {
+        return $this->hasMany(CompetitionParticipantStudent::class);
+    }
+
+    /**
+     * Get competitions this student is participating in.
+     */
+    public function competitions()
+    {
+        return $this->belongsToMany(CompetitionParticipant::class, 'competition_participant_students')
+            ->withPivot(['role'])
+            ->withTimestamps();
+    }
 }

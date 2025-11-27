@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\ClubController;
+use App\Http\Controllers\Admin\CompetitionController;
+use App\Http\Controllers\Admin\CompetitionParticipantController;
+use App\Http\Controllers\Admin\CompetitionSubmissionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\Model3dController as AdminModel3dController;
 use App\Http\Controllers\Admin\SchoolController;
@@ -9,6 +12,7 @@ use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VrExperimentController;
 use App\Http\Controllers\Client\ClubController as ClientClubController;
+use App\Http\Controllers\Client\CompetitionController as ClientCompetitionController;
 use App\Http\Controllers\Client\Model3dController as ClientModel3dController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
 use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentController;
@@ -67,6 +71,18 @@ Route::middleware('auth')->group(function () {
         // Student registration routes
         Route::get('/students', [ClientStudentController::class, 'index'])->name('client.students.index');
         Route::post('/students', [ClientStudentController::class, 'store'])->name('client.students.store');
+
+        // Competition routes for teachers
+        Route::prefix('competitions')->name('client.competitions.')->group(function () {
+            Route::get('/', [ClientCompetitionController::class, 'index'])->name('index');
+            Route::get('/my-submissions', [ClientCompetitionController::class, 'mySubmissions'])->name('my-submissions');
+            Route::get('/{competition}', [ClientCompetitionController::class, 'show'])->name('show');
+            Route::get('/{competition}/register', [ClientCompetitionController::class, 'register'])->name('register');
+            Route::post('/{competition}/register', [ClientCompetitionController::class, 'storeRegistration'])->name('register.store');
+            Route::get('/{competition}/submit', [ClientCompetitionController::class, 'createSubmission'])->name('submit');
+            Route::post('/{competition}/submit', [ClientCompetitionController::class, 'storeSubmission'])->name('submit.store');
+            Route::delete('/{competition}/attachment/{attachment}', [ClientCompetitionController::class, 'deleteAttachment'])->name('attachment.delete');
+        });
     });
 });
 
@@ -106,6 +122,46 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/{school}/toggle-status', [SchoolController::class, 'toggleStatus'])->name('toggle-status');
         });
 
+        // Competitions routes
+        Route::prefix('competitions')->name('competitions.')->group(function () {
+            Route::get('/', [CompetitionController::class, 'index'])->name('index');
+            Route::get('/create', [CompetitionController::class, 'create'])->name('create');
+            Route::get('/all-participants', [CompetitionParticipantController::class, 'allParticipants'])->name('all-participants');
+            Route::post('/', [CompetitionController::class, 'store'])->name('store');
+            Route::get('/{competition}', [CompetitionController::class, 'show'])->name('show');
+            Route::get('/{competition}/edit', [CompetitionController::class, 'edit'])->name('edit');
+            Route::put('/{competition}', [CompetitionController::class, 'update'])->name('update');
+            Route::delete('/{competition}', [CompetitionController::class, 'destroy'])->name('destroy');
+            Route::post('/{competition}/update-status', [CompetitionController::class, 'updateStatus'])->name('update-status');
+
+            // Awards routes
+            Route::post('/{competition}/awards', [CompetitionController::class, 'storeAward'])->name('awards.store');
+            Route::put('/{competition}/awards/{award}', [CompetitionController::class, 'updateAward'])->name('awards.update');
+            Route::delete('/{competition}/awards/{award}', [CompetitionController::class, 'destroyAward'])->name('awards.destroy');
+
+            // Participants routes
+            Route::prefix('{competition}/participants')->name('participants.')->group(function () {
+                Route::get('/', [CompetitionParticipantController::class, 'index'])->name('index');
+                Route::get('/{participant}', [CompetitionParticipantController::class, 'show'])->name('show');
+                Route::post('/{participant}/approve', [CompetitionParticipantController::class, 'approve'])->name('approve');
+                Route::post('/{participant}/reject', [CompetitionParticipantController::class, 'reject'])->name('reject');
+                Route::post('/{participant}/disqualify', [CompetitionParticipantController::class, 'disqualify'])->name('disqualify');
+                Route::post('/{participant}/update-score', [CompetitionParticipantController::class, 'updateScore'])->name('update-score');
+                Route::post('/{participant}/assign-award', [CompetitionParticipantController::class, 'assignAward'])->name('assign-award');
+                Route::post('/bulk-approve', [CompetitionParticipantController::class, 'bulkApprove'])->name('bulk-approve');
+                Route::post('/auto-assign-awards', [CompetitionParticipantController::class, 'autoAssignAwards'])->name('auto-assign-awards');
+            });
+
+            // Submissions routes
+            Route::prefix('{competition}/submissions')->name('submissions.')->group(function () {
+                Route::get('/', [CompetitionSubmissionController::class, 'index'])->name('index');
+                Route::get('/{submission}', [CompetitionSubmissionController::class, 'show'])->name('show');
+                Route::post('/{submission}/judge', [CompetitionSubmissionController::class, 'judge'])->name('judge');
+                Route::post('/{submission}/request-revision', [CompetitionSubmissionController::class, 'requestRevision'])->name('request-revision');
+                Route::post('/{submission}/mark-under-review', [CompetitionSubmissionController::class, 'markUnderReview'])->name('mark-under-review');
+            });
+        });
+
         // Progress & Tracking routes
         Route::get('progress', [\App\Http\Controllers\Admin\ProgressController::class, 'index'])->name('progress.index');
         Route::get('progress/student/{user}', [\App\Http\Controllers\Admin\ProgressController::class, 'showStudent'])->name('progress.student');
@@ -119,6 +175,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/', [AdminUserController::class, 'store'])->name('store');
             Route::put('/{user}', [AdminUserController::class, 'update'])->name('update');
             Route::post('/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('toggle-status');
+        });
+
+        // Database Backup routes
+        Route::prefix('database-backup')->name('database-backup.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\DatabaseBackupController::class, 'index'])->name('index');
+            Route::post('/create', [\App\Http\Controllers\Admin\DatabaseBackupController::class, 'create'])->name('create');
+            Route::get('/download/{filename}', [\App\Http\Controllers\Admin\DatabaseBackupController::class, 'download'])->name('download');
+            Route::delete('/delete/{filename}', [\App\Http\Controllers\Admin\DatabaseBackupController::class, 'destroy'])->name('destroy');
         });
     });
 });
