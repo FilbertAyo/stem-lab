@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VrExperimentController;
 use App\Http\Controllers\Client\ClubController as ClientClubController;
 use App\Http\Controllers\Client\CompetitionController as ClientCompetitionController;
+use App\Http\Controllers\PublicCompetitionController;
 use App\Http\Controllers\Client\Model3dController as ClientModel3dController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
 use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentController;
@@ -22,8 +23,13 @@ use App\Models\Model3d;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('client.front.welcome');
+    $competitions = \App\Http\Controllers\PublicCompetitionController::getFeaturedCompetitions(3);
+    return view('client.front.welcome', compact('competitions'));
 });
+
+// Public Competitions (accessible without login)
+Route::get('/explore/competitions', [PublicCompetitionController::class, 'index'])->name('competitions.public');
+Route::get('/explore/competitions/{competition}', [PublicCompetitionController::class, 'show'])->name('competitions.public.show');
 
 Route::get('/dashboard', function () {
     $latestModels = Model3d::with('subject')->latest()->take(6)->get();

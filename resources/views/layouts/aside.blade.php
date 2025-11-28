@@ -64,10 +64,10 @@
                 @if(auth()->user()->role === 'teacher')
                     <li class="sidebar-item {{ request()->routeIs('client.competitions.*') ? 'active' : '' }}">
                         <a href="{{ route('client.competitions.index') }}" class="sidebar-link">
-                            <i class="bi bi-trophy"></i>
+                        <i class="bi bi-trophy"></i>
                             <span>Competitions</span>
-                        </a>
-                    </li>
+                    </a>
+                </li>
                 @endif
 
 

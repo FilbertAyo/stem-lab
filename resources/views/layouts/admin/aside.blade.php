@@ -117,7 +117,7 @@
               <li class="pc-item">
                 <a href="{{ route('admin.competitions.create') }}" class="pc-link">
                   <span class="pc-mtext">Create Competition</span>
-                </a>
+            </a>
               </li>
               <li class="pc-item">
                 <a href="{{ route('admin.competitions.all-participants') }}" class="pc-link">
