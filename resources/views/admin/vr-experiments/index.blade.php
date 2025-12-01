@@ -56,7 +56,7 @@
                             <tbody>
                                 @forelse($vrExperiments as $experiment)
                                     <tr>
-                                        <td>{{ $experiment->id }}</td>
+                                        <td>{{ $loop->index + 1 + ($vrExperiments->currentPage() - 1) * $vrExperiments->perPage() }}</td>
                                         <td>
                                             @if($experiment->thumbnail)
                                                 <img src="{{ asset('storage/' . $experiment->thumbnail) }}" 

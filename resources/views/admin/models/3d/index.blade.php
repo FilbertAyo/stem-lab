@@ -55,9 +55,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($model3ds as $model)
+                                @forelse($model3ds as $index => $model)
                                     <tr>
-                                        <td>{{ $model->id }}</td>
+                                        <td>{{ $index + 1 + ($model3ds->currentPage() - 1) * $model3ds->perPage() }}</td>
                                         <td>{{ $model->name }}</td>
                                         <td>{{ $model->subject->subject_name ?? 'N/A' }}</td>
                                         <td>{{ Str::limit($model->description ?? 'N/A', 50) }}</td>
