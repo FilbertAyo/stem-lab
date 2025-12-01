@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Services\CacheService;
 use App\Models\Subject;
 use App\Models\VrExperiment;
 use Illuminate\Http\Request;
@@ -22,20 +23,21 @@ class VrExperimentController extends Controller
         // Check if we should show grouped view (default when no filters/search)
         $showGroupedView = $sort === 'by_subject' && !$search && !$subjectId;
 
-        $subjects = Subject::where('is_active', true)
-            ->orderBy('display_order')
-            ->get();
+        // Get cached subjects
+        $subjects = CacheService::getActiveSubjects();
 
         // Get total count for stats
         $totalExperiments = VrExperiment::where('is_active', true)->count();
 
         if ($showGroupedView) {
-            // Grouped view: Get all active experiments grouped by subject
-            $allExperiments = VrExperiment::with('subject')
-                ->where('is_active', true)
+            // Grouped view: Get all active experiments grouped by subject using database query
+            $allExperiments = VrExperiment::active()
+                ->withSubject()
+                ->orderBy('subject_id')
+                ->orderBy('name')
                 ->get();
 
-            // Group experiments by subject
+            // Group experiments by subject (more efficient than loading all then grouping)
             $experimentsBySubject = $allExperiments->groupBy('subject_id');
             $subjectsWithExperiments = $subjects->filter(fn ($s) => $experimentsBySubject->has($s->id));
 
@@ -53,13 +55,10 @@ class VrExperimentController extends Controller
         }
 
         // Standard paginated view with filters/sorting
-        $query = VrExperiment::with('subject')
-            ->where('is_active', true)
-            ->when($subjectId, fn ($q) => $q->where('subject_id', $subjectId))
-            ->when($search, fn ($q) => $q->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-            }));
+        $query = VrExperiment::active()
+            ->withSubject()
+            ->when($subjectId, fn ($q) => $q->forSubject($subjectId))
+            ->when($search, fn ($q) => $q->search($search));
 
         // Apply sorting
         $query = match ($sort) {

@@ -46,7 +46,9 @@
                                             <img src="{{ asset('storage/' . $club->image_path) }}"
                                                  alt="{{ $club->name }}"
                                                  class="w-100 h-100"
-                                                 style="object-fit: cover;">
+                                                 style="object-fit: cover;"
+                                                 loading="lazy"
+                                                 decoding="async">
                                         </div>
                                     @else
                                         <div class="rounded-top d-flex flex-column justify-content-center align-items-center bg-light" style="height: 220px;">

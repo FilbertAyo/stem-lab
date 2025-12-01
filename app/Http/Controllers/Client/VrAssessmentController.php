@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Services\CacheService;
 use App\Models\VrAssessmentAttempt;
 use App\Models\VrQuestion;
 use App\Models\VrQuestionAnswer;
@@ -11,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class VrAssessmentController extends Controller
 {
@@ -19,17 +21,9 @@ class VrAssessmentController extends Controller
      */
     public function index(): View
     {
-        $user = auth()->user();
-        
-        // Get all active question banks with their experiments
-        $questionBanks = VrQuestionBank::with(['vrExperiment.schoolClass', 'vrExperiment.subject'])
-            ->where('is_active', true)
-            ->whereHas('vrExperiment', function ($query) {
-                $query->where('is_active', true);
-            })
-            ->withCount('questions')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $user = Auth::user();
+        // Get cached active question banks
+        $questionBanks = CacheService::getActiveQuestionBanks();
 
         // Get user's attempts for progress tracking
         $userAttempts = VrAssessmentAttempt::where('user_id', $user->id)
@@ -45,15 +39,19 @@ class VrAssessmentController extends Controller
      */
     public function show(VrQuestionBank $questionBank): View
     {
-        // Ensure the bank is active
-        if (!$questionBank->is_active || !$questionBank->vrExperiment->is_active) {
+        $questionBank->load(['vrExperiment.schoolClass', 'vrExperiment.subject']);
+        
+        // Ensure the bank, experiment, and subject are all active
+        if (!$questionBank->is_active 
+            || !$questionBank->vrExperiment->is_active 
+            || !$questionBank->vrExperiment->subject 
+            || !$questionBank->vrExperiment->subject->is_active) {
             abort(404);
         }
 
-        $questionBank->load(['vrExperiment.schoolClass', 'vrExperiment.subject']);
         $questionBank->loadCount('questions');
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Get user's previous attempts
         $previousAttempts = VrAssessmentAttempt::where('user_id', $user->id)
@@ -77,7 +75,17 @@ class VrAssessmentController extends Controller
      */
     public function start(VrQuestionBank $questionBank): RedirectResponse
     {
-        $user = auth()->user();
+        $user = Auth::user();
+        
+        $questionBank->load(['vrExperiment.subject']);
+        
+        // Ensure the bank, experiment, and subject are all active
+        if (!$questionBank->is_active 
+            || !$questionBank->vrExperiment->is_active 
+            || !$questionBank->vrExperiment->subject 
+            || !$questionBank->vrExperiment->subject->is_active) {
+            abort(404);
+        }
 
         // Check for existing in-progress attempt
         $attempt = VrAssessmentAttempt::where('user_id', $user->id)
@@ -101,10 +109,10 @@ class VrAssessmentController extends Controller
     /**
      * Display the quiz-taking interface.
      */
-    public function take(VrAssessmentAttempt $attempt): View
+    public function take(VrAssessmentAttempt $attempt): View|RedirectResponse
     {
         // Ensure the attempt belongs to the current user and is not completed
-        if ($attempt->user_id !== auth()->id()) {
+        if ($attempt->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -140,7 +148,7 @@ class VrAssessmentController extends Controller
     public function saveAnswer(Request $request, VrAssessmentAttempt $attempt): JsonResponse
     {
         // Ensure the attempt belongs to the current user and is not completed
-        if ($attempt->user_id !== auth()->id()) {
+        if ($attempt->user_id !== Auth::id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -189,7 +197,7 @@ class VrAssessmentController extends Controller
     public function submit(VrAssessmentAttempt $attempt): RedirectResponse
     {
         // Ensure the attempt belongs to the current user and is not completed
-        if ($attempt->user_id !== auth()->id()) {
+        if ($attempt->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -238,10 +246,10 @@ class VrAssessmentController extends Controller
     /**
      * Display the quiz results.
      */
-    public function results(VrAssessmentAttempt $attempt): View
+    public function results(VrAssessmentAttempt $attempt): View|RedirectResponse
     {
         // Ensure the attempt belongs to the current user
-        if ($attempt->user_id !== auth()->id()) {
+        if ($attempt->user_id !== Auth::id()) {
             abort(403);
         }
 

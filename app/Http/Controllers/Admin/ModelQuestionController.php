@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Model3d;
 use App\Models\ModelQuestion;
+use App\Services\CacheService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,9 +15,21 @@ class ModelQuestionController extends Controller
     /**
      * Display questions for a specific 3D model.
      */
-    public function index(Model3d $model3d): View
+    public function index(Request $request, Model3d $model3d): View
     {
-        $questions = $model3d->questions()->orderBy('order')->get();
+        $query = $model3d->questions();
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('question_text', 'like', '%' . $search . '%')
+                  ->orWhere('explanation', 'like', '%' . $search . '%')
+                  ->orWhere('correct_answer', 'like', '%' . $search . '%');
+            });
+        }
+
+        $questions = $query->ordered()->paginate(15)->withQueryString();
         return view('admin.models.3d.questions.index', compact('model3d', 'questions'));
     }
 
@@ -59,6 +72,9 @@ class ModelQuestionController extends Controller
         }
 
         ModelQuestion::create($validated);
+
+        // Clear questions cache for this model
+        CacheService::clearModelQuestionsCache($model3d->id);
 
         return redirect()->route('admin.models.3d.questions.index', $model3d)
             ->with('success', 'Question created successfully.');
@@ -108,6 +124,9 @@ class ModelQuestionController extends Controller
 
         $question->update($validated);
 
+        // Clear questions cache for this model
+        CacheService::clearModelQuestionsCache($model3d->id);
+
         return redirect()->route('admin.models.3d.questions.index', $model3d)
             ->with('success', 'Question updated successfully.');
     }
@@ -123,6 +142,9 @@ class ModelQuestionController extends Controller
         }
 
         $question->delete();
+
+        // Clear questions cache for this model
+        CacheService::clearModelQuestionsCache($model3d->id);
 
         return redirect()->route('admin.models.3d.questions.index', $model3d)
             ->with('success', 'Question deleted successfully.');
@@ -143,6 +165,9 @@ class ModelQuestionController extends Controller
                 ->where('model_id', $model3d->id)
                 ->update(['order' => $index + 1]);
         }
+
+        // Clear questions cache for this model
+        CacheService::clearModelQuestionsCache($model3d->id);
 
         return redirect()->route('admin.models.3d.questions.index', $model3d)
             ->with('success', 'Question order updated successfully.');

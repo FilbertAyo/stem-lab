@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -73,5 +74,29 @@ class User extends Authenticatable
     public function teacherClubs()
     {
         return $this->hasMany(TeacherClub::class);
+    }
+
+    /**
+     * Scope a query to only include users with a specific role.
+     */
+    public function scopeRole(Builder $query, string $role): Builder
+    {
+        return $query->where('role', $role);
+    }
+
+    /**
+     * Scope a query to only include active users.
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope a query to only include users with model question answers.
+     */
+    public function scopeWithAnswers(Builder $query): Builder
+    {
+        return $query->whereHas('modelQuestionAnswers');
     }
 }

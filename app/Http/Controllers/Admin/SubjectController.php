@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Subject;
+use App\Services\CacheService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -67,6 +68,9 @@ class SubjectController extends Controller
         unset($validated['icon'], $validated['image']);
 
         Subject::create($validated);
+
+        // Cache cleared automatically via model event, but explicit for clarity
+        CacheService::clearSubjectCaches();
 
         return redirect()->route('subjects.index')
             ->with('success', 'Subject created successfully.');
@@ -135,6 +139,9 @@ class SubjectController extends Controller
 
         $subject->update($validated);
 
+        // Cache cleared automatically via model event, but explicit for clarity
+        CacheService::clearSubjectCaches();
+
         return redirect()->route('subjects.index')
             ->with('success', 'Subject updated successfully.');
     }
@@ -153,6 +160,9 @@ class SubjectController extends Controller
         }
 
         $subject->delete();
+
+        // Cache cleared automatically via model event, but explicit for clarity
+        CacheService::clearSubjectCaches();
 
         return redirect()->route('subjects.index')
             ->with('success', 'Subject deleted successfully.');

@@ -55,6 +55,7 @@
     </head>
     <body
         class="{{ $bodyClass }}"
+        data-page="{{ $page }}"
         x-data="landingTheme()"
         x-init="init()"
         :class="{ 'b eh dark': darkMode === true }"
@@ -67,8 +68,8 @@
             <div class="bb ze ki xn 2xl:ud-px-0 oo wf yf i">
                 <div class="vd to/4 tc wf yf">
                     <a href="{{ url('/') }}">
-                        <img class="om" src="{{ asset('images/logo/logo-dark.png') }}" alt="{{ config('app.name') }} Logo" style="height:50px;"/>
-                        <img class="xc nm" src="{{ asset('images/logo/logo-white.png') }}" alt="{{ config('app.name') }} Logo" style="height:50px;"/>
+                        <img class="om" src="{{ asset('images/logo/logo-dark.png') }}" alt="{{ config('app.name') }} Logo" style="height:50px;" loading="eager" fetchpriority="high" width="150" height="50"/>
+                        <img class="xc nm" src="{{ asset('images/logo/logo-white.png') }}" alt="{{ config('app.name') }} Logo" style="height:50px;" loading="eager" fetchpriority="high" width="150" height="50"/>
                     </a>
                     <button class="po rc" @click="navigationOpen = !navigationOpen">
                         <span class="rc i pf re pd">
@@ -200,8 +201,8 @@
                     <div class="tc uf ap gg fp">
                         <div class="animate_top zd/2 to/4">
                             <a href="{{ url('/') }}">
-                                <img src="{{ asset('images/logo/logo-dark.png') }}" alt="{{ config('app.name') }} Logo" class="om" style="height:50px;"/>
-                                <img src="{{ asset('images/logo/logo-white.png') }}" alt="{{ config('app.name') }} Logo" class="xc nm" style="height:50px;"/>
+                                <img src="{{ asset('images/logo/logo-dark.png') }}" alt="{{ config('app.name') }} Logo" class="om" style="height:50px;" loading="lazy" width="150" height="50"/>
+                                <img src="{{ asset('images/logo/logo-white.png') }}" alt="{{ config('app.name') }} Logo" class="xc nm" style="height:50px;" loading="lazy" width="150" height="50"/>
                             </a>
                             <p class="lc fb">Adilisha is a non-profit organization that empowers girls in STEM education across Tanzania.</p>
                             <ul class="tc wf cg">
@@ -346,7 +347,7 @@
         <script>
             function landingTheme() {
                 return {
-                    page: @json($page),
+                    page: document.body.getAttribute('data-page') || 'home',
                     darkMode: JSON.parse(window.localStorage.getItem('darkMode') ?? 'false'),
                     stickyMenu: false,
                     navigationOpen: false,

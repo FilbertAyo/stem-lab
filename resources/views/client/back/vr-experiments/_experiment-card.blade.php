@@ -4,7 +4,9 @@
             <img src="{{ asset('storage/' . $experiment->thumbnail) }}"
                  alt="{{ $experiment->name }} thumbnail"
                  class="w-100 h-100"
-                 style="object-fit: cover;">
+                 style="object-fit: cover;"
+                 loading="lazy"
+                 decoding="async">
         @else
             <div class="d-flex flex-column justify-content-center align-items-center bg-gradient-primary h-100 w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                 <i class="bi bi-vr text-white fs-1"></i>

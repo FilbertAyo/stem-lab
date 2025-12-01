@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Model3d;
-use App\Models\Subject;
+use App\Services\CacheService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -15,9 +15,24 @@ class Model3dController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $model3ds = Model3d::with('subject')->withCount('questions')->latest()->get();
+        $query = Model3d::withSubject()->withCount('questions');
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%')
+                  ->orWhere('tags', 'like', '%' . $search . '%')
+                  ->orWhereHas('subject', function ($subjectQuery) use ($search) {
+                      $subjectQuery->where('subject_name', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
+        $model3ds = $query->latest()->paginate(15)->withQueryString();
         return view('admin.models.3d.index', compact('model3ds'));
     }
 
@@ -26,7 +41,7 @@ class Model3dController extends Controller
      */
     public function create(): View
     {
-        $subjects = Subject::where('is_active', true)->orderBy('subject_name')->get();
+        $subjects = CacheService::getActiveSubjects();
         return view('admin.models.3d.create', compact('subjects'));
     }
 
@@ -56,6 +71,7 @@ class Model3dController extends Controller
             'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // Max 5MB
             'description' => ['nullable', 'string'],
             'tags' => ['nullable', 'string', 'max:500'],
+            'is_active' => ['boolean'],
         ]);
 
         // Handle GLB file upload - preserve .glb extension
@@ -76,7 +92,13 @@ class Model3dController extends Controller
             $validated['thumbnail'] = $thumbnailPath;
         }
 
+        // Set is_active default
+        $validated['is_active'] = $request->has('is_active');
+
         Model3d::create($validated);
+
+        // Clear model-related caches
+        CacheService::clearModelCaches();
 
         return redirect()->route('admin.models.3d.index')
             ->with('success', '3D model created successfully.');
@@ -96,7 +118,7 @@ class Model3dController extends Controller
      */
     public function edit(Model3d $model3d): View
     {
-        $subjects = Subject::where('is_active', true)->orderBy('subject_name')->get();
+        $subjects = CacheService::getActiveSubjects();
         return view('admin.models.3d.edit', compact('model3d', 'subjects'));
     }
 
@@ -127,6 +149,7 @@ class Model3dController extends Controller
             'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // Max 5MB
             'description' => ['nullable', 'string'],
             'tags' => ['nullable', 'string', 'max:500'],
+            'is_active' => ['boolean'],
         ]);
 
         // Handle GLB file upload - preserve .glb extension
@@ -161,7 +184,13 @@ class Model3dController extends Controller
             unset($validated['thumbnail']);
         }
 
+        // Set is_active
+        $validated['is_active'] = $request->has('is_active');
+
         $model3d->update($validated);
+
+        // Clear model-related caches
+        CacheService::clearModelCaches();
 
         return redirect()->route('admin.models.3d.index')
             ->with('success', '3D model updated successfully.');
@@ -184,6 +213,9 @@ class Model3dController extends Controller
 
         // Delete the model record
         $model3d->delete();
+
+        // Clear model-related caches
+        CacheService::clearModelCaches();
 
         return redirect()->route('admin.models.3d.index')
             ->with('success', '3D model and associated files deleted successfully.');

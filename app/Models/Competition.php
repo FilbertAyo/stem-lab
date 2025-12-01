@@ -162,7 +162,15 @@ class Competition extends Model
      */
     public function scopePublished($query)
     {
-        return $query->whereIn('status', ['published', 'ongoing', 'judging', 'completed']);
+        return $query->whereIn('status', ['published', 'ongoing']);
+    }
+
+    /**
+     * Scope for public visible competitions.
+     */
+    public function scopePublicVisible($query)
+    {
+        return $query->whereIn('status', ['published', 'ongoing', 'completed']);
     }
 
     /**

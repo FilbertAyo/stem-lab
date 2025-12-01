@@ -16,48 +16,62 @@ class ProgressController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = ModelQuestionAnswer::with(['user', 'model3d', 'question']);
+        // Use database aggregation instead of loading all records
+        $baseQuery = ModelQuestionAnswer::query();
 
         // Filter by model if provided
         if ($request->has('model_id') && $request->model_id) {
-            $query->where('model_id', $request->model_id);
+            $baseQuery->where('model_id', $request->model_id);
         }
 
         // Filter by user if provided
         if ($request->has('user_id') && $request->user_id) {
-            $query->where('user_id', $request->user_id);
+            $baseQuery->where('user_id', $request->user_id);
         }
 
-        // Get all answers and group by user_id and model_id
-        $allAnswers = $query->get();
-        
-        // Group by user_id and model_id
-        $grouped = $allAnswers->groupBy(function ($answer) {
-            return $answer->user_id . '_' . $answer->model_id;
-        });
+        // Get aggregated progress data using database aggregation
+        $progressData = $baseQuery
+            ->selectRaw('
+                user_id,
+                model_id,
+                COUNT(*) as total_questions,
+                SUM(CASE WHEN is_correct = true THEN 1 ELSE 0 END) as correct_answers,
+                SUM(score) as total_score,
+                MAX(created_at) as last_answered
+            ')
+            ->groupBy('user_id', 'model_id')
+            ->orderByDesc('last_answered')
+            ->get();
 
-        // Create aggregated data for each student-model combination
-        $progressData = $grouped->map(function ($answers, $key) {
-            $firstAnswer = $answers->first();
-            $totalQuestions = $answers->count();
-            $correctAnswers = $answers->where('is_correct', true)->count();
-            $totalScore = $answers->sum('score');
-            $percentage = $totalQuestions > 0 ? round(($correctAnswers / $totalQuestions) * 100, 2) : 0;
-            $lastAnswered = $answers->max('created_at');
+        // Extract unique IDs from the results (more efficient than cloning query)
+        $userIds = $progressData->pluck('user_id')->unique()->values()->all();
+        $modelIds = $progressData->pluck('model_id')->unique()->values()->all();
+
+        // Eager load users and models only if we have IDs
+        $users = !empty($userIds) ? User::whereIn('id', $userIds)->get()->keyBy('id') : collect();
+        $models = !empty($modelIds) ? Model3d::whereIn('id', $modelIds)->get()->keyBy('id') : collect();
+
+        // Transform aggregated data and attach relationships
+        $progressData = $progressData->map(function ($item) use ($users, $models) {
+            $percentage = $item->total_questions > 0 
+                ? round(($item->correct_answers / $item->total_questions) * 100, 2) 
+                : 0;
 
             return (object) [
-                'user' => $firstAnswer->user,
-                'model3d' => $firstAnswer->model3d,
-                'total_questions' => $totalQuestions,
-                'correct_answers' => $correctAnswers,
-                'total_score' => $totalScore,
+                'user' => $users->get($item->user_id),
+                'model3d' => $models->get($item->model_id),
+                'total_questions' => (int) $item->total_questions,
+                'correct_answers' => (int) $item->correct_answers,
+                'total_score' => (int) $item->total_score,
                 'percentage' => $percentage,
-                'last_answered' => $lastAnswered,
-                'answers' => $answers, // Keep for detail view
+                'last_answered' => $item->last_answered,
             ];
-        })->sortByDesc('last_answered')->values();
+        })->filter(function ($item) {
+            // Filter out items where user or model was not found (shouldn't happen, but safety check)
+            return $item->user && $item->model3d;
+        });
 
-        // Paginate manually
+        // Paginate the results
         $perPage = 20;
         $currentPage = $request->get('page', 1);
         $items = $progressData->slice(($currentPage - 1) * $perPage, $perPage)->all();
@@ -74,19 +88,26 @@ class ProgressController extends Controller
         $paginated->appends($request->query());
 
         // Get all models for filter dropdown
-        $models = Model3d::withCount('questions')->orderBy('name')->get();
+        $models = Model3d::withCount('questions')->ordered()->get();
 
-        // Get all students who have answered questions
-        $students = User::whereHas('modelQuestionAnswers')
+        // Get all students who have answered questions (optimized query)
+        $students = User::withAnswers()
             ->orderBy('name')
             ->get();
 
-        // Calculate statistics
+        // Calculate statistics using single query with aggregation
+        $statsQuery = ModelQuestionAnswer::selectRaw('
+            COUNT(*) as total_answers,
+            SUM(CASE WHEN is_correct = true THEN 1 ELSE 0 END) as total_correct,
+            COUNT(DISTINCT user_id) as total_students,
+            COUNT(DISTINCT model_id) as total_models
+        ')->first();
+
         $stats = [
-            'total_answers' => ModelQuestionAnswer::count(),
-            'total_correct' => ModelQuestionAnswer::where('is_correct', true)->count(),
-            'total_students' => User::whereHas('modelQuestionAnswers')->distinct()->count(),
-            'total_models' => Model3d::whereHas('answers')->distinct()->count(),
+            'total_answers' => (int) $statsQuery->total_answers,
+            'total_correct' => (int) $statsQuery->total_correct,
+            'total_students' => (int) $statsQuery->total_students,
+            'total_models' => (int) $statsQuery->total_models,
         ];
 
         return view('admin.progress.index', compact('paginated', 'models', 'students', 'stats'));
@@ -123,12 +144,21 @@ class ProgressController extends Controller
         // Group by model
         $answersByModel = $answers->groupBy('model_id');
 
-        // Calculate statistics for this student
+        // Calculate statistics using database aggregation for better performance
+        $statsQuery = ModelQuestionAnswer::where('user_id', $user->id)
+            ->selectRaw('
+                COUNT(*) as total_answers,
+                SUM(CASE WHEN is_correct = true THEN 1 ELSE 0 END) as total_correct,
+                COUNT(DISTINCT model_id) as total_models,
+                AVG(score) * 100 as average_score
+            ')
+            ->first();
+
         $stats = [
-            'total_answers' => $answers->count(),
-            'total_correct' => $answers->where('is_correct', true)->count(),
-            'total_models' => $answersByModel->count(),
-            'average_score' => $answers->count() > 0 ? round(($answers->sum('score') / $answers->count()) * 100, 2) : 0,
+            'total_answers' => (int) $statsQuery->total_answers,
+            'total_correct' => (int) $statsQuery->total_correct,
+            'total_models' => (int) $statsQuery->total_models,
+            'average_score' => round((float) $statsQuery->average_score, 2),
         ];
 
         return view('admin.progress.student', compact('user', 'answers', 'answersByModel', 'stats'));
@@ -147,12 +177,21 @@ class ProgressController extends Controller
         // Group by user
         $answersByUser = $answers->groupBy('user_id');
 
-        // Calculate statistics for this model
+        // Calculate statistics using database aggregation for better performance
+        $statsQuery = ModelQuestionAnswer::where('model_id', $model3d->id)
+            ->selectRaw('
+                COUNT(*) as total_answers,
+                SUM(CASE WHEN is_correct = true THEN 1 ELSE 0 END) as total_correct,
+                COUNT(DISTINCT user_id) as total_students,
+                AVG(score) * 100 as average_score
+            ')
+            ->first();
+
         $stats = [
-            'total_answers' => $answers->count(),
-            'total_correct' => $answers->where('is_correct', true)->count(),
-            'total_students' => $answersByUser->count(),
-            'average_score' => $answers->count() > 0 ? round(($answers->sum('score') / $answers->count()) * 100, 2) : 0,
+            'total_answers' => (int) $statsQuery->total_answers,
+            'total_correct' => (int) $statsQuery->total_correct,
+            'total_students' => (int) $statsQuery->total_students,
+            'average_score' => round((float) $statsQuery->average_score, 2),
         ];
 
         return view('admin.progress.model', compact('model3d', 'answers', 'answersByUser', 'stats'));

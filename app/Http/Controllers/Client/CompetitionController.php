@@ -24,18 +24,22 @@ class CompetitionController extends Controller
     {
         $user = Auth::user();
         
-        // Get the clubs the teacher has joined
-        $teacherClubs = $user->teacherClubs()->with('club')->get();
-        $clubIds = $teacherClubs->pluck('club_id')->toArray();
+        // Get club IDs the teacher has joined (more efficient - only get IDs)
+        $clubIds = $user->teacherClubs()->pluck('club_id')->toArray();
 
-        // Get competitions for those clubs
-        $competitions = Competition::whereIn('club_id', $clubIds)
-            ->where('is_active', true)
-            ->whereIn('status', ['published', 'ongoing'])
-            ->with(['club', 'awards'])
-            ->withCount('participants')
-            ->orderBy('competition_start', 'desc')
-            ->get();
+        // Get competitions for those clubs (only if teacher has clubs)
+        $competitions = !empty($clubIds)
+            ? Competition::active()
+                ->published()
+                ->whereIn('club_id', $clubIds)
+                ->with(['club', 'awards'])
+                ->withCount('participants')
+                ->orderBy('competition_start', 'desc')
+                ->get()
+            : collect();
+
+        // Get teacher clubs with relationships only if needed for display
+        $teacherClubs = $user->teacherClubs()->with('club')->get();
 
         // Get competitions the teacher has already joined
         $joinedCompetitionIds = CompetitionParticipant::whereIn('teacher_club_id', $teacherClubs->pluck('id'))
@@ -67,7 +71,7 @@ class CompetitionController extends Controller
     /**
      * Show registration form for a competition.
      */
-    public function register(Competition $competition): View
+    public function register(Competition $competition): View|\Illuminate\Http\RedirectResponse
     {
         $user = Auth::user();
         
@@ -195,7 +199,7 @@ class CompetitionController extends Controller
     /**
      * Show submission form.
      */
-    public function createSubmission(Competition $competition): View
+    public function createSubmission(Competition $competition): View|\Illuminate\Http\RedirectResponse
     {
         $user = Auth::user();
         $teacherClub = $user->teacherClubs()->where('club_id', $competition->club_id)->first();

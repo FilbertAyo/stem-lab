@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,4 +33,20 @@ class Subject extends Model
         'is_active' => 'boolean',
         'display_order' => 'integer',
     ];
+
+    /**
+     * Scope a query to only include active subjects.
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope a query to order subjects by display order.
+     */
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('display_order');
+    }
 }

@@ -1048,33 +1048,82 @@ class ModelQuestionSeeder extends Seeder
             ],
         ];
 
-        // Get all models from database
-        $models = Model3d::all();
+        // Get all models from database (only name and id for efficiency)
+        $models = Model3d::select('id', 'name')->get()->keyBy('name');
 
-        foreach ($models as $model) {
-            if (isset($questionsData[$model->name])) {
-                $order = 1;
-                foreach ($questionsData[$model->name] as $questionData) {
-                    ModelQuestion::updateOrCreate(
-                        [
-                            'model_id' => $model->id,
-                            'question_text' => $questionData['question_text'],
-                        ],
-                        [
-                            'model_id' => $model->id,
-                            'question_type' => $questionData['question_type'],
-                            'question_text' => $questionData['question_text'],
-                            'options' => $questionData['options'],
-                            'correct_answer' => $questionData['correct_answer'],
-                            'explanation' => $questionData['explanation'],
-                            'order' => $order++,
-                        ]
-                    );
+        // Prepare bulk insert data
+        $bulkInsertData = [];
+        $bulkUpdateData = [];
+
+        foreach ($questionsData as $modelName => $questions) {
+            if (!$models->has($modelName)) {
+                continue;
+            }
+
+            $model = $models->get($modelName);
+            $order = 1;
+
+            // Get existing questions for this model in one query (more efficient than N queries per question)
+            $existingQuestions = ModelQuestion::where('model_id', $model->id)
+                ->pluck('id', 'question_text')
+                ->toArray();
+
+            foreach ($questions as $questionData) {
+                $questionText = $questionData['question_text'];
+                
+                // Check if question already exists using the pre-loaded map
+                $existingQuestionId = $existingQuestions[$questionText] ?? null;
+
+                if ($existingQuestionId) {
+                    // Update existing question
+                    $bulkUpdateData[] = [
+                        'id' => $existingQuestionId,
+                        'model_id' => $model->id,
+                        'question_type' => $questionData['question_type'],
+                        'question_text' => $questionText,
+                        'options' => $questionData['options'] ? json_encode($questionData['options']) : null,
+                        'correct_answer' => $questionData['correct_answer'],
+                        'explanation' => $questionData['explanation'] ?? null,
+                        'order' => $order,
+                    ];
+                } else {
+                    // Prepare for insert
+                    $bulkInsertData[] = [
+                        'model_id' => $model->id,
+                        'question_type' => $questionData['question_type'],
+                        'question_text' => $questionText,
+                        'options' => $questionData['options'] ? json_encode($questionData['options']) : null,
+                        'correct_answer' => $questionData['correct_answer'],
+                        'explanation' => $questionData['explanation'] ?? null,
+                        'order' => $order,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
                 }
+                $order++;
+            }
+        }
+
+        // Bulk insert new questions
+        if (!empty($bulkInsertData)) {
+            // Chunk inserts to avoid memory issues with large datasets
+            foreach (array_chunk($bulkInsertData, 500) as $chunk) {
+                ModelQuestion::insert($chunk);
+            }
+        }
+
+        // Bulk update existing questions (more efficient than individual updates)
+        if (!empty($bulkUpdateData)) {
+            foreach ($bulkUpdateData as $updateData) {
+                $id = $updateData['id'];
+                unset($updateData['id']);
+                ModelQuestion::where('id', $id)->update($updateData);
             }
         }
     }
 }
+
+
 
 
 

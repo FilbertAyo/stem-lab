@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -57,6 +58,41 @@ class VrExperiment extends Model
     public function questionBanks(): HasMany
     {
         return $this->hasMany(VrQuestionBank::class);
+    }
+
+    /**
+     * Scope a query to only include active experiments.
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope a query to include the subject relationship.
+     */
+    public function scopeWithSubject(Builder $query): Builder
+    {
+        return $query->with('subject');
+    }
+
+    /**
+     * Scope a query to filter by subject.
+     */
+    public function scopeForSubject(Builder $query, int $subjectId): Builder
+    {
+        return $query->where('subject_id', $subjectId);
+    }
+
+    /**
+     * Scope a query to search experiments by name or description.
+     */
+    public function scopeSearch(Builder $query, string $search): Builder
+    {
+        return $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('description', 'like', "%{$search}%");
+        });
     }
 }
 

@@ -15,7 +15,7 @@
                 <h3 class="mb-1">VR Experiments Library</h3>
                 <p class="text-muted mb-0">
                     Explore immersive virtual reality STEM experiments.
-                    <span class="badge bg-primary ms-1">{{ $totalExperiments }} experiments</span>
+                    <!-- <span class="badge bg-primary ms-1">{{ $totalExperiments }} experiments</span> -->
                 </p>
             </div>
 

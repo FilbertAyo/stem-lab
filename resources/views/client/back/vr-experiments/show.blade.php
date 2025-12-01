@@ -24,7 +24,9 @@
                                 <img src="{{ asset('storage/' . $vrExperiment->thumbnail) }}"
                                      alt="{{ $vrExperiment->name }}"
                                      class="w-100 h-100"
-                                     style="object-fit: cover; border-radius: 0.5rem 0.5rem 0 0;">
+                                     style="object-fit: cover; border-radius: 0.5rem 0.5rem 0 0;"
+                                     loading="lazy"
+                                     decoding="async">
                             @else
                                 <div class="d-flex flex-column justify-content-center align-items-center h-100 w-100"
                                      style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 0.5rem 0.5rem 0 0;">

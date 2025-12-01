@@ -23,13 +23,10 @@
                 <div class="card-body py-3">
                     <form method="GET" action="{{ route('admin.competitions.index') }}" class="row g-3 align-items-end">
                         <div class="col-md-3">
-                            <label class="form-label small">Search</label>
                             <input type="text" name="search" class="form-control" placeholder="Competition name..." value="{{ request('search') }}">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label small">Club</label>
                             <select name="club_id" class="form-select">
-                                <option value="">All Clubs</option>
                                 @foreach($clubs as $club)
                                     <option value="{{ $club->id }}" {{ request('club_id') == $club->id ? 'selected' : '' }}>
                                         {{ $club->name }}
@@ -38,7 +35,6 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label small">Status</label>
                             <select name="status" class="form-select">
                                 <option value="">All Status</option>
                                 <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>

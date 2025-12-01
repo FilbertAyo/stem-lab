@@ -16,9 +16,27 @@ class VrExperimentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $vrExperiments = VrExperiment::with(['schoolClass', 'subject'])->latest()->get();
+        $query = VrExperiment::with(['schoolClass', 'subject'])->withSubject();
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%')
+                  ->orWhere('external_url', 'like', '%' . $search . '%')
+                  ->orWhereHas('subject', function ($subjectQuery) use ($search) {
+                      $subjectQuery->where('subject_name', 'like', '%' . $search . '%');
+                  })
+                  ->orWhereHas('schoolClass', function ($classQuery) use ($search) {
+                      $classQuery->where('name', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
+        $vrExperiments = $query->latest()->paginate(15)->withQueryString();
         return view('admin.vr-experiments.index', compact('vrExperiments'));
     }
 
@@ -27,8 +45,8 @@ class VrExperimentController extends Controller
      */
     public function create(): View
     {
-        $classes = SchoolClass::where('is_active', true)->orderBy('name')->get();
-        $subjects = Subject::where('is_active', true)->orderBy('subject_name')->get();
+        $classes = SchoolClass::active()->ordered()->get();
+        $subjects = \App\Services\CacheService::getActiveSubjects();
         return view('admin.vr-experiments.create', compact('classes', 'subjects'));
     }
 
@@ -67,8 +85,8 @@ class VrExperimentController extends Controller
      */
     public function edit(VrExperiment $vrExperiment): View
     {
-        $classes = SchoolClass::where('is_active', true)->orderBy('name')->get();
-        $subjects = Subject::where('is_active', true)->orderBy('subject_name')->get();
+        $classes = SchoolClass::active()->ordered()->get();
+        $subjects = \App\Services\CacheService::getActiveSubjects();
         return view('admin.vr-experiments.edit', compact('vrExperiment', 'classes', 'subjects'));
     }
 

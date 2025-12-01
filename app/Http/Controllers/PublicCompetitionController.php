@@ -13,8 +13,8 @@ class PublicCompetitionController extends Controller
     public function index(): View
     {
         // Active competitions (registration open or ongoing)
-        $activeCompetitions = Competition::where('is_active', true)
-            ->whereIn('status', ['published', 'ongoing'])
+        $activeCompetitions = Competition::active()
+            ->published()
             ->where(function ($q) {
                 $q->where('competition_end', '>=', now())
                   ->orWhere('status', 'ongoing');
@@ -25,7 +25,7 @@ class PublicCompetitionController extends Controller
             ->get();
 
         // Upcoming competitions (not yet started)
-        $upcomingCompetitions = Competition::where('is_active', true)
+        $upcomingCompetitions = Competition::active()
             ->where('status', 'published')
             ->where('competition_start', '>', now())
             ->with(['club'])
@@ -33,7 +33,7 @@ class PublicCompetitionController extends Controller
             ->get();
 
         // Completed competitions
-        $completedCompetitions = Competition::where('is_active', true)
+        $completedCompetitions = Competition::active()
             ->where('status', 'completed')
             ->with(['club'])
             ->withCount('participants')
@@ -41,11 +41,21 @@ class PublicCompetitionController extends Controller
             ->limit(6)
             ->get();
 
+        // Calculate stats using single query with aggregation
+        $statsQuery = Competition::active()
+            ->selectRaw('
+                COUNT(*) as total,
+                SUM(CASE WHEN status IN (\'published\', \'ongoing\') AND (competition_end >= ? OR status = \'ongoing\') THEN 1 ELSE 0 END) as active,
+                SUM(CASE WHEN status = \'published\' AND competition_start > ? THEN 1 ELSE 0 END) as upcoming,
+                SUM(CASE WHEN status = \'completed\' THEN 1 ELSE 0 END) as completed
+            ', [now(), now()])
+            ->first();
+
         $stats = [
-            'total' => Competition::where('is_active', true)->count(),
-            'active' => $activeCompetitions->count(),
-            'upcoming' => $upcomingCompetitions->count(),
-            'completed' => Competition::where('status', 'completed')->count(),
+            'total' => (int) $statsQuery->total,
+            'active' => (int) $statsQuery->active,
+            'upcoming' => (int) $statsQuery->upcoming,
+            'completed' => (int) $statsQuery->completed,
         ];
 
         return view('client.front.competitions', compact(
@@ -82,8 +92,8 @@ class PublicCompetitionController extends Controller
      */
     public static function getFeaturedCompetitions(int $limit = 3)
     {
-        return Competition::where('is_active', true)
-            ->whereIn('status', ['published', 'ongoing'])
+        return Competition::active()
+            ->published()
             ->with(['club'])
             ->withCount('awards')
             ->orderBy('competition_start')

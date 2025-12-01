@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Model3d;
 use App\Models\ModelQuestion;
 use App\Models\ModelQuestionAnswer;
+use App\Services\CacheService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ModelQuestionController extends Controller
 {
@@ -63,6 +65,9 @@ class ModelQuestionController extends Controller
                     'score' => $score,
                 ]
             );
+            
+            // Clear user progress cache (handled by model event, but explicit for clarity)
+            CacheService::clearUserCache($userId);
 
             $results[] = [
                 'question_id' => $question->id,
@@ -83,16 +88,21 @@ class ModelQuestionController extends Controller
 
     /**
      * Get questions for a 3D model (for AJAX loading).
+     * Cached for 1 hour since questions rarely change.
      */
     public function getQuestions(Model3d $model3d): JsonResponse
     {
-        $questions = $model3d->questions()->orderBy('order')->get()->map(function ($question) {
+        $cacheKey = "model_questions_{$model3d->id}";
+        
+        $questions = Cache::remember($cacheKey, CacheService::TTL_LONG, function () use ($model3d) {
+            return $model3d->questions()->ordered()->get()->map(function ($question) {
             return [
                 'id' => $question->id,
                 'question_type' => $question->question_type,
                 'question_text' => $question->question_text,
                 'options' => $question->options,
             ];
+            });
         });
 
         return response()->json([

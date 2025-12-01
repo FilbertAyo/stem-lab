@@ -4,7 +4,9 @@
             <img src="{{ asset('storage/' . $model->thumbnail) }}"
                  alt="{{ $model->name }} thumbnail"
                  class="w-100 h-100"
-                 style="object-fit: cover;">
+                 style="object-fit: cover;"
+                 loading="lazy"
+                 decoding="async">
         @else
             <div class="d-flex flex-column justify-content-center align-items-center bg-light h-100 w-100">
                 <i class="bi bi-cube text-secondary fs-1"></i>

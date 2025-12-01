@@ -99,6 +99,24 @@
                             <small class="form-text text-muted">Enter comma-separated keywords for searchability</small>
                         </div>
 
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input @error('is_active') is-invalid @enderror"
+                                       type="checkbox"
+                                       id="is_active"
+                                       name="is_active"
+                                       value="1"
+                                       {{ old('is_active', $model3d->is_active) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_active">
+                                    Active (Visible to students)
+                                </label>
+                                @error('is_active')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <small class="form-text text-muted">When active, this model will be visible to students on the client side.</small>
+                        </div>
+
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary">
                                 <i class="ti ti-check"></i> Update 3D Model

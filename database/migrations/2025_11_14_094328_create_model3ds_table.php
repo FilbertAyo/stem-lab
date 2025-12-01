@@ -20,6 +20,10 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('tags')->nullable(); // Comma-separated keywords
             $table->timestamps();
+
+            // Performance indexes
+            $table->index('subject_id', 'model3ds_subject_id_index');
+            $table->index('name', 'model3ds_name_index');
         });
     }
 

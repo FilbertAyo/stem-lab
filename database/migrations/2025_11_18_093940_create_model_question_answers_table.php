@@ -21,8 +21,11 @@ return new class extends Migration
             $table->integer('score')->default(0); // 1 for correct, 0 for incorrect
             $table->timestamps();
 
-            // Index for faster queries
+            // Performance indexes
             $table->index(['user_id', 'model_id']);
+            $table->index('question_id', 'model_question_answers_question_id_index');
+            $table->index('is_correct', 'model_question_answers_is_correct_index');
+            $table->index(['user_id', 'is_correct'], 'model_question_answers_user_id_is_correct_index');
         });
     }
 

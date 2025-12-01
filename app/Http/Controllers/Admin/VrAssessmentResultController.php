@@ -33,7 +33,24 @@ class VrAssessmentResultController extends Controller
             $query->where('passed', $request->status === 'passed');
         }
 
-        $attempts = $query->paginate(20);
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->where('name', 'like', '%' . $search . '%')
+                              ->orWhere('email', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('questionBank', function ($bankQuery) use ($search) {
+                    $bankQuery->where('title', 'like', '%' . $search . '%')
+                              ->orWhereHas('vrExperiment', function ($expQuery) use ($search) {
+                                  $expQuery->where('name', 'like', '%' . $search . '%');
+                              });
+                });
+            });
+        }
+
+        $attempts = $query->paginate(20)->withQueryString();
         $questionBanks = VrQuestionBank::with('vrExperiment')->get();
 
         return view('admin.vr-assessments.results.index', compact('attempts', 'questionBanks'));

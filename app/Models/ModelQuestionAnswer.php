@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,5 +56,29 @@ class ModelQuestionAnswer extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(ModelQuestion::class, 'question_id');
+    }
+
+    /**
+     * Scope a query to only include answers for a specific user.
+     */
+    public function scopeForUser(Builder $query, int $userId): Builder
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    /**
+     * Scope a query to only include answers for a specific model.
+     */
+    public function scopeForModel(Builder $query, int $modelId): Builder
+    {
+        return $query->where('model_id', $modelId);
+    }
+
+    /**
+     * Scope a query to only include correct answers.
+     */
+    public function scopeCorrect(Builder $query): Builder
+    {
+        return $query->where('is_correct', true);
     }
 }

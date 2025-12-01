@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Club;
 use App\Models\Competition;
 use App\Models\CompetitionAward;
+use App\Services\CacheService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -39,7 +41,11 @@ class CompetitionController extends Controller
         }
 
         $competitions = $query->latest()->paginate(15)->withQueryString();
-        $clubs = Club::where('is_active', true)->orderBy('name')->get();
+        
+        // Get cached active clubs
+        $clubs = Cache::remember('active_clubs', CacheService::TTL_LONG, function () {
+            return Club::active()->ordered()->get();
+        });
 
         return view('admin.competitions.index', compact('competitions', 'clubs'));
     }
@@ -49,7 +55,10 @@ class CompetitionController extends Controller
      */
     public function create(): View
     {
-        $clubs = Club::where('is_active', true)->orderBy('name')->get();
+        // Get cached active clubs
+        $clubs = Cache::remember('active_clubs', CacheService::TTL_LONG, function () {
+            return Club::active()->ordered()->get();
+        });
 
         return view('admin.competitions.create', compact('clubs'));
     }
@@ -125,7 +134,10 @@ class CompetitionController extends Controller
      */
     public function edit(Competition $competition): View
     {
-        $clubs = Club::where('is_active', true)->orderBy('name')->get();
+        // Get cached active clubs
+        $clubs = Cache::remember('active_clubs', CacheService::TTL_LONG, function () {
+            return Club::active()->ordered()->get();
+        });
 
         return view('admin.competitions.edit', compact('competition', 'clubs'));
     }

@@ -2,7 +2,7 @@
 <section class="gj do ir hj sp jr i pg">
   <!-- Hero Images -->
   <div class="xc fn zd/2 2xl:ud-w-187.5 bd 2xl:ud-h-171.5 h q r">
-    <img src="{{ asset('images/shape-04.svg') }}" alt="shape" class="h q r" />
+    <img src="{{ asset('images/shape-04.svg') }}" alt="shape" class="h q r" loading="lazy" decoding="async" />
     <model-viewer
       src="{{ asset('images/microscope.glb') }}"
       alt="Interactive heart model"
@@ -19,6 +19,7 @@
         <script
           type="module"
           src="https://unpkg.com/@google/model-viewer@3.3.0/dist/model-viewer.min.js"
+          async
         ></script>
       @endpush
     @endonce

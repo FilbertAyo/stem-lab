@@ -16,6 +16,27 @@
                 </div>
             @endif
 
+            <div class="card mb-3">
+                <div class="card-body py-3">
+                    <form method="GET" action="{{ route('admin.vr-experiments.index') }}" class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                            
+                            <input type="text" name="search" class="form-control" placeholder="Search by name, description, URL, subject, or class..." value="{{ request('search') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-outline-primary me-2">
+                                <i class="ti ti-search"></i> Search
+                            </button>
+                            @if(request('search'))
+                                <a href="{{ route('admin.vr-experiments.index') }}" class="btn btn-outline-secondary">
+                                    <i class="ti ti-x"></i> Clear
+                                </a>
+                            @endif
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="card tbl-card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -99,6 +120,18 @@
                             </tbody>
                         </table>
                     </div>
+                    @if($vrExperiments->hasPages())
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-muted small">
+                                    Showing {{ $vrExperiments->firstItem() }} to {{ $vrExperiments->lastItem() }} of {{ $vrExperiments->total() }} results
+                                </div>
+                                <div>
+                                    {{ $vrExperiments->links('pagination::bootstrap-5') }}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

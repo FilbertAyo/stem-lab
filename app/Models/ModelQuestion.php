@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,5 +50,21 @@ class ModelQuestion extends Model
     public function answers(): HasMany
     {
         return $this->hasMany(ModelQuestionAnswer::class, 'question_id');
+    }
+
+    /**
+     * Scope a query to filter questions by model.
+     */
+    public function scopeForModel(Builder $query, int $modelId): Builder
+    {
+        return $query->where('model_id', $modelId);
+    }
+
+    /**
+     * Scope a query to order questions by their order field.
+     */
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('order');
     }
 }

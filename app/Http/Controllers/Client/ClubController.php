@@ -22,9 +22,7 @@ class ClubController extends Controller
         $user = Auth::user();
         
         // Get all active clubs
-        $clubs = Club::where('is_active', true)
-            ->orderBy('name')
-            ->get();
+        $clubs = Club::active()->ordered()->get();
 
         // Get clubs the teacher has already joined
         $joinedClubIds = $user->clubs()->pluck('clubs.id')->toArray();
@@ -42,9 +40,7 @@ class ClubController extends Controller
             ? $selectedTeacherClub->students->sortBy('name')->values()
             : collect();
 
-        $classes = SchoolClass::where('is_active', true)
-            ->orderBy('name')
-            ->get();
+        $classes = SchoolClass::active()->ordered()->get();
 
         return view('client.back.clubs.index', [
             'clubs' => $clubs,
@@ -76,7 +72,7 @@ class ClubController extends Controller
         // Get all active schools for dropdown (only if teacher doesn't have a school yet)
         $schools = $existingSchool 
             ? collect() 
-            : School::where('is_active', true)->orderBy('name')->get();
+            : School::active()->ordered()->get();
 
         return view('client.back.clubs.join', compact('club', 'schools', 'existingSchool'));
     }

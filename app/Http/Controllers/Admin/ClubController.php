@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Club;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -14,7 +15,7 @@ class ClubController extends Controller
 {
     public function index(): View
     {
-        $clubs = Club::orderBy('name')->get();
+        $clubs = Club::ordered()->get();
 
         return view('admin.clubs.index', compact('clubs'));
     }
@@ -37,6 +38,9 @@ class ClubController extends Controller
         unset($validated['image']);
 
         Club::create($validated);
+
+        // Clear clubs cache
+        Cache::forget('active_clubs');
 
         return redirect()->route('admin.clubs.index')->with('status', 'Club created successfully.');
     }
@@ -67,6 +71,9 @@ class ClubController extends Controller
 
         $club->update($validated);
 
+        // Clear clubs cache
+        Cache::forget('active_clubs');
+
         return redirect()->route('admin.clubs.index')->with('status', 'Club updated successfully.');
     }
 
@@ -75,6 +82,9 @@ class ClubController extends Controller
         $club->update([
             'is_active' => ! $club->is_active,
         ]);
+
+        // Clear clubs cache
+        Cache::forget('active_clubs');
 
         $message = $club->is_active ? 'Club enabled successfully.' : 'Club disabled successfully.';
 

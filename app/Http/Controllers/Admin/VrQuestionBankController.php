@@ -14,12 +14,30 @@ class VrQuestionBankController extends Controller
     /**
      * Display a listing of all question banks.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $questionBanks = VrQuestionBank::with(['vrExperiment.schoolClass', 'vrExperiment.subject'])
-            ->withCount('questions')
-            ->latest()
-            ->get();
+        $query = VrQuestionBank::with(['vrExperiment.schoolClass', 'vrExperiment.subject'])
+            ->withCount('questions');
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%')
+                  ->orWhereHas('vrExperiment', function ($expQuery) use ($search) {
+                      $expQuery->where('name', 'like', '%' . $search . '%')
+                               ->orWhereHas('subject', function ($subjectQuery) use ($search) {
+                                   $subjectQuery->where('subject_name', 'like', '%' . $search . '%');
+                               })
+                               ->orWhereHas('schoolClass', function ($classQuery) use ($search) {
+                                   $classQuery->where('name', 'like', '%' . $search . '%');
+                               });
+                  });
+            });
+        }
+
+        $questionBanks = $query->latest()->paginate(10)->withQueryString();
             
         return view('admin.vr-assessments.question-banks.index', compact('questionBanks'));
     }

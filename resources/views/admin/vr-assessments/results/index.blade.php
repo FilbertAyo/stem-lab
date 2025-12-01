@@ -6,12 +6,16 @@
                 <h5 class="mb-0">VR Assessment Results</h5>
             </div>
 
-            {{-- Filters --}}
+            {{-- Filters and Search --}}
             <div class="card mb-3">
                 <div class="card-body">
                     <form action="{{ route('admin.vr-assessments.results.index') }}" method="GET" class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">Question Bank</label>
+                            
+                            <input type="text" name="search" class="form-control" placeholder="Search by student name, email, question bank, or experiment..." value="{{ request('search') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small">Question Bank</label>
                             <select name="question_bank_id" class="form-select">
                                 <option value="">All Question Banks</option>
                                 @foreach($questionBanks as $bank)
@@ -21,8 +25,8 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Status</label>
+                        <div class="col-md-2">
+                            <label class="form-label small">Status</label>
                             <select name="status" class="form-select">
                                 <option value="">All Status</option>
                                 <option value="passed" {{ request('status') === 'passed' ? 'selected' : '' }}>Passed</option>
@@ -30,10 +34,10 @@
                             </select>
                         </div>
                         <div class="col-md-3 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary me-2">
+                            <button type="submit" class="btn btn-outline-primary me-2">
                                 <i class="ti ti-filter"></i> Filter
                             </button>
-                            <a href="{{ route('admin.vr-assessments.results.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('admin.vr-assessments.results.index') }}" class="btn btn-outline-secondary">
                                 <i class="ti ti-x"></i> Clear
                             </a>
                         </div>
@@ -123,8 +127,15 @@
                     </div>
 
                     @if($attempts->hasPages())
-                        <div class="mt-3">
-                            {{ $attempts->links() }}
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-muted small">
+                                    Showing {{ $attempts->firstItem() }} to {{ $attempts->lastItem() }} of {{ $attempts->total() }} results
+                                </div>
+                                <div>
+                                    {{ $attempts->links('pagination::bootstrap-5') }}
+                                </div>
+                            </div>
                         </div>
                     @endif
                 </div>

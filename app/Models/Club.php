@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -52,6 +53,22 @@ class Club extends Model
     public function activeCompetitions()
     {
         return $this->competitions()->active()->published();
+    }
+
+    /**
+     * Scope a query to only include active clubs.
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope a query to order clubs by name.
+     */
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('name');
     }
 }
 

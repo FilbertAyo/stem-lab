@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -39,5 +40,21 @@ class School extends Model
     public function students(): HasManyThrough
     {
         return $this->hasManyThrough(Student::class, TeacherClub::class);
+    }
+
+    /**
+     * Scope a query to only include active schools.
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope a query to order schools by name.
+     */
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('name');
     }
 }

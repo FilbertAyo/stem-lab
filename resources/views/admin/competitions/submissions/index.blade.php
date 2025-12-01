@@ -83,11 +83,10 @@
                 <div class="card-body py-3">
                     <form method="GET" class="row g-3 align-items-end">
                         <div class="col-md-3">
-                            <label class="form-label small">Search</label>
+                            
                             <input type="text" name="search" class="form-control" placeholder="Title, description..." value="{{ request('search') }}">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label small">Status</label>
                             <select name="status" class="form-select">
                                 <option value="">All Status</option>
                                 <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
@@ -98,7 +97,6 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label small">Judged</label>
                             <select name="judged" class="form-select">
                                 <option value="">All</option>
                                 <option value="yes" {{ request('judged') == 'yes' ? 'selected' : '' }}>Judged</option>

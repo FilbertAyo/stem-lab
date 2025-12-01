@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Model3d;
-use App\Models\Subject;
+use App\Services\CacheService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -24,32 +24,29 @@ class Model3dController extends Controller
         // Check if we should show grouped view (default when no filters/search)
         $showGroupedView = $sort === 'by_subject' && !$search && !$subjectId;
 
-        $subjects = Subject::where('is_active', true)
-            ->orderBy('display_order')
-            ->get();
+        // Get cached subjects
+        $subjects = CacheService::getActiveSubjects();
 
-        // Get total count for stats
-        $totalModels = Model3d::count();
+        // Get total count for stats (only active models)
+        $totalModels = Model3d::where('is_active', true)->count();
 
-        // Get student's answers for all models
-        $studentAnswers = \App\Models\ModelQuestionAnswer::where('user_id', $userId)
-            ->with('question')
-            ->get()
-            ->groupBy('model_id');
+        // Get cached user progress
+        $studentAnswers = CacheService::getUserProgress($userId);
 
         if ($showGroupedView) {
-            // Grouped view: Get all models grouped by subject, subjects in random order
-            $allModels = Model3d::with('subject')
+            // Grouped view: Get all active models grouped by subject
+            $allModels = Model3d::active()
+                ->with('subject')
                 ->withCount('questions')
                 ->get();
 
-            // Calculate progress for each model
+            // Calculate progress for each model using aggregated data
             $modelProgress = [];
             foreach ($allModels as $model) {
-                $answers = $studentAnswers->get($model->id, collect());
+                $answerData = $studentAnswers->get($model->id);
                 $totalQuestions = $model->questions_count;
-                $answeredQuestions = $answers->count();
-                $correctAnswers = $answers->where('is_correct', true)->count();
+                $answeredQuestions = $answerData ? (int) $answerData->answered_count : 0;
+                $correctAnswers = $answerData ? (int) $answerData->correct_count : 0;
                 $percentage = $answeredQuestions > 0 ? round(($correctAnswers / $answeredQuestions) * 100, 2) : 0;
                 $isCompleted = $answeredQuestions > 0 && $answeredQuestions >= $totalQuestions;
 
@@ -82,13 +79,11 @@ class Model3dController extends Controller
         }
 
         // Standard paginated view with filters/sorting
-        $query = Model3d::with('subject')
+        $query = Model3d::active()
+            ->withSubject()
             ->withCount('questions')
-            ->when($subjectId, fn ($q) => $q->where('subject_id', $subjectId))
-            ->when($search, fn ($q) => $q->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-            }));
+            ->when($subjectId, fn ($q) => $q->forSubject($subjectId))
+            ->when($search, fn ($q) => $q->search($search));
 
         // Apply sorting
         $query = match ($sort) {
@@ -100,13 +95,13 @@ class Model3dController extends Controller
 
         $model3ds = $query->paginate(12)->withQueryString();
 
-        // Calculate progress for each model
+        // Calculate progress for each model using aggregated data
         $modelProgress = [];
         foreach ($model3ds as $model) {
-            $answers = $studentAnswers->get($model->id, collect());
+            $answerData = $studentAnswers->get($model->id);
             $totalQuestions = $model->questions_count;
-            $answeredQuestions = $answers->count();
-            $correctAnswers = $answers->where('is_correct', true)->count();
+            $answeredQuestions = $answerData ? (int) $answerData->answered_count : 0;
+            $correctAnswers = $answerData ? (int) $answerData->correct_count : 0;
             $percentage = $answeredQuestions > 0 ? round(($correctAnswers / $answeredQuestions) * 100, 2) : 0;
             $isCompleted = $answeredQuestions > 0 && $answeredQuestions >= $totalQuestions;
 
@@ -140,15 +135,25 @@ class Model3dController extends Controller
     public function show(Model3d $model3d): View
     {
         $model3d->load('subject');
+        
+        // Ensure the model and subject are active
+        if (!$model3d->is_active 
+            || !$model3d->subject 
+            || !$model3d->subject->is_active) {
+            abort(404);
+        }
+        
         $userId = Auth::id();
 
         // Get student's answers for this model
-        $answers = \App\Models\ModelQuestionAnswer::where('user_id', $userId)
-            ->where('model_id', $model3d->id)
+        $answers = \App\Models\ModelQuestionAnswer::forUser($userId)
+            ->forModel($model3d->id)
             ->with('question')
             ->get();
 
-        $totalQuestions = $model3d->questions()->count();
+        // Use withCount for better performance
+        $model3d->loadCount('questions');
+        $totalQuestions = $model3d->questions_count;
         $answeredQuestions = $answers->count();
         $correctAnswers = $answers->where('is_correct', true)->count();
         $percentage = $answeredQuestions > 0 ? round(($correctAnswers / $answeredQuestions) * 100, 2) : 0;

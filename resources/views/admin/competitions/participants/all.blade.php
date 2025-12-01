@@ -102,11 +102,10 @@
                 <div class="card-body py-3">
                     <form method="GET" class="row g-3 align-items-end">
                         <div class="col-md-3">
-                            <label class="form-label small">Search</label>
+                            
                             <input type="text" name="search" class="form-control" placeholder="Team, Teacher, School, Competition..." value="{{ request('search') }}">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label small">Competition</label>
                             <select name="competition_id" class="form-select">
                                 <option value="">All Competitions</option>
                                 @foreach($competitions as $competition)
@@ -117,7 +116,6 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label small">Status</label>
                             <select name="status" class="form-select">
                                 <option value="">All Status</option>
                                 <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>

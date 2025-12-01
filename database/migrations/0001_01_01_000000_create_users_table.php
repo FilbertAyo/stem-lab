@@ -21,6 +21,10 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            // Performance indexes
+            $table->index('role', 'users_role_index');
+            $table->index(['role', 'is_active'], 'users_role_is_active_index');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

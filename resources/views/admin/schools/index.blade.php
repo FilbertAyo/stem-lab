@@ -25,6 +25,58 @@
                 </div>
             @endif
 
+            <!-- Search and Filters Form -->
+            <div class="card mb-3">
+                <div class="card-body py-3">
+                    <form method="GET" action="{{ route('admin.schools.index') }}" class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label small">Search</label>
+                            <input type="text" name="search" class="form-control" placeholder="Search by name, address, district, region, email, or phone..." value="{{ request('search') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="">All Status</option>
+                                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small">Region</label>
+                            <select name="region" class="form-select">
+                                <option value="">All Regions</option>
+                                @foreach($regions as $region)
+                                    <option value="{{ $region }}" {{ request('region') === $region ? 'selected' : '' }}>
+                                        {{ $region }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small">District</label>
+                            <select name="district" class="form-select">
+                                <option value="">All Districts</option>
+                                @foreach($districts as $district)
+                                    <option value="{{ $district }}" {{ request('district') === $district ? 'selected' : '' }}>
+                                        {{ $district }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-outline-primary me-2">
+                                <i class="ti ti-filter"></i> Filter
+                            </button>
+                            @if(request('search') || request('status') || request('region') || request('district'))
+                                <a href="{{ route('admin.schools.index') }}" class="btn btn-outline-secondary">
+                                    <i class="ti ti-x"></i> Clear
+                                </a>
+                            @endif
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="card tbl-card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -45,7 +97,7 @@
                             <tbody>
                                 @forelse ($schools as $school)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $loop->index + 1 + ($schools->currentPage() - 1) * $schools->perPage() }}</td>
                                         <td class="fw-semibold">{{ $school->name }}</td>
                                         <td>{{ $school->address ? \Illuminate\Support\Str::limit($school->address, 50) : '—' }}</td>
                                         <td>
@@ -119,6 +171,18 @@
                             </tbody>
                         </table>
                     </div>
+                    @if($schools->hasPages())
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-muted small">
+                                    Showing {{ $schools->firstItem() }} to {{ $schools->lastItem() }} of {{ $schools->total() }} results
+                                </div>
+                                <div>
+                                    {{ $schools->links('pagination::bootstrap-5') }}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

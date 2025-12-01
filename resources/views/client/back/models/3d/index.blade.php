@@ -15,7 +15,7 @@
                 <h3 class="mb-1">3D Models Library</h3>
                 <p class="text-muted mb-0">
                     Browse all interactive STEM models available to your account.
-                    <span class="badge bg-primary ms-1">{{ $totalModels }} models</span>
+                    <!-- <span class="badge bg-primary ms-1">{{ $totalModels }} models</span> -->
                 </p>
             </div>
 

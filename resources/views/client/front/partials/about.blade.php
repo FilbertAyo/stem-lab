@@ -4,13 +4,13 @@
       <!-- About Images -->
       <div class="animate_left xc gn gg jn/2 i">
         <div>
-          <img src="{{ asset('images/about-01.png') }}" alt="About" class="ib" />
-          <img src="{{ asset('images/about-02.png') }}" alt="About" />
+          <img src="{{ asset('images/about-01.png') }}" alt="About" class="ib" loading="lazy" decoding="async" />
+          <img src="{{ asset('images/about-02.png') }}" alt="About" loading="lazy" decoding="async" />
         </div>
         <div>
-          <img src="{{ asset('images/shape-06.svg') }}" alt="Shape" />
-          <img src="{{ asset('images/about-03.png') }}" alt="About" class="ob gb" />
-          <img src="{{ asset('images/shape-07.svg') }}" alt="Shape" class="bb" />
+          <img src="{{ asset('images/shape-06.svg') }}" alt="Shape" loading="lazy" decoding="async" />
+          <img src="{{ asset('images/about-03.png') }}" alt="About" class="ob gb" loading="lazy" decoding="async" />
+          <img src="{{ asset('images/shape-07.svg') }}" alt="Shape" class="bb" loading="lazy" decoding="async" />
         </div>
       </div>
 
@@ -27,7 +27,7 @@
         <a href="https://www.youtube.com/watch?v=xcJtL7QggTI" data-fslightbox class="vc wf hg mb">
           <span class="tc wf xf be dd rg i gh ua">
             <span class="nf h vc yc vd rg gh qk -ud-z-1"></span>
-            <img src="{{ asset('images/icon-play.svg') }}" alt="Play" />
+            <img src="{{ asset('images/icon-play.svg') }}" alt="Play" loading="lazy" decoding="async" />
           </span>
           <span class="kk">Discover how to use the platform</span>
         </a>

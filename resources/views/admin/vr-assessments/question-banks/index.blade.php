@@ -16,6 +16,28 @@
                 </div>
             @endif
 
+            <!-- Search Form -->
+            <div class="card mb-3">
+                <div class="card-body py-3">
+                    <form method="GET" action="{{ route('admin.vr-assessments.question-banks.index') }}" class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                            
+                            <input type="text" name="search" class="form-control" placeholder="Search by title, description, experiment name, subject, or class..." value="{{ request('search') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-outline-primary me-2">
+                                <i class="ti ti-search"></i> Search
+                            </button>
+                            @if(request('search'))
+                                <a href="{{ route('admin.vr-assessments.question-banks.index') }}" class="btn btn-outline-secondary">
+                                    <i class="ti ti-x"></i> Clear
+                                </a>
+                            @endif
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="card tbl-card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -35,7 +57,7 @@
                             <tbody>
                                 @forelse($questionBanks as $bank)
                                     <tr>
-                                        <td>{{ $bank->id }}</td>
+                                        <td>{{ $loop->index + 1 + ($questionBanks->currentPage() - 1) * $questionBanks->perPage() }}</td>
                                         <td>
                                             <strong>{{ $bank->title }}</strong>
                                             @if($bank->description)
@@ -120,9 +142,19 @@
                         </table>
                     </div>
                 </div>
+                    @if($questionBanks->hasPages())
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-muted small">
+                                    Showing {{ $questionBanks->firstItem() }} to {{ $questionBanks->lastItem() }} of {{ $questionBanks->total() }} results
+                                </div>
+                                <div>
+                                    {{ $questionBanks->links('pagination::bootstrap-5') }}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
             </div>
         </div>
     </div>
-
 </x-admin-layout>
-

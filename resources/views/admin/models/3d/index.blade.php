@@ -16,6 +16,28 @@
                 </div>
             @endif
 
+            <!-- Search Form -->
+            <div class="card mb-3">
+                <div class="card-body py-3">
+                    <form method="GET" action="{{ route('admin.models.3d.index') }}" class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                            <input type="text" name="search" class="form-control" placeholder="Search by name, description, tags, or subject..." value="{{ request('search') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-outline-primary me-2">
+                                <i class="ti ti-search"></i> Search
+                            </button>
+                            @if(request('search'))
+                                <a href="{{ route('admin.models.3d.index') }}" class="btn btn-outline-secondary">
+                                    <i class="ti ti-x"></i> Clear
+                                </a>
+                            @endif
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+
             <div class="card tbl-card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -28,6 +50,7 @@
                                     <th>Description</th>
                                     <th>Tags</th>
                                     <th>Questions</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -41,6 +64,13 @@
                                         <td>{{ Str::limit($model->tags ?? 'N/A', 30) }}</td>
                                         <td>
                                             <span class="badge bg-warning">{{ $model->questions_count }}</span>
+                                        </td>
+                                        <td>
+                                            @if($model->is_active)
+                                                <span class="badge bg-success">Active</span>
+                                            @else
+                                                <span class="badge bg-secondary">Inactive</span>
+                                            @endif
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
@@ -76,12 +106,24 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center">No 3D models found. <a href="{{ route('admin.models.3d.create') }}">Create one now</a>.</td>
+                                        <td colspan="8" class="text-center">No 3D models found. <a href="{{ route('admin.models.3d.create') }}">Create one now</a>.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
+                    @if($model3ds->hasPages())
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-muted small">
+                                    Showing {{ $model3ds->firstItem() }} to {{ $model3ds->lastItem() }} of {{ $model3ds->total() }} results
+                                </div>
+                                <div>
+                                    {{ $model3ds->links('pagination::bootstrap-5') }}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

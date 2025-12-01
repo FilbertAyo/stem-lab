@@ -21,6 +21,10 @@ return new class extends Migration
             $table->text('explanation')->nullable();
             $table->integer('order')->default(0); // For reordering questions
             $table->timestamps();
+
+            // Performance indexes
+            $table->index('model_id', 'model_questions_model_id_index');
+            $table->index(['model_id', 'order'], 'model_questions_model_id_order_index');
         });
     }
 

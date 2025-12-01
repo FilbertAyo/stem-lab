@@ -23,6 +23,27 @@
                 </div>
             @endif
 
+            <!-- Search Form -->
+            <div class="card mb-3">
+                <div class="card-body py-3">
+                    <form method="GET" action="{{ route('admin.models.3d.questions.index', $model3d) }}" class="row g-3 align-items-end">
+                        <div class="col-md-10">
+                            <input type="text" name="search" class="form-control" placeholder="Search by question text, explanation, or answer..." value="{{ request('search') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-outline-primary me-2">
+                                <i class="ti ti-search"></i> Search
+                            </button>
+                            @if(request('search'))
+                                <a href="{{ route('admin.models.3d.questions.index', $model3d) }}" class="btn btn-outline-secondary">
+                                    <i class="ti ti-x"></i> Clear
+                                </a>
+                            @endif
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-body">
                     @if($questions->count() > 0)
@@ -87,6 +108,19 @@
                         @if($questions->count() > 1)
                             <div class="mt-3">
                                 <p class="text-muted small mb-2">Drag rows to reorder questions (coming soon) or use the order numbers above.</p>
+                            </div>
+                        @endif
+
+                        @if($questions->hasPages())
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="text-muted small">
+                                        Showing {{ $questions->firstItem() }} to {{ $questions->lastItem() }} of {{ $questions->total() }} results
+                                    </div>
+                                    <div>
+                                        {{ $questions->links('pagination::bootstrap-5') }}
+                                    </div>
+                                </div>
                             </div>
                         @endif
                     @else
