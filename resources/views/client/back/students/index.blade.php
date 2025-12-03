@@ -11,6 +11,13 @@
                     </div>
                 @endif
 
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <pre class="mb-0" style="white-space: pre-wrap;">{{ session('error') }}</pre>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 @if ($teacherClubs->isEmpty())
                     <div class="card border-0 shadow-sm">
                         <div class="card-body text-center py-5">
@@ -29,9 +36,14 @@
                                 <h5 class="mb-0"><i class="bi bi-people me-2"></i>All Registered Students</h5>
                                 <small class="text-muted">Students across all your schools and clubs.</small>
                             </div>
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
-                                <i class="bi bi-plus-circle me-1"></i>Register Student
-                            </button>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
+                                    <i class="bi bi-upload me-1"></i>Bulk Upload
+                                </button>
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
+                                    <i class="bi bi-plus-circle me-1"></i>Register Student
+                                </button>
+                            </div>
                         </div>
                         <div class="card-body">
                             @if($students->isEmpty())
@@ -212,18 +224,147 @@
         </div>
     @endif
 
+    <!-- Bulk Upload Modal -->
+    @if($teacherClubs->isNotEmpty())
+        <div class="modal fade" id="bulkUploadModal" tabindex="-1" aria-labelledby="bulkUploadModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bulkUploadModalLabel">
+                            <i class="bi bi-upload me-2"></i>
+                            Bulk Upload Students
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="{{ route('client.students.bulk-store') }}" enctype="multipart/form-data" id="bulkUploadForm">
+                        @csrf
+                        <div class="modal-body">
+                            @if($teacherClubs->count() > 1)
+                                <div class="mb-3">
+                                    <label for="bulk_teacher_club_id" class="form-label">
+                                        Select Club & School <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="form-select @error('teacher_club_id') is-invalid @enderror"
+                                            id="bulk_teacher_club_id"
+                                            name="teacher_club_id"
+                                            required>
+                                        <option value="">Choose a club and school...</option>
+                                        @foreach($teacherClubs as $tc)
+                                            <option value="{{ $tc->id }}" {{ old('teacher_club_id') == $tc->id ? 'selected' : '' }}>
+                                                {{ $tc->club->name }} - {{ $tc->school->name ?? 'N/A' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('teacher_club_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="text-muted">Select the club and school where these students belong.</small>
+                                </div>
+                            @else
+                                <input type="hidden" name="teacher_club_id" value="{{ $teacherClubs->first()->id }}">
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>Club:</strong> {{ $teacherClubs->first()->club->name }}<br>
+                                    <strong>School:</strong> {{ $teacherClubs->first()->school->name ?? 'N/A' }}
+                                </div>
+                            @endif
+
+                            <div class="mb-3">
+                                <label for="csv_file" class="form-label">
+                                    CSV File <span class="text-danger">*</span>
+                                </label>
+                                <input type="file"
+                                       class="form-control @error('csv_file') is-invalid @enderror"
+                                       id="csv_file"
+                                       name="csv_file"
+                                       accept=".csv"
+                                       required>
+                                @error('csv_file')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="text-muted">
+                                    Upload a CSV file with columns: <strong>name, age, gender, class_name</strong>
+                                </small>
+                            </div>
+
+                            <div class="alert alert-light border">
+                                <h6 class="fw-semibold mb-2"><i class="bi bi-info-circle me-2"></i>CSV Format Instructions:</h6>
+                                <ul class="mb-0 small">
+                                    <li>First row should contain headers: <code>name, age, gender, class_name</code></li>
+                                    <li><strong>name:</strong> Student's full name</li>
+                                    <li><strong>age:</strong> Student's age (number between 1-150)</li>
+                                    <li><strong>gender:</strong> Must be either "male" or "female"</li>
+                                    <li><strong>class_name:</strong> Exact name of the class (must match an existing class)</li>
+                                </ul>
+                                <hr class="my-2">
+                                <p class="mb-0 small"><strong>Example:</strong></p>
+                                <pre class="mb-0 small bg-white p-2 rounded">name,age,gender,class_name
+John Doe,15,male,Form 1
+Jane Smith,16,female,Form 2</pre>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle me-1"></i>
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-upload me-1"></i>
+                                Upload & Import
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @php
+        $showBulkModal = false;
+        $showSingleModal = false;
+        
+        if ($errors->any() && (old('teacher_club_id') || $teacherClubs->count() == 1)) {
+            if (old('csv_file') || (session('error') && !old('name'))) {
+                $showBulkModal = true;
+            } else {
+                $showSingleModal = true;
+            }
+        } elseif (session('error')) {
+            $errorMessage = session('error', '');
+            if (str_contains($errorMessage, 'CSV') || str_contains($errorMessage, 'bulk') || str_contains($errorMessage, 'Line')) {
+                $showBulkModal = true;
+            }
+        }
+    @endphp
+
+    <div id="modal-config" 
+         data-show-bulk="{{ $showBulkModal ? 'true' : 'false' }}"
+         data-show-single="{{ $showSingleModal ? 'true' : 'false' }}"
+         style="display: none;"></div>
+
     @push('scripts')
         <script>
-            // Reopen modal with validation errors if form submission failed
-            @if($errors->any() && (old('teacher_club_id') || $teacherClubs->count() == 1))
-                document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function() {
+                const config = document.getElementById('modal-config');
+                const showBulkModal = config.getAttribute('data-show-bulk') === 'true';
+                const showSingleModal = config.getAttribute('data-show-single') === 'true';
+                
+                if (showBulkModal) {
+                    const bulkModalElement = document.getElementById('bulkUploadModal');
+                    if (bulkModalElement) {
+                        const bulkModal = new bootstrap.Modal(bulkModalElement);
+                        bulkModal.show();
+                    }
+                }
+
+                if (showSingleModal) {
                     const modalElement = document.getElementById('registerStudentModal');
                     if (modalElement) {
                         const modal = new bootstrap.Modal(modalElement);
                         modal.show();
                     }
-                });
-            @endif
+                }
+            });
         </script>
     @endpush
 </x-app-layout>

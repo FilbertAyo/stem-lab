@@ -71,6 +71,11 @@ class ModelQuestionController extends Controller
             $validated['options'] = ['True', 'False'];
         }
 
+        // For short_answer, clear options
+        if ($validated['question_type'] === 'short_answer') {
+            $validated['options'] = null;
+        }
+
         ModelQuestion::create($validated);
 
         // Clear questions cache for this model
@@ -120,6 +125,11 @@ class ModelQuestionController extends Controller
         // For true/false, set default options
         if ($validated['question_type'] === 'true_false') {
             $validated['options'] = ['True', 'False'];
+        }
+
+        // For short_answer, clear options
+        if ($validated['question_type'] === 'short_answer') {
+            $validated['options'] = null;
         }
 
         $question->update($validated);

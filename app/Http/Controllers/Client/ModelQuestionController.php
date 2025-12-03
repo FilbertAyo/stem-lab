@@ -96,18 +96,18 @@ class ModelQuestionController extends Controller
         
         $questions = Cache::remember($cacheKey, CacheService::TTL_LONG, function () use ($model3d) {
             return $model3d->questions()->ordered()->get()->map(function ($question) {
-            return [
-                'id' => $question->id,
-                'question_type' => $question->question_type,
-                'question_text' => $question->question_text,
-                'options' => $question->options,
-            ];
-            });
+                return [
+                    'id' => $question->id,
+                    'question_type' => $question->question_type,
+                    'question_text' => $question->question_text,
+                    'options' => $question->options,
+                ];
+            })->values()->toArray(); // Convert to array and re-index
         });
 
         return response()->json([
             'success' => true,
-            'questions' => $questions,
+            'questions' => $questions ?? [],
         ]);
     }
 }

@@ -25,6 +25,7 @@
                                 <option value="">Select question type</option>
                                 <option value="mcq" {{ old('question_type') === 'mcq' ? 'selected' : '' }}>Multiple Choice (MCQ)</option>
                                 <option value="true_false" {{ old('question_type') === 'true_false' ? 'selected' : '' }}>True / False</option>
+                                <option value="short_answer" {{ old('question_type') === 'short_answer' ? 'selected' : '' }}>Short Answer</option>
                             </select>
                             @error('question_type')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -76,8 +77,8 @@
                                        name="correct_answer"
                                        value="{{ old('correct_answer') }}"
                                        required>
-                                <small class="form-text text-muted">
-                                    For MCQ: enter the exact option text.
+                                <small class="form-text text-muted" id="correct-answer-hint">
+                                    For MCQ: enter the exact option text. For Short Answer: enter the expected answer.
                                 </small>
                             </div>
                             <div id="correct-answer-boolean-wrapper" style="display: none;">
@@ -132,13 +133,42 @@
             function handleQuestionTypeChange() {
                 const isMcq = questionType.value === 'mcq';
                 const isTrueFalse = questionType.value === 'true_false';
+                const isShortAnswer = questionType.value === 'short_answer';
 
                 optionsContainer.style.display = isMcq ? 'block' : 'none';
                 correctAnswerTextWrapper.style.display = isTrueFalse ? 'none' : 'block';
                 correctAnswerBooleanWrapper.style.display = isTrueFalse ? 'block' : 'none';
 
+                // Enable/disable option inputs to prevent empty values from being submitted
+                const optionInputs = optionsContainer.querySelectorAll('input[name="options[]"]');
+                optionInputs.forEach(input => {
+                    input.disabled = !isMcq;
+                    if (!isMcq) {
+                        input.removeAttribute('name'); // Remove name so it's not submitted
+                    } else {
+                        input.setAttribute('name', 'options[]'); // Restore name for MCQ
+                    }
+                });
+
+                // Update hint text
+                const hint = document.getElementById('correct-answer-hint');
+                if (hint) {
+                    if (isMcq) {
+                        hint.textContent = 'For MCQ: enter the exact option text.';
+                    } else if (isShortAnswer) {
+                        hint.textContent = 'For Short Answer: enter the expected answer.';
+                    } else {
+                        hint.textContent = 'For MCQ: enter the exact option text. For Short Answer: enter the expected answer.';
+                    }
+                }
+
                 if (isTrueFalse) {
                     syncBooleanValue();
+                } else {
+                    // Ensure the text input is not empty if switching away from true/false
+                    if (!correctAnswerInput.value && correctAnswerBooleanSelect.value) {
+                        correctAnswerInput.value = '';
+                    }
                 }
             }
 
@@ -157,6 +187,11 @@
                     </button>
                 `;
                 optionsList.appendChild(newOption);
+                // Ensure the new input is enabled (should be since we only call this for MCQ)
+                const newInput = newOption.querySelector('input');
+                if (newInput) {
+                    newInput.disabled = false;
+                }
             }
 
             function removeOption(button) {
@@ -170,6 +205,19 @@
 
             // Initialize UI based on pre-selected value
             handleQuestionTypeChange();
+
+            // Ensure correct_answer is synced before form submission
+            document.querySelector('form').addEventListener('submit', function(e) {
+                if (questionType.value === 'true_false') {
+                    syncBooleanValue();
+                    // Double-check that the value is set
+                    if (!correctAnswerInput.value) {
+                        e.preventDefault();
+                        alert('Please select a correct answer (True or False).');
+                        return false;
+                    }
+                }
+            });
         </script>
     @endpush
 </x-admin-layout>

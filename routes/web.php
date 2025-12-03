@@ -44,11 +44,12 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('models/3d')->name('client.models.3d.')->group(function () {
         Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
-        Route::get('/{model3d}', [ClientModel3dController::class, 'show'])->name('show');
-
-        // Question routes
+        
+        // Question routes (must come before /{model3d} to avoid route conflicts)
         Route::get('/{model3d}/questions', [\App\Http\Controllers\Client\ModelQuestionController::class, 'getQuestions'])->name('questions.get');
         Route::post('/{model3d}/questions/submit', [\App\Http\Controllers\Client\ModelQuestionController::class, 'submitAnswers'])->name('questions.submit');
+        
+        Route::get('/{model3d}', [ClientModel3dController::class, 'show'])->name('show');
     });
 
     // VR Experiments routes
@@ -77,6 +78,7 @@ Route::middleware('auth')->group(function () {
         // Student registration routes
         Route::get('/students', [ClientStudentController::class, 'index'])->name('client.students.index');
         Route::post('/students', [ClientStudentController::class, 'store'])->name('client.students.store');
+        Route::post('/students/bulk', [ClientStudentController::class, 'bulkStore'])->name('client.students.bulk-store');
 
         // Competition routes for teachers
         Route::prefix('competitions')->name('client.competitions.')->group(function () {

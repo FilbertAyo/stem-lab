@@ -170,14 +170,32 @@
                 correctAnswerTextWrapper.style.display = isTrueFalse ? 'none' : 'block';
                 correctAnswerBooleanWrapper.style.display = isTrueFalse ? 'block' : 'none';
 
+                // Enable/disable option inputs to prevent empty values from being submitted
+                const optionInputs = optionsContainer.querySelectorAll('input[name="options[]"]');
+                optionInputs.forEach(input => {
+                    input.disabled = !isMcq;
+                    if (!isMcq) {
+                        input.removeAttribute('name'); // Remove name so it's not submitted
+                    } else {
+                        input.setAttribute('name', 'options[]'); // Restore name for MCQ
+                    }
+                });
+
                 if (isTrueFalse) {
                     syncBooleanValue();
+                } else {
+                    // Ensure the text input is not empty if switching away from true/false
+                    if (!correctAnswerInput.value && correctAnswerBooleanSelect.value) {
+                        correctAnswerInput.value = '';
+                    }
                 }
 
                 if (isMcq) {
                     correctAnswerHelp.textContent = 'Enter the exact option text that is correct.';
                 } else if (isShortAnswer) {
                     correctAnswerHelp.textContent = 'Enter the expected answer. Will be compared case-insensitively.';
+                } else {
+                    correctAnswerHelp.textContent = 'For MCQ: enter the exact option text. For Short Answer: enter the expected answer.';
                 }
             }
 
@@ -203,6 +221,11 @@
                     </button>
                 `;
                 optionsList.appendChild(newOption);
+                // Ensure the new input is enabled (should be since we only call this for MCQ)
+                const newInput = newOption.querySelector('input');
+                if (newInput) {
+                    newInput.disabled = false;
+                }
                 optionCount++;
             }
 
@@ -230,6 +253,19 @@
 
             // Initialize UI based on pre-selected value
             handleQuestionTypeChange();
+
+            // Ensure correct_answer is synced before form submission
+            document.querySelector('form').addEventListener('submit', function(e) {
+                if (questionType.value === 'true_false') {
+                    syncBooleanValue();
+                    // Double-check that the value is set
+                    if (!correctAnswerInput.value) {
+                        e.preventDefault();
+                        alert('Please select a correct answer (True or False).');
+                        return false;
+                    }
+                }
+            });
         </script>
     @endpush
 </x-admin-layout>

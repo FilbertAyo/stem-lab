@@ -7,6 +7,7 @@ use App\Models\Model3d;
 use App\Models\ModelQuestionAnswer;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
 class ProgressController extends Controller
@@ -64,7 +65,7 @@ class ProgressController extends Controller
                 'correct_answers' => (int) $item->correct_answers,
                 'total_score' => (int) $item->total_score,
                 'percentage' => $percentage,
-                'last_answered' => $item->last_answered,
+                'last_answered' => Carbon::parse($item->last_answered),
             ];
         })->filter(function ($item) {
             // Filter out items where user or model was not found (shouldn't happen, but safety check)

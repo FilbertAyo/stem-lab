@@ -89,12 +89,16 @@
                                     </span>
                                 </div>
                                 @if($progress['total'] > 0)
+                                    @php
+                                        $progressPercentage = round(($progress['answered'] / $progress['total']) * 100);
+                                        $progressBarClass = $progress['percentage'] >= 70 ? 'success' : ($progress['percentage'] >= 50 ? 'warning' : 'danger');
+                                    @endphp
                                     <div class="text-end ms-2">
                                         <div class="progress" style="width: 90px; height: 14px;">
-                                            <div class="progress-bar bg-{{ $progress['percentage'] >= 70 ? 'success' : ($progress['percentage'] >= 50 ? 'warning' : 'danger') }}"
+                                            <div class="progress-bar bg-{{ $progressBarClass }}"
                                                  role="progressbar"
-                                                 style="width: {{ ($progress['answered'] / $progress['total']) * 100 }}%">
-                                                {{ round(($progress['answered'] / $progress['total']) * 100) }}%
+                                                 style="width: <?php echo $progressPercentage; ?>%">
+                                                {{ $progressPercentage }}%
                                             </div>
                                         </div>
                                         <small class="text-muted">Progress</small>
@@ -165,16 +169,31 @@
                             'Accept': 'application/json',
                         }
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
                     .then(data => {
-                        if (data.success && data.questions.length > 0) {
-                            questions = data.questions;
-                            renderQuestions();
+                        console.log('Questions data received:', data);
+                        if (data.success && Array.isArray(data.questions)) {
+                            if (data.questions.length > 0) {
+                                questions = data.questions;
+                                renderQuestions();
+                            } else {
+                                document.getElementById('questions-container').innerHTML = `
+                                    <div class="text-center py-4">
+                                        <i class="bi bi-info-circle text-muted fs-1 mb-3"></i>
+                                        <p class="text-muted mb-0">No questions available for this model yet.</p>
+                                    </div>
+                                `;
+                            }
                         } else {
+                            console.error('Invalid response format:', data);
                             document.getElementById('questions-container').innerHTML = `
                                 <div class="text-center py-4">
-                                    <i class="bi bi-info-circle text-muted fs-1 mb-3"></i>
-                                    <p class="text-muted mb-0">No questions available for this model yet.</p>
+                                    <p class="text-danger mb-0">Invalid response format. Please refresh the page.</p>
                                 </div>
                             `;
                         }
@@ -184,6 +203,7 @@
                         document.getElementById('questions-container').innerHTML = `
                             <div class="text-center py-4">
                                 <p class="text-danger mb-0">Error loading questions. Please refresh the page.</p>
+                                <small class="text-muted d-block mt-2">${error.message}</small>
                             </div>
                         `;
                     });
