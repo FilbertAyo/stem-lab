@@ -2,6 +2,13 @@
 
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="auth-header">
         <a href="#"><img src="{{ asset('images/logo/logo-dark.png') }}" alt="img" style="height: 50px;"></a>
     </div>

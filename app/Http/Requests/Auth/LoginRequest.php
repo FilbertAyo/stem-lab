@@ -58,12 +58,24 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        if ($isAdminLogin && Auth::user()?->role !== 'admin') {
+        $authenticatedUser = Auth::user();
+
+        if ($isAdminLogin && $authenticatedUser?->role !== 'admin') {
             Auth::logout();
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
+            ]);
+        }
+
+        // Check if admin user is active
+        if ($isAdminLogin && $authenticatedUser && $authenticatedUser->role === 'admin' && !$authenticatedUser->is_active) {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => 'Your account has been disabled. Please contact an administrator.',
             ]);
         }
 
