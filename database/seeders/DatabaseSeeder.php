@@ -15,11 +15,6 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             ClassSeeder::class,
             SubjectSeeder::class,
-            ClubSeeder::class,
-            SchoolSeeder::class,
-            Model3dSeeder::class,
-            VrExperimentSeeder::class,
-            VrAssessmentSeeder::class,
         ]);
     }
 }

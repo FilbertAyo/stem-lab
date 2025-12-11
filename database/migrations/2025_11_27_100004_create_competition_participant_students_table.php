@@ -13,8 +13,16 @@ return new class extends Migration
     {
         Schema::create('competition_participant_students', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('competition_participant_id')->constrained('competition_participants')->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('competition_participant_id');
+            $table->foreign('competition_participant_id', 'cps_cp_id_fk')
+                ->references('id')
+                ->on('competition_participants')
+                ->onDelete('cascade');
+            $table->foreignId('student_id');
+            $table->foreign('student_id', 'cps_student_id_fk')
+                ->references('id')
+                ->on('students')
+                ->onDelete('cascade');
             
             // Role in the team (optional)
             $table->string('role')->nullable(); // e.g., "Team Leader", "Researcher", "Presenter"
