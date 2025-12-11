@@ -39,7 +39,7 @@
           <a href="#!" class="ek jk lk gh gi hi rg ml il vc _d _l">Explore the Lab</a>
 
           <span class="tc sf">
-            <a href="#!" class="inline-block ek xj kk wm"> Call us +255 689 780 000 </a>
+            <a href="#!" class="inline-block ek xj kk wm"> Call us +255 282 561 724 </a>
             <span class="inline-block">Let's co-create the future of STEM education</span>
           </span>
         </div>

@@ -26,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Disable Debugbar in production/UAT environments
+        if ($this->app->environment() !== 'local') {
+            config(['debugbar.enabled' => false]);
+        }
+
         // Clear caches when models are created, updated, or deleted
         $this->registerModelEvents();
     }
