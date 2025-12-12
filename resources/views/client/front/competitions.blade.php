@@ -11,7 +11,7 @@
       <div class="animate_top text-center">
       
         <h1 class="fk vj pr kk wm bb _b" style="font-size: 2.5rem;">
-          Compete, Learn & Win
+          
         </h1>
         <p class="bb on/5 wo/5 hq mt-4" style="max-width: 600px; margin: 0 auto;">
           Join exciting STEM competitions designed for school clubs across Tanzania. Showcase your innovations, collaborate with peers, and win amazing prizes.
@@ -177,16 +177,10 @@
   <!-- No Competitions -->
   @if($activeCompetitions->isEmpty() && $upcomingCompetitions->isEmpty() && $completedCompetitions->isEmpty())
   <section class="i pg fh rm ji gp">
-    <div class="bb ze ki xn text-center py-5">
+    <div class="bb ze ki xn text-center">
       <div class="animate_top">
         <i class="ti ti-trophy" style="font-size: 5rem; color: #d1d5db;"></i>
         <h3 class="fk vj kk wm mt-4">No Competitions Yet</h3>
-        <p class="ur mt-3" style="max-width: 400px; margin: 0 auto;">
-          Exciting STEM competitions are being prepared. Register now to be notified when new competitions are announced!
-        </p>
-        <a href="{{ route('register') }}" class="lk gh dk rg tc wf xf _l gi hi mt-4" style="display: inline-flex; padding: 12px 32px;">
-          Register Now <i class="ti ti-arrow-right ml-2"></i>
-        </a>
       </div>
     </div>
   </section>

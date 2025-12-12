@@ -58,138 +58,9 @@
         data-page="{{ $page }}"
         x-data="landingTheme()"
         x-init="init()"
-        :class="{ 'b eh dark': darkMode === true }"
+        :class="{ 'b eh': darkMode === true }"
     >
-        <header
-            class="g s r vd ya cj"
-            :class="{ 'hh sm _k dj bl ll' : stickyMenu }"
-            @scroll.window="stickyMenu = window.pageYOffset > 20"
-        >
-            <div class="bb ze ki xn 2xl:ud-px-0 oo wf yf i">
-                <div class="vd to/4 tc wf yf">
-                    <a href="{{ url('/') }}">
-                        <img class="om" src="{{ asset('images/logo/logo-dark.png') }}" alt="{{ config('app.name') }} Logo" style="height:50px;" loading="eager" fetchpriority="high" width="150" height="50"/>
-                        <img class="xc nm" src="{{ asset('images/logo/logo-white.png') }}" alt="{{ config('app.name') }} Logo" style="height:50px;" loading="eager" fetchpriority="high" width="150" height="50"/>
-                    </a>
-                    <button class="po rc" @click="navigationOpen = !navigationOpen">
-                        <span class="rc i pf re pd">
-                            <span class="du-block h q vd yc">
-                                <span class="rc i r s eh um tg te rd eb ml jl dl" :class="{ 'ue el': !navigationOpen }"></span>
-                                <span class="rc i r s eh um tg te rd eb ml jl fl" :class="{ 'ue qr': !navigationOpen }"></span>
-                                <span class="rc i r s eh um tg te rd eb ml jl gl" :class="{ 'ue hl': !navigationOpen }"></span>
-                            </span>
-                            <span class="du-block h q vd yc lf">
-                                <span class="rc eh um tg ml jl el h na r ve yc" :class="{ 'sd dl': !navigationOpen }"></span>
-                                <span class="rc eh um tg ml jl qr h s pa vd rd" :class="{ 'sd rr': !navigationOpen }"></span>
-                            </span>
-                        </span>
-                    </button>
-                </div>
-                <div
-                    class="vd wo/4 sd qo f ho oo wf yf"
-                    :class="{ 'd hh rm sr td ud qg ug jc yh': navigationOpen }"
-                >
-                    <nav>
-                        <ul class="tc _o sf yo cg ep">
-                            <li>
-                                <a href="{{ url('/') }}" class="xl" :class="{ 'mk': page === 'home' }">Home</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('competitions.public') }}" class="xl">
-                                Competitions
-                            </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/#about') }}" class="xl">About</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/#subjects') }}" class="xl">Subjects</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/#support') }}" class="xl">Support</a>
-                            </li>
-                        </ul>
-                    </nav>
-                    <div class="tc wf ig pb no gap-2">
-                        <div class="pc h io pa ra" :class="navigationOpen ? '!-ud-visible' : 'd'">
-                            <label class="rc ab i">
-                                <input
-                                    type="checkbox"
-                                    :value="darkMode"
-                                    @change="darkMode = !darkMode"
-                                    class="pf vd yc uk h r za ab"
-                                />
-                                <!-- Sun Icon (shown in dark mode to switch to light) -->
-                                <svg
-                                    :class="{ 'wn' : page === 'home', 'xh' : page === 'home' && stickyMenu }"
-                                    class="xc sk nm"
-                                    width="25"
-                                    height="25"
-                                    viewBox="0 0 25 25"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M12.0908 18.6363C10.3549 18.6363 8.69 17.9467 7.46249 16.7192C6.23497 15.4916 5.54537 13.8268 5.54537 12.0908C5.54537 10.3549 6.23497 8.69 7.46249 7.46249C8.69 6.23497 10.3549 5.54537 12.0908 5.54537C13.8268 5.54537 15.4916 6.23497 16.7192 7.46249C17.9467 8.69 18.6363 10.3549 18.6363 12.0908C18.6363 13.8268 17.9467 15.4916 16.7192 16.7192C15.4916 17.9467 13.8268 18.6363 12.0908 18.6363ZM12.0908 16.4545C13.2481 16.4545 14.358 15.9947 15.1764 15.1764C15.9947 14.358 16.4545 13.2481 16.4545 12.0908C16.4545 10.9335 15.9947 9.8236 15.1764 9.00526C14.358 8.18692 13.2481 7.72718 12.0908 7.72718C10.9335 7.72718 9.8236 8.18692 9.00526 9.00526C8.18692 9.8236 7.72718 10.9335 7.72718 12.0908C7.72718 13.2481 8.18692 14.358 9.00526 15.1764C9.8236 15.9947 10.9335 16.4545 12.0908 16.4545ZM10.9999 0.0908203H13.1817V3.36355H10.9999V0.0908203ZM10.9999 20.8181H13.1817V24.0908H10.9999V20.8181ZM2.83446 4.377L4.377 2.83446L6.69082 5.14828L5.14828 6.69082L2.83446 4.37809V4.377ZM17.4908 19.0334L19.0334 17.4908L21.3472 19.8046L19.8046 21.3472L17.4908 19.0334ZM19.8046 2.83337L21.3472 4.377L19.0334 6.69082L17.4908 5.14828L19.8046 2.83446V2.83337ZM5.14828 17.4908L6.69082 19.0334L4.377 21.3472L2.83446 19.8046L5.14828 17.4908ZM24.0908 10.9999V13.1817H20.8181V10.9999H24.0908ZM3.36355 10.9999V13.1817H0.0908203V10.9999H3.36355Z"
-                                        fill=""
-                                    />
-                                </svg>
-                                <!-- Moon Icon (shown in light mode to switch to dark) -->
-                                <svg
-                                    :class="{ 'wn' : page === 'home', 'xh' : page === 'home' && stickyMenu }"
-                                    class="th wl om"
-                                    width="25"
-                                    height="25"
-                                    viewBox="0 0 25 25"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M21.6364 12.8182C21.6364 13.1818 21.5455 13.5455 21.3636 13.8182C21.1818 14.1818 20.9091 14.4545 20.5455 14.6364C20.1818 14.8182 19.8182 14.9091 19.4545 14.9091C19.0909 14.9091 18.7273 14.8182 18.3636 14.6364C18 14.4545 17.7273 14.1818 17.5455 13.8182C17.3636 13.5455 17.2727 13.1818 17.2727 12.8182C17.2727 12.4545 17.3636 12.0909 17.5455 11.8182C17.7273 11.4545 18 11.1818 18.3636 11C18.7273 10.8182 19.0909 10.7273 19.4545 10.7273C19.8182 10.7273 20.1818 10.8182 20.5455 11C20.9091 11.1818 21.1818 11.4545 21.3636 11.8182C21.5455 12.0909 21.6364 12.4545 21.6364 12.8182ZM16.3636 12.8182C16.3636 15.3636 14.5455 17.4545 12 18.1818C9.45455 18.9091 6.81818 17.7273 5.18182 15.6364C3.54545 13.5455 3 10.9091 3.72727 8.36364C4.45455 5.81818 6.54545 4 9.09091 3.27273C10.0909 3 11.1818 2.90909 12.1818 3.09091C12.7273 3.18182 12.9091 3.81818 12.4545 4.18182C11.7273 4.72727 11.1818 5.54545 11 6.36364C10.7273 7.45455 10.8182 8.63636 11.2727 9.63636C11.7273 10.6364 12.4545 11.3636 13.4545 11.8182C14.4545 12.2727 15.6364 12.3636 16.7273 12.0909C17.1818 12 17.8182 12.1818 17.9091 12.7273C18 12.8182 18 12.8182 17.9091 13.3636C17.7273 14.1818 17.1818 14.8182 16.3636 15.2727C16.3636 14.4545 16.2727 13.6364 16.3636 12.8182Z"
-                                        fill=""
-                                    />
-                                </svg>
-                           </label>
-                        </div>
-                        <button
-                            type="button"
-                            @click="window.location.reload()"
-                            class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#19140035] dark:border-[#3E3E3A] text-[#1b1b18] dark:text-[#EDEDEC] hover:border-black dark:hover:border-white transition"
-                            aria-label="Reload page"
-                        >
-                            <svg
-                                class="w-4 h-4"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    d="M21 12a9 9 0 1 1-2.64-6.36V3M21 3h-4"
-                                    stroke="currentColor"
-                                    stroke-width="1.5"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                />
-                            </svg>
-                        </button>
-                        <a
-                            href="{{ route('login') }}"
-                            :class="{ 'nk yl' : page === 'home', 'ok' : page === 'home' && stickyMenu }"
-                            class="ek pk xl"
-                        >
-                            Sign In
-                        </a>
-                        <a
-                            href="{{ route('register') }}"
-                            :class="{ 'hh/[0.15]' : page === 'home', 'sh' : page === 'home' && stickyMenu }"
-                            class="lk gh dk rg tc wf xf _l gi hi"
-                        >
-                            Sign Up
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </header>
+        @include('layouts.header')
 
         <div class="pt-28 lg:pt-36">
             @yield('content')
@@ -248,20 +119,7 @@
                                         </svg>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#!">
-                                        <svg class="vh ul cl il" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <g clip-path="url(#clip0_48_1508)">
-                                                <path d="M7.443 5.3501C8.082 5.3501 8.673 5.4001 9.213 5.5481C9.70301 5.63814 10.1708 5.82293 10.59 6.0921C10.984 6.3391 11.279 6.6861 11.475 7.1311C11.672 7.5761 11.77 8.1211 11.77 8.7141C11.77 9.4071 11.623 10.0001 11.279 10.4451C10.984 10.8911 10.492 11.2861 9.902 11.5831C10.738 11.8311 11.377 12.2761 11.77 12.8691C12.164 13.4631 12.41 14.2051 12.41 15.0461C12.41 15.7391 12.262 16.3321 12.016 16.8271C11.77 17.3221 11.377 17.7671 10.934 18.0641C10.4528 18.3825 9.92084 18.6165 9.361 18.7561C8.771 18.9051 8.181 19.0041 7.591 19.0041H1V5.3501H7.443ZM7.049 10.8901C7.59 10.8901 8.033 10.7421 8.377 10.4951C8.721 10.2481 8.869 9.8021 8.869 9.2581C8.869 8.9611 8.819 8.6641 8.721 8.4671C8.623 8.2691 8.475 8.1201 8.279 7.9721C8.082 7.8731 7.885 7.7741 7.639 7.7251C7.393 7.6751 7.148 7.6751 6.852 7.6751H4V10.8911H7.05L7.049 10.8901ZM7.197 16.7281C7.492 16.7281 7.787 16.6781 8.033 16.6291C8.28138 16.5819 8.51628 16.4805 8.721 16.3321C8.92139 16.1873 9.08903 16.002 9.213 15.7881C9.311 15.5411 9.41 15.2441 9.41 14.8981C9.41 14.2051 9.213 13.7101 8.82 13.3641C8.426 13.0671 7.885 12.9191 7.246 12.9191H4V16.7291H7.197V16.7281ZM16.689 16.6781C17.082 17.0741 17.672 17.2721 18.459 17.2721C19 17.2721 19.492 17.1241 19.885 16.8771C20.279 16.5801 20.525 16.2831 20.623 15.9861H23.033C22.639 17.1731 22.049 18.0141 21.263 18.5581C20.475 19.0531 19.541 19.3501 18.41 19.3501C17.6864 19.3523 16.9688 19.2179 16.295 18.9541C15.6887 18.7266 15.148 18.3529 14.721 17.8661C14.2643 17.4107 13.9267 16.8498 13.738 16.2331C13.492 15.5901 13.393 14.8981 13.393 14.1061C13.393 13.3641 13.492 12.6721 13.738 12.0281C13.9745 11.4082 14.3245 10.8378 14.77 10.3461C15.213 9.9011 15.754 9.5061 16.344 9.2581C17.0007 8.99416 17.7022 8.85969 18.41 8.8621C19.246 8.8621 19.984 9.0111 20.623 9.3571C21.263 9.7031 21.754 10.0991 22.148 10.6931C22.5499 11.2636 22.8494 11.8998 23.033 12.5731C23.131 13.2651 23.18 13.9581 23.131 14.7491H16C16 15.5411 16.295 16.2831 16.689 16.6791V16.6781ZM15.459 6.2901H20.967V7.6261H15.46V6.2901H15.459Z" />
-                                            </g>
-                                            <defs>
-                                                <clipPath id="clip0_48_1508">
-                                                    <rect width="24" height="24" fill="white" />
-                                                </clipPath>
-                                            </defs>
-                                        </svg>
-                                    </a>
-                                </li>
+                           
                             </ul>
                         </div>
                         <div class="vd ro tc sf rn un gg vn">
@@ -353,15 +211,15 @@
                     navigationOpen: false,
                     scrollTop: false,
                     init() {
-                        this.applyDarkMode(this.darkMode);
+                        // Initialize darkMode from localStorage if not already set
+                        const stored = window.localStorage.getItem('darkMode');
+                        if (stored !== null) {
+                            this.darkMode = JSON.parse(stored);
+                        }
+                        // Watch for darkMode changes
                         this.$watch('darkMode', value => {
                             window.localStorage.setItem('darkMode', JSON.stringify(value));
-                            this.applyDarkMode(value);
                         });
-                    },
-                    applyDarkMode(value) {
-                        document.documentElement.classList.toggle('dark', value);
-                        document.body.classList.toggle('dark', value);
                     },
                 };
             }
