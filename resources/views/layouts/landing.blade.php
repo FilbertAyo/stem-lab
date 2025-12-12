@@ -95,8 +95,8 @@
                                 <a href="{{ url('/') }}" class="xl" :class="{ 'mk': page === 'home' }">Home</a>
                             </li>
                             <li>
-                                <a href="{{ route('competitions.public') }}" class="xl" :class="{ 'mk': page === 'competitions' }">
-                                <i class="ti ti-trophy" style="font-size: 0.9rem;"></i> Competitions
+                                <a href="{{ route('competitions.public') }}" class="xl">
+                                Competitions
                             </a>
                             </li>
                             <li>
