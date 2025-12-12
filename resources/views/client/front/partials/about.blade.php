@@ -24,7 +24,7 @@
           extends that mission through immersive, inclusive learning experiences.
         </p>
 
-        <a href="https://www.youtube.com/watch?v=xcJtL7QggTI" data-fslightbox class="vc wf hg mb">
+        <a href="#" data-fslightbox class="vc wf hg mb">
           <span class="tc wf xf be dd rg i gh ua">
             <span class="nf h vc yc vd rg gh qk -ud-z-1"></span>
             <img src="{{ asset('images/icon-play.svg') }}" alt="Play" loading="lazy" decoding="async" />
