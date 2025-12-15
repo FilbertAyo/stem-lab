@@ -8,11 +8,13 @@ use App\Http\Controllers\Admin\CompetitionSubmissionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\Model3dController as AdminModel3dController;
 use App\Http\Controllers\Admin\SchoolController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VrExperimentController;
 use App\Http\Controllers\Client\ClubController as ClientClubController;
 use App\Http\Controllers\Client\CompetitionController as ClientCompetitionController;
+use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
 use App\Http\Controllers\PublicCompetitionController;
 use App\Http\Controllers\Client\Model3dController as ClientModel3dController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
@@ -31,11 +33,7 @@ Route::get('/', function () {
 Route::get('/explore/competitions', [PublicCompetitionController::class, 'index'])->name('competitions.public');
 Route::get('/explore/competitions/{competition}', [PublicCompetitionController::class, 'show'])->name('competitions.public.show');
 
-Route::get('/dashboard', function () {
-    $latestModels = Model3d::with('subject')->latest()->take(6)->get();
-
-    return view('client.back.dashboard', compact('latestModels'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [ClientDashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -191,6 +189,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/create', [\App\Http\Controllers\Admin\DatabaseBackupController::class, 'create'])->name('create');
             Route::get('/download/{filename}', [\App\Http\Controllers\Admin\DatabaseBackupController::class, 'download'])->name('download');
             Route::delete('/delete/{filename}', [\App\Http\Controllers\Admin\DatabaseBackupController::class, 'destroy'])->name('destroy');
+        });
+
+        // Settings routes
+        Route::prefix('settings')->name('settings.')->group(function () {
+            Route::get('/', [SettingsController::class, 'index'])->name('index');
+            Route::put('/', [SettingsController::class, 'update'])->name('update');
         });
     });
 });

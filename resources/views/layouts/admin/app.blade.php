@@ -45,11 +45,17 @@
         <div class="footer-wrapper container-fluid">
             <div class="row">
                 <div class="col-sm my-1">
-                    <p class="m-0"> All right reserved <a href="https://wa.me/255755237692" target="_blank">Adilisha STEM Clab</a></p>
+                    @php
+                        $siteName = \App\Models\Setting::get('site_name', config('app.name', 'Adilisha STEM Lab'));
+                    @endphp
+                    <p class="m-0">{{ now()->year }} &copy; {{ $siteName }}</p>
                 </div>
                 <div class="col-auto my-1">
                     <ul class="list-inline footer-link mb-0">
-                        <li class="list-inline-item"><a href="#">Home</a></li>
+                        @php
+                            $appVersion = \App\Models\Setting::get('app_version', '1.0.0');
+                        @endphp
+                        <li class="list-inline-item"><a href="#">{{ $appVersion }}</a></li>
                     </ul>
                 </div>
             </div>

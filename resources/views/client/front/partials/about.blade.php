@@ -24,13 +24,18 @@
           extends that mission through immersive, inclusive learning experiences.
         </p>
 
-        <!-- <a href="https://www.youtube.com/watch?v=xcJtL7QggTI" data-fslightbox class="vc wf hg mb">
+        @php
+            $youtubeVideoUrl = \App\Models\Setting::get('youtube_video_url');
+        @endphp
+        @if(!empty($youtubeVideoUrl))
+        <a href="{{ $youtubeVideoUrl }}" data-fslightbox class="vc wf hg mb">
           <span class="tc wf xf be dd rg i gh ua">
             <span class="nf h vc yc vd rg gh qk -ud-z-1"></span>
             <img src="{{ asset('images/icon-play.svg') }}" alt="Play" loading="lazy" decoding="async" />
           </span>
           <span class="kk">Discover how to use the platform</span>
-        </a> -->
+        </a>
+        @endif
       </div>
     </div>
   </div>

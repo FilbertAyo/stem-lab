@@ -36,10 +36,18 @@
         </p>
 
         <div class="tc tf yo zf mb">
-          <a href="#!" class="ek jk lk gh gi hi rg ml il vc _d _l">Explore the Lab</a>
+          <a href="{{ route('register') }}" class="ek jk lk gh gi hi rg ml il vc _d _l">Explore the Labs</a>
 
           <span class="tc sf">
-            <a href="#!" class="inline-block ek xj kk wm"> Call us +255 282 561 724 </a>
+            @php
+                $sitePhone = \App\Models\Setting::get('site_phone', '+255 282 561 724');
+                $whatsappUrl = \App\Models\Setting::get('whatsapp_url');
+            @endphp
+            @if(!empty($whatsappUrl))
+                <a href="{{ $whatsappUrl }}" target="_blank" rel="noopener noreferrer" class="inline-block ek xj kk wm"> Call us {{ $sitePhone }} </a>
+            @else
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $sitePhone) }}" class="inline-block ek xj kk wm"> Call us {{ $sitePhone }} </a>
+            @endif
             <span class="inline-block">Let's co-create the future of STEM education</span>
           </span>
         </div>

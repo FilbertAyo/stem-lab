@@ -31,11 +31,17 @@
                 <footer class="mt-3">
                     <div class="footer clearfix mb-0 text-muted">
                         <div class="float-start">
-                            <p>{{ now()->year }} &copy; {{ config('app.name', 'Adilisha STEM Lab') }}</p>
+                            @php
+                                $siteName = \App\Models\Setting::get('site_name', config('app.name', 'Adilisha STEM Labs'));
+                            @endphp
+                            <p>{{ now()->year }} &copy; {{ $siteName }}</p>
                         </div>
-                        <!-- <div class="float-end">
-                            <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="https://adilisha.org">Adilisha</a></p>
-                        </div> -->
+                        <div class="float-end">
+                            @php
+                                $appVersion = \App\Models\Setting::get('app_version', '1.0.0');
+                            @endphp
+                            <p>V{{ $appVersion }}</p>
+                        </div>
                     </div>
                 </footer>
             </div>
