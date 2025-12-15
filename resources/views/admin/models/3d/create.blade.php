@@ -38,9 +38,9 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="file" class="form-label">GLB File <span class="text-danger">*</span></label>
+                                <label for="file" class="form-label">GLB File</label>
                                 <input type="file" class="form-control @error('file') is-invalid @enderror"
-                                       id="file" name="file" accept=".glb" required>
+                                       id="file" name="file" accept=".glb">
                                 @error('file')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
