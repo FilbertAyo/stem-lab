@@ -54,7 +54,7 @@ class Model3dController extends Controller
             'subject_id' => ['required', 'exists:subjects,id'],
             'name' => ['required', 'string', 'max:255'],
             'file' => [
-                'required',
+                'nullable',
                 'file',
                 'max:512000', // Max 100MB for GLB files
                 function ($attribute, $value, $fail) {
