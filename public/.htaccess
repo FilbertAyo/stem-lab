@@ -23,3 +23,13 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Increase upload limits for GLB files (3D models)
+# Note: These settings may be overridden by PHP configuration
+# If uploads still fail, increase upload_max_filesize and post_max_size in php.ini
+<IfModule mod_php.c>
+    php_value upload_max_filesize 100M
+    php_value post_max_size 100M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>

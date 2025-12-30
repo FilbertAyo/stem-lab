@@ -10,7 +10,7 @@
     @endif
 
     <div class="auth-header">
-        <a href="#"><img src="{{ asset('images/logo/logo-dark.png') }}" alt="img" style="height: 50px;"></a>
+        <a href="#"><img src="{{ asset('images/logo/logo-dark.png') }}" alt="Adilisha STEM Lab" style="height: 45px; width: auto;"></a>
     </div>
     <div class="card my-5">
         <div class="card-body">
@@ -31,22 +31,7 @@
                     <input type="password" name="password" class="form-control" placeholder="Password">
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
-                <div class="d-flex mt-1 justify-content-between">
-                    <div class="form-check">
-                        <input
-                            class="form-check-input input-primary"
-                            type="checkbox"
-                            id="customCheckc1"
-                            name="remember"
-                            value="1"
-                            {{ old('remember', true) ? 'checked' : '' }}
-                        >
-                        <label class="form-check-label text-muted" for="customCheckc1">Keep me sign in</label>
-                    </div>
-                    {{-- <h5 class="text-secondary f-w-400">
-                        <a href="{{ route('password.request') }}" class="text-secondary text-decoration-none">Forgot Password?</a>
-                    </h5> --}}
-                </div>
+                {{-- Removed "Remember me" checkbox for admin - sessions should expire properly --}}
                 <div class="d-grid mt-4">
                     <button type="submit" class="btn btn-primary">Login</button>
                 </div>

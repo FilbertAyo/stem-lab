@@ -8,9 +8,8 @@
           <img src="{{ asset('images/about-02.png') }}" alt="About" loading="lazy" decoding="async" />
         </div>
         <div>
-          <img src="{{ asset('images/shape-06.svg') }}" alt="Shape" loading="lazy" decoding="async" />
           <img src="{{ asset('images/about-03.png') }}" alt="About" class="ob gb" loading="lazy" decoding="async" />
-          <img src="{{ asset('images/shape-07.svg') }}" alt="Shape" class="bb" loading="lazy" decoding="async" />
+          <img src="{{ asset('images/about-04.png') }}" alt="About" class="ob gb" loading="lazy" decoding="async" />
         </div>
       </div>
 

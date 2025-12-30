@@ -7,8 +7,7 @@
 <main>
 
     <section class="i pg fh rm ki xn vq gj qp gr hj rp hr">
-        <!-- Bg Shapes -->
-        <img src="{{ asset('images/shape-06.svg') }}" alt="Shape" class="h j k" />
+      
 
         <div class="animate_top bb af i va sg hh sm vk xm yi _n jp hi ao kp">
           <!-- Bg Border -->

@@ -6,8 +6,8 @@
     <div class="bb ze ki xn 2xl:ud-px-0 oo wf yf i">
         <div class="vd to/4 tc wf yf">
             <a href="{{ url('/') }}">
-                <img class="om" src="{{ asset('images/logo/logo-dark.png') }}" alt="{{ config('app.name') }} Logo" style="height:50px;" loading="eager" fetchpriority="high" width="150" height="50"/>
-                <img class="xc nm" src="{{ asset('images/logo/logo-white.png') }}" alt="{{ config('app.name') }} Logo" style="height:50px;" loading="eager" fetchpriority="high" width="150" height="50"/>
+                <img class="om" src="{{ asset('images/logo/logo-dark.png') }}" alt="{{ config('app.name') }} Logo" style="height:45px; width:auto;" loading="eager" fetchpriority="high"/>
+                <img class="xc nm" src="{{ asset('images/logo/logo-white.png') }}" alt="{{ config('app.name') }} Logo" style="height:45px; width:auto;" loading="eager" fetchpriority="high"/>
             </a>
             <button class="po rc" @click="navigationOpen = !navigationOpen">
                 <span class="rc i pf re pd">
@@ -32,11 +32,7 @@
                     <li>
                         <a href="{{ url('/') }}" class="xl" :class="{ 'mk': page === 'home' }">Home</a>
                     </li>
-                    <li>
-                        <a href="{{ route('competitions.public') }}" class="xl">
-                        Competitions
-                    </a>
-                    </li>
+                   
                     <li>
                         <a href="{{ url('/#about') }}" class="xl">About</a>
                     </li>
@@ -44,8 +40,11 @@
                         <a href="{{ url('/#subjects') }}" class="xl">Subjects</a>
                     </li>
                     <li>
-                        <a href="{{ url('/#support') }}" class="xl">Support</a>
+                        <a href="{{ route('competitions.public') }}" class="xl">
+                        Competitions
+                    </a>
                     </li>
+                  
                 </ul>
             </nav>
             <div class="tc wf ig pb no gap-2">

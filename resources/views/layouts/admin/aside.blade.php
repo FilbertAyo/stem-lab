@@ -2,7 +2,7 @@
 <nav class="pc-sidebar">
     <div class="navbar-wrapper">
         <a href="{{ route('admin.dashboard') }}" class="text-primary">
-          <img src="{{ asset('images/logo/logo-dark.png') }}" class="img-fluid logo-lg" alt="Adilisha STEM Lab" style="height: 60px;padding: 5px 26px;">
+          <img src="{{ asset('images/logo/logo-dark.png') }}" class="img-fluid logo-lg" alt="Adilisha STEM Lab" style="height: 50px; width: auto; padding: 5px 26px;">
         </a>
 
       <div class="navbar-content">

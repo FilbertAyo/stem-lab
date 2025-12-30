@@ -187,22 +187,7 @@
   @endif
 
   <!-- CTA -->
-  <section class="i pg fh rm ji gp uq" style="background: linear-gradient(135deg, #0077b6 0%, #00b4d8 100%);">
-    <div class="bb ze ki xn text-center">
-      <div class="animate_top">
-        <h2 class="fk vj pr kk wm" style="color: white;">Ready to Compete?</h2>
-        <p class="mt-3" style="color: rgba(255,255,255,0.9); max-width: 500px; margin: 0 auto;">
-          Join a school club, register your students, and participate in exciting STEM competitions across Tanzania.
-        </p>
-        <div class="mt-5 d-flex justify-content-center gap-3 flex-wrap">
-          <a href="{{ route('register') }}" class="lk dk rg tc wf xf _l gi hi" style="padding: 12px 32px; background: white; color: #0077b6;">
-            Get Started <i class="ti ti-arrow-right ml-2"></i>
-          </a>
-         
-        </div>
-      </div>
-    </div>
-  </section>
+  @include('client.front.partials.cta')
 </main>
 @endsection
 

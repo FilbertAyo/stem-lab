@@ -44,7 +44,7 @@
                                 @error('file')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-text text-muted">Upload a GLB 3D model file. Max size: 50MB for now</small>
+                                <small class="form-text text-muted">Upload a GLB 3D model file. Max size: 100MB (subject to server PHP configuration)</small>
                             </div>
 
                             <div class="col-md-6 mb-3">

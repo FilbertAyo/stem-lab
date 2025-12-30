@@ -1,10 +1,5 @@
 <section class="i pg fh rm ji gp uq">
-  <!-- Bg Shapes -->
-  <img src="{{ asset('images/shape-06.svg') }}" alt="Shape" class="h aa y" />
-  <img src="{{ asset('images/shape-07.svg') }}" alt="Shape" class="h w da ee" />
-  <img src="{{ asset('images/shape-12.svg') }}" alt="Shape" class="h p s" />
-  <img src="{{ asset('images/shape-13.svg') }}" alt="Shape" class="h r q" />
-
+ 
   <!-- Section Title Start -->
   <div class="animate_top bb ze rj ki xn vq">
     <h2 class="fk vj pr kk wm on/5 gq/2 bb _b">

@@ -56,7 +56,7 @@ class Model3dController extends Controller
             'file' => [
                 'nullable',
                 'file',
-                'max:512000', // Max 100MB for GLB files
+                'max:102400', // Max 100MB for GLB files (102400 KB = 100 MB)
                 function ($attribute, $value, $fail) {
                     if ($value && $value->isValid()) {
                         $extension = strtolower($value->getClientOriginalExtension());
@@ -64,6 +64,25 @@ class Model3dController extends Controller
                         // Check extension - this is the most reliable check for GLB files
                         if ($extension !== 'glb') {
                             $fail('The file must be a GLB file.');
+                            return;
+                        }
+
+                        // Check PHP upload limits
+                        $maxUploadSize = self::getPhpMaxUploadSizeStatic();
+                        $fileSize = $value->getSize();
+                        
+                        if ($fileSize > $maxUploadSize) {
+                            $maxSizeMB = round($maxUploadSize / 1024 / 1024, 2);
+                            $fail("The file is too large. Maximum upload size allowed by server is {$maxSizeMB}MB. Please contact your administrator to increase PHP upload_max_filesize and post_max_size settings.");
+                        }
+                    } elseif ($value && !$value->isValid()) {
+                        // Handle upload errors
+                        $error = $value->getError();
+                        if ($error === UPLOAD_ERR_INI_SIZE || $error === UPLOAD_ERR_FORM_SIZE) {
+                            $maxSizeMB = round(self::getPhpMaxUploadSizeStatic() / 1024 / 1024, 2);
+                            $fail("The file is too large. Maximum upload size allowed by server is {$maxSizeMB}MB. Please contact your administrator to increase PHP upload_max_filesize and post_max_size settings.");
+                        } else {
+                            $fail('File upload failed. Please try again.');
                         }
                     }
                 },
@@ -133,7 +152,7 @@ class Model3dController extends Controller
             'file' => [
                 'nullable',
                 'file',
-                'max:102400', // Max 100MB for GLB files
+                'max:102400', // Max 100MB for GLB files (102400 KB = 100 MB)
                 function ($attribute, $value, $fail) {
                     if ($value && $value->isValid()) {
                         $extension = strtolower($value->getClientOriginalExtension());
@@ -142,6 +161,24 @@ class Model3dController extends Controller
                         if ($extension !== 'glb') {
                             $fail('The file must be a GLB file.');
                             return;
+                        }
+
+                        // Check PHP upload limits
+                        $maxUploadSize = self::getPhpMaxUploadSizeStatic();
+                        $fileSize = $value->getSize();
+                        
+                        if ($fileSize > $maxUploadSize) {
+                            $maxSizeMB = round($maxUploadSize / 1024 / 1024, 2);
+                            $fail("The file is too large. Maximum upload size allowed by server is {$maxSizeMB}MB. Please contact your administrator to increase PHP upload_max_filesize and post_max_size settings.");
+                        }
+                    } elseif ($value && !$value->isValid()) {
+                        // Handle upload errors
+                        $error = $value->getError();
+                        if ($error === UPLOAD_ERR_INI_SIZE || $error === UPLOAD_ERR_FORM_SIZE) {
+                            $maxSizeMB = round(self::getPhpMaxUploadSizeStatic() / 1024 / 1024, 2);
+                            $fail("The file is too large. Maximum upload size allowed by server is {$maxSizeMB}MB. Please contact your administrator to increase PHP upload_max_filesize and post_max_size settings.");
+                        } else {
+                            $fail('File upload failed. Please try again.');
                         }
                     }
                 },
@@ -219,5 +256,57 @@ class Model3dController extends Controller
 
         return redirect()->route('admin.models.3d.index')
             ->with('success', '3D model and associated files deleted successfully.');
+    }
+
+    /**
+     * Get the maximum upload size allowed by PHP configuration.
+     * Returns the minimum of upload_max_filesize and post_max_size.
+     *
+     * @return int Maximum upload size in bytes
+     */
+    private function getPhpMaxUploadSize(): int
+    {
+        return self::getPhpMaxUploadSizeStatic();
+    }
+
+    /**
+     * Get the maximum upload size allowed by PHP configuration (static version for use in closures).
+     * Returns the minimum of upload_max_filesize and post_max_size.
+     *
+     * @return int Maximum upload size in bytes
+     */
+    private static function getPhpMaxUploadSizeStatic(): int
+    {
+        $uploadMax = self::parseSize(ini_get('upload_max_filesize'));
+        $postMax = self::parseSize(ini_get('post_max_size'));
+        
+        // Return the smaller of the two, but at least 1MB
+        return min($uploadMax, $postMax);
+    }
+
+    /**
+     * Parse PHP size string (e.g., "2M", "512K", "1G") to bytes.
+     *
+     * @param string $size PHP size string
+     * @return int Size in bytes
+     */
+    private static function parseSize(string $size): int
+    {
+        $size = trim($size);
+        $last = strtolower($size[strlen($size) - 1]);
+        $value = (int) $size;
+        
+        switch ($last) {
+            case 'g':
+                $value *= 1024;
+                // no break
+            case 'm':
+                $value *= 1024;
+                // no break
+            case 'k':
+                $value *= 1024;
+        }
+        
+        return $value;
     }
 }

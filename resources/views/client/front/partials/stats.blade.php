@@ -1,6 +1,4 @@
 <section class="i pg qh rm ji hp">
-  <img src="{{ asset('images/shape-11.svg') }}" alt="Shape" class="of h ga ha ke" />
-  <img src="{{ asset('images/shape-14.svg') }}" alt="Shape" class="h ia o ae jf" />
   <img src="{{ asset('images/shape-15.svg') }}" alt="Shape" class="h q p" />
 
   <div class="bb ze i va ki xn br">

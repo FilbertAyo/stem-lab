@@ -72,8 +72,8 @@
                     <div class="tc uf ap gg fp">
                         <div class="animate_top zd/2 to/4">
                             <a href="{{ url('/') }}">
-                                <img src="{{ asset('images/logo/logo-dark.png') }}" alt="{{ config('app.name') }} Logo" class="om" style="height:50px;" loading="lazy" width="150" height="50"/>
-                                <img src="{{ asset('images/logo/logo-white.png') }}" alt="{{ config('app.name') }} Logo" class="xc nm" style="height:50px;" loading="lazy" width="150" height="50"/>
+                                <img src="{{ asset('images/logo/logo-dark.png') }}" alt="{{ config('app.name') }} Logo" class="om" style="height:45px; width:auto;" loading="lazy"/>
+                                <img src="{{ asset('images/logo/logo-white.png') }}" alt="{{ config('app.name') }} Logo" class="xc nm" style="height:45px; width:auto;" loading="lazy"/>
                             </a>
                             <p class="lc fb">Adilisha is a non-profit organization that empowers girls in STEM education across Tanzania.</p>
                             <ul class="tc wf cg">
@@ -188,29 +188,21 @@
                                 <h4 class="kk wm tj ec">Quick Links</h4>
                                 <ul>
                                     <li><a href="{{ url('/') }}" class="sc xl vb">Home</a></li>
-                                    <li><a href="#!" class="sc xl vb">Product</a></li>
-                                    <li><a href="#!" class="sc xl vb">Careers</a></li>
-                                    <li><a href="#!" class="sc xl vb">Pricing</a></li>
+                                    <li><a href="{{ route('competitions.public') }}" class="sc xl vb">Competitions</a></li>
+                                    <li><a href="{{ route('login') }}" class="sc xl vb">Login</a></li>
+                                    <li><a href="{{ route('register') }}" class="sc xl vb">Register</a></li>
                                 </ul>
                             </div>
                             <div class="animate_top">
                                 <h4 class="kk wm tj ec">Services</h4>
                                 <ul>
-                                    <li><a href="#!" class="sc xl vb">Web Development</a></li>
-                                    <li><a href="#!" class="sc xl vb">Graphics Design</a></li>
-                                    <li><a href="#!" class="sc xl vb">Digital Marketing</a></li>
-                                    <li><a href="#!" class="sc xl vb">Ui/Ux Design</a></li>
+                                    <li><a class="sc xl vb">VR STEM Labs</a></li>
+                                    <li><a class="sc xl vb">Physical STEM Labs</a></li>
+                                    <li><a class="sc xl vb">Coding and Robotics Stations</a></li>
+                                   
                                 </ul>
                             </div>
-                            <div class="animate_top">
-                                <h4 class="kk wm tj ec">Support</h4>
-                                <ul>
-                                    <li><a href="#!" class="sc xl vb">Company</a></li>
-                                    <li><a href="#!" class="sc xl vb">Press media</a></li>
-                                    <li><a href="#!" class="sc xl vb">Our Blog</a></li>
-                                    <li><a href="#!" class="sc xl vb">Contact Us</a></li>
-                                </ul>
-                            </div>
+                          
                             <div class="animate_top">
                                 <h4 class="kk wm tj ec">Newsletter</h4>
                                 <p class="ac qe">Subscribe to receive future updates</p>
@@ -238,13 +230,12 @@
                 <div class="bh ch pm tc uf sf yo wf xf ap cg fp bj">
                     <div class="animate_top">
                         <ul class="tc wf gg">
-                            <li><a href="#!" class="xl">English</a></li>
-                            <li><a href="#!" class="xl">Privacy Policy</a></li>
-                            <li><a href="#!" class="xl">Support</a></li>
+                            <li><a class="xl">Privacy Policy</a></li>
+                            <li><a class="xl">Support</a></li>
                             @php
                                 $appVersion = \App\Models\Setting::get('app_version', '1.0.0');
                             @endphp
-                            <li class="list-inline-item"><a href="#!" class="xl">V{{ $appVersion }}</a></li>
+                                <li class="list-inline-item"><a class="xl">V{{ $appVersion }}</a></li>
                         </ul>
                     </div>
                     <div class="animate_top">

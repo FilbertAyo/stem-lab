@@ -4,7 +4,7 @@
             <div class="d-flex justify-content-between">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}">
-                        <img src="{{ asset('images/logo/logo-dark.png') }}" alt="Logo" style="height: 60px;">
+                        <img src="{{ asset('images/logo/logo-dark.png') }}" alt="Adilisha STEM Lab" style="height: 50px; width: auto;">
                     </a>
                 </div>
                 <div class="toggler">

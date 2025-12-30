@@ -50,6 +50,11 @@ class LoginRequest extends FormRequest
         $remember = (bool) Arr::get($validated, 'remember', false);
         $isAdminLogin = (bool) Arr::get($validated, 'admin_login', false);
 
+        // Force remember=false for admin logins to ensure sessions expire properly
+        if ($isAdminLogin) {
+            $remember = false;
+        }
+
         if (! Auth::attempt($credentials, $remember)) {
             RateLimiter::hit($this->throttleKey());
 
