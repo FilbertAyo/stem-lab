@@ -42,7 +42,7 @@
                 <li class="sidebar-item {{ request()->routeIs('client.models.3d.*') ? 'active' : '' }}">
                     <a href="{{ route('client.models.3d.index') }}" class="sidebar-link">
                         <i class="bi bi-box"></i>
-                        <span>3D Model</span>
+                        <span>3D Models</span>
                     </a>
                 </li>
 

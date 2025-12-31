@@ -32,6 +32,17 @@ class Model3dController extends Controller
             });
         }
 
+        // Status filter
+        if ($request->filled('status')) {
+            $status = $request->status;
+            if ($status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($status === 'inactive') {
+                $query->where('is_active', false);
+            }
+            // If status is 'all', no filter is applied
+        }
+
         $model3ds = $query->latest()->paginate(15)->withQueryString();
         return view('admin.models.3d.index', compact('model3ds'));
     }

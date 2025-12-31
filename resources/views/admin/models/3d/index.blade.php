@@ -20,14 +20,21 @@
             <div class="card mb-3">
                 <div class="card-body py-3">
                     <form method="GET" action="{{ route('admin.models.3d.index') }}" class="row g-3 align-items-end">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <input type="text" name="search" class="form-control" placeholder="Search by name, description, tags, or subject..." value="{{ request('search') }}">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
+                            <select name="status" class="form-select">
+                                <option value="all" {{ request('status') === 'all' || !request('status') ? 'selected' : '' }}>All Status</option>
+                                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
                             <button type="submit" class="btn btn-outline-primary me-2">
                                 <i class="ti ti-search"></i> Search
                             </button>
-                            @if(request('search'))
+                            @if(request('search') || request('status'))
                                 <a href="{{ route('admin.models.3d.index') }}" class="btn btn-outline-secondary">
                                     <i class="ti ti-x"></i> Clear
                                 </a>

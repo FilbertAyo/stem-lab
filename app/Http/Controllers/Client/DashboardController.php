@@ -51,8 +51,8 @@ class DashboardController extends Controller
             $totalStudents = Student::whereIn('teacher_club_id', $teacherClubs)->count();
         }
 
-        // Get latest models
-        $latestModels = Model3d::with('subject')->latest()->take(6)->get();
+        // Get latest active models
+        $latestModels = Model3d::active()->with('subject')->latest()->take(3)->get();
 
         // Calculate accuracy
         $accuracy = $totalAnswers > 0 ? round(($correctAnswers / $totalAnswers) * 100, 1) : 0;

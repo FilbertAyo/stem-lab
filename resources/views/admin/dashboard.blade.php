@@ -10,19 +10,38 @@
 
             <!-- Statistics Cards -->
             <div class="row mb-4">
-                <!-- Users Card -->
+                <!-- Admins Card -->
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar avatar-md bg-danger text-white rounded">
+                                        <i class="ti ti-shield fs-4"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0 text-muted">Total Admins</h6>
+                                    <h4 class="mb-0">{{ $stats['total_admins'] }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teachers Card -->
                 <div class="col-md-3 col-sm-6 mb-3">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="flex-shrink-0">
                                     <div class="avatar avatar-md bg-primary text-white rounded">
-                                        <i class="ti ti-users fs-4"></i>
+                                        <i class="ti ti-user fs-4"></i>
                                     </div>
                                 </div>
                                 <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-muted">Total Users</h6>
-                                    <h4 class="mb-0">{{ $stats['total_users'] }}</h4>
+                                    <h6 class="mb-0 text-muted">Total Teachers</h6>
+                                    <h4 class="mb-0">{{ $stats['total_teachers'] }}</h4>
                                 </div>
                             </div>
                         </div>
@@ -165,6 +184,85 @@
                                     @endif
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Latest Active Admin & Recent Activities Row -->
+            <div class="row mb-4">
+                <!-- Latest Active Admin -->
+                <div class="col-md-4 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-transparent border-bottom">
+                            <h6 class="mb-0">Latest Active Admin</h6>
+                        </div>
+                        <div class="card-body">
+                            @if($latestActiveAdmin && $latestActiveAdmin['user'])
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="avatar avatar-lg bg-danger text-white rounded-circle">
+                                            <span class="fs-5">{{ substr($latestActiveAdmin['user']->name, 0, 1) }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">{{ $latestActiveAdmin['user']->name }}</h6>
+                                        <p class="text-muted mb-0 small">{{ $latestActiveAdmin['user']->email }}</p>
+                                        @if($latestActiveAdmin['last_activity'])
+                                            <small class="text-muted">
+                                                <i class="ti ti-clock"></i>
+                                                Active {{ $latestActiveAdmin['last_activity']->diffForHumans() }}
+                                            </small>
+                                        @else
+                                            <small class="text-muted">
+                                                <i class="ti ti-user"></i>
+                                                Registered {{ $latestActiveAdmin['user']->created_at->diffForHumans() }}
+                                            </small>
+                                        @endif
+                                    </div>
+                                </div>
+                            @else
+                                <p class="text-muted mb-0 small">No admin activity found</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="col-md-8 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-transparent border-bottom">
+                            <h6 class="mb-0">Recent Activities (Today)</h6>
+                        </div>
+                        <div class="card-body">
+                            @if($recentActivities->count() > 0)
+                                <div class="list-group list-group-flush">
+                                    @foreach($recentActivities as $activity)
+                                        <div class="list-group-item px-0 border-0 border-bottom">
+                                            <div class="d-flex align-items-start">
+                                                <div class="flex-shrink-0">
+                                                    <div class="avatar avatar-sm bg-{{ $activity['color'] }}-subtle text-{{ $activity['color'] }} rounded">
+                                                        <i class="ti {{ $activity['icon'] }}"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="mb-1 small">{{ $activity['title'] }}</h6>
+                                                    @if($activity['user'])
+                                                        <p class="text-muted mb-0 small">
+                                                            <i class="ti ti-user"></i> {{ $activity['user']->name }}
+                                                        </p>
+                                                    @endif
+                                                    <small class="text-muted">
+                                                        <i class="ti ti-clock"></i> {{ $activity['time']->diffForHumans() }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-muted mb-0 small text-center py-3">No activities today</p>
+                            @endif
                         </div>
                     </div>
                 </div>

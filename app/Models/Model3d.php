@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Request;
 
 class Model3d extends Model
 {
@@ -101,5 +102,25 @@ class Model3d extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
+    }
+
+    /**
+     * Retrieve the model for route model binding.
+     * For client routes, only allow active models.
+     */
+    public function resolveRouteBinding($value, $field = null)
+    {
+        // Check if this is an admin route by checking the request path
+        $isAdminRoute = Request::is('admin/*');
+
+        if (!$isAdminRoute) {
+            // For client routes, only allow active models
+            return $this->where($field ?? $this->getRouteKeyName(), $value)
+                ->where('is_active', true)
+                ->first();
+        }
+
+        // For admin routes, allow all models
+        return $this->where($field ?? $this->getRouteKeyName(), $value)->first();
     }
 }
