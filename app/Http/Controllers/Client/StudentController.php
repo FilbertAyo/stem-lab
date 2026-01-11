@@ -16,16 +16,19 @@ use Illuminate\View\View;
 class StudentController extends Controller
 {
     /**
-     * Display student registration panel.
+     * Display members panel (students and teachers).
      */
     public function index(): View
     {
         $user = Auth::user();
 
+        // Get teacher's approved club memberships
         $teacherClubs = TeacherClub::where('user_id', $user->id)
+            ->approved()
             ->with(['club', 'school'])
             ->get();
 
+        // Get all students
         $students = Student::whereIn('teacher_club_id', $teacherClubs->pluck('id'))
             ->with(['schoolClass', 'teacherClub.club', 'teacherClub.school'])
             ->orderBy('name')
@@ -36,10 +39,59 @@ class StudentController extends Controller
             ->orderBy('name')
             ->get();
 
+        // Get all clubs the user is a member of (for Teachers tab)
+        // Group by club and school to show all members
+        $clubsWithTeachers = collect();
+        
+        foreach ($teacherClubs as $teacherClub) {
+            $clubId = $teacherClub->club_id;
+            $schoolId = $teacherClub->school_id;
+            
+            // Check if we already added this club-school combination
+            $exists = $clubsWithTeachers->first(function ($item) use ($clubId, $schoolId) {
+                return $item['club']->id === $clubId && $item['school']->id === $schoolId;
+            });
+            
+            if (!$exists) {
+                // Get all approved teachers from this school in this club
+                $approvedTeachers = TeacherClub::where('club_id', $clubId)
+                    ->where('school_id', $schoolId)
+                    ->approved()
+                    ->with(['user', 'school'])
+                    ->get();
+
+                // Get pending requests from this school in this club (only if user is leader)
+                $isLeader = $user->teacherClubs()
+                    ->where('club_id', $clubId)
+                    ->where('school_id', $schoolId)
+                    ->where('is_leader', true)
+                    ->approved()
+                    ->exists();
+                
+                $pendingRequests = collect();
+                if ($isLeader) {
+                    $pendingRequests = TeacherClub::where('club_id', $clubId)
+                        ->where('school_id', $schoolId)
+                        ->pending()
+                        ->with(['user', 'school'])
+                        ->get();
+                }
+
+                $clubsWithTeachers->push([
+                    'club' => $teacherClub->club,
+                    'school' => $teacherClub->school,
+                    'approvedTeachers' => $approvedTeachers,
+                    'pendingRequests' => $pendingRequests,
+                    'isLeader' => $isLeader,
+                ]);
+            }
+        }
+
         return view('client.back.students.index', [
             'teacherClubs' => $teacherClubs,
             'students' => $students,
             'classes' => $classes,
+            'clubsWithTeachers' => $clubsWithTeachers,
         ]);
     }
 
@@ -58,9 +110,10 @@ class StudentController extends Controller
             'school_class_id' => ['required', 'exists:school_classes,id'],
         ]);
 
-        // Verify the teacher_club belongs to the current teacher
+        // Verify the teacher_club belongs to the current teacher and is approved
         $teacherClub = TeacherClub::where('id', $validated['teacher_club_id'])
             ->where('user_id', $user->id)
+            ->approved()
             ->firstOrFail();
 
         Student::create($validated);
@@ -81,9 +134,10 @@ class StudentController extends Controller
             'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'], // Max 5MB
         ]);
 
-        // Verify the teacher_club belongs to the current teacher
+        // Verify the teacher_club belongs to the current teacher and is approved
         $teacherClub = TeacherClub::where('id', $validated['teacher_club_id'])
             ->where('user_id', $user->id)
+            ->approved()
             ->firstOrFail();
 
         $file = $request->file('csv_file');

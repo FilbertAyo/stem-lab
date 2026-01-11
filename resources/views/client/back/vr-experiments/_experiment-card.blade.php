@@ -8,8 +8,8 @@
                  loading="lazy"
                  decoding="async">
         @else
-            <div class="d-flex flex-column justify-content-center align-items-center bg-gradient-primary h-100 w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                <i class="bi bi-vr text-white fs-1"></i>
+            <div class="d-flex flex-column justify-content-center align-items-center bg-primary h-100 w-100">
+               
                 <span class="text-white-50 small mt-2">VR Experience</span>
             </div>
         @endif

@@ -32,4 +32,13 @@ class SchoolClass extends Model
     {
         return $query->orderBy('name');
     }
+
+    /**
+     * Get the weekly sessions associated with this class.
+     */
+    public function weeklySessions()
+    {
+        return $this->belongsToMany(WeeklySession::class, 'weekly_session_classes')
+            ->withTimestamps();
+    }
 }

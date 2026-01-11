@@ -1,5 +1,10 @@
 <x-app-layout>
-
+    <div class="page-heading">
+        <div>
+            <h3 class="mb-1">Members</h3>
+            <p class="text-muted mb-0">Manage students and teachers in your clubs.</p>
+        </div>
+    </div>
 
     <div class="page-content">
         <section class="row">
@@ -23,66 +28,215 @@
                         <div class="card-body text-center py-5">
                             <i class="bi bi-people display-4 text-muted mb-3"></i>
                             <h5 class="fw-semibold mb-2">No clubs joined yet</h5>
-                            <p class="text-muted mb-3">Join a club to start registering students from your school.</p>
+                            <p class="text-muted mb-3">Join a club to start managing members.</p>
                             <a href="{{ route('client.clubs.index') }}" class="btn btn-primary btn-sm">
                                 <i class="bi bi-school me-1"></i>Browse Clubs
                             </a>
                         </div>
                     </div>
                 @else
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="mb-0"><i class="bi bi-people me-2"></i>All Registered Students</h5>
-                                <small class="text-muted">Students across all your schools and clubs.</small>
-                            </div>
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
-                                    <i class="bi bi-upload me-1"></i>Bulk Upload
-                                </button>
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
-                                    <i class="bi bi-plus-circle me-1"></i>Register Student
-                                </button>
+                    <!-- Tabs Navigation -->
+                    <ul class="nav nav-tabs mb-4" id="membersTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a href="{{ route('client.students.index') }}" class="nav-link {{ request('tab') !== 'teachers' ? 'active' : '' }}">
+                                Students
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a href="{{ route('client.students.index', ['tab' => 'teachers']) }}" class="nav-link {{ request('tab') === 'teachers' ? 'active' : '' }}">
+                              Teachers
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Tabs Content -->
+                    <div class="tab-content" id="membersTabContent">
+                        <!-- Students Tab -->
+                        @if(request('tab') !== 'teachers')
+                        <div class="tab-pane fade show active" id="students" role="tabpanel" aria-labelledby="students-tab">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="mb-0">All Registered Students</h5>
+                                        <small class="text-muted">Students across all your schools and clubs.</small>
+                                    </div>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
+                                            <i class="bi bi-upload me-1"></i>Bulk Upload
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
+                                            <i class="bi bi-plus-circle me-1"></i>Register Student
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    @if($students->isEmpty())
+                                        <div class="text-center py-4">
+                                            <i class="bi bi-inbox display-6 text-muted mb-3"></i>
+                                            <p class="text-muted mb-2">No students have been registered yet.</p>
+                                            <p class="text-muted mb-3">Click the "Register Student" button above to add your first student.</p>
+                                        </div>
+                                    @else
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-hover align-middle">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Student</th>
+                                                        <th>Age</th>
+                                                        <th>Gender</th>
+                                                        <th>Class</th>
+                                                        <th>Club</th>
+                                                        <th>School</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($students as $student)
+                                                        <tr>
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td class="fw-semibold">{{ $student->name }}</td>
+                                                            <td>{{ $student->age }}</td>
+                                                            <td>{{ ucfirst($student->gender) }}</td>
+                                                            <td>{{ $student->schoolClass->name ?? '—' }}</td>
+                                                            <td>{{ $student->teacherClub->club->name ?? '—' }}</td>
+                                                            <td>{{ $student->teacherClub->school->name ?? '—' }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            @if($students->isEmpty())
-                                <div class="text-center py-4">
-                                    <i class="bi bi-inbox display-6 text-muted mb-3"></i>
-                                    <p class="text-muted mb-2">No students have been registered yet.</p>
-                                    <p class="text-muted mb-3">Click the "Register Student" button above to add your first student.</p>
+                        @endif
+
+                        <!-- Teachers Tab -->
+                        @if(request('tab') === 'teachers')
+                        <div class="tab-pane fade show active" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">
+                            @if($clubsWithTeachers->isEmpty())
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body text-center py-5">
+                                        <i class="bi bi-person-badge display-4 text-muted mb-3"></i>
+                                        <h5 class="fw-semibold mb-2">No club memberships</h5>
+                                        <p class="text-muted mb-3">Join a club to see teachers and members.</p>
+                                    </div>
                                 </div>
                             @else
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover align-middle">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Student</th>
-                                                <th>Age</th>
-                                                <th>Gender</th>
-                                                <th>Class</th>
-                                                <th>Club</th>
-                                                <th>School</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($students as $student)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td class="fw-semibold">{{ $student->name }}</td>
-                                                    <td>{{ $student->age }}</td>
-                                                    <td><span class="badge bg-secondary">{{ ucfirst($student->gender) }}</span></td>
-                                                    <td>{{ $student->schoolClass->name ?? '—' }}</td>
-                                                    <td>{{ $student->teacherClub->club->name ?? '—' }}</td>
-                                                    <td>{{ $student->teacherClub->school->name ?? '—' }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                @foreach($clubsWithTeachers as $clubData)
+                                    <div class="card border-0 shadow-sm mb-4">
+                                        <div class="card-header">
+                                            <h5 class="mb-0">
+                                                <i class="bi bi-school me-2"></i>
+                                                {{ $clubData['club']->name }}
+                                            </h5>
+                                            @if(isset($clubData['school']))
+                                                <small class="text-muted">School: {{ $clubData['school']->name }}</small>
+                                            @endif
+                                        </div>
+                                        <div class="card-body">
+                                            <!-- Approved Teachers Section -->
+                                            <div class="mb-4">
+                                                <h6 class="fw-semibold mb-3">
+                                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                                    Approved Teachers ({{ $clubData['approvedTeachers']->count() }})
+                                                </h6>
+                                                @if($clubData['approvedTeachers']->isEmpty())
+                                                    <p class="text-muted">No approved teachers yet.</p>
+                                                @else
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-hover mb-0">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Name</th>
+                                                                    <th>Email</th>
+                                                                    <th>School</th>
+                                                                    <th>Role</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($clubData['approvedTeachers'] as $teacherClub)
+                                                                    <tr>
+                                                                        <td>{{ $loop->iteration }}</td>
+                                                                        <td class="fw-semibold">
+                                                                            {{ $teacherClub->user->name }}
+                                                                          
+                                                                        </td>
+                                                                        <td>{{ $teacherClub->user->email }}</td>
+                                                                        <td>{{ $teacherClub->school->name ?? 'N/A' }}</td>
+                                                                        <td>
+                                                                            @if($teacherClub->is_leader)
+                                                                                <span class="badge bg-primary">Club Leader</span>
+                                                                            @else
+                                                                                <span class="badge bg-info">Member</span>
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <!-- Pending Requests Section -->
+                                            @if($clubData['pendingRequests']->isNotEmpty())
+                                                <hr>
+                                                <div>
+                                                    <h6 class="fw-semibold mb-3">
+                                                        <i class="bi bi-clock-history text-warning me-2"></i>
+                                                        Pending Join Requests ({{ $clubData['pendingRequests']->count() }})
+                                                    </h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-hover mb-0">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Name</th>
+                                                                    <th>Email</th>
+                                                                    <th>School</th>
+                                                                    <th>Request Date</th>
+                                                                    <th class="text-end">Actions</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($clubData['pendingRequests'] as $request)
+                                                                    <tr>
+                                                                        <td>{{ $loop->iteration }}</td>
+                                                                        <td class="fw-semibold">{{ $request->user->name }}</td>
+                                                                        <td>{{ $request->user->email }}</td>
+                                                                        <td>{{ $request->school->name ?? 'N/A' }}</td>
+                                                                        <td>{{ $request->created_at->format('M d, Y') }}</td>
+                                                                        <td class="text-end">
+                                                                            <form method="POST" action="{{ route('client.clubs.approve-request', $request) }}" class="d-inline me-2">
+                                                                                @csrf
+                                                                                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Approve this request?')">
+                                                                                    <i class="bi bi-check-circle me-1"></i>
+                                                                                    Approve
+                                                                                </button>
+                                                                            </form>
+                                                                            <form method="POST" action="{{ route('client.clubs.reject-request', $request) }}" class="d-inline">
+                                                                                @csrf
+                                                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Reject this request?')">
+                                                                                    <i class="bi bi-x-circle me-1"></i>
+                                                                                    Reject
+                                                                                </button>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
                             @endif
                         </div>
+                        @endif
                     </div>
                 @endif
             </div>
@@ -127,23 +281,17 @@
                                 </div>
                             @else
                                 <input type="hidden" name="teacher_club_id" value="{{ $teacherClubs->first()->id }}">
-                                <div class="alert alert-info mb-3">
-                                    <i class="bi bi-info-circle me-2"></i>
-                                    <strong>Club:</strong> {{ $teacherClubs->first()->club->name }}<br>
-                                    <strong>School:</strong> {{ $teacherClubs->first()->school->name ?? 'N/A' }}
-                                </div>
                             @endif
 
                             <div class="mb-3">
-                                <label for="student_name" class="form-label">
+                                <label for="name" class="form-label">
                                     Student Name <span class="text-danger">*</span>
                                 </label>
                                 <input type="text"
                                        class="form-control @error('name') is-invalid @enderror"
-                                       id="student_name"
+                                       id="name"
                                        name="name"
                                        value="{{ old('name') }}"
-                                       placeholder="Enter student's full name"
                                        required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -152,17 +300,16 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="student_age" class="form-label">
+                                    <label for="age" class="form-label">
                                         Age <span class="text-danger">*</span>
                                     </label>
                                     <input type="number"
                                            class="form-control @error('age') is-invalid @enderror"
-                                           id="student_age"
+                                           id="age"
                                            name="age"
                                            value="{{ old('age') }}"
                                            min="1"
                                            max="150"
-                                           placeholder="e.g. 15"
                                            required>
                                     @error('age')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -170,17 +317,16 @@
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="student_gender" class="form-label">
+                                    <label for="gender" class="form-label">
                                         Gender <span class="text-danger">*</span>
                                     </label>
                                     <select class="form-select @error('gender') is-invalid @enderror"
-                                            id="student_gender"
+                                            id="gender"
                                             name="gender"
                                             required>
-                                        <option value="">Select Gender</option>
-
-                                        <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                                        <option value="">Select gender...</option>
                                         <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                                        <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
                                     </select>
                                     @error('gender')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -196,7 +342,7 @@
                                         id="school_class_id"
                                         name="school_class_id"
                                         required>
-                                    <option value="">Select Class</option>
+                                    <option value="">Select class...</option>
                                     @foreach($classes as $class)
                                         <option value="{{ $class->id }}" {{ old('school_class_id') == $class->id ? 'selected' : '' }}>
                                             {{ $class->name }}
@@ -209,10 +355,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                                <i class="bi bi-x-circle me-1"></i>
-                                Cancel
-                            </button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-check-circle me-1"></i>
                                 Register Student
@@ -222,12 +365,10 @@
                 </div>
             </div>
         </div>
-    @endif
 
-    <!-- Bulk Upload Modal -->
-    @if($teacherClubs->isNotEmpty())
+        <!-- Bulk Upload Modal -->
         <div class="modal fade" id="bulkUploadModal" tabindex="-1" aria-labelledby="bulkUploadModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="bulkUploadModalLabel">
@@ -239,6 +380,11 @@
                     <form method="POST" action="{{ route('client.students.bulk-store') }}" enctype="multipart/form-data" id="bulkUploadForm">
                         @csrf
                         <div class="modal-body">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>CSV Format Required:</strong> Your CSV file must include columns: name, age, gender, class_name
+                            </div>
+
                             @if($teacherClubs->count() > 1)
                                 <div class="mb-3">
                                     <label for="bulk_teacher_club_id" class="form-label">
@@ -258,15 +404,9 @@
                                     @error('teacher_club_id')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                    <small class="text-muted">Select the club and school where these students belong.</small>
                                 </div>
                             @else
                                 <input type="hidden" name="teacher_club_id" value="{{ $teacherClubs->first()->id }}">
-                                <div class="alert alert-info mb-3">
-                                    <i class="bi bi-info-circle me-2"></i>
-                                    <strong>Club:</strong> {{ $teacherClubs->first()->club->name }}<br>
-                                    <strong>School:</strong> {{ $teacherClubs->first()->school->name ?? 'N/A' }}
-                                </div>
                             @endif
 
                             <div class="mb-3">
@@ -277,40 +417,19 @@
                                        class="form-control @error('csv_file') is-invalid @enderror"
                                        id="csv_file"
                                        name="csv_file"
-                                       accept=".csv"
+                                       accept=".csv,.txt"
                                        required>
                                 @error('csv_file')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="text-muted">
-                                    Upload a CSV file with columns: <strong>name, age, gender, class_name</strong>
-                                </small>
-                            </div>
-
-                            <div class="alert alert-light border">
-                                <h6 class="fw-semibold mb-2"><i class="bi bi-info-circle me-2"></i>CSV Format Instructions:</h6>
-                                <ul class="mb-0 small">
-                                    <li>First row should contain headers: <code>name, age, gender, class_name</code></li>
-                                    <li><strong>name:</strong> Student's full name</li>
-                                    <li><strong>age:</strong> Student's age (number between 1-150)</li>
-                                    <li><strong>gender:</strong> Must be either "male" or "female"</li>
-                                    <li><strong>class_name:</strong> Exact name of the class (must match an existing class)</li>
-                                </ul>
-                                <hr class="my-2">
-                                <p class="mb-0 small"><strong>Example:</strong></p>
-                                <pre class="mb-0 small bg-white p-2 rounded">name,age,gender,class_name
-John Doe,15,male,Form 1
-Jane Smith,16,female,Form 2</pre>
+                                <small class="text-muted">Maximum file size: 5MB. Accepted formats: CSV, TXT</small>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                                <i class="bi bi-x-circle me-1"></i>
-                                Cancel
-                            </button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-success">
                                 <i class="bi bi-upload me-1"></i>
-                                Upload & Import
+                                Upload CSV
                             </button>
                         </div>
                     </form>
@@ -318,54 +437,4 @@ Jane Smith,16,female,Form 2</pre>
             </div>
         </div>
     @endif
-
-    @php
-        $showBulkModal = false;
-        $showSingleModal = false;
-        
-        if ($errors->any() && (old('teacher_club_id') || $teacherClubs->count() == 1)) {
-            if (old('csv_file') || (session('error') && !old('name'))) {
-                $showBulkModal = true;
-            } else {
-                $showSingleModal = true;
-            }
-        } elseif (session('error')) {
-            $errorMessage = session('error', '');
-            if (str_contains($errorMessage, 'CSV') || str_contains($errorMessage, 'bulk') || str_contains($errorMessage, 'Line')) {
-                $showBulkModal = true;
-            }
-        }
-    @endphp
-
-    <div id="modal-config" 
-         data-show-bulk="{{ $showBulkModal ? 'true' : 'false' }}"
-         data-show-single="{{ $showSingleModal ? 'true' : 'false' }}"
-         style="display: none;"></div>
-
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const config = document.getElementById('modal-config');
-                const showBulkModal = config.getAttribute('data-show-bulk') === 'true';
-                const showSingleModal = config.getAttribute('data-show-single') === 'true';
-                
-                if (showBulkModal) {
-                    const bulkModalElement = document.getElementById('bulkUploadModal');
-                    if (bulkModalElement) {
-                        const bulkModal = new bootstrap.Modal(bulkModalElement);
-                        bulkModal.show();
-                    }
-                }
-
-                if (showSingleModal) {
-                    const modalElement = document.getElementById('registerStudentModal');
-                    if (modalElement) {
-                        const modal = new bootstrap.Modal(modalElement);
-                        modal.show();
-                    }
-                }
-            });
-        </script>
-    @endpush
 </x-app-layout>
-

@@ -59,12 +59,13 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the clubs that this teacher belongs to.
+     * Get the clubs that this teacher belongs to (only approved memberships).
      */
     public function clubs()
     {
         return $this->belongsToMany(Club::class, 'teacher_clubs')
-            ->withPivot(['school_id'])
+            ->wherePivot('status', 'approved')
+            ->withPivot(['school_id', 'status', 'is_leader'])
             ->withTimestamps();
     }
 
@@ -74,6 +75,24 @@ class User extends Authenticatable
     public function teacherClubs()
     {
         return $this->hasMany(TeacherClub::class);
+    }
+
+    /**
+     * Get pending club join requests for this user.
+     */
+    public function pendingClubRequests()
+    {
+        return $this->hasMany(TeacherClub::class)->where('status', 'pending');
+    }
+
+    /**
+     * Get clubs where this user is the leader (through TeacherClub).
+     */
+    public function leadClubs()
+    {
+        return $this->hasMany(TeacherClub::class)
+            ->where('is_leader', true)
+            ->with('club');
     }
 
     /**

@@ -105,6 +105,15 @@ class Model3d extends Model
     }
 
     /**
+     * Get the weekly sessions associated with this 3D model.
+     */
+    public function weeklySessions()
+    {
+        return $this->belongsToMany(WeeklySession::class, 'weekly_session_model3ds')
+            ->withTimestamps();
+    }
+
+    /**
      * Retrieve the model for route model binding.
      * For client routes, only allow active models.
      */

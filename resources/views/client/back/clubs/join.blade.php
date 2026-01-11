@@ -19,6 +19,16 @@
                             @endif
                         </div>
 
+                            <div class="alert alert-info mb-4">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-info-circle me-2 fs-5 mt-1"></i>
+                                    <div>
+                                        <strong>Join Process</strong>
+                                        <p class="mb-0 small">If you're the first teacher from your school to join this club, you'll automatically become the school leader. Otherwise, your request will need approval from your school's leader.</p>
+                                    </div>
+                                </div>
+                            </div>
+
                         <hr class="my-4">
 
                         <form method="POST" action="{{ route('client.clubs.join', $club) }}" id="joinClubForm">

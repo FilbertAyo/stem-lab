@@ -40,6 +40,39 @@ class Club extends Model
     }
 
     /**
+     * Get the club leader (single TeacherClub where is_leader = true).
+     */
+    public function leader()
+    {
+        return $this->hasOne(TeacherClub::class)->where('is_leader', true);
+    }
+
+    /**
+     * Get pending join requests for this club.
+     */
+    public function pendingRequests()
+    {
+        return $this->hasMany(TeacherClub::class)->where('status', 'pending');
+    }
+
+    /**
+     * Check if club has a leader.
+     */
+    public function hasLeader(): bool
+    {
+        return $this->teacherClubs()->where('is_leader', true)->exists();
+    }
+
+    /**
+     * Get the leader user.
+     */
+    public function getLeader(): ?User
+    {
+        $leaderRecord = $this->teacherClubs()->where('is_leader', true)->first();
+        return $leaderRecord ? $leaderRecord->user : null;
+    }
+
+    /**
      * Get the competitions for this club.
      */
     public function competitions()
@@ -53,6 +86,14 @@ class Club extends Model
     public function activeCompetitions()
     {
         return $this->competitions()->active()->published();
+    }
+
+    /**
+     * Get the weekly sessions for this club.
+     */
+    public function weeklySessions()
+    {
+        return $this->hasMany(WeeklySession::class);
     }
 
     /**

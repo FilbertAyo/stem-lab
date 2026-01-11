@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VrExperimentController;
+use App\Http\Controllers\Admin\WeeklySessionController;
 use App\Http\Controllers\Client\ClubController as ClientClubController;
 use App\Http\Controllers\Client\CompetitionController as ClientCompetitionController;
 use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
@@ -69,14 +70,29 @@ Route::middleware('auth')->group(function () {
 
     // Teacher-only routes
     Route::middleware('teacher')->group(function () {
-        Route::get('/clubs', [ClientClubController::class, 'index'])->name('client.clubs.index');
-        Route::get('/clubs/{club}/join', [ClientClubController::class, 'showJoinForm'])->name('client.clubs.join.form');
-        Route::post('/clubs/{club}/join', [ClientClubController::class, 'join'])->name('client.clubs.join');
+        Route::prefix('clubs')->name('client.clubs.')->group(function () {
+            Route::get('/', [ClientClubController::class, 'index'])->name('index');
+            Route::get('/{club}/join', [ClientClubController::class, 'showJoinForm'])->name('join.form');
+            Route::post('/{club}/join', [ClientClubController::class, 'join'])->name('join');
+            Route::get('/pending-requests', [ClientClubController::class, 'pendingRequests'])->name('pending-requests');
+            Route::post('/{teacherClub}/approve', [ClientClubController::class, 'approveRequest'])->name('approve-request');
+            Route::post('/{teacherClub}/reject', [ClientClubController::class, 'rejectRequest'])->name('reject-request');
+        });
 
         // Student registration routes
         Route::get('/students', [ClientStudentController::class, 'index'])->name('client.students.index');
         Route::post('/students', [ClientStudentController::class, 'store'])->name('client.students.store');
         Route::post('/students/bulk', [ClientStudentController::class, 'bulkStore'])->name('client.students.bulk-store');
+
+        // Weekly Sessions routes
+        Route::prefix('weekly-sessions')->name('client.weekly-sessions.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Client\WeeklySessionController::class, 'index'])->name('index');
+            Route::get('/{weeklySession}', [\App\Http\Controllers\Client\WeeklySessionController::class, 'show'])->name('show');
+            Route::get('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'createReport'])->name('report.create');
+            Route::post('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'storeReport'])->name('report.store');
+            Route::get('/{weeklySession}/report/edit', [\App\Http\Controllers\Client\WeeklySessionController::class, 'editReport'])->name('report.edit');
+            Route::put('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'updateReport'])->name('report.update');
+        });
 
         // Competition routes for teachers
         Route::prefix('competitions')->name('client.competitions.')->group(function () {
@@ -116,8 +132,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('clubs')->name('clubs.')->group(function () {
             Route::get('/', [ClubController::class, 'index'])->name('index');
             Route::post('/', [ClubController::class, 'store'])->name('store');
+            Route::get('/{club}', [ClubController::class, 'show'])->name('show');
             Route::put('/{club}', [ClubController::class, 'update'])->name('update');
             Route::post('/{club}/toggle-status', [ClubController::class, 'toggleStatus'])->name('toggle-status');
+            Route::post('/{club}/transfer-leadership', [ClubController::class, 'transferLeadership'])->name('transfer-leadership');
+            Route::post('/{teacherClub}/approve-request', [ClubController::class, 'approveRequest'])->name('approve-request');
+            Route::post('/{teacherClub}/reject-request', [ClubController::class, 'rejectRequest'])->name('reject-request');
         });
 
         Route::prefix('schools')->name('schools.')->group(function () {
@@ -195,6 +215,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('settings')->name('settings.')->group(function () {
             Route::get('/', [SettingsController::class, 'index'])->name('index');
             Route::put('/', [SettingsController::class, 'update'])->name('update');
+        });
+
+        // Weekly Sessions routes
+        Route::prefix('weekly-sessions')->name('weekly-sessions.')->group(function () {
+            Route::get('/', [WeeklySessionController::class, 'index'])->name('index');
+            Route::get('/create', [WeeklySessionController::class, 'create'])->name('create');
+            Route::post('/', [WeeklySessionController::class, 'store'])->name('store');
+            Route::get('/{weeklySession}', [WeeklySessionController::class, 'show'])->name('show');
+            Route::get('/{weeklySession}/edit', [WeeklySessionController::class, 'edit'])->name('edit');
+            Route::put('/{weeklySession}', [WeeklySessionController::class, 'update'])->name('update');
+            Route::delete('/{weeklySession}', [WeeklySessionController::class, 'destroy'])->name('destroy');
+            Route::post('/{weeklySession}/update-status', [WeeklySessionController::class, 'updateStatus'])->name('update-status');
         });
     });
 });

@@ -23,8 +23,14 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-
                 @if(auth()->user()->role === 'teacher')
+                <li class="sidebar-item {{ request()->routeIs('client.weekly-sessions.*') ? 'active' : '' }}">
+                        <a href="{{ route('client.weekly-sessions.index') }}" class="sidebar-link">
+                            <i class="bi bi-calendar-week"></i>
+                            <span>Weekly Sessions</span>
+                        </a>
+                    </li>
+               
                     <li class="sidebar-item {{ request()->routeIs('client.clubs.*') ? 'active' : '' }}">
                         <a href="{{ route('client.clubs.index') }}" class="sidebar-link">
                             <i class="bi bi-house"></i>
@@ -34,9 +40,10 @@
                     <li class="sidebar-item {{ request()->routeIs('client.students.*') ? 'active' : '' }}">
                         <a href="{{ route('client.students.index') }}" class="sidebar-link">
                             <i class="bi bi-people"></i>
-                            <span>Students</span>
+                            <span>Members</span>
                         </a>
                     </li>
+                   
                 @endif
 
                 <li class="sidebar-item {{ request()->routeIs('client.models.3d.*') ? 'active' : '' }}">

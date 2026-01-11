@@ -94,6 +94,14 @@ class VrExperiment extends Model
               ->orWhere('description', 'like', "%{$search}%");
         });
     }
+
+    /**
+     * Get the weekly sessions associated with this VR experiment.
+     */
+    public function weeklySessions(): HasMany
+    {
+        return $this->hasMany(WeeklySession::class);
+    }
 }
 
 
