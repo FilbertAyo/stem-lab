@@ -222,6 +222,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [WeeklySessionController::class, 'index'])->name('index');
             Route::get('/create', [WeeklySessionController::class, 'create'])->name('create');
             Route::post('/', [WeeklySessionController::class, 'store'])->name('store');
+            
+            // Reports routes (must come before {weeklySession} route to avoid route conflicts)
+            Route::prefix('reports')->name('reports.')->group(function () {
+                Route::get('/', [WeeklySessionController::class, 'reportsIndex'])->name('index');
+                Route::get('/{report}', [WeeklySessionController::class, 'showReport'])->name('show');
+            });
+            
             Route::get('/{weeklySession}', [WeeklySessionController::class, 'show'])->name('show');
             Route::get('/{weeklySession}/edit', [WeeklySessionController::class, 'edit'])->name('edit');
             Route::put('/{weeklySession}', [WeeklySessionController::class, 'update'])->name('update');

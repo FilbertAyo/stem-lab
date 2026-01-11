@@ -7,9 +7,11 @@ use App\Models\Student;
 use App\Models\TeacherClub;
 use App\Models\WeeklySession;
 use App\Models\WeeklySessionReport;
+use App\Models\WeeklySessionReportPhoto;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class WeeklySessionController extends Controller
@@ -158,6 +160,7 @@ class WeeklySessionController extends Controller
         // Check if teacher has submitted a report
         $report = WeeklySessionReport::where('weekly_session_id', $weeklySession->id)
             ->where('teacher_club_id', $teacherClub->id)
+            ->with('photos')
             ->first();
 
         return view('client.back.weekly-sessions.show', [
@@ -195,12 +198,16 @@ class WeeklySessionController extends Controller
             return redirect()->route('client.weekly-sessions.report.edit', $weeklySession);
         }
 
-        $weeklySession->load(['club', 'classes']);
+        $weeklySession->load(['club', 'classes', 'subject']);
+
+        // Get total students registered for auto-fill
+        $totalStudentsRegistered = Student::where('teacher_club_id', $teacherClub->id)->count();
 
         return view('client.back.weekly-sessions.report', [
             'weeklySession' => $weeklySession,
             'teacherClub' => $teacherClub,
             'report' => null,
+            'totalStudentsRegistered' => $totalStudentsRegistered,
         ]);
     }
 
@@ -231,12 +238,7 @@ class WeeklySessionController extends Controller
                 ->with('error', 'A report already exists for this session. Please edit it instead.');
         }
 
-        $validated = $request->validate([
-            'attendance_count' => ['nullable', 'integer', 'min:0'],
-            'feedback' => ['nullable', 'string', 'max:2000'],
-            'engagement_notes' => ['nullable', 'string', 'max:2000'],
-            'conducted_at' => ['nullable', 'date'],
-        ]);
+        $validated = $this->validateReport($request);
 
         $validated['weekly_session_id'] = $weeklySession->id;
         $validated['teacher_club_id'] = $teacherClub->id;
@@ -246,7 +248,23 @@ class WeeklySessionController extends Controller
             $validated['conducted_at'] = now();
         }
 
-        WeeklySessionReport::create($validated);
+        // Handle JSON arrays
+        if ($request->has('absence_reasons')) {
+            $validated['absence_reasons'] = $request->input('absence_reasons', []);
+        }
+        if ($request->has('understanding_check_methods')) {
+            $validated['understanding_check_methods'] = $request->input('understanding_check_methods', []);
+        }
+        if ($request->has('challenge_types')) {
+            $validated['challenge_types'] = $request->input('challenge_types', []);
+        }
+
+        $report = WeeklySessionReport::create($validated);
+
+        // Handle photo uploads
+        if ($request->hasFile('photos')) {
+            $this->handlePhotoUploads($request, $report);
+        }
 
         return redirect()->route('client.weekly-sessions.show', $weeklySession)
             ->with('status', 'Report submitted successfully.');
@@ -271,18 +289,23 @@ class WeeklySessionController extends Controller
 
         $report = WeeklySessionReport::where('weekly_session_id', $weeklySession->id)
             ->where('teacher_club_id', $teacherClub->id)
+            ->with('photos')
             ->first();
 
         if (!$report) {
             return redirect()->route('client.weekly-sessions.report.create', $weeklySession);
         }
 
-        $weeklySession->load(['club', 'classes']);
+        $weeklySession->load(['club', 'classes', 'subject']);
+
+        // Get total students registered for auto-fill
+        $totalStudentsRegistered = Student::where('teacher_club_id', $teacherClub->id)->count();
 
         return view('client.back.weekly-sessions.report', [
             'weeklySession' => $weeklySession,
             'teacherClub' => $teacherClub,
             'report' => $report,
+            'totalStudentsRegistered' => $totalStudentsRegistered,
         ]);
     }
 
@@ -311,16 +334,175 @@ class WeeklySessionController extends Controller
             return redirect()->route('client.weekly-sessions.report.create', $weeklySession);
         }
 
-        $validated = $request->validate([
+        $validated = $this->validateReport($request);
+
+        // Validate photos and deletions separately
+        $request->validate([
+            'photos' => ['nullable', 'array', 'max:5'],
+            'photos.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
+            'delete_photos' => ['nullable', 'array'],
+            'delete_photos.*' => ['nullable', 'integer', 'exists:weekly_session_report_photos,id'],
+        ]);
+
+        // Map students_present to attendance_count for backward compatibility
+        if (isset($validated['students_present'])) {
+            $validated['attendance_count'] = $validated['students_present'];
+        }
+
+        // Handle JSON arrays
+        if ($request->has('absence_reasons')) {
+            $validated['absence_reasons'] = $request->input('absence_reasons', []);
+        }
+        if ($request->has('understanding_check_methods')) {
+            $validated['understanding_check_methods'] = $request->input('understanding_check_methods', []);
+        }
+        if ($request->has('challenge_types')) {
+            $validated['challenge_types'] = $request->input('challenge_types', []);
+        }
+
+        $report->update($validated);
+
+        // Handle photo deletions first (before adding new ones)
+        if ($request->has('delete_photos') && !empty($request->input('delete_photos'))) {
+            $this->handlePhotoDeletions($request->input('delete_photos', []));
+        }
+
+        // Handle new photo uploads
+        if ($request->hasFile('photos')) {
+            $this->handlePhotoUploads($request, $report);
+        }
+
+        return redirect()->route('client.weekly-sessions.show', $weeklySession)
+            ->with('status', 'Report updated successfully.');
+    }
+
+    /**
+     * Validate report data.
+     */
+    private function validateReport(Request $request): array
+    {
+        return $request->validate([
+            // Attendance
+            'total_students_registered' => ['nullable', 'integer', 'min:0'],
             'attendance_count' => ['nullable', 'integer', 'min:0'],
+            'students_present' => ['nullable', 'integer', 'min:0'],
+            'girls_present' => ['nullable', 'integer', 'min:0'],
+            'had_absent_students' => ['nullable', 'boolean'],
+            'absence_reasons' => ['nullable', 'array'],
+            'absence_reasons.*' => ['nullable', 'string', 'in:sickness,family_reasons,school_activities,weather_transport,no_reason,other'],
+            'absence_reason_other' => ['nullable', 'string', 'max:255'],
+            
+            // Session Details
+            'activity_type' => ['nullable', 'string', 'in:hands_on_experiment,project_work,group_discussion,competition_challenge,guest_speaker,video_demonstration'],
+            'activity_completed' => ['nullable', 'string', 'in:fully_completed,partially_completed,not_completed'],
+            'incompletion_reason' => ['nullable', 'string', 'max:2000'],
+            
+            // Student Engagement
+            'engagement_level' => ['nullable', 'string', 'in:very_engaged,moderately_engaged,low_engagement'],
+            'questions_participation' => ['nullable', 'string', 'in:most_students_75pct,about_half_50_75pct,some_students_25_50pct,very_few_25pct'],
+            'girls_participation' => ['nullable', 'string', 'in:very_active,moderately,not_much,no_girls_present'],
+            'students_special_interest' => ['nullable', 'boolean'],
+            'special_interest_details' => ['nullable', 'string', 'max:2000'],
+            
+            // Learning Outcomes
+            'learning_understanding' => ['nullable', 'string', 'in:all_understood,most_understood,some_understood,struggled'],
+            'understanding_check_methods' => ['nullable', 'array'],
+            'understanding_check_methods.*' => ['nullable', 'string', 'in:questions,observed_work,quiz_test,presentations,group_discussions,other'],
+            'understanding_check_other' => ['nullable', 'string', 'max:255'],
+            'students_learned' => ['nullable', 'string', 'max:2000'],
+            
+            // Challenges
+            'had_challenges' => ['nullable', 'boolean'],
+            'challenge_types' => ['nullable', 'array'],
+            'challenge_types.*' => ['nullable', 'string', 'in:not_enough_materials,equipment_not_working,too_difficult,too_easy,classroom_management,not_enough_time,internet_electricity,other'],
+            'challenge_other' => ['nullable', 'string', 'max:255'],
+            'challenge_description' => ['nullable', 'string', 'max:2000'],
+            
+            // Resources
+            'resources_used' => ['nullable', 'string', 'max:2000'],
+            'needs_additional_materials' => ['nullable', 'boolean'],
+            'additional_materials_needed' => ['nullable', 'string', 'max:2000'],
+            
+            // Student Confidence & Attitudes
+            'student_confidence' => ['nullable', 'string', 'in:very_confident,somewhat_confident,not_very_confident,hesitant_afraid'],
+            'teamwork_quality' => ['nullable', 'string', 'in:excellent_teamwork,good_teamwork,teamwork_issues,preferred_alone,not_applicable'],
+            'stem_attitudes' => ['nullable', 'string', 'in:excited_positive,interested_neutral,bored_uninterested'],
+            
+            // Projects & Competitions
+            'has_active_projects' => ['nullable', 'boolean'],
+            'project_description' => ['nullable', 'string', 'max:2000'],
+            'project_completion_status' => ['nullable', 'string', 'in:just_started_0_25,in_progress_25_75,almost_done_75_100,completed,not_applicable'],
+            'competition_preparation' => ['nullable', 'boolean'],
+            'competition_name' => ['nullable', 'string', 'max:255'],
+            
+            // Highlights
+            'session_highlight' => ['nullable', 'string', 'max:2000'],
+            'interesting_questions' => ['nullable', 'string', 'max:2000'],
+            
+            // Additional Comments
+            'additional_comments' => ['nullable', 'string', 'max:2000'],
+            'needs_support' => ['nullable', 'boolean'],
+            'support_needed' => ['nullable', 'string', 'max:2000'],
+            
+            // Teacher Reflection
+            'session_satisfaction' => ['nullable', 'string', 'in:very_satisfied,satisfied,neutral,not_satisfied'],
+            'would_do_differently' => ['nullable', 'string', 'max:2000'],
+            'what_worked_well' => ['nullable', 'string', 'max:2000'],
+            
+            // Legacy fields (for backward compatibility)
             'feedback' => ['nullable', 'string', 'max:2000'],
             'engagement_notes' => ['nullable', 'string', 'max:2000'],
             'conducted_at' => ['nullable', 'date'],
         ]);
+    }
 
-        $report->update($validated);
+    /**
+     * Handle photo uploads for a report.
+     */
+    private function handlePhotoUploads(Request $request, WeeklySessionReport $report): void
+    {
+        $existingPhotoCount = $report->photos()->count();
+        $maxPhotos = 5;
+        $remainingSlots = $maxPhotos - $existingPhotoCount;
 
-        return redirect()->route('client.weekly-sessions.show', $weeklySession)
-            ->with('status', 'Report updated successfully.');
+        if ($remainingSlots <= 0) {
+            return;
+        }
+
+        $photos = $request->file('photos', []);
+        $photosToUpload = array_slice($photos, 0, $remainingSlots);
+
+        $order = $report->photos()->max('order') ?? 0;
+
+        foreach ($photosToUpload as $photo) {
+            if ($photo && $photo->isValid()) {
+                $path = $photo->store('weekly-session-reports/photos', 'public');
+                
+                WeeklySessionReportPhoto::create([
+                    'weekly_session_report_id' => $report->id,
+                    'file_path' => $path,
+                    'original_filename' => $photo->getClientOriginalName(),
+                    'order' => ++$order,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Handle photo deletions.
+     */
+    private function handlePhotoDeletions(array $photoIds): void
+    {
+        $photos = WeeklySessionReportPhoto::whereIn('id', $photoIds)->get();
+
+        foreach ($photos as $photo) {
+            // Delete file from storage
+            if (Storage::disk('public')->exists($photo->file_path)) {
+                Storage::disk('public')->delete($photo->file_path);
+            }
+
+            // Delete record
+            $photo->delete();
+        }
     }
 }

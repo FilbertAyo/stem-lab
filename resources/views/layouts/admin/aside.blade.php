@@ -95,8 +95,8 @@
                 </a>
               </li>
               <li class="pc-item">
-                <a href="{{ route('admin.weekly-sessions.create') }}" class="pc-link">
-                  <span class="pc-mtext">Create Session</span>
+                <a href="{{ route('admin.weekly-sessions.reports.index') }}" class="pc-link">
+                  <span class="pc-mtext">Session Reports</span>
                 </a>
               </li>
             </ul>
