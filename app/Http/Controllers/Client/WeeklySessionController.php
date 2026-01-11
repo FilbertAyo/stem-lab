@@ -10,6 +10,7 @@ use App\Models\WeeklySessionReport;
 use App\Models\WeeklySessionReportPhoto;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -33,8 +34,19 @@ class WeeklySessionController extends Controller
 
         if (empty($clubIds)) {
             // Teacher has no clubs, return empty list
+            $emptySessions = new LengthAwarePaginator(
+                [],
+                0,
+                15,
+                $request->get('page', 1),
+                [
+                    'path' => $request->url(),
+                    'query' => $request->query(),
+                ]
+            );
+            
             return view('client.back.weekly-sessions.index', [
-                'sessions' => collect()->paginate(15),
+                'sessions' => $emptySessions,
                 'teacherClubs' => collect(),
                 'statusFilter' => $request->get('status', 'all'),
             ]);
