@@ -96,6 +96,14 @@ class VrExperiment extends Model
     }
 
     /**
+     * Scope a query to order experiments by name.
+     */
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('name');
+    }
+
+    /**
      * Get the weekly sessions associated with this VR experiment.
      */
     public function weeklySessions(): HasMany
