@@ -24,7 +24,7 @@
                                     <i class="bi bi-info-circle me-2 fs-5 mt-1"></i>
                                     <div>
                                         <strong>Join Process</strong>
-                                        <p class="mb-0 small">If you're the first teacher from your school to join this club, you'll automatically become the school leader. Otherwise, your request will need approval from your school's leader.</p>
+                                        <p class="mb-0 small">If you're the first teacher from your school to join this club, you'll be automatically approved. Otherwise, your request will need approval from your school's leader.</p>
                                     </div>
                                 </div>
                             </div>
@@ -186,7 +186,12 @@
         </section>
     </div>
 
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('client/assets/vendors/choices.js/choices.min.css') }}">
+    @endpush
+
     @push('scripts')
+        <script src="{{ asset('client/assets/vendors/choices.js/choices.min.js') }}"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const schoolSelect = document.getElementById('school_id');
@@ -194,20 +199,35 @@
                 const newSchoolFields = document.getElementById('newSchoolFields');
                 const schoolNameInput = document.getElementById('school_name');
                 const form = document.getElementById('joinClubForm');
+                let choicesInstance = null;
 
                 // Only initialize if school selection fields exist (teacher doesn't have existing school)
                 if (schoolSelect && isNewSchoolCheckbox) {
+                    // Initialize Choices.js for searchable dropdown
+                    choicesInstance = new Choices(schoolSelect, {
+                        searchEnabled: true,
+                        searchChoices: true,
+                        itemSelectText: '',
+                        placeholder: true,
+                        placeholderValue: '-- Select a school --',
+                        searchPlaceholderValue: 'Search schools...',
+                    });
+
                     function toggleNewSchoolFields() {
                         if (isNewSchoolCheckbox.checked) {
                             newSchoolFields.style.display = 'block';
-                            schoolSelect.disabled = true;
+                            if (choicesInstance) {
+                                choicesInstance.disable();
+                            }
                             schoolSelect.removeAttribute('required');
                             if (schoolNameInput) {
                                 schoolNameInput.setAttribute('required', 'required');
                             }
                         } else {
                             newSchoolFields.style.display = 'none';
-                            schoolSelect.disabled = false;
+                            if (choicesInstance) {
+                                choicesInstance.enable();
+                            }
                             schoolSelect.setAttribute('required', 'required');
                             if (schoolNameInput) {
                                 schoolNameInput.removeAttribute('required');
@@ -233,10 +253,15 @@
                             }
                         } else {
                             // If selecting existing school, validate school selection
-                            if (schoolSelect && !schoolSelect.value) {
+                            const selectedValue = choicesInstance ? choicesInstance.getValue(true) : schoolSelect.value;
+                            if (!selectedValue || selectedValue === '') {
                                 e.preventDefault();
                                 alert('Please select a school or check "Add new school" to register a new one.');
-                                schoolSelect.focus();
+                                if (choicesInstance && choicesInstance.containerOuter) {
+                                    choicesInstance.containerOuter.element.focus();
+                                } else {
+                                    schoolSelect.focus();
+                                }
                                 return false;
                             }
                         }

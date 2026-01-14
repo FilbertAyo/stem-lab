@@ -517,4 +517,59 @@ class WeeklySessionController extends Controller
             $photo->delete();
         }
     }
+
+    /**
+     * Upload a PDF report for a weekly session.
+     */
+    public function uploadPdfReport(Request $request, WeeklySession $weeklySession): RedirectResponse
+    {
+        $user = Auth::user();
+
+        // Verify teacher belongs to the session's club
+        $teacherClub = $user->teacherClubs()
+            ->approved()
+            ->where('club_id', $weeklySession->club_id)
+            ->first();
+
+        if (!$teacherClub) {
+            abort(403, 'You do not have access to this session.');
+        }
+
+        // Validate PDF file
+        $validated = $request->validate([
+            'pdf_file' => ['required', 'file', 'mimes:pdf', 'max:10240'], // Max 10MB
+        ]);
+
+        // Check if report already exists
+        $report = WeeklySessionReport::where('weekly_session_id', $weeklySession->id)
+            ->where('teacher_club_id', $teacherClub->id)
+            ->first();
+
+        // Handle PDF upload
+        $pdfPath = $request->file('pdf_file')->store('weekly-session-reports/pdfs', 'public');
+
+        if ($report) {
+            // Delete old PDF if exists
+            if ($report->pdf_file && Storage::disk('public')->exists($report->pdf_file)) {
+                Storage::disk('public')->delete($report->pdf_file);
+            }
+            // Update existing report with PDF
+            $report->update([
+                'pdf_file' => $pdfPath,
+                'submitted_at' => now(),
+            ]);
+        } else {
+            // Create new report with PDF
+            WeeklySessionReport::create([
+                'weekly_session_id' => $weeklySession->id,
+                'teacher_club_id' => $teacherClub->id,
+                'user_id' => $user->id,
+                'pdf_file' => $pdfPath,
+                'submitted_at' => now(),
+            ]);
+        }
+
+        return redirect()->route('client.weekly-sessions.show', $weeklySession)
+            ->with('status', 'PDF report uploaded successfully.');
+    }
 }

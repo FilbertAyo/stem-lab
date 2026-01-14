@@ -90,6 +90,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{weeklySession}', [\App\Http\Controllers\Client\WeeklySessionController::class, 'show'])->name('show');
             Route::get('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'createReport'])->name('report.create');
             Route::post('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'storeReport'])->name('report.store');
+            Route::post('/{weeklySession}/report/upload-pdf', [\App\Http\Controllers\Client\WeeklySessionController::class, 'uploadPdfReport'])->name('report.upload-pdf');
             Route::get('/{weeklySession}/report/edit', [\App\Http\Controllers\Client\WeeklySessionController::class, 'editReport'])->name('report.edit');
             Route::put('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'updateReport'])->name('report.update');
         });

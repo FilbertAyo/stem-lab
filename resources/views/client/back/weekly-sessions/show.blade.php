@@ -207,22 +207,75 @@
                                 <p class="text-muted small mb-0">
                                     Submitted on {{ $report->submitted_at->format('M d, Y H:i') }}
                                 </p>
+                                @if($report->pdf_file)
+                                    <p class="text-muted small mb-0 mt-2">
+                                        <i class="bi bi-file-pdf text-danger me-1"></i>PDF Report Uploaded
+                                    </p>
+                                @endif
                             </div>
                             <div class="d-grid gap-2">
-                                <a href="{{ route('client.weekly-sessions.report.edit', $weeklySession) }}" class="btn btn-primary">
-                                    <i class="bi bi-pencil me-1"></i> Edit Report
-                                </a>
+                                @if($report->pdf_file)
+                                    <a href="{{ asset('storage/' . $report->pdf_file) }}" target="_blank" class="btn btn-outline-danger">
+                                        <i class="bi bi-file-pdf me-1"></i> View PDF Report
+                                    </a>
+                                    <a href="{{ route('client.weekly-sessions.report.edit', $weeklySession) }}" class="btn btn-primary">
+                                        <i class="bi bi-upload me-1"></i> Replace with Online Form
+                                    </a>
+                                @else
+                                    <a href="{{ route('client.weekly-sessions.report.edit', $weeklySession) }}" class="btn btn-primary">
+                                        <i class="bi bi-pencil me-1"></i> Edit Report
+                                    </a>
+                                @endif
                             </div>
                         @else
-                            <p class="text-muted small mb-3">Submit a report after conducting this session.</p>
-                            <div class="d-grid">
+                            <p class="text-muted small mb-3">Submit a report after conducting this session. Choose either option:</p>
+                            <div class="d-grid gap-2">
                                 <a href="{{ route('client.weekly-sessions.report.create', $weeklySession) }}" class="btn btn-success">
-                                    <i class="bi bi-file-plus me-1"></i> Submit Report
+                                    <i class="bi bi-file-text me-1"></i> Fill Online Form
                                 </a>
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#uploadPdfModal">
+                                    <i class="bi bi-file-pdf me-1"></i> Upload PDF Report
+                                </button>
                             </div>
                         @endif
                     </div>
                 </div>
+
+                <!-- PDF Upload Modal -->
+                @if(!$report)
+                <div class="modal fade" id="uploadPdfModal" tabindex="-1" aria-labelledby="uploadPdfModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="{{ route('client.weekly-sessions.report.upload-pdf', $weeklySession) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="uploadPdfModalLabel">
+                                        <i class="bi bi-file-pdf text-danger me-2"></i>Upload PDF Report
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="pdf_file" class="form-label">PDF File <span class="text-danger">*</span></label>
+                                        <input type="file" class="form-control @error('pdf_file') is-invalid @enderror" 
+                                               id="pdf_file" name="pdf_file" accept=".pdf" required>
+                                        @error('pdf_file')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="text-muted">Please upload a PDF file (max size: 10MB)</small>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-upload me-1"></i> Upload PDF
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>

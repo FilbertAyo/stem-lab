@@ -61,6 +61,7 @@ class WeeklySessionReport extends Model
         'engagement_notes',
         'conducted_at',
         'submitted_at',
+        'pdf_file',
     ];
 
     protected $casts = [

@@ -9,6 +9,22 @@
     @php($experimentsBySubject = $experimentsBySubject ?? collect())
     @php($subjectsWithExperiments = $subjectsWithExperiments ?? collect())
 
+    {{-- Navigation Tabs --}}
+    <div class="mb-4">
+        <ul class="nav nav-tabs border-0">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('client.models.3d.index') }}">
+                    <i class="bi bi-box me-1"></i>3D Models
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ route('client.vr-experiments.index') }}">
+                    <i class="bi bi-vr me-1"></i>VR Experiments
+                </a>
+            </li>
+        </ul>
+    </div>
+
     <div class="page-heading">
         <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
             <div>

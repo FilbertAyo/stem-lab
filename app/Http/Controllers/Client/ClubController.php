@@ -174,21 +174,20 @@ class ClubController extends Controller
             }
         }
 
-        // Check if there's already a leader for this school in this club
-        $hasSchoolLeader = TeacherClub::where('club_id', $club->id)
+        // Check if there are any approved teachers from the same school in this club (first teacher check)
+        $hasAnyApprovedTeacherFromSameSchool = TeacherClub::where('club_id', $club->id)
             ->where('school_id', $schoolId)
-            ->where('is_leader', true)
             ->approved()
             ->exists();
 
-        // Set status and leader based on whether this school has a leader in this club
-        if (!$hasSchoolLeader) {
-            // First teacher from this school becomes leader and is auto-approved
+        // Set status and leader based on whether this is the first teacher from this school to join the club
+        if (!$hasAnyApprovedTeacherFromSameSchool) {
+            // First teacher from this school to join the club is automatically approved
             $teacherClubData['status'] = 'approved';
             $teacherClubData['is_leader'] = true;
             $message = "Successfully joined {$club->name}! You are now the leader for your school in this club.";
         } else {
-            // Subsequent teachers from the same school need approval
+            // Subsequent teachers from the same school need approval from their school leader
             $teacherClubData['status'] = 'pending';
             $teacherClubData['is_leader'] = false;
             $message = "Your request to join {$club->name} has been submitted and is pending approval from your school's leader.";

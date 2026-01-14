@@ -151,11 +151,26 @@ class StudentController extends Controller
         $errors = [];
         $successCount = 0;
         $lineNumber = 0;
+        $tempPath = null;
+        $handle = null;
 
         try {
-            $handle = fopen($path, 'r');
+            // Read file content and handle BOM
+            $content = file_get_contents($path);
+            
+            // Remove BOM if present (UTF-8 BOM: EF BB BF)
+            if (substr($content, 0, 3) === "\xEF\xBB\xBF") {
+                $content = substr($content, 3);
+            }
+            
+            // Write back to temp file without BOM
+            $tempPath = sys_get_temp_dir() . '/csv_upload_' . uniqid() . '.csv';
+            file_put_contents($tempPath, $content);
+            
+            $handle = fopen($tempPath, 'r');
             
             if ($handle === false) {
+                @unlink($tempPath);
                 return redirect()->route('client.students.index')
                     ->with('error', 'Failed to read the CSV file.');
             }
@@ -164,13 +179,15 @@ class StudentController extends Controller
             $header = fgetcsv($handle);
             $lineNumber++;
 
-            if ($header === false) {
+            if ($header === false || empty($header)) {
                 fclose($handle);
+                @unlink($tempPath);
                 return redirect()->route('client.students.index')
                     ->with('error', 'The CSV file is empty.');
             }
 
-            // Normalize header (trim and lowercase)
+            // Normalize header (trim whitespace and lowercase)
+            // fgetcsv() already handles CSV quote removal automatically
             $header = array_map(fn($h) => strtolower(trim($h)), $header);
             
             // Validate required columns
@@ -179,8 +196,9 @@ class StudentController extends Controller
             
             if (!empty($missingColumns)) {
                 fclose($handle);
+                @unlink($tempPath);
                 return redirect()->route('client.students.index')
-                    ->with('error', 'CSV file is missing required columns: ' . implode(', ', $missingColumns) . '.');
+                    ->with('error', 'CSV file is missing required columns: ' . implode(', ', $missingColumns) . '. Found columns: ' . implode(', ', $header));
             }
 
             // Get column indices
@@ -272,6 +290,7 @@ class StudentController extends Controller
             }
 
             fclose($handle);
+            @unlink($tempPath);
 
             // If there are errors, rollback and return with errors
             if (!empty($errors)) {
@@ -294,6 +313,12 @@ class StudentController extends Controller
                 ->with('status', $message);
 
         } catch (\Exception $e) {
+            if (isset($handle) && $handle !== false) {
+                fclose($handle);
+            }
+            if (isset($tempPath) && file_exists($tempPath)) {
+                @unlink($tempPath);
+            }
             DB::rollBack();
             Log::error("Bulk upload error: " . $e->getMessage());
 
