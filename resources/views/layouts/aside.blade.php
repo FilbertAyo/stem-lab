@@ -25,13 +25,20 @@
                 </li>
             
 
-                <li class="sidebar-item {{ request()->routeIs('client.models.3d.*') || request()->routeIs('client.vr-experiments.*') ? 'active' : '' }}">
-                    <a href="{{ route('client.models.3d.index') }}" class="sidebar-link">
-                        <i class="bi bi-box"></i>
+      
+                <li class="sidebar-item {{  request()->routeIs('client.vr-experiments.*') ? 'active' : '' }}">
+                    <a href="{{ route('client.vr-experiments.index') }}" class="sidebar-link">
+                    <i class="bi bi-vr me-1"></i>
                         <span>Labs</span>
                     </a>
                 </li>
 
+                <li class="sidebar-item {{ request()->routeIs('client.models.3d.*') ? 'active' : '' }}">
+                    <a href="{{ route('client.models.3d.index') }}" class="sidebar-link">
+                        <i class="bi bi-box"></i>
+                        <span>3D Models</span>
+                    </a>
+                </li>
 
                 @if(auth()->user()->role === 'teacher')
                 <li class="sidebar-item {{ request()->routeIs('client.weekly-sessions.*') ? 'active' : '' }}">
