@@ -70,9 +70,8 @@
                     </div>
                     <div class="card-body">
                         <div class="text-center py-4">
-                            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
-                                <i class="bi bi-browser-chrome fs-1 text-primary"></i>
-                            </div>
+                                <i class="bi bi-arrow-up-right-circle-fill fs-1 text-primary"></i>
+                            
 
                             <h5 class="fw-semibold mb-2">Ready to explore?</h5>
                             <p class="text-muted small mb-4">
