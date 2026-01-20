@@ -17,27 +17,22 @@
         <section class="row">
             <!-- VR Experiment Preview Column -->
             <div class="col-lg-8 col-12 mb-4">
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body p-0">
-                        <div class="position-relative" style="min-height: 500px;">
-                            @if($vrExperiment->external_url)
-                                <iframe src="{{ $vrExperiment->external_url }}"
-                                        class="w-100"
-                                        height="500"
-                                        style="border: none; border-radius: 0.5rem 0.5rem 0 0;"
-                                        allowfullscreen>
-                                </iframe>
-                            @else
-                                <div class="d-flex flex-column justify-content-center align-items-center h-100 w-100"
-                                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 0.5rem 0.5rem 0 0; min-height: 500px;">
-                                    <i class="bi bi-vr text-white" style="font-size: 5rem;"></i>
-                                    <span class="text-white-50 mt-3 fs-5">Virtual Reality Experience</span>
-                                    <span class="text-white-50 mt-2 small">No URL available</span>
-                                </div>
-                            @endif
-
+                {{-- VR Experiment Iframe - Responsive --}}
+                <div class="position-relative mb-4" style="width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 0.5rem; box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);">
+                    @if($vrExperiment->external_url)
+                        <iframe src="{{ $vrExperiment->external_url }}"
+                                class="position-absolute top-0 start-0 w-100 h-100"
+                                style="border: none;"
+                                allowfullscreen>
+                        </iframe>
+                    @else
+                        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+                             style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <i class="bi bi-vr text-white" style="font-size: 5rem;"></i>
+                            <span class="text-white-50 mt-3 fs-5">Virtual Reality Experience</span>
+                            <span class="text-white-50 mt-2 small">No URL available</span>
                         </div>
-                    </div>
+                    @endif
                 </div>
 
                 <div class="card border-0 shadow-sm">
