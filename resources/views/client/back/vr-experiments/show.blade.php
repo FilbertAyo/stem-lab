@@ -38,8 +38,8 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <h5 class="fw-semibold mb-3">About this experiment</h5>
-                        <div class="text-muted mb-4" style="white-space: pre-wrap;">
-                            {{ $vrExperiment->description ?? 'No description has been provided for this VR experiment yet.' }}
+                        <div class="text-muted mb-4">
+                            {!! nl2br(e(trim($vrExperiment->description ?? 'No description has been provided for this VR experiment yet.'))) !!}
                         </div>
 
                         <div class="row g-3">
