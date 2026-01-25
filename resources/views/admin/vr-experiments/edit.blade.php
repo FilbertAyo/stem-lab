@@ -99,7 +99,7 @@
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
                             <textarea class="form-control @error('description') is-invalid @enderror"
-                                      id="description" name="description" rows="5"
+                                      id="description" name="description" rows="10"
                                       placeholder="Describe what this VR experiment is about, how students should use it, and what learning outcomes they will achieve...">{{ old('description', $vrExperiment->description) }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>

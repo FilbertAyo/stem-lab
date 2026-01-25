@@ -18,9 +18,9 @@
             <!-- VR Experiment Preview Column -->
             <div class="col-lg-8 col-12 mb-4">
                 {{-- VR Experiment Iframe - Responsive --}}
-                <div class="position-relative mb-4" style="width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 0.5rem; box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);">
+                <div id="vr-iframe-container" class="position-relative mb-4" style="width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 0.5rem; box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);">
                     @if($vrExperiment->external_url)
-                        <iframe src="{{ $vrExperiment->external_url }}"
+                        <iframe id="vr-experiment-iframe" src="{{ $vrExperiment->external_url }}"
                                 class="position-absolute top-0 start-0 w-100 h-100"
                                 style="border: none;"
                                 allowfullscreen>
@@ -38,9 +38,9 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <h5 class="fw-semibold mb-3">About this experiment</h5>
-                        <p class="text-muted mb-4">
+                        <div class="text-muted mb-4" style="white-space: pre-wrap;">
                             {{ $vrExperiment->description ?? 'No description has been provided for this VR experiment yet.' }}
-                        </p>
+                        </div>
 
                         <div class="row g-3">
                             <div class="col-sm-6">
@@ -65,14 +65,13 @@
                 <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
                     <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                         <h5 class="fw-semibold mb-0">
-                            <i class="bi bi-vr me-2"></i>Launch VR Experience
+                            <i class="bi bi-vr me-2"></i>View full page
                         </h5>
                     </div>
                     <div class="card-body">
                         <div class="text-center py-4">
                                 <i class="bi bi-arrow-up-right-circle-fill fs-1 text-primary"></i>
-                            
-
+                        
                             <h5 class="fw-semibold mb-2">Ready to explore?</h5>
                             <p class="text-muted small mb-4">
                                 This browser-based interactive experience will help you understand
@@ -81,11 +80,11 @@
 
                             @if($vrExperiment->external_url)
                                 <div class="d-grid gap-2">
-                                    <a href="{{ $vrExperiment->external_url }}"
-                                       target="_blank"
-                                       class="btn btn-primary btn-lg">
-                                        <i class="bi bi-play-fill me-2"></i>Launch VR Experience
-                                    </a>
+                                    <button type="button"
+                                            id="fullscreen-btn"
+                                            class="btn btn-primary btn-lg">
+                                        <i class="bi bi-fullscreen me-2"></i>View full page
+                                    </button>
                                   
                                 </div>
                             @else
@@ -114,5 +113,63 @@
             </div>
         </section>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            const iframeContainer = document.getElementById('vr-iframe-container');
+            const iframe = document.getElementById('vr-experiment-iframe');
+
+            if (fullscreenBtn && iframeContainer) {
+                fullscreenBtn.addEventListener('click', function() {
+                    // Try to request fullscreen on the iframe container
+                    if (iframeContainer.requestFullscreen) {
+                        iframeContainer.requestFullscreen().catch(err => {
+                            console.error('Error attempting to enable fullscreen:', err);
+                            // Fallback: try to request fullscreen on the iframe itself
+                            if (iframe && iframe.requestFullscreen) {
+                                iframe.requestFullscreen().catch(err => {
+                                    console.error('Error attempting to enable iframe fullscreen:', err);
+                                });
+                            }
+                        });
+                    } else if (iframeContainer.webkitRequestFullscreen) {
+                        // Safari support
+                        iframeContainer.webkitRequestFullscreen();
+                    } else if (iframeContainer.mozRequestFullScreen) {
+                        // Firefox support
+                        iframeContainer.mozRequestFullScreen();
+                    } else if (iframeContainer.msRequestFullscreen) {
+                        // IE/Edge support
+                        iframeContainer.msRequestFullscreen();
+                    } else if (iframe && iframe.requestFullscreen) {
+                        // Fallback to iframe
+                        iframe.requestFullscreen();
+                    }
+                });
+
+                // Update button text when exiting fullscreen
+                document.addEventListener('fullscreenchange', updateButtonText);
+                document.addEventListener('webkitfullscreenchange', updateButtonText);
+                document.addEventListener('mozfullscreenchange', updateButtonText);
+                document.addEventListener('MSFullscreenChange', updateButtonText);
+
+                function updateButtonText() {
+                    const isFullscreen = document.fullscreenElement || 
+                                        document.webkitFullscreenElement || 
+                                        document.mozFullScreenElement || 
+                                        document.msFullscreenElement;
+                    
+                    if (isFullscreen) {
+                        fullscreenBtn.innerHTML = '<i class="bi bi-fullscreen-exit me-2"></i>Exit full page';
+                    } else {
+                        fullscreenBtn.innerHTML = '<i class="bi bi-fullscreen me-2"></i>View full page';
+                    }
+                }
+            }
+        });
+    </script>
+    @endpush
 </x-app-layout>
 
