@@ -4,50 +4,52 @@
 @section('page', 'forgot-password')
 
 @section('content')
-  <main>
-    <section class="i pg fh rm ki xn vq gj qp gr hj rp hr">
-      <img src="{{ asset('images/shape-06.svg') }}" alt="Shape" class="h j k" />
+<div class="page-wrapper overflow-hidden">
+  <section class="bg-light-gray d-flex align-items-center justify-content-center min-vh-100">
+    <div class="container py-3">
+      <div class="sign-in card mx-auto shadow-lg">
+        <div class="card-body py-8 px-lg-5">
+          <a href="{{ url('/') }}" class="mb-8 hstack justify-content-center">
+            <img src="{{ asset('images/logo/logo-dark.png') }}" style="height:45px; width:auto;" alt="logo-dark" class="img-fluid">
+          </a>
 
-      <div class="animate_top bb af i va sg hh sm vk xm yi _n jp hi ao kp">
-        <span class="rc h r s zd/2 od zg gh"></span>
-        <span class="rc h r q zd/2 od xg mh"></span>
-
-        <div class="sj hk xj rj ob">
-          Forgot your password? No problem. Enter your email address and we will send you a password reset link.
-        </div>
-
-        @if(session('status'))
-          <p class="mt-4 text-sm text-green-600">
-            {{ session('status') }}
+          <p class="text-center mb-3">
+            Forgot your password? No problem. Enter your email address and we will send you a password reset link.
           </p>
-        @endif
 
-        <form class="sb mt-6" method="POST" action="{{ route('password.email') }}">
-          @csrf
+          @if (session('status'))
+            <p class="text-center text-success mb-3">
+              {{ session('status') }}
+            </p>
+          @endif
 
-          <div class="wb">
-            <label class="rc kk wm vb" for="email">Email</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value="{{ old('email') }}"
-              placeholder="you@example.org"
-              required
-              autofocus
-              autocomplete="email"
-              class="vd hh rg zk _g ch hm dm fm pl/50 xi mi sm xm pm dn/40"
-            />
-            @error('email')
-              <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-          </div>
+          <form class="d-flex flex-column gap-3 mt-3" method="POST" action="{{ route('password.email') }}">
+            @csrf
 
-          <button type="submit" class="vd rj ek rc rg gh lk ml il _l gi hi">
-            Email Password Reset Link
-          </button>
-        </form>
+            <div>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value="{{ old('email') }}"
+                placeholder="Email"
+                required
+                autofocus
+                autocomplete="email"
+                class="form-control border-bottom @error('email') is-invalid @enderror"
+              >
+              @error('email')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+              @enderror
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100 justify-content-center py-2 fw-medium my-3 fs-5 lh-lg">
+              Email Password Reset Link
+            </button>
+          </form>
+        </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+</div>
 @endsection

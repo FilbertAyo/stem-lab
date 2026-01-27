@@ -4,75 +4,68 @@
 @section('page', 'signin')
 
 @section('content')
-<main>
+<div class="page-wrapper overflow-hidden">
+  <section class="bg-light-gray d-flex align-items-center justify-content-center min-vh-100">
+    <div class="container py-3">
+      <div class="sign-in card mx-auto shadow-lg">
+        <div class="card-body py-8 px-lg-5">
+          <a href="{{ url('/') }}" class="mb-8 hstack justify-content-center">
+            <img src="{{ asset('images/logo/logo-dark.png') }}" style="height:45px; width:auto;" alt="logo-dark" class="img-fluid">
+          </a>
 
-    <section class="i pg fh rm ki xn vq gj qp gr hj rp hr">
-      
-
-        <div class="animate_top bb af i va sg hh sm vk xm yi _n jp hi ao kp">
-          <!-- Bg Border -->
-          <span class="rc h r s zd/2 od zg gh"></span>
-          <span class="rc h r q zd/2 od xg mh"></span>
-
-
-            <form class="sb" method="POST" action="{{ route('login') }}">
+          <form class="d-flex flex-column gap-3" method="POST" action="{{ route('login') }}">
             @csrf
-            <div class="wb">
-              <label class="rc kk wm vb" for="email">Email</label>
+
+            <div>
               <input
                 type="email"
-                name="email"
+                class="form-control border-bottom @error('email') is-invalid @enderror"
                 id="email"
+                name="email"
                 value="{{ old('email') }}"
-                placeholder="you@example.org"
+                placeholder="Email"
                 required
                 autofocus
                 autocomplete="username"
-                class="vd hh rg zk _g ch hm dm fm pl/50 xi mi sm xm pm dn/40"
-              />
+              >
               @error('email')
-                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                <div class="invalid-feedback d-block">{{ $message }}</div>
               @enderror
             </div>
 
-            <div class="wb">
-              <label class="rc kk wm vb" for="password">Password</label>
+            <div>
               <input
                 type="password"
-                name="password"
+                class="form-control border-bottom @error('password') is-invalid @enderror"
                 id="password"
-                placeholder="**************"
+                name="password"
+                placeholder="Password"
                 required
-                autocomplete="new-password"
-                class="vd hh rg zk _g ch hm dm fm pl/50 xi mi sm xm pm dn/40"
-              />
+                autocomplete="current-password"
+              >
               @error('password')
-                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                <div class="invalid-feedback d-block">{{ $message }}</div>
               @enderror
             </div>
 
-            <div class="tc uf wf ag jq wb">
-
-                @if (Route::has('password.request'))
-                  <a
-                    href="{{ route('password.request') }}"
-                    class="mk text-sm"
-                  >
-                    Forgot password?
-                  </a>
-                @endif
-              </div>
-
-            <button type="submit" class="vd rj ek rc rg gh lk ml il _l gi hi">
-            Sign In
+            <button type="submit" class="btn btn-dark w-100 justify-content-center py-2 fw-medium my-7 fs-4 lh-lg">
+              Sign In
             </button>
-
-            <p class="sj hk xj rj ob">
-                Don't have an account?
-              <a class="mk" href="{{ route('register') }}"> Sign Up </a>
-            </p>
           </form>
+
+          @if (Route::has('password.request'))
+            <a class="text-center mb-1 d-block text-dark fw-medium" href="{{ route('password.request') }}">
+              Forget Password?
+            </a>
+          @endif
+
+          <p class="mb-0 fw-medium text-center">
+            Not a member yet?
+            <a class="text-dark" href="{{ route('register') }}">Sign Up</a>
+          </p>
         </div>
-      </section>
-  </main>
+      </div>
+    </div>
+  </section>
+</div>
 @endsection

@@ -4,74 +4,74 @@
 @section('page', 'reset-password')
 
 @section('content')
-  <main>
-    <section class="i pg fh rm ki xn vq gj qp gr hj rp hr">
-      <img src="{{ asset('images/shape-06.svg') }}" alt="Shape" class="h j k" />
+<div class="page-wrapper overflow-hidden">
+  <section class="bg-light-gray d-flex align-items-center justify-content-center min-vh-100">
+    <div class="container py-3">
+      <div class="sign-in card mx-auto shadow-lg">
+        <div class="card-body py-8 px-lg-5">
+          <a href="{{ url('/') }}" class="mb-8 hstack justify-content-center">
+            <img src="{{ asset('images/logo/logo-dark.png') }}" style="height:45px; width:auto;" alt="logo-dark" class="img-fluid">
+          </a>
 
-      <div class="animate_top bb af i va sg hh sm vk xm yi _n jp hi ao kp">
-        <span class="rc h r s zd/2 od zg gh"></span>
-        <span class="rc h r q zd/2 od xg mh"></span>
+          <form class="d-flex flex-column gap-3" method="POST" action="{{ route('password.store') }}">
+            @csrf
 
-        <form class="sb" method="POST" action="{{ route('password.store') }}">
-          @csrf
+            <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-          <input type="hidden" name="token" value="{{ $request->route('token') }}">
+            <div>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value="{{ old('email', $request->email) }}"
+                placeholder="Email"
+                required
+                autofocus
+                autocomplete="username"
+                class="form-control border-bottom @error('email') is-invalid @enderror"
+              >
+              @error('email')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+              @enderror
+            </div>
 
-          <div class="wb">
-            <label class="rc kk wm vb" for="email">Email</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value="{{ old('email', $request->email) }}"
-              placeholder="you@example.org"
-              required
-              autofocus
-              autocomplete="username"
-              class="vd hh rg zk _g ch hm dm fm pl/50 xi mi sm xm pm dn/40"
-            />
-            @error('email')
-              <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-          </div>
+            <div>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Password"
+                required
+                autocomplete="new-password"
+                class="form-control border-bottom @error('password') is-invalid @enderror"
+              >
+              @error('password')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+              @enderror
+            </div>
 
-          <div class="wb">
-            <label class="rc kk wm vb" for="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="**************"
-              required
-              autocomplete="new-password"
-              class="vd hh rg zk _g ch hm dm fm pl/50 xi mi sm xm pm dn/40"
-            />
-            @error('password')
-              <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-          </div>
+            <div>
+              <input
+                type="password"
+                name="password_confirmation"
+                id="password_confirmation"
+                placeholder="Confirm Password"
+                required
+                autocomplete="new-password"
+                class="form-control border-bottom @error('password_confirmation') is-invalid @enderror"
+              >
+              @error('password_confirmation')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+              @enderror
+            </div>
 
-          <div class="wb">
-            <label class="rc kk wm vb" for="password_confirmation">Confirm Password</label>
-            <input
-              type="password"
-              name="password_confirmation"
-              id="password_confirmation"
-              placeholder="**************"
-              required
-              autocomplete="new-password"
-              class="vd hh rg zk _g ch hm dm fm pl/50 xi mi sm xm pm dn/40"
-            />
-            @error('password_confirmation')
-              <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-          </div>
-
-          <button type="submit" class="vd rj ek rc rg gh lk ml il _l gi hi">
-            Reset Password
-          </button>
-        </form>
+            <button type="submit" class="btn btn-dark w-100 justify-content-center py-2 fw-medium my-3 fs-5 lh-lg">
+              Reset Password
+            </button>
+          </form>
+        </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+</div>
 @endsection
