@@ -1,58 +1,28 @@
-<!-- ===== Hero Start ===== -->
-<section class="gj do ir hj sp jr i pg">
-  <!-- Hero Images -->
-  <div class="xc fn zd/2 2xl:ud-w-187.5 bd 2xl:ud-h-171.5 h q r">
-    <img src="{{ asset('images/shape-04.svg') }}" alt="shape" class="h q r" loading="lazy" decoding="async" />
-    <model-viewer
-      src="{{ asset('images/microscope.glb') }}"
-      alt="Interactive heart model"
-      auto-rotate
-      camera-controls
-      touch-action="pan-y"
-      shadow-intensity="1"
-      class="h q r"
-      style="width: 100%; height: 100%; min-height: 420px;"
-    ></model-viewer>
-
-    @once
-      @push('scripts')
-        <script
-          type="module"
-          src="https://unpkg.com/@google/model-viewer@3.3.0/dist/model-viewer.min.js"
-          async
-        ></script>
-      @endpush
-    @endonce
-  </div>
-
-  <!-- Hero Content -->
-  <div class="bb ze ki xn 2xl:ud-px-0">
-    <div class="tc _o">
-      <div class="animate_left jn/2">
-        <h1 class="fk vj zp or kk wm wb">Immersive STEM labs designed for every girl in Tanzania.</h1>
-        <p class="fq">
-          Adilisha STEM Lab delivers browser-based and headset VR experiences that let learners practice real science,
-          explore cutting-edge technology, and build confidence without needing physical equipment.
-        </p>
-
-        <div class="tc tf yo zf mb">
-          <a href="{{ route('register') }}" class="ek jk lk gh gi hi rg ml il vc _d _l">Explore the Labs</a>
-
-          <span class="tc sf">
-            @php
-                $sitePhone = \App\Models\Setting::get('site_phone', '+255 282 561 724');
-                $whatsappUrl = \App\Models\Setting::get('whatsapp_url');
-            @endphp
-            @if(!empty($whatsappUrl))
-                <a href="{{ $whatsappUrl }}" target="_blank" rel="noopener noreferrer" class="inline-block ek xj kk wm"> Call us {{ $sitePhone }} </a>
-            @else
-                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $sitePhone) }}" class="inline-block ek xj kk wm"> Call us {{ $sitePhone }} </a>
-            @endif
-            <span class="inline-block">Let's co-create the future of STEM education</span>
-          </span>
+<section class="banner-section position-relative d-flex align-items-end min-vh-100">
+      <video class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" autoplay muted loop playsinline>
+        <source src="{{ asset('images/hero.mp4') }}" type="video/mp4" />
+      </video>
+      <div class="container">
+        <div class="d-flex flex-column gap-4 pb-8 position-relative z-1">
+          <div class="row align-items-center">
+            <div class="col-xl-4">
+              <div class="d-flex align-items-center gap-4" data-aos="fade-up" data-aos-delay="100"
+                data-aos-duration="1000">
+                <img src="../assets/images/svgs/primary-leaf.svg" alt="" class="img-fluid animate-spin">
+                <p class="mb-0 text-white fs-5 text-opacity-70">
+                  Empowering the next generation with access to <span class="text-primary">STEM education</span> through immersive VR experiences and custom devices.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-end gap-3" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
+            <h1 class="mb-0 fs-16 text-white lh-2">STEM Labs</h1>
+            <a href="javascript:void(0)" class="p-1 ps-7 bg-primary rounded-pill">
+              <span class="bg-white round-52 rounded-circle d-flex align-items-center justify-content-center">
+                <iconify-icon icon="lucide:arrow-up-right" class="fs-8 text-dark"></iconify-icon>
+              </span>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
+    </section>
