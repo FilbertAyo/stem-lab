@@ -134,9 +134,11 @@
           </ul>
         </div>
         <div class="col-md-4 col-xl-3 mb-8 mb-xl-0">
-          <h4 class="text-white mb-4">Newsletter</h4>
-          <p class="text-white text-opacity-70 mb-3">Subscribe to receive future updates</p>
-        
+          <h4 class="text-white mb-4">About Us</h4>
+          <p class="text-white text-opacity-70 mb-3">
+            To learn more about us, please visit Adilisha Child and Youth Development Organization:<br>
+            <a href="https://adilisha.or.tz" target="_blank" rel="noopener noreferrer" class="text-primary fw-bold">adilisha.or.tz</a>
+          </p>
         </div>
       </div>
     </div>
@@ -144,7 +146,8 @@
       <div class="row align-items-center">
         <div class="col-md-6 mb-3 mb-md-0">
           <ul class="list-unstyled d-flex flex-wrap gap-3 mb-0">
-            <li><a href="#!" class="text-white text-opacity-70 link-hover">Privacy Policy</a></li>
+            <li><a href="{{ route('privacy.policy') }}" class="text-white text-opacity-70 link-hover">Privacy Policy</a></li>
+            <li><a href="{{ route('terms.conditions') }}" class="text-white text-opacity-70 link-hover">Terms & Conditions</a></li>
             <li><a href="#!" class="text-white text-opacity-70 link-hover">Support</a></li>
             @php
               $appVersion = \App\Models\Setting::get('app_version', '1.0.0');

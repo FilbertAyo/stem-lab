@@ -8,9 +8,9 @@
             <div class="col-xl-4">
               <div class="d-flex align-items-center gap-4" data-aos="fade-up" data-aos-delay="100"
                 data-aos-duration="1000">
-                <img src="../assets/images/svgs/primary-leaf.svg" alt="" class="img-fluid animate-spin">
+                <!-- <img src="{{ asset('client/front-end/assets/images/svgs/primary-leaf.svg') }}" alt="" class="img-fluid animate-spin"> -->
                 <p class="mb-0 text-white fs-5 text-opacity-70">
-                  Empowering the next generation with access to <span class="text-primary">STEM education</span> through immersive VR experiences and custom devices.
+                  Empowering the next generation with access to <span class="text-primary">STEM education</span> through cutting edge VR headsets and immersive learning experiences.
                 </p>
               </div>
             </div>

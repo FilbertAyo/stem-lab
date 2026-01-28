@@ -20,18 +20,17 @@ $(function () {
         autoplay: true,
         autoplayTimeout: 5000,
         autoplayHoverPause: false,
+        smartSpeed: 1000,
+        slideSpeed: 1000,
         responsive: {
             0: {
                 items: 1
             },
-            600: {
+            768: {
                 items: 2
             },
-            1000: {
-                items: 3
-            },
             1200: {
-                items: 4
+                items: 2
             }
         }
     })

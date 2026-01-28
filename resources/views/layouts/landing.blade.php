@@ -24,7 +24,7 @@
 <body>
 
   <!-- Header -->
-@include('layouts.header')
+@include('client.front.partials.header')
 
   <!--  Page Wrapper -->
   <div class="page-wrapper overflow-hidden">
@@ -33,7 +33,7 @@
 
   </div>
 
-@include('layouts.footer')
+@include('client.front.partials.footer')
 
   <div class="get-template hstack gap-2">
     <button class="btn bg-primary p-2 round-52 rounded-circle hstack justify-content-center flex-shrink-0"

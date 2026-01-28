@@ -37,3 +37,6 @@ Lets Cursor design freely
 Matches Apple/Meta storytelling
 
 Positions Adilisha XR as a serious global product
+
+
+TO add thhere is i dont want to look like normal website i wnat to be modern and not regular even on the words i use on the header 

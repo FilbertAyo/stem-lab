@@ -30,6 +30,14 @@ Route::get('/', function () {
     return view('client.front.welcome', compact('competitions'));
 });
 
+Route::get('/privacy-policy', function () {
+    return view('client.front.policy');
+})->name('privacy.policy');
+
+Route::get('/terms-conditions', function () {
+    return view('client.front.terms');
+})->name('terms.conditions');
+
 // Public Competitions (accessible without login)
 Route::get('/explore/competitions', [PublicCompetitionController::class, 'index'])->name('competitions.public');
 Route::get('/explore/competitions/{competition}', [PublicCompetitionController::class, 'show'])->name('competitions.public.show');

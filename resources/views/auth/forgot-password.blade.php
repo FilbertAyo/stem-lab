@@ -1,4 +1,4 @@
-@extends('layouts.landing')
+@extends('layouts.guest')
 
 @section('title', 'Forgot Password | ' . config('app.name'))
 @section('page', 'forgot-password')

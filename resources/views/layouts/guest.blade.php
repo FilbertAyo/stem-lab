@@ -1,30 +1,52 @@
-<!DOCTYPE html>
+@php
+    $page = trim($__env->yieldContent('page', 'home'));
+    $bodyClass = trim($__env->yieldContent('body_class'));
+@endphp
+
+<!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Adilisha STEM Lab') }}</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>@yield('title', config('app.name'))</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/logo/favicon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/logo/favicon.png') }}" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/logo/favicon.png') }}" media="(prefers-color-scheme: dark)">
+  <link rel="shortcut icon" type="image/png" href="{{ asset('client/front-end/assets/images/logos/favicon.svg') }}" />
+  <link rel="stylesheet" href="{{ asset('client/front-end/assets/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('client/front-end/assets/libs/aos-master/dist/aos.css') }}">
+  <link rel="stylesheet" href="{{ asset('client/front-end/assets/css/styles.css') }}" />
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+  @stack('head')
+</head>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
+<body>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
-            </div>
-        </div>
-    </body>
+  <!--  Page Wrapper -->
+  <div class="page-wrapper overflow-hidden">
+
+  @yield('content')
+
+  </div>
+
+  <div class="get-template hstack gap-2">
+    <button class="btn bg-primary p-2 round-52 rounded-circle hstack justify-content-center flex-shrink-0"
+      id="scrollToTopBtn">
+      <iconify-icon icon="lucide:arrow-up" class="fs-7 text-dark"></iconify-icon>
+    </button>
+  </div>
+
+
+    <script src="{{ asset('client/front-end/assets/libs/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('client/front-end/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('client/front-end/assets/libs/owl.carousel/dist/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('client/front-end/assets/libs/aos-master/dist/aos.js') }}"></script>
+    <script src="{{ asset('client/front-end/assets/js/custom.js') }}"></script>
+  <!-- solar icons -->
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+  @stack('scripts')
+</body>
+
 </html>

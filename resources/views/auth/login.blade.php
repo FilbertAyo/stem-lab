@@ -1,4 +1,4 @@
-@extends('layouts.landing')
+@extends('layouts.guest')
 
 @section('title', 'Sign In | ' . config('app.name'))
 @section('page', 'signin')

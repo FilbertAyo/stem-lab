@@ -1,4 +1,4 @@
-@extends('layouts.landing')
+@extends('layouts.guest')
 
 @section('title', 'Verify Email | ' . config('app.name'))
 @section('page', 'verify-email')

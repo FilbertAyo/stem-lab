@@ -11,24 +11,23 @@
         </div>
         
         <!-- Desktop Navigation - Visible on large screens -->
-        <nav class="d-none d-lg-flex align-items-center gap-4">
-          <ul class="header-menu list-unstyled mb-0 d-flex align-items-center gap-4">
+        <nav class="d-none d-lg-flex align-items-center">
+          <ul class="header-menu list-unstyled mb-0 d-flex align-items-center">
             <li class="header-item">
-              <a href="{{ url('/') }}" class="header-link text-dark fw-semibold">Home</a>
+              <a href="{{ url('/#labs') }}" class="header-link text-white fw-semibold">Labs</a>
             </li>
             <li class="header-item">
-              <a href="{{ url('/#about') }}" class="header-link text-dark fw-semibold">About</a>
+              <a href="{{ url('/#impact') }}" class="header-link text-white fw-semibold">Impact</a>
             </li>
             <li class="header-item">
-              <a href="{{ url('/#subjects') }}" class="header-link text-dark fw-semibold">Subjects</a>
+              <a href="{{ url('/#insights') }}" class="header-link text-white fw-semibold">Insights</a>
             </li>
             <li class="header-item">
-              <a href="{{ route('competitions.public') }}" class="header-link text-dark fw-semibold">Competitions</a>
+              <a href="{{ route('competitions.public') }}" class="header-link text-white fw-semibold">Competitions</a>
             </li>
           </ul>
-          <div class="d-flex align-items-center gap-3">
-            <a href="{{ route('login') }}" class="btn fs-2 text-white px-3 py-2">Sign In</a>
-            <a href="{{ route('register') }}" class="btn btn-dark text-white fs-2 px-3 py-2">Sign Up</a>
+          <div class="d-flex align-items-center">
+            <a href="{{ route('login') }}" class="btn btn-primary border-0 text-white fs-2 px-4 py-2">Get Started</a>
           </div>
         </nav>
 
@@ -36,9 +35,9 @@
         <div class="d-flex d-lg-none align-items-center">
           <div class="btn-group">
             <button
-              class="btn btn-secondary toggle-menu round-45 p-2 d-flex align-items-center justify-content-center bg-white rounded-circle"
+              class="btn btn-secondary toggle-menu round-45 p-2 d-flex align-items-center justify-content-center bg-white bg-opacity-20 rounded-circle"
               type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-              <iconify-icon icon="solar:hamburger-menu-line-duotone" class="menu-icon fs-8 text-dark"></iconify-icon>
+              <iconify-icon icon="solar:hamburger-menu-line-duotone" class="menu-icon fs-8 text-white"></iconify-icon>
             </button>
             <ul class="dropdown-menu dropdown-menu-end p-4">
               <div class="d-flex flex-column gap-6">
@@ -49,34 +48,29 @@
                 <div class="d-flex flex-column gap-3">
                   <ul class="header-menu list-unstyled mb-0 d-flex flex-column gap-2">
                     <li class="header-item">
-                      <a href="{{ url('/') }}" aria-current="true"
-                        class="header-link active hstack gap-2 fs-7 fw-bold text-dark"><img
-                          src="../assets/images/svgs/secondary-leaf.svg" alt="" width="20" height="20"
-                          class="img-fluid animate-spin">Home</a>
+                      <a href="{{ url('/#labs') }}" class="header-link hstack gap-2 fs-7 fw-bold text-dark"><img
+                          src="{{ asset('client/front-end/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
+                          class="img-fluid animate-spin">Labs</a>
                     </li>
                     <li class="header-item">
-                      <a href="{{ url('/#about') }}" class="header-link hstack gap-2 fs-7 fw-bold text-dark"><img
-                          src="../assets/images/svgs/secondary-leaf.svg" alt="" width="20" height="20"
-                          class="img-fluid animate-spin">About</a>
+                      <a href="{{ url('/#impact') }}" class="header-link hstack gap-2 fs-7 fw-bold text-dark"><img
+                          src="{{ asset('client/front-end/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
+                          class="img-fluid animate-spin">Impact</a>
                     </li>
                     <li class="header-item">
-                      <a href="{{ url('/#subjects') }}" class="header-link hstack gap-2 fs-7 fw-bold text-dark"><img
-                          src="../assets/images/svgs/secondary-leaf.svg" alt="" width="20" height="20"
-                          class="img-fluid animate-spin">Subjects</a>
+                      <a href="{{ url('/#insights') }}" class="header-link hstack gap-2 fs-7 fw-bold text-dark"><img
+                          src="{{ asset('client/front-end/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
+                          class="img-fluid animate-spin">Insights</a>
                     </li>
                     <li class="header-item">
                       <a href="{{ route('competitions.public') }}" class="header-link hstack gap-2 fs-7 fw-bold text-dark"><img
-                          src="../assets/images/svgs/secondary-leaf.svg" alt="" width="20" height="20"
+                          src="{{ asset('client/front-end/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
                           class="img-fluid animate-spin">Competitions</a>
                     </li>
                   </ul>
-                  <div class="hstack gap-3">
+                  <div class="hstack">
                     <a href="{{ route('login') }}"
-                      class="btn btn-outline-light fs-6 bg-white px-3 py-2 text-dark w-50 hstack justify-content-center">Sign
-                      In</a>
-                    <a href="{{ route('register') }}"
-                      class="btn btn-dark text-white fs-6 bg-dark px-3 py-2 w-50 hstack justify-content-center">Sign
-                      Up</a>
+                      class="btn btn-dark text-white fs-6 bg-dark px-4 py-2 w-100 hstack justify-content-center">Get Started</a>
                   </div>
                 </div>
                 <div>

@@ -16403,20 +16403,27 @@ textarea.form-control-lg {
   }
 }
 .header {
-  padding: 8px 0;
+  padding: 6px 350px;
+  min-height: 50px;
   z-index: 99;
   transition: all 0.5s ease-in-out;
   animation: 0.5s ease-in-out 0s normal none 1 running fadeInDown;
+  background-color: transparent;
+}
+.header .header-wrapper {
+  display: flex;
+  align-items: center;
+  min-height: 30px;
 }
 @media (max-width: 991.98px) {
   .header {
-    padding: 12px 0;
+    padding: 6px 0;
+    min-height: 60px;
   }
 }
 .header.fixed-header {
-  padding: 12px 0;
+  padding: 6px 0;
   background-color: #ffffff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 .header.fixed-header .logo .logo-dark {
   display: block;
@@ -16434,6 +16441,9 @@ textarea.form-control-lg {
 .header.fixed-header .toggle-menu .menu-icon {
   color: var(--bs-dark) !important;
 }
+.header.fixed-header .header-link {
+  color: var(--bs-dark) !important;
+}
 .header .logo .logo-dark {
   display: none;
 }
@@ -16448,6 +16458,27 @@ textarea.form-control-lg {
   opacity: 1;
   width: 20px;
   margin-inline-end: 5px;
+}
+
+/* Apple Vision Pro style header spacing */
+@media (min-width: 992px) {
+  .header .container {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+  .header .header-menu {
+    gap: 40px;
+  }
+  .header nav {
+    gap: 40px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .header .container {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
 }
 
 .banner-section::before {

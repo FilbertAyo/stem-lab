@@ -1,4 +1,4 @@
-@extends('layouts.landing')
+@extends('layouts.guest')
 
 @section('title', 'Reset Password | ' . config('app.name'))
 @section('page', 'reset-password')
