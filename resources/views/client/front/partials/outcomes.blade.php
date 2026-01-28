@@ -26,7 +26,7 @@
                 <h2 class="mb-0 fs-13 pb-7 border-bottom"><span class="count" data-target="73">73</span>%</h2>
                 <div class="d-flex flex-column gap-3">
                   <h4 class="mb-0">Improvement in conceptual understanding</h4>
-                  <p class="mb-0">Through immersive chemistry experiments at Rural Schools in Tanzania and across Africa.</p>
+                  <p class="mb-0">Through immersive experiments at Rural Schools in Tanzania and across Africa.</p>
                 </div>
               </div>
             </div>
@@ -44,7 +44,7 @@
                 <h2 class="mb-0 fs-13 pb-7 border-bottom"><span class="count" data-target="82">82</span>%</h2>
                 <div class="d-flex flex-column gap-3">
                   <h4 class="mb-0">Girls' participation in STEM</h4>
-                  <p class="mb-0">Increased when learning through immersive biology labs at Girls' Academies in Tanzania and Africa.</p>
+                  <p class="mb-0">Increased when learning through immersive labs at Girls' Academies in Tanzania and Africa.</p>
                 </div>
               </div>
             </div>
