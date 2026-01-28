@@ -15,8 +15,8 @@
                 <div class="col-xxl-8">
                   <div class="d-flex flex-column gap-6" data-aos="fade-up" data-aos-delay="100"
                     data-aos-duration="1000">
-                    <h2 class="mb-0">Transforming education through immersive VR experiences.</h2>
-                    <p class="fs-5 mb-0">Adilisha XR Pro bridges the infrastructure gap, bringing world-class science laboratories to schools across Africa—one headset at a time.</p>
+                    <h2 class="mb-0">Transforming STEM education through immersive VR experiences.</h2>
+                    <p class="fs-5 mb-0">Adilisha XR Pro bridges the infrastructure gap, bringing world-class science laboratories to schools across Africa, one headset at a time.</p>
                   </div>
                 </div>
               </div>

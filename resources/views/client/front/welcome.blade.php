@@ -36,7 +36,7 @@
                     <div class="d-flex flex-column gap-6" data-aos="fade-up" data-aos-delay="100"
                       data-aos-duration="1000">
                       <h2 class="mb-0">Comprehensive virtual laboratory platform</h2>
-                      <p class="fs-5 mb-0 text-opacity-70">Adilisha STEM Labs provides a complete ecosystem of immersive science experiences—from chemistry and physics to biology and engineering—all accessible through Adilisha XR Pro.</p>
+                      <p class="fs-5 mb-0 text-opacity-70">Adilisha STEM Labs provides a complete ecosystem of immersive science experiences, from chemistry and physics to biology and engineering, all accessible through Adilisha XR Pro.</p>
                     </div>
                   </div>
                 </div>
@@ -285,7 +285,7 @@
                   <div class="d-flex flex-column gap-6" data-aos="fade-up" data-aos-delay="100"
                     data-aos-duration="1000">
                     <h2 class="mb-0">Discover immersive learning</h2>
-                    <p class="fs-5 mb-0 text-opacity-70">Explore how students across Africa are experiencing science education through Adilisha XR Pro—transforming classrooms into virtual laboratories where learning comes alive.</p>
+                    <p class="fs-5 mb-0 text-opacity-70">Explore how students across Africa are experiencing science education through Adilisha XR Pro, transforming classrooms into virtual laboratories where learning comes alive.</p>
                   </div>
                 </div>
               </div>

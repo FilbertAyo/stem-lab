@@ -17,7 +17,7 @@
                   <div class="d-flex flex-column gap-6" data-aos="fade-up" data-aos-delay="100"
                     data-aos-duration="1000">
                     <h2 class="mb-0">Immersive laboratory experiences</h2>
-                    <p class="fs-5 mb-0">Step into our virtual science laboratories—where students conduct experiments, explore molecular structures, and discover scientific principles through immersive XR technology.</p>
+                    <p class="fs-5 mb-0">Step into our virtual science laboratories, where students conduct experiments, explore molecular structures, and discover scientific principles through immersive XR technology.</p>
                   </div>
                 </div>
               </div>

@@ -16,7 +16,7 @@
                   <div class="d-flex flex-column gap-6" data-aos="fade-up" data-aos-delay="100"
                     data-aos-duration="1000">
                     <h2 class="mb-0 text-white">Engineered for education</h2>
-                    <p class="fs-5 mb-0 text-white text-opacity-70">Adilisha XR Pro delivers precision, durability, and immersive experiences designed specifically for the classroom environment—where learning meets innovation.</p>
+                    <p class="fs-5 mb-0 text-white text-opacity-70">Adilisha XR Pro delivers precision, durability, and immersive experiences designed specifically for the classroom environment, where learning meets innovation.</p>
                   </div>
                 </div>
               </div>

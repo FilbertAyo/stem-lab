@@ -16,9 +16,7 @@
             <li class="header-item">
               <a href="{{ url('/#labs') }}" class="header-link text-white fw-semibold">Labs</a>
             </li>
-            <li class="header-item">
-              <a href="{{ url('/#impact') }}" class="header-link text-white fw-semibold">Impact</a>
-            </li>
+           
             <li class="header-item">
               <a href="{{ url('/#insights') }}" class="header-link text-white fw-semibold">Insights</a>
             </li>

@@ -10,7 +10,7 @@
                 <span class="badge text-bg-dark">Design Journey</span>
               </div>
               <h2 class="mb-0" data-aos="fade-right" data-aos-delay="200" data-aos-duration="1000">From concept to reality</h2>
-              <p class="mb-0 fs-5" data-aos="fade-right" data-aos-delay="300" data-aos-duration="1000">Every curve, every component, every detail of Adilisha XR Pro was meticulously designed through countless iterations—from initial sketches to final prototype, driven by a singular vision: making world-class education accessible.</p>
+              <p class="mb-0 fs-5" data-aos="fade-right" data-aos-delay="300" data-aos-duration="1000">Every curve, every component, every detail of Adilisha XR Pro was meticulously designed through countless iterations, from initial sketches to final prototype, driven by a singular vision: making world-class education accessible.</p>
             </div>
           </div>
           <div class="col-xl-9 col-xxl-8">
@@ -111,7 +111,7 @@
                       <a href="javascript:void(0)" class="logo-dark">
                         <img src="{{ asset('client/front-end/assets/images/logos/logo-dark.svg') }}" alt="logo" class="img-fluid">
                       </a>
-                      <p class="mb-0 fs-5 text-dark">Real-world validation across diverse school environments—from urban centers to rural communities—ensuring Adilisha XR Pro meets the needs of every learning space.</p>
+                      <p class="mb-0 fs-5 text-dark">Real-world validation across diverse school environments, from urban centers to rural communities, ensuring Adilisha XR Pro meets the needs of every learning space.</p>
                     </div>
                   </div>
                   <span

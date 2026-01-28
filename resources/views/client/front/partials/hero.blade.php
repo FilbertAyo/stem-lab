@@ -10,7 +10,7 @@
                 data-aos-duration="1000">
                 <!-- <img src="{{ asset('client/front-end/assets/images/svgs/primary-leaf.svg') }}" alt="" class="img-fluid animate-spin"> -->
                 <p class="mb-0 text-white fs-5 text-opacity-70">
-                  Empowering the next generation through access to quality <span class="text-primary">STEM education</span> using innovative VR headsets and immersive, hands on learning experiences.
+                  Empowering children through access to quality <span class="text-primary">STEM education</span> using innovative VR headsets and immersive, hands on learning experiences.
                 </p>
               </div>
             </div>

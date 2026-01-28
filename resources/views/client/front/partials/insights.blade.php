@@ -47,7 +47,7 @@
                   </h2>
                   <div id="flush-collapseTwo" class="accordion-collapse collapse"
                     data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body pt-0 fs-5 text-dark">Our virtual laboratory ecosystem includes over 120 experiments across chemistry, physics, biology, astronomy, and engineering. Students can conduct molecular reactions, explore cellular structures, simulate physics experiments, and interact with 3D models—all in immersive XR environments.</div>
+                    <div class="accordion-body pt-0 fs-5 text-dark">Our virtual laboratory ecosystem includes over 120 experiments across chemistry, physics, biology, astronomy, and engineering. Students can conduct molecular reactions, explore cellular structures, simulate physics experiments, and interact with 3D models, all in immersive XR environments.</div>
                   </div>
                 </div>
                 <div class="accordion-item">
@@ -59,7 +59,7 @@
                   </h2>
                   <div id="flush-collapseThree" class="accordion-collapse collapse"
                     data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body pt-0 fs-5 text-dark">Yes, Adilisha XR Pro supports offline mode for core laboratory experiences. While cloud synchronization enhances collaboration and progress tracking, essential experiments can be accessed without continuous internet connectivity—crucial for schools in areas with limited infrastructure.</div>
+                    <div class="accordion-body pt-0 fs-5 text-dark">Yes, Adilisha XR Pro supports offline mode for core laboratory experiences. While cloud synchronization enhances collaboration and progress tracking, essential experiments can be accessed without continuous internet connectivity, crucial for schools in areas with limited infrastructure.</div>
                   </div>
                 </div>
                 <div class="accordion-item">
@@ -71,7 +71,7 @@
                   </h2>
                   <div id="flush-collapseFour" class="accordion-collapse collapse"
                     data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body pt-0 fs-5 text-dark">Our platform includes a comprehensive teacher dashboard that provides real-time analytics, progress tracking, and performance insights. Teachers can view student engagement, experiment completion rates, and learning outcomes—enabling data-driven instruction and personalized support.</div>
+                    <div class="accordion-body pt-0 fs-5 text-dark">Our platform includes a comprehensive teacher dashboard that provides real-time analytics, progress tracking, and performance insights. Teachers can view student engagement, experiment completion rates, and learning outcomes, enabling data-driven instruction and personalized support.</div>
                   </div>
                 </div>
                 <div class="accordion-item border-bottom">
