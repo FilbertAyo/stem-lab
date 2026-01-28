@@ -41,8 +41,8 @@
                         <p class="mb-0">Months of development</p>
                       </div>
                       <div class="hstack gap-6 pt-6">
-                        <img src="{{ asset('client/front-end/assets/images/profile/avatar-1.png') }}" alt=""
-                          class="img-fluid rounded-circle overflow-hidden flex-shrink-0" width="64" height="64">
+                        <!-- <img src="{{ asset('client/front-end/assets/images/profile/avatar-1.png') }}" alt=""
+                          class="img-fluid rounded-circle overflow-hidden flex-shrink-0" width="64" height="64"> -->
                         <div>
                           <h5 class="mb-0">Design Iterations</h5>
                           <p class="mb-0">Concept to Prototype</p>
