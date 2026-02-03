@@ -11,8 +11,8 @@
     @include('client.front.partials.concept')
     @include('client.front.partials.labs')
     @include('client.front.partials.xr')
-    @include('client.front.partials.outcomes')
-    @include('client.front.partials.journey')
+    <!-- @include('client.front.partials.outcomes')
+    @include('client.front.partials.journey') -->
    
 
     <!--  Labs Ecosystem Section -->
