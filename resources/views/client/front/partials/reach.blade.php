@@ -6,7 +6,7 @@
               data-aos-duration="1000">
 
               <hr class="border-line">
-              <span class="badge text-bg-dark">Impact & Reach</span>
+              <span class="badge text-bg-secondary">Impact & Reach</span>
             </div>
           </div>
           <div class="col-xl-8 col-xxl-7">
@@ -15,34 +15,12 @@
                 <div class="col-xxl-8">
                   <div class="d-flex flex-column gap-6" data-aos="fade-up" data-aos-delay="100"
                     data-aos-duration="1000">
-                    <h2 class="mb-0">Transforming STEM education through immersive VR experiences.</h2>
-                    <p class="fs-5 mb-0">Adilisha XR Pro bridges the infrastructure gap, bringing world-class science laboratories to schools across Africa, one headset at a time.</p>
+                    <h2 class="mb-0 text-secondary">Transforming STEM education through immersive VR experiences.</h2>
+                    <p class="fs-5 mb-0">Adilisha XR bridges the infrastructure gap, bringing world-class science laboratories to schools across Africa, one headset at a time.</p>
                   </div>
                 </div>
               </div>
-              <!-- <div class="row">
-                <div class="col-md-6 col-lg-4 mb-7 mb-lg-0">
-                  <div class="d-flex flex-column gap-6 pt-9 border-top" data-aos="fade-up" data-aos-delay="200"
-                    data-aos-duration="1000">
-                    <h2 class="mb-0 fs-14"><span class="count" data-target="250">250</span>+</h2>
-                    <p class="mb-0">Schools equipped with Adilisha XR Pro</p>
-                  </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-7 mb-lg-0">
-                  <div class="d-flex flex-column gap-6 pt-9 border-top" data-aos="fade-up" data-aos-delay="300"
-                    data-aos-duration="1000">
-                    <h2 class="mb-0 fs-14"><span class="count" data-target="50">50</span>K+</h2>
-                    <p class="mb-0">Students experiencing immersive STEM labs</p>
-                  </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-7 mb-lg-0">
-                  <div class="d-flex flex-column gap-6 pt-9 border-top" data-aos="fade-up" data-aos-delay="400"
-                    data-aos-duration="1000">
-                    <h2 class="mb-0 fs-14"><span class="count" data-target="120">120</span>+</h2>
-                    <p class="mb-0">Virtual laboratory experiments available</p>
-                  </div>
-                </div>
-              </div> -->
+        
               <a href="{{ route('login') }}" class="btn" data-aos="fade-up" data-aos-delay="500" data-aos-duration="1000">
                 <span class="btn-text text-white">Explore the Labs</span>
                 <iconify-icon icon="lucide:arrow-up-right"

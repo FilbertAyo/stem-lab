@@ -1,6 +1,6 @@
 <section class="about-img">
       <img src="{{ asset('images/vr-img.jpg') }}" alt="" class="w-100 object-fit-cover">
-      <div class="marquee w-100 d-flex align-items-center overflow-hidden bg-primary py-4">
+      <div class="marquee w-100 d-flex align-items-center overflow-hidden bg-secondary py-4">
         <div class="marquee-content d-flex align-items-center gap-8">
           <div class="hstack gap-4 flex-shrink-0">
             <h4 class="mb-0 text-white">Virtual Reality</h4>

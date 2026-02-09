@@ -1,4 +1,4 @@
-<footer class="footer bg-dark py-3 py-lg-11 py-xl-12">
+<footer class="footer bg-secondary py-3 py-lg-11 py-xl-12">
     <div class="container">
       <div class="row">
         <div class="col-xl-5 mb-8 mb-xl-0">
