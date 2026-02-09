@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminOnly::class,
             'teacher' => \App\Http\Middleware\TeacherOnly::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'block.client.on.admin' => \App\Http\Middleware\BlockClientOnAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

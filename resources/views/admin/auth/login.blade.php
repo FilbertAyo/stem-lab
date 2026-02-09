@@ -20,7 +20,6 @@
 
             <form method="POST" action="{{ route('admin.login.store') }}">
                 @csrf
-                <input type="hidden" name="admin_login" value="1">
                 <div class="form-group mb-3">
                     <label class="form-label">Email Address</label>
                     <input type="email" class="form-control" name="email" placeholder="Email Address" value="{{ old('email') }}">

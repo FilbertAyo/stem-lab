@@ -48,7 +48,14 @@ class LoginRequest extends FormRequest
         $credentials = Arr::only($validated, ['email', 'password']);
 
         $remember = (bool) Arr::get($validated, 'remember', false);
-        $isAdminLogin = (bool) Arr::get($validated, 'admin_login', false);
+        
+        // Detect admin login by checking request host
+        $isAdminLogin = $this->isAdminDomain();
+        
+        // Fallback: also check admin_login flag for backward compatibility during transition
+        if (!$isAdminLogin) {
+            $isAdminLogin = (bool) Arr::get($validated, 'admin_login', false);
+        }
 
         // Force remember=false for admin logins to ensure sessions expire properly
         if ($isAdminLogin) {
@@ -120,5 +127,16 @@ class LoginRequest extends FormRequest
         $ipAddress = (string) request()->ip();
 
         return Str::transliterate($email.'|'.$ipAddress);
+    }
+
+    /**
+     * Check if the request is from the admin subdomain.
+     */
+    protected function isAdminDomain(): bool
+    {
+        $host = $this->getHost();
+        $adminHost = parse_url(config('app.admin_url'), PHP_URL_HOST);
+        
+        return $host === $adminHost;
     }
 }

@@ -16,7 +16,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(Request $request): View
     {
-        if ($request->route()?->named('admin.*')) {
+        // Check if request is from admin subdomain
+        if ($this->isAdminDomain($request)) {
             return view('admin.auth.login');
         }
 
@@ -52,7 +53,7 @@ class AuthenticatedSessionController extends Controller
 
         return redirect(
             $user && $user->role === 'admin'
-                ? route('admin.login')
+                ? config('app.admin_url') . '/login'
                 : route('login')
         );
     }
@@ -62,9 +63,21 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
 
         if ($user && $user->role === 'admin') {
-            return route('admin.dashboard', absolute: false);
+            // Use absolute URL with admin subdomain
+            return config('app.admin_url') . '/dashboard';
         }
 
         return route('dashboard', absolute: false);
+    }
+
+    /**
+     * Check if the request is from the admin subdomain.
+     */
+    protected function isAdminDomain(Request $request): bool
+    {
+        $host = $request->getHost();
+        $adminHost = parse_url(config('app.admin_url'), PHP_URL_HOST);
+        
+        return $host === $adminHost;
     }
 }

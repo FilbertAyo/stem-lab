@@ -16,10 +16,12 @@ class Authenticate extends Middleware
             return null;
         }
 
-        // Check if the request is for an admin route
-        // Check both path prefix and route name prefix
-        if ($request->is('admin*') || str_starts_with($request->route()?->getName() ?? '', 'admin.')) {
-            return route('admin.login');
+        // Check if the request is from admin subdomain or for an admin route
+        $host = $request->getHost();
+        $adminHost = parse_url(config('app.admin_url'), PHP_URL_HOST);
+        
+        if ($host === $adminHost || $request->is('admin*') || str_starts_with($request->route()?->getName() ?? '', 'admin.')) {
+            return config('app.admin_url') . '/login';
         }
 
         // Default redirect for client routes

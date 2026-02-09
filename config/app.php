@@ -56,6 +56,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Admin Application URL
+    |--------------------------------------------------------------------------
+    |
+    | This URL is used for the admin subdomain. Admin routes will be
+    | accessible at this domain instead of the main application URL.
+    |
+    */
+
+    'admin_url' => env('APP_ADMIN_URL', 'https://admin.adilishastemlabs.com'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

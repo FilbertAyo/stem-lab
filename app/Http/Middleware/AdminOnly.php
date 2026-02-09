@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminOnly
@@ -18,7 +19,7 @@ class AdminOnly
         $user = $request->user();
 
         if (! $user) {
-            return redirect()->route('admin.login');
+            return redirect(config('app.admin_url') . '/login');
         }
 
         // Refresh user from database to ensure we have the latest is_active status
@@ -30,11 +31,11 @@ class AdminOnly
 
         // Check if admin user is active - if disabled, log them out immediately
         if (! $user->is_active) {
-            auth()->logout();
+            Auth::guard('web')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
             
-            return redirect()->route('admin.login')
+            return redirect(config('app.admin_url') . '/login')
                 ->with('error', 'Your account has been disabled. Please contact an administrator.');
         }
 

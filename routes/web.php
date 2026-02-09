@@ -117,14 +117,25 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::prefix('admin')->name('admin.')->group(function () {
+// Redirect /admin/* from main domain to admin subdomain
+Route::prefix('admin')->group(function () {
+    Route::get('/', function () {
+        return redirect(config('app.admin_url'), 301);
+    });
+    
+    Route::any('{any}', function ($any) {
+        return redirect(config('app.admin_url') . '/' . $any, 301);
+    })->where('any', '.*');
+});
+
+// Admin subdomain routes - accessible only on admin.adilishastemlabs.com
+Route::domain('admin.adilishastemlabs.com')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('login', [AuthenticatedSessionController::class, 'create'])
             ->name('login');
 
         Route::post('login', [AuthenticatedSessionController::class, 'store'])
-            ->name('login.store')
-            ->defaults('admin_login', true);
+            ->name('login.store');
     });
 
     Route::middleware(['auth', 'admin'])->group(function () {
@@ -244,12 +255,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{weeklySession}', [WeeklySessionController::class, 'destroy'])->name('destroy');
             Route::post('/{weeklySession}/update-status', [WeeklySessionController::class, 'updateStatus'])->name('update-status');
         });
-    });
-});
 
-// Subjects routes - outside name prefix to use 'subjects.*' names
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
-    Route::resource('subjects', SubjectController::class)->names('subjects');
+        // Subjects routes - outside name prefix to use 'subjects.*' names
+        Route::resource('subjects', SubjectController::class)->names('subjects');
 
     // 3D Models routes - with admin prefix in route names
     Route::prefix('models')->name('admin.models.')->group(function () {
@@ -310,6 +318,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\VrAssessmentResultController::class, 'index'])->name('index');
             Route::get('/{attempt}', [\App\Http\Controllers\Admin\VrAssessmentResultController::class, 'show'])->name('show');
         });
+    });
     });
 });
 

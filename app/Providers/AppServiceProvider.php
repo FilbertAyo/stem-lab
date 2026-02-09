@@ -9,6 +9,7 @@ use App\Models\Subject;
 use App\Models\VrQuestionBank;
 use App\Services\CacheService;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,6 +29,12 @@ class AppServiceProvider extends ServiceProvider
     {
         // Clear caches when models are created, updated, or deleted
         $this->registerModelEvents();
+        
+        // Ensure admin routes generate URLs with admin subdomain
+        // This is handled automatically by Route::domain(), but we ensure it's set correctly
+        if (request()->getHost() === parse_url(config('app.admin_url'), PHP_URL_HOST)) {
+            URL::forceRootUrl(config('app.admin_url'));
+        }
     }
 
     /**
