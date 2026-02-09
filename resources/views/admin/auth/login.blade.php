@@ -10,7 +10,7 @@
     @endif
 
     <div class="auth-header">
-        <a href="#"><img src="{{ asset('images/logo/logo-dark.png') }}" alt="Adilisha STEM Lab" style="height: 45px; width: auto;"></a>
+        <a href="https://virtual.adilishastemlabs.com"><img src="{{ asset('images/logo/logo-dark.png') }}" alt="Adilisha STEM Lab" style="height: 45px; width: auto;"></a>
     </div>
     <div class="card my-5">
         <div class="card-body">

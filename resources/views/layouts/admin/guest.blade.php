@@ -44,7 +44,7 @@
                     </div>
                     <div class="col-auto my-1">
                         <ul class="list-inline footer-link mb-0">
-                            <li class="list-inline-item"><a href="{{ url('/') }}">Home</a></li>
+                            <li class="list-inline-item"><a href="{{ url('https://adilishastemlabs.com') }}">Virtual STEM Labs</a></li>
                         </ul>
                     </div>
                 </div>

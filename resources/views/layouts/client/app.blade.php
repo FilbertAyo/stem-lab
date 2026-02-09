@@ -19,11 +19,11 @@
     </head>
     <body>
         <div id="app">
-            @include('layouts.aside')
+            @include('layouts.client.aside')
 
             <div id="main">
                 <header class="mb-3">
-                    @include('layouts.navigation')
+                    @include('layouts.client.navigation')
                 </header>
 
                 {{ $slot }}

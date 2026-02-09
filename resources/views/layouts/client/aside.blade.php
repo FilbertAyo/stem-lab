@@ -3,7 +3,7 @@
         <div class="sidebar-header">
             <div class="d-flex justify-content-between">
                 <div class="logo">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="https://adilishastemlabs.com">
                         <img src="{{ asset('images/logo/logo-dark.png') }}" alt="Adilisha STEM Lab" style="height: 50px; width: auto;">
                     </a>
                 </div>
@@ -24,7 +24,6 @@
                     </a>
                 </li>
             
-
       
                 <li class="sidebar-item {{  request()->routeIs('client.vr-experiments.*') ? 'active' : '' }}">
                     <a href="{{ route('client.vr-experiments.index') }}" class="sidebar-link">
