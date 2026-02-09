@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('layouts.client.guest')
 
 @section('title', 'Confirm Password | ' . config('app.name'))
 @section('page', 'confirm-password')

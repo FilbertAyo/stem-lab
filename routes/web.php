@@ -129,8 +129,8 @@ Route::prefix('admin')->group(function () {
     })->where('any', '.*');
 });
 
-// Admin subdomain routes - accessible only on admin.adilishastemlabs.com
-Route::domain('admin.adilishastemlabs.com')->name('admin.')->group(function () {
+// Admin subdomain routes - accessible only on admin subdomain
+Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilishastemlabs.com')->name('admin.')->group(function () {
     // Redirect root admin subdomain to login page (or dashboard if authenticated)
     Route::get('/', function () {
         if (auth()->check() && auth()->user()->role === 'admin') {
