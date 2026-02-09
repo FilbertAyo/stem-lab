@@ -16403,7 +16403,7 @@ textarea.form-control-lg {
   }
 }
 .header {
-  padding: 6px 350px;
+  padding: 6px 200px;
   min-height: 50px;
   z-index: 99;
   transition: all 0.5s ease-in-out;
