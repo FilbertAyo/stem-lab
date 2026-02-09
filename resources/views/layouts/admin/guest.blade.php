@@ -37,14 +37,12 @@
 
                 <div class="auth-footer row">
                     <div class="col my-1">
-                        <p class="m-0">Copyright © <a href="#">Adiisha STEM Lab</a>
-                            <span class="mx-2">|</span>
-                            <span>Administrative Use Only</span>
+                        <p class="m-0">Copyright © <a href="{{ config('app.url', 'https://adilishastemlabs.com') }}">Adilisha STEM Labs</a>
                         </p>
                     </div>
                     <div class="col-auto my-1">
                         <ul class="list-inline footer-link mb-0">
-                            <li class="list-inline-item"><a href="{{ url('https://adilishastemlabs.com') }}">Virtual STEM Labs</a></li>
+                            <li class="list-inline-item"><a href="{{ url('https://adilisha.or.tz') }}">Adilisha Child and Youth Development Organization</a></li>
                         </ul>
                     </div>
                 </div>

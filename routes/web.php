@@ -25,10 +25,11 @@ use App\Http\Controllers\ProfileController;
 use App\Models\Model3d;
 use Illuminate\Support\Facades\Route;
 
+// Root: redirect admin subdomain to login; show landing page on main domain
 Route::get('/', function () {
     $competitions = \App\Http\Controllers\PublicCompetitionController::getFeaturedCompetitions(3);
     return view('client.front.welcome', compact('competitions'));
-});
+})->middleware('block.client.on.admin');
 
 Route::get('/privacy-policy', function () {
     return view('client.front.policy');

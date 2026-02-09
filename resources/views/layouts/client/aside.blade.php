@@ -3,7 +3,7 @@
         <div class="sidebar-header">
             <div class="d-flex justify-content-between">
                 <div class="logo">
-                    <a href="https://adilishastemlabs.com">
+                    <a href="{{ config('app.url', 'https://adilishastemlabs.com') }}">
                         <img src="{{ asset('images/logo/logo-dark.png') }}" alt="Adilisha STEM Lab" style="height: 50px; width: auto;">
                     </a>
                 </div>
