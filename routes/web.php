@@ -130,6 +130,14 @@ Route::prefix('admin')->group(function () {
 
 // Admin subdomain routes - accessible only on admin.adilishastemlabs.com
 Route::domain('admin.adilishastemlabs.com')->name('admin.')->group(function () {
+    // Redirect root admin subdomain to login page (or dashboard if authenticated)
+    Route::get('/', function () {
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            return redirect(config('app.admin_url', 'https://admin.adilishastemlabs.com') . '/dashboard');
+        }
+        return redirect(config('app.admin_url', 'https://admin.adilishastemlabs.com') . '/login');
+    });
+
     Route::middleware('guest')->group(function () {
         Route::get('login', [AuthenticatedSessionController::class, 'create'])
             ->name('login');
