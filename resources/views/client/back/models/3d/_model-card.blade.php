@@ -1,4 +1,4 @@
-<div class="card h-100 border-0 shadow-sm hover-shadow-lg transition-all">
+<div class="card h-100 border shadow-none hover-shadow-lg transition-all">
     <div class="rounded-top position-relative" style="overflow: hidden; height: 220px;">
         @if($model->thumbnail)
             <img src="{{ asset('storage/' . $model->thumbnail) }}"
@@ -24,7 +24,7 @@
 
     <div class="card-body d-flex flex-column">
         <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="badge bg-light text-dark">
+            <span class="badge border text-dark">
                 <i class="bi bi-book me-1"></i>
                 {{ $model->subject->subject_name ?? 'General' }}
             </span>
@@ -39,9 +39,9 @@
         </p>
         <div class="mt-auto d-flex justify-content-between align-items-center">
             <a href="#" target="_blank" class="text-muted small">
-                <i class="bi bi-box-arrow-up-right me-1"></i>Interactive model
+                <i class="bi bi-box-arrow-up-right me-1"></i> model
             </a>
-            <a href="{{ route('client.models.3d.show', $model) }}" class="btn btn-primary btn-sm">
+            <a href="{{ route('client.models.3d.show', $model) }}" class="badge bg-primary">
                 View model
             </a>
         </div>

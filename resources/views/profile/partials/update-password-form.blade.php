@@ -56,13 +56,14 @@
             </div>
         </div>
 
-        <div class="alert alert-info small mb-3">
+        <div class="alert alert-info small mb-3 alert-dismissible fade show" role="alert" style="background-color: #e7f5ff; border-color: #b6d4fe;">
             <i class="bi bi-info-circle me-1"></i>
             <strong>Password requirements:</strong> Use at least 8 characters with a mix of letters, numbers, and symbols.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
         <div class="d-flex align-items-center gap-3">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary text-white">
                 <i class="bi bi-shield-check me-1"></i> Update Password
             </button>
 

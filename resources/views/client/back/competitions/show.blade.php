@@ -1,26 +1,25 @@
 <x-app-layout>
-    <div class="page-heading">
-        <div>
+    <div class="col-lg-9">
+
+        <div class="dashboard-content-header mb-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item"><a href="{{ route('client.competitions.index') }}">Competitions</a></li>
                     <li class="breadcrumb-item active">{{ $competition->name }}</li>
                 </ol>
             </nav>
-            <h3 class="mb-0">{{ $competition->name }}</h3>
+            <h2 class="title mb-0">{{ $competition->name }}</h2>
         </div>
-    </div>
 
-    <div class="page-content">
         @if (session('status'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; border-color: #c3e6cb;">
                 {{ session('status') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
         @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #f8d7da; border-color: #f5c6cb;" >
                 {{ session('error') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
@@ -31,7 +30,7 @@
             <div class="col-lg-8">
                 <!-- Cover Image -->
                 @if($competition->cover_image)
-                    <div class="card border-0 shadow-sm mb-4">
+                    <div class="card border shadow-none mb-4">
                         <img src="{{ Storage::url($competition->cover_image) }}" 
                              class="card-img-top rounded" 
                              alt="{{ $competition->name }}"
@@ -40,7 +39,7 @@
                 @endif
 
                 <!-- Description -->
-                <div class="card border-0 shadow-sm mb-4">
+                <div class="card border shadow-none mb-4">
                     <div class="card-body">
                         <h5 class="card-title fw-semibold mb-3">About this Competition</h5>
                         <p class="card-text">{{ $competition->description ?: 'No description provided.' }}</p>
@@ -49,7 +48,7 @@
 
                 <!-- Terms & Conditions -->
                 @if($competition->terms_and_conditions)
-                    <div class="card border-0 shadow-sm mb-4">
+                    <div class="card border shadow-none mb-4">
                         <div class="card-header bg-transparent">
                             <h6 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Terms and Conditions</h6>
                         </div>
@@ -61,7 +60,7 @@
 
                 <!-- Instructions -->
                 @if($competition->instructions)
-                    <div class="card border-0 shadow-sm mb-4">
+                    <div class="card border shadow-none mb-4">
                         <div class="card-header bg-transparent">
                             <h6 class="mb-0"><i class="bi bi-list-check me-2"></i>How to Participate</h6>
                         </div>
@@ -102,7 +101,7 @@
 
                 <!-- My Registration Status -->
                 @if($existingParticipant)
-                    <div class="card border-0 shadow-sm mb-4 border-start border-4 border-{{ $existingParticipant->status_badge }}">
+                    <div class="card border shadow-none mb-4 border-start border-4 border-{{ $existingParticipant->status_badge }}">
                         <div class="card-header bg-transparent">
                             <h6 class="mb-0"><i class="bi bi-check-circle me-2"></i>Your Registration</h6>
                         </div>
@@ -178,7 +177,7 @@
             <!-- Sidebar -->
             <div class="col-lg-4">
                 <!-- Quick Info -->
-                <div class="card border-0 shadow-sm mb-4">
+                <div class="card border shadow-none mb-4">
                     <div class="card-header bg-transparent">
                         <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Quick Info</h6>
                     </div>
@@ -207,7 +206,7 @@
                 </div>
 
                 <!-- Timeline -->
-                <div class="card border-0 shadow-sm mb-4">
+                <div class="card border shadow-none mb-4">
                     <div class="card-header bg-transparent">
                         <h6 class="mb-0"><i class="bi bi-calendar-event me-2"></i>Timeline</h6>
                     </div>
@@ -244,7 +243,7 @@
                 </div>
 
                 <!-- Registration Action -->
-                <div class="card border-0 shadow-sm">
+                <div class="card border shadow-none">
                     <div class="card-body">
                         @if($existingParticipant)
                             <div class="text-center">

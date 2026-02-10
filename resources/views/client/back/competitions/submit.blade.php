@@ -1,6 +1,7 @@
 <x-app-layout>
-    <div class="page-heading">
-        <div>
+    <div class="col-lg-9">
+
+        <div class="dashboard-content-header mb-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item"><a href="{{ route('client.competitions.index') }}">Competitions</a></li>
@@ -8,29 +9,33 @@
                     <li class="breadcrumb-item active">Submit</li>
                 </ol>
             </nav>
-            <h3 class="mb-0">Submit Your Work</h3>
+            <h2 class="title mb-0">Submit Your Work</h2>
         </div>
-    </div>
 
-    <div class="page-content">
         <div class="row">
             <div class="col-lg-8">
                 <form action="{{ route('client.competitions.submit.store', $competition) }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #f8d7da; border-color: #f5c6cb;">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-exclamation-triangle me-2 fs-5 mt-1"></i>
+                                <div>
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
 
                     <!-- Basic Info -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-transparent">
+                    <div class="card border shadow-none mb-4">
+                        <div class="card-header bg-light-soft">
                             <h6 class="mb-0"><i class="bi bi-file-text me-2"></i>Submission Details</h6>
                         </div>
                         <div class="card-body">
@@ -58,8 +63,8 @@
                     </div>
 
                     <!-- Experiment Details -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-transparent">
+                    <div class="card border shadow-none mb-4">
+                        <div class="card-header bg-light-soft">
                             <h6 class="mb-0"><i class="bi bi-flask me-2"></i>Experiment Details</h6>
                         </div>
                         <div class="card-body">
@@ -107,8 +112,8 @@
                     </div>
 
                     <!-- Additional Info -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-transparent">
+                    <div class="card border shadow-none mb-4">
+                        <div class="card-header bg-light-soft">
                             <h6 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Additional Information</h6>
                         </div>
                         <div class="card-body">
@@ -135,8 +140,8 @@
                     </div>
 
                     <!-- File Uploads -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-transparent">
+                    <div class="card border shadow-none mb-4">
+                        <div class="card-header bg-light-soft">
                             <h6 class="mb-0"><i class="bi bi-paperclip me-2"></i>Attachments</h6>
                         </div>
                         <div class="card-body">
@@ -196,10 +201,10 @@
                     </div>
 
                     <!-- Submit Actions -->
-                    <div class="card border-0 shadow-sm">
+                    <div class="card border shadow-none">
                         <div class="card-body">
                             <div class="d-flex gap-2 flex-wrap">
-                                <button type="submit" name="submit_final" value="0" class="btn btn-outline-primary">
+                                <button type="submit" name="submit_final" value="0" class="btn btn-primary text-white">
                                     <i class="bi bi-save me-1"></i> Save as Draft
                                 </button>
                                 <button type="submit" name="submit_final" value="1" class="btn btn-success"
@@ -221,7 +226,7 @@
 
             <!-- Sidebar -->
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm mb-4 sticky-top" style="top: 20px;">
+                <div class="card border shadow-none mb-4 sticky-top" style="top: 20px;">
                     <div class="card-header bg-transparent">
                         <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Competition Info</h6>
                     </div>

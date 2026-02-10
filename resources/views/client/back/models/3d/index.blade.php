@@ -11,33 +11,29 @@
 
  
 
-    <div class="page-heading">
-        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
-            <div>
-                <h3 class="mb-1">3D Models Library</h3>
-                <p class="text-muted mb-0">
-                    Browse all interactive STEM models available to your account.
-                    <!-- <span class="badge bg-primary ms-1">{{ $totalModels }} models</span> -->
-                </p>
-            </div>
+    <div class="col-lg-9">
 
-            {{-- Quick Subject Navigation (only in grouped view) --}}
-            @if($showGroupedView && $subjectsWithModels->isNotEmpty())
-                <div class="d-none d-lg-block">
-                    <span class="text-muted small me-2">Jump to:</span>
-                    @foreach($subjectsWithModels as $subject)
-                        <a href="#subject-{{ $subject->id }}"
-                           class="btn btn-sm btn-outline-secondary me-1 mb-1"
-                           onclick="event.preventDefault(); document.getElementById('subject-{{ $subject->id }}').scrollIntoView({behavior: 'smooth', block: 'start'});">
-                            {{ $subject->subject_name }}
-                        </a>
-                    @endforeach
-                </div>
-            @endif
+        <div class="dashboard-content-header">
+            <h2 class="title mb-1">3D Models Library</h2>
+         
         </div>
 
+        {{-- Quick Subject Navigation (only in grouped view) --}}
+        @if($showGroupedView && $subjectsWithModels->isNotEmpty())
+            <div class="d-none d-lg-block mb-3">
+                <span class="text-muted small me-2">Jump to:</span>
+                @foreach($subjectsWithModels as $subject)
+                    <a href="#subject-{{ $subject->id }}"
+                       class="text-decoration-none me-1"
+                       onclick="event.preventDefault(); document.getElementById('subject-{{ $subject->id }}').scrollIntoView({behavior: 'smooth', block: 'start'});">
+                        <span class="badge text-dark border">{{ $subject->subject_name }}</span>    
+                    </a>
+                @endforeach
+            </div>
+        @endif
+
         {{-- Search & Filter Bar --}}
-        <div class="card border-0 shadow-sm mb-4">
+        <div class="card border shadow-none mb-4">
             <div class="card-body py-3">
                 <form method="GET" action="{{ route('client.models.3d.index') }}" id="filterForm">
                     <div class="row g-3 align-items-end">
@@ -88,12 +84,12 @@
                         {{-- Action Buttons --}}
                         <div class="col-12 col-md-2">
                             <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary flex-grow-1">
-                                    <i class="bi bi-funnel me-1"></i>Filter
+                                <button type="submit" class="btn btn-primary text-white flex-grow-1">
+                                   Filter
                                 </button>
                                 @if($search || $selectedSubject || ($sort !== 'by_subject'))
-                                    <a href="{{ route('client.models.3d.index') }}" class="btn btn-outline-secondary" title="Clear all filters">
-                                        <i class="bi bi-x-lg"></i>
+                                    <a href="{{ route('client.models.3d.index') }}" class="btn btn-secondary text-white" title="Clear all filters">
+                                       Clear all filters
                                     </a>
                                 @endif
                             </div>
@@ -126,15 +122,13 @@
                 @endif
             </div>
         @endif
-    </div>
 
-    <div class="page-content">
         <section class="row">
             <div class="col-12">
                 @if($showGroupedView)
                     {{-- Grouped by Subject View --}}
                     @if($subjectsWithModels->isEmpty())
-                        <div class="card border-0 shadow-sm">
+                        <div class="card border shadow-none">
                             <div class="card-body text-center py-5">
                                 <i class="bi bi-box display-4 text-muted mb-3"></i>
                                 <h5 class="fw-semibold mb-2">No 3D models published yet</h5>
@@ -158,8 +152,8 @@
                                             <span class="badge bg-secondary">{{ $subjectModels->count() }} models</span>
                                         </div>
                                         <a href="{{ route('client.models.3d.index', ['subject' => $subject->id, 'sort' => 'newest']) }}"
-                                           class="btn btn-link btn-sm text-decoration-none">
-                                            View all <i class="bi bi-arrow-right"></i>
+                                           class="text-decoration-none">
+                                            View all 
                                         </a>
                                     </div>
 
@@ -176,7 +170,7 @@
                                             @if($subjectModels->count() > 8)
                                                 <div class="flex-shrink-0 d-flex align-items-stretch" style="width: 200px;">
                                                     <a href="{{ route('client.models.3d.index', ['subject' => $subject->id, 'sort' => 'newest']) }}"
-                                                       class="card border-0 shadow-sm h-100 w-100 text-decoration-none hover-shadow-lg transition-all">
+                                                       class="card border shadow-none h-100 w-100 text-decoration-none hover-shadow-lg transition-all">
                                                         <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
                                                             <div class="bg-primary bg-opacity-10 rounded-circle p-3 mb-3">
                                                                 <i class="bi bi-plus-lg fs-3 text-primary"></i>
@@ -209,7 +203,7 @@
                     @endif
 
                     @if($model3ds->isEmpty())
-                        <div class="card border-0 shadow-sm">
+                        <div class="card border shadow-none">
                             <div class="card-body text-center py-5">
                                 <i class="bi bi-box display-4 text-muted mb-3"></i>
                                 <h5 class="fw-semibold mb-2">

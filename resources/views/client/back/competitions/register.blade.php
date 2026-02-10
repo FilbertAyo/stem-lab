@@ -1,6 +1,7 @@
 <x-app-layout>
-    <div class="page-heading">
-        <div>
+    <div class="col-lg-9">
+
+        <div class="dashboard-content-header mb-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item"><a href="{{ route('client.competitions.index') }}">Competitions</a></li>
@@ -8,26 +9,30 @@
                     <li class="breadcrumb-item active">Register</li>
                 </ol>
             </nav>
-            <h3 class="mb-0">Register for Competition</h3>
+            <h2 class="title mb-0">Register for Competition</h2>
         </div>
-    </div>
 
-    <div class="page-content">
         <div class="row">
             <div class="col-lg-8">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-transparent">
+                <div class="card border shadow-none">
+                        <div class="card-header bg-light-soft">
                         <h5 class="mb-0">{{ $competition->name }}</h5>
                         <small class="text-muted">{{ $competition->club->name }}</small>
                     </div>
                     <div class="card-body">
                         @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul class="mb-0">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #ffebeb; border-color: #ffc2c2;">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-exclamation-triangle me-2 fs-5 mt-1"></i>
+                                    <div>
+                                        <ul class="mb-0">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         @endif
 
@@ -70,7 +75,7 @@
                                 </h6>
 
                                 @if($students->isEmpty())
-                                    <div class="alert alert-warning">
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: #fff3cd; border-color: #ffeeba;">
                                         <i class="bi bi-exclamation-triangle me-2"></i>
                                         @if($competition->min_age || $competition->max_age)
                                             No students match the age requirements ({{ $competition->min_age ?? 'Any' }}-{{ $competition->max_age ?? 'Any' }} years). 
@@ -78,18 +83,20 @@
                                         @else
                                             You have no students registered. Please <a href="{{ route('client.students.index') }}">register students</a> first.
                                         @endif
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
                                 @else
-                                    <div class="alert alert-info small mb-3">
+                                    <div class="alert alert-info small mb-3 alert-dismissible fade show" role="alert" style="background-color: #e7f5ff; border-color: #b6d4fe;">
                                         <i class="bi bi-info-circle me-2"></i>
                                         Select between {{ $competition->min_members }} and {{ $competition->max_members ?? 'unlimited' }} students for your team.
                                         @if($competition->min_age || $competition->max_age)
                                             <br>Age requirement: {{ $competition->min_age ?? 'Any' }} - {{ $competition->max_age ?? 'Any' }} years.
                                         @endif
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
 
                                     <div class="table-responsive">
-                                        <table class="table table-hover">
+                                        <table class="table table-hover table-light-soft">
                                             <thead>
                                                 <tr>
                                                     <th style="width: 50px;">Select</th>
@@ -154,7 +161,7 @@
                                 <button type="submit" class="btn btn-primary" {{ $students->isEmpty() ? 'disabled' : '' }}>
                                     <i class="bi bi-check-circle me-1"></i> Register Team
                                 </button>
-                                <a href="{{ route('client.competitions.show', $competition) }}" class="btn btn-outline-secondary">
+                                <a href="{{ route('client.competitions.show', $competition) }}" class="btn btn-secondary text-white">
                                     Cancel
                                 </a>
                             </div>
@@ -165,8 +172,8 @@
 
             <!-- Sidebar -->
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-transparent">
+                <div class="card border shadow-none mb-4">
+                    <div class="card-header bg-light-soft">
                         <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Requirements</h6>
                     </div>
                     <div class="card-body">
@@ -189,7 +196,7 @@
                     </div>
                 </div>
 
-                <div class="card border-0 shadow-sm bg-light">
+                <div class="card border shadow-none bg-light-soft">
                     <div class="card-body">
                         <h6><i class="bi bi-lightbulb me-2"></i>Tips</h6>
                         <ul class="small text-muted mb-0">

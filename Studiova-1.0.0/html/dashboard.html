@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Articles - Studiova</title>
+  <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.svg" />
+  <link rel="stylesheet" href="../assets/libs/owl.carousel/dist/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="../assets/libs/aos-master/dist/aos.css">
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <style>
+    /* Dashboard-specific styles */
+    .dashboard-header {
+      background: #fff;
+      border-bottom: 4px solid var(--bs-primary);
+      padding: 1rem 0;
+    }
+    .dashboard-nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .dashboard-nav a {
+      color: #1f2a2e;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .dashboard-nav a:hover, .dashboard-nav a.active {
+      color: var(--bs-primary);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+    .dashboard-cta {
+      background: var(--bs-primary) !important;
+      color: #1f2a2e !important;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+    .dashboard-cta:hover {
+      opacity: 0.9;
+      color: #1f2a2e !important;
+    }
+    .dashboard-main {
+      padding: 3rem 0 4rem;
+      min-height: calc(100vh - 200px);
+    }
+    .dashboard-sidebar {
+      padding-right: 2rem;
+    }
+    .dashboard-sidebar .filter-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 12px 16px;
+      background: #f4f8fa;
+      border: 1px solid rgba(31, 42, 46, 0.12);
+      border-radius: 8px;
+      font-weight: 500;
+      color: #1f2a2e;
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+    .dashboard-sidebar .category-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .dashboard-sidebar .category-list li {
+      border-bottom: 1px solid rgba(31, 42, 46, 0.08);
+    }
+    .dashboard-sidebar .category-list a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      color: #1f2a2e;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .dashboard-sidebar .category-list a:hover {
+      color: var(--bs-primary);
+    }
+    .dashboard-title {
+      font-size: 48px;
+      font-weight: 700;
+      color: #1f2a2e;
+      margin-bottom: 2rem;
+    }
+    .dashboard-content-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .dashboard-content-header .title {
+      font-size: 48px;
+      font-weight: 700;
+      color: #1f2a2e;
+      margin: 0;
+    }
+    .article-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem 3rem;
+    }
+    .article-item {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .article-item h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1f2a2e;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .article-item p {
+      font-size: 16px;
+      color: rgba(31, 42, 46, 0.7);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .article-item:hover h3 {
+      color: var(--bs-primary);
+    }
+    .newsletter-bar {
+      background: #e8e0f0;
+      padding: 2rem 3rem;
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .newsletter-bar p {
+      margin: 0;
+      font-size: 18px;
+      color: #1f2a2e;
+      max-width: 600px;
+    }
+    .newsletter-form {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .newsletter-form input {
+      padding: 12px 20px;
+      border: 1px solid rgba(31, 42, 46, 0.2);
+      border-radius: 8px;
+      min-width: 260px;
+      font-size: 16px;
+    }
+    .newsletter-form .subscribe-btn {
+      background: #6b5b95;
+      color: #fff;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .newsletter-form .subscribe-btn:hover {
+      background: #5a4a7d;
+      color: #fff;
+    }
+    .nav-toggle {
+      display: none;
+      background: #fff;
+      border: none;
+      padding: 8px;
+    }
+    /* Responsive */
+    @media (max-width: 1199px) {
+      .article-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .dashboard-title, .dashboard-content-header .title {
+        font-size: 36px;
+      }
+    }
+    @media (max-width: 991px) {
+      .dashboard-nav {
+        display: none;
+      }
+      .dashboard-nav.show {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        z-index: 1000;
+      }
+      .nav-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .dashboard-sidebar {
+        padding-right: 0;
+        margin-bottom: 2rem;
+      }
+      .dashboard-sidebar .filter-btn {
+        max-width: 200px;
+      }
+      .article-grid {
+        grid-template-columns: 1fr;
+      }
+      .newsletter-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 2rem;
+      }
+      .newsletter-form {
+        width: 100%;
+      }
+      .newsletter-form input {
+        flex: 1;
+        min-width: 0;
+      }
+    }
+    @media (max-width: 767px) {
+      .dashboard-title, .dashboard-content-header .title {
+        font-size: 28px;
+      }
+      .newsletter-form {
+        flex-direction: column;
+      }
+      .newsletter-form input,
+      .newsletter-form .subscribe-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Dashboard Header -->
+  <header class="dashboard-header position-fixed start-0 top-0 w-100 z-3">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo-dark">
+          <img src="../assets/images/logos/logo-dark.svg" alt="Studiova" class="img-fluid" style="height: 32px;">
+        </a>
+        <nav class="dashboard-nav" id="dashboardNav">
+          <a href="dashboard.html" class="active">Articles</a>
+          <a href="tools.html">Tools</a>
+          <a href="projects.html">Templates</a>
+          <a href="about-us.html">About</a>
+          <a href="contact.html">Newsletter</a>
+        </nav>
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-link p-2 text-dark" type="button" aria-label="Search">
+            <iconify-icon icon="solar:magnifer-line-duotone" class="fs-6"></iconify-icon>
+          </button>
+          <a href="contact.html" class="btn dashboard-cta">Account</a>
+          <button class="nav-toggle" type="button" id="navToggle" aria-label="Toggle menu">
+            <iconify-icon icon="solar:hamburger-menu-line-duotone" class="fs-6 text-dark"></iconify-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Wrapper -->
+  <div class="page-wrapper overflow-hidden" style="padding-top: 90px;">
+    <div class="dashboard-main">
+      <div class="container">
+        <div class="row">
+          <!-- Left Sidebar -->
+          <div class="col-lg-3 dashboard-sidebar">
+            <h1 class="dashboard-title d-none d-lg-block">Articles</h1>
+           
+            <ul class="category-list">
+              <li><a href="#ai-search">AI Search <iconify-icon icon="lucide:chevron-right"></iconify-icon></a></li>
+              <li><a href="#seo-fundamentals">SEO Fundamentals <iconify-icon icon="lucide:chevron-right"></iconify-icon></a></li>
+              <li><a href="#content-marketing">Content Marketing <iconify-icon icon="lucide:chevron-right"></iconify-icon></a></li>
+              <li><a href="#link-building">Link Building <iconify-icon icon="lucide:chevron-right"></iconify-icon></a></li>
+              <li><a href="#marketing">Marketing <iconify-icon icon="lucide:chevron-right"></iconify-icon></a></li>
+            </ul>
+          </div>
+
+          <!-- Main Content -->
+          <div class="col-lg-9">
+            <div class="dashboard-content-header">
+              <h2 class="title mb-0">Articles</h2>
+              <button class="btn btn-link p-2 text-dark" type="button" aria-label="Clear filter">
+                <iconify-icon icon="lucide:x" class="fs-6"></iconify-icon>
+              </button>
+            </div>
+            <div class="article-grid">
+              <a href="blog-detail.html" class="article-item">
+                <h3>AI Search Strategy</h3>
+                <p>Win LLM mentions with the Seen and Trusted Framework.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>LLM Seeding: A New AI Search Strategy</h3>
+                <p>For marketers who want their brand cited by AI tools.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>Generative Engine Optimization (GEO)</h3>
+                <p>For brands looking to grow visibility across AI search platforms.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>What Is SEO?</h3>
+                <p>For people that are new to search engine optimization.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>How to Improve SEO</h3>
+                <p>17 simple ways to quickly improve SEO rankings.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>SEO Checklist</h3>
+                <p>Covers technical SEO, On-page SEO, and keyword research.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>SEO Strategy</h3>
+                <p>Learn exactly how to create a strategy, step by step.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>SEO Competitor Analysis</h3>
+                <p>Learn how to outrank your rivals in the SERPs.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>Google E-E-A-T</h3>
+                <p>Understand what it is and how to demonstrate it.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>Internal Linking for SEO</h3>
+                <p>Key for any site that wants higher rankings in Google.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>Technical SEO</h3>
+                <p>Technical SEO is still SUPER important.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>On-Page SEO</h3>
+                <p>Optimize for UX, bounce rate, search intent, and more.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>Ecommerce SEO</h3>
+                <p>Boost your online store's visibility in search results.</p>
+              </a>
+              <a href="blog-detail.html" class="article-item">
+                <h3>Best SEO Courses</h3>
+                <p>9 courses that actually teach SEO and AI search.</p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <footer class="footer bg-dark py-5 py-lg-8">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-4 mb-md-0">
+         
+          <p class="mb-0 text-white text-opacity-70 fs-6">© Studiova copyright 2025</p>
+        </div>
+        <div class="col-md-8">
+          <ul class="footer-menu list-unstyled mb-0 d-flex flex-wrap gap-3 justify-content-md-end">
+            <li><a class="link-hover fs-6 text-white" href="index.html">Adilisha STEM Labs</a></li>
+          
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="get-template hstack gap-2">
+    <button class="btn bg-primary p-2 round-52 rounded-circle hstack justify-content-center flex-shrink-0" id="scrollToTopBtn">
+      <iconify-icon icon="lucide:arrow-up" class="fs-7 text-dark"></iconify-icon>
+    </button>
+  </div>
+
+  <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/custom.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+  <script>
+    document.getElementById('navToggle')?.addEventListener('click', function() {
+      document.getElementById('dashboardNav').classList.toggle('show');
+    });
+  </script>
+</body>
+
+</html>

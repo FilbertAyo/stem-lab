@@ -1,17 +1,17 @@
 <x-app-layout>
-    <div class="page-heading">
-        <div>
-            <h3 class="mb-1">My Competition Submissions</h3>
-            <p class="text-muted mb-0">Track your competition registrations and submissions.</p>
-        </div>
-        <div>
-            <a href="{{ route('client.competitions.index') }}" class="btn btn-outline-primary">
-                <i class="bi bi-trophy me-1"></i> Browse Competitions
-            </a>
-        </div>
-    </div>
+    <div class="col-lg-9">
 
-    <div class="page-content">
+        <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+                <h2 class="title mb-1">My Competition Submissions</h2>
+            </div>
+            <div>
+                <a href="{{ route('client.competitions.index') }}" class="btn btn-primary text-white btn-sm">
+                    Browse Competitions
+                </a>
+            </div>  
+        </div>
+
         <section class="row">
             <div class="col-12">
                 @if (session('status'))
@@ -22,22 +22,22 @@
                 @endif
 
                 @if($participants->isEmpty())
-                    <div class="card border-0 shadow-sm">
+                    <div class="card border shadow-none">
                         <div class="card-body text-center py-5">
                             <i class="bi bi-file-earmark-text display-4 text-muted mb-3"></i>
                             <h5 class="fw-semibold mb-2">No registrations yet</h5>
                             <p class="text-muted mb-3">
                                 You haven't registered for any competitions yet.
                             </p>
-                            <a href="{{ route('client.competitions.index') }}" class="btn btn-primary">
+                            <a href="{{ route('client.competitions.index') }}" class="btn btn-primary text-white btn-sm">
                                 <i class="bi bi-trophy me-1"></i> Browse Competitions
                             </a>
                         </div>
                     </div>
                 @else
                     @foreach($participants as $participant)
-                        <div class="card border-0 shadow-sm mb-4">
-                            <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                        <div class="card border shadow-none mb-4">
+                            <div class="card-header bg-light-soft d-flex justify-content-between align-items-center">
                                 <div>
                                     <h5 class="mb-0">{{ $participant->competition->name }}</h5>
                                     <small class="text-muted">{{ $participant->competition->club->name }}</small>
@@ -83,7 +83,7 @@
                                         @if($participant->submissions->isEmpty())
                                             <p class="text-muted small mb-2">No submissions yet.</p>
                                             @if($participant->status === 'approved' && $participant->competition->canAcceptSubmissions())
-                                                <a href="{{ route('client.competitions.submit', $participant->competition) }}" class="btn btn-sm btn-success">
+                                                <a href="{{ route('client.competitions.submit', $participant->competition) }}" class="btn btn-sm btn-success text-white">
                                                     <i class="bi bi-upload me-1"></i> Submit Now
                                                 </a>
                                             @endif
@@ -110,7 +110,7 @@
                                                 </div>
                                             @endforeach
                                             @if($participant->status === 'approved' && $participant->competition->canAcceptSubmissions())
-                                                <a href="{{ route('client.competitions.submit', $participant->competition) }}" class="btn btn-sm btn-outline-primary">
+                                                <a href="{{ route('client.competitions.submit', $participant->competition) }}" class="btn btn-sm btn-primary text-white">
                                                     <i class="bi bi-pencil me-1"></i> Edit Submission
                                                 </a>
                                             @endif

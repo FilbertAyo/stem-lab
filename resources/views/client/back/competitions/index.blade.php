@@ -1,17 +1,17 @@
 <x-app-layout>
-    <div class="page-heading">
-        <div>
-            <h3 class="mb-1">Competitions</h3>
-            <p class="text-muted mb-0">View and join competitions available for your clubs.</p>
-        </div>
-        <div>
-            <a href="{{ route('client.competitions.my-submissions') }}" class="btn btn-outline-primary">
-                <i class="bi bi-file-earmark-text me-1"></i> My Submissions
-            </a>
-        </div>
-    </div>
+    <div class="col-lg-9">
 
-    <div class="page-content">
+        <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+                <h2 class="title mb-1">Competitions</h2>    
+            </div>
+            <div>
+                <a href="{{ route('client.competitions.my-submissions') }}" class="btn btn-primary text-white btn-sm">
+                    My Submissions
+                </a>
+            </div>
+        </div>
+
         <section class="row">
             <div class="col-12">
                 @if (session('status'))
@@ -29,27 +29,27 @@
                 @endif
 
                 @if($teacherClubs->isEmpty())
-                    <div class="card border-0 shadow-sm">
+                    <div class="card border shadow-none">
                         <div class="card-body text-center py-5">
                             <i class="bi bi-trophy display-4 text-muted mb-3"></i>
                             <h5 class="fw-semibold mb-2">Join a club first</h5>
                             <p class="text-muted mb-3">
                                 You need to join a club before you can view and participate in competitions.
                             </p>
-                            <a href="{{ route('client.clubs.index') }}" class="btn btn-primary">
+                            <a href="{{ route('client.clubs.index') }}" class="btn btn-primary text-white btn-sm">
                                 <i class="bi bi-plus-circle me-1"></i> Browse Clubs
                             </a>
                         </div>
                     </div>
                 @elseif($competitions->isEmpty())
-                    <div class="card border-0 shadow-sm">
+                    <div class="card border shadow-none">
                         <div class="card-body text-center py-5">
                             <i class="bi bi-trophy display-4 text-muted mb-3"></i>
                             <h5 class="fw-semibold mb-2">No competitions available</h5>
                             <p class="text-muted mb-3">
                                 There are no active competitions for your clubs at the moment. Check back later!
                             </p>
-                            <a href="{{ route('dashboard') }}" class="btn btn-outline-primary">
+                            <a href="{{ route('dashboard') }}" class="btn btn-primary text-white btn-sm">
                                 Return to dashboard
                             </a>
                         </div>
@@ -58,7 +58,7 @@
                     <div class="row g-4">
                         @foreach($competitions as $competition)
                             <div class="col-12 col-lg-6">
-                                <div class="card h-100 border-0 shadow-sm">
+                                <div class="card h-100 border shadow-none">
                                     <div class="row g-0 h-100">
                                         <div class="col-md-4">
                                             @if($competition->cover_image)
@@ -105,7 +105,7 @@
                                                     </div>
                                                 </div>
 
-                                                <a href="{{ route('client.competitions.show', $competition) }}" class="btn btn-primary btn-sm">
+                                                <a href="{{ route('client.competitions.show', $competition) }}" class="btn btn-primary text-white btn-sm">
                                                     View Details <i class="bi bi-arrow-right"></i>
                                                 </a>
                                             </div>

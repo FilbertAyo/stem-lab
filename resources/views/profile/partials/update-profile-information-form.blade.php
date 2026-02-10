@@ -68,18 +68,18 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Role</label>
-                <input type="text" class="form-control bg-light" value="{{ ucfirst($user->role) }}" disabled>
+                <input type="text" class="form-control bg-light-soft" value="{{ ucfirst($user->role) }}" disabled>
                 <small class="text-muted">Contact administrator to change your role.</small>
             </div>
 
             <div class="col-md-6 mb-3">
                 <label class="form-label">Account Status</label>
-                <input type="text" class="form-control bg-light" value="{{ $user->is_active ? 'Active' : 'Inactive' }}" disabled>
+                <input type="text" class="form-control bg-light-soft" value="{{ $user->is_active ? 'Active' : 'Inactive' }}" disabled>
             </div>
         </div>
 
         <div class="d-flex align-items-center gap-3 mt-2">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary text-white">
                 <i class="bi bi-check-lg me-1"></i> Save Changes
             </button>
 

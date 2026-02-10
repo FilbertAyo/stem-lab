@@ -1,19 +1,20 @@
 <x-app-layout>
-    <div class="page-heading d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <div>
-            <h3 class="mb-1">{{ $vrExperiment->name }}</h3>
-            <p class="text-muted mb-0">
-                {{ $vrExperiment->subject->subject_name ?? 'General STEM Experiment' }}
-            </p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('client.vr-experiments.index') }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left me-1"></i> Back to library
-            </a>
-        </div>
-    </div>
+    <div class="col-lg-9">
 
-    <div class="page-content">
+        <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+                <h2 class="title mb-1">{{ $vrExperiment->name }}</h2>
+                <p class="text-muted mb-0">
+                    {{ $vrExperiment->subject->subject_name ?? 'General STEM Experiment' }}
+                </p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ route('client.vr-experiments.index') }}" class="badge bg-light-soft text-dark border d-flex align-items-center" style="font-size: 0.95rem;">
+                   Back to library
+                </a>
+            </div>
+        </div>
+
         <section class="row">
             <!-- VR Experiment Preview Column -->
             <div class="col-lg-8 col-12 mb-4">
@@ -35,7 +36,7 @@
                     @endif
                 </div>
 
-                <div class="card border-0 shadow-sm">
+                <div class="card border shadow-none">
                     <div class="card-body">
                         <h5 class="fw-semibold mb-3">About this experiment</h5>
                         <div class="text-muted mb-4">
@@ -44,13 +45,13 @@
 
                         <div class="row g-3">
                             <div class="col-sm-6">
-                                <div class="p-3 bg-light rounded-3 h-100">
+                                <div class="p-3 bg-light-soft h-100">
                                     <span class="text-muted text-uppercase small d-block mb-1">Subject</span>
                                     <span class="fw-semibold">{{ $vrExperiment->subject->subject_name ?? 'General' }}</span>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="p-3 bg-light rounded-3 h-100">
+                                <div class="p-3 bg-light-soft  h-100">
                                     <span class="text-muted text-uppercase small d-block mb-1">Added</span>
                                     <span class="fw-semibold">{{ $vrExperiment->created_at?->format('M d, Y') }}</span>
                                 </div>
@@ -62,15 +63,15 @@
 
             <!-- Launch Panel Column -->
             <div class="col-lg-4 col-12 mb-4">
-                <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
-                    <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card border shadow-none">
+                    <div class="card-header bg-gradient text-white">
                         <h5 class="fw-semibold mb-0">
-                            <i class="bi bi-vr me-2"></i>View full page
+                            View full page
                         </h5>
                     </div>
                     <div class="card-body">
                         <div class="text-center py-4">
-                                <i class="bi bi-arrow-up-right-circle-fill fs-1 text-primary"></i>
+                                <i class="bi bi-arrow-up-right-circle-fill fs-12 text-primary"></i>
                         
                             <h5 class="fw-semibold mb-2">Ready to explore?</h5>
                             <p class="text-muted small mb-4">
@@ -79,11 +80,11 @@
                             </p>
 
                             @if($vrExperiment->external_url)
-                                <div class="d-grid gap-2">
+                                <div class="d-grid gap-2 text-center">
                                     <button type="button"
-                                            id="fullscreen-btn"
-                                            class="btn btn-primary btn-lg">
-                                        <i class="bi bi-fullscreen me-2"></i>View full page
+                                            id="fullscreen-btn" 
+                                            class="btn btn-primary btn-sm text-white">
+                                        View full page
                                     </button>
                                   
                                 </div>
@@ -97,7 +98,7 @@
                     </div>
 
                     {{-- Requirements/Tips Section --}}
-                    <div class="card-footer bg-light">
+                    <div class="card-footer bg-light-soft">
                         <h6 class="fw-semibold mb-2">
                             <i class="bi bi-info-circle me-1"></i>Tips for best experience
                         </h6>

@@ -1,12 +1,10 @@
 <x-app-layout>
-    <div class="page-heading">
-        <div>
-            <h3 class="mb-1">Weekly Sessions</h3>
-            <p class="text-muted mb-0">View and manage weekly learning sessions for your clubs.</p>
-        </div>
-    </div>
+    <div class="col-lg-9">
 
-    <div class="page-content">
+        <div class="dashboard-content-header">
+            <h2 class="title mb-1">Weekly Sessions</h2>
+        </div>
+
         @if (session('status'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('status') }}
@@ -22,24 +20,24 @@
         @endif
 
         {{-- Filter Tabs --}}
-        <div class="card border-0 shadow-sm mb-4">
+        <div class="card border shadow-none mb-4">
             <div class="card-body py-3">
                 <div class="d-flex flex-wrap gap-2 align-items-center">
                     <span class="text-muted small me-2">Filter:</span>
                     <a href="{{ route('client.weekly-sessions.index', ['status' => 'all']) }}" 
-                       class="btn btn-sm {{ $statusFilter === 'all' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                       class="badge bg-light-soft   border d-inline-flex align-items-center gap-1 text-decoration-none {{ $statusFilter === 'all' ? 'bg-primary' : 'bg-secondary' }}">
                         All Sessions
                     </a>
                     <a href="{{ route('client.weekly-sessions.index', ['status' => 'upcoming']) }}" 
-                       class="btn btn-sm {{ $statusFilter === 'upcoming' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                       class="badge bg-light-soft border d-inline-flex align-items-center gap-1 text-decoration-none {{ $statusFilter === 'upcoming' ? 'bg-primary' : 'bg-secondary' }}">
                         Upcoming
                     </a>
                     <a href="{{ route('client.weekly-sessions.index', ['status' => 'active']) }}" 
-                       class="btn btn-sm {{ $statusFilter === 'active' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                       class="badge bg-light-soft border d-inline-flex align-items-center gap-1 text-decoration-none {{ $statusFilter === 'active' ? 'bg-primary' : 'bg-secondary' }}">
                         Active
                     </a>
                     <a href="{{ route('client.weekly-sessions.index', ['status' => 'completed']) }}" 
-                       class="btn btn-sm {{ $statusFilter === 'completed' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                       class="badge bg-light-soft  border d-inline-flex align-items-center gap-1 text-decoration-none {{ $statusFilter === 'completed' ? 'bg-primary' : 'bg-secondary' }}">
                         Completed
                     </a>
                 </div>
@@ -47,7 +45,7 @@
         </div>
 
         @if($sessions->isEmpty())
-            <div class="card border-0 shadow-sm">
+            <div class="card border shadow-none">
                 <div class="card-body text-center py-5">
                     <i class="bi bi-calendar-x display-4 text-muted mb-3"></i>
                     <h5 class="fw-semibold mb-2">No sessions found</h5>
@@ -64,7 +62,7 @@
             <div class="row g-4">
                 @foreach($sessions as $session)
                     <div class="col-12 col-md-6 col-xl-4">
-                        <div class="card h-100 border-0 shadow-sm">
+                        <div class="card h-100 border shadow-none">
                             <div class="card-body d-flex flex-column">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <div class="flex-grow-1">

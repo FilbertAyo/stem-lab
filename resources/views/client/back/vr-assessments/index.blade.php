@@ -1,10 +1,10 @@
 <x-app-layout>
-    <div class="page-heading">
-        <h3>VR Quizzes</h3>
-        <p class="text-muted">Test your knowledge after completing VR experiments</p>
-    </div>
+    <div class="col-lg-9">
 
-    <div class="page-content">
+        <div class="dashboard-content-header">
+            <h2 class="title mb-1">VR Quizzes</h2>
+        </div>
+
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
@@ -21,7 +21,7 @@
                         $hasCompleted = $attempts->count() > 0;
                     @endphp
                     <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100 border-0 shadow-sm">
+                        <div class="card h-100 border shadow-none">
                             {{-- Experiment Thumbnail --}}
                             <div class="position-relative" style="height: 160px;">
                                 @if($bank->vrExperiment->thumbnail)
@@ -103,12 +103,12 @@
                 @endforeach
             </div>
         @else
-            <div class="card border-0 shadow-sm">
+            <div class="card border shadow-none">
                 <div class="card-body text-center py-5">
                     <i class="bi bi-question-circle text-muted" style="font-size: 4rem;"></i>
                     <h4 class="mt-3">No Quizzes Available</h4>
                     <p class="text-muted">Check back later for new quizzes based on VR experiments.</p>
-                    <a href="{{ route('client.vr-experiments.index') }}" class="btn btn-primary">
+                    <a href="{{ route('client.vr-experiments.index') }}" class="btn btn-primary text-white btn-sm">
                         <i class="bi bi-vr me-1"></i>Explore VR Experiments
                     </a>
                 </div>

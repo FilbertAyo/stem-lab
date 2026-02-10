@@ -1,7 +1,8 @@
 <x-app-layout>
-    <div class="page-content">
+    <div class="col-lg-9">
+
         {{-- Results Header --}}
-        <div class="card border-0 shadow-sm mb-4">
+        <div class="card border shadow-none mb-4">
             <div class="card-body text-center py-5">
                 @if($attempt->passed)
                     <div class="mb-4">
@@ -67,7 +68,7 @@
         </div>
 
         {{-- Quiz Info --}}
-        <div class="card border-0 shadow-sm mb-4">
+        <div class="card border shadow-none mb-4">
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-md-8">
@@ -92,7 +93,7 @@
         </div>
 
         {{-- Answer Review --}}
-        <div class="card border-0 shadow-sm">
+        <div class="card border shadow-none">
             <div class="card-header bg-light">
                 <h5 class="mb-0"><i class="bi bi-list-check me-1"></i>Answer Review</h5>
             </div>

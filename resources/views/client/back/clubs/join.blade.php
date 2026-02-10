@@ -1,15 +1,13 @@
 <x-app-layout>
-    <div class="page-heading">
-        <div>
-            <h3 class="mb-1">Join {{ $club->name }}</h3>
-            <p class="text-muted mb-0">Please provide your school details to complete the registration.</p>
-        </div>
-    </div>
+    <div class="col-lg-9">
 
-    <div class="page-content">
+        <div class="dashboard-content-header">
+            <h2 class="title mb-1">Join {{ $club->name }}</h2>
+        </div>
+
         <section class="row">
             <div class="col-12 col-lg-12 col-xl-12">
-                <div class="card border-0 shadow-sm">
+                <div class="card border shadow-none">
                     <div class="card-body p-4">
 
                         <div class="mb-4">
@@ -170,11 +168,11 @@
                             </div>
 
                             <div class="d-flex gap-2 mt-4">
-                                <a href="{{ route('client.clubs.index') }}" class="btn btn-light">
+                                <a href="{{ route('client.clubs.index') }}" class="btn bg-light-soft text-dark">
                                     <i class="bi bi-arrow-left me-1"></i>
                                     Cancel
                                 </a>
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary text-white">
                                     <i class="bi bi-check-circle me-1"></i>
                                     Join Club
                                 </button>

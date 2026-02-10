@@ -1,7 +1,8 @@
 <x-app-layout>
-    <div class="page-content">
+    <div class="col-lg-9">
+
         {{-- Quiz Header --}}
-        <div class="card border-0 shadow-sm mb-4">
+        <div class="card border shadow-none mb-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                     <div>
@@ -45,7 +46,7 @@
         <div class="row">
             <div class="col-lg-8">
                 @foreach($attempt->questionBank->questions as $index => $question)
-                    <div class="card border-0 shadow-sm mb-3 question-card" 
+                    <div class="card border shadow-none mb-3 question-card" 
                          id="question-{{ $question->id }}"
                          data-question-id="{{ $question->id }}">
                         <div class="card-body">
@@ -133,7 +134,7 @@
                 @endforeach
 
                 {{-- Submit Button --}}
-                <div class="card border-0 shadow-sm">
+                <div class="card border shadow-none">
                     <div class="card-body text-center">
                         <p class="text-muted mb-3">
                             Make sure you've answered all questions before submitting.
@@ -153,7 +154,7 @@
 
             {{-- Question Navigator --}}
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card border shadow-none sticky-top" style="top: 20px;">
                     <div class="card-header bg-light">
                         <h6 class="mb-0"><i class="bi bi-list-ol me-1"></i>Question Navigator</h6>
                     </div>

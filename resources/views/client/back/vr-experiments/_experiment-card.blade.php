@@ -1,4 +1,4 @@
-<div class="card h-100 border-0 shadow-sm hover-shadow-lg transition-all">
+<div class="card h-100 border shadow-none hover-shadow-lg transition-all">
     <div class="rounded-top position-relative" style="overflow: hidden; height: 220px;">
         @if($experiment->thumbnail)
             <img src="{{ asset('storage/' . $experiment->thumbnail) }}"
@@ -22,7 +22,7 @@
 
     <div class="card-body d-flex flex-column">
         <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="badge bg-light text-dark">
+            <span class="badge border text-dark">
                 <i class="bi bi-book me-1"></i>
                 {{ $experiment->subject->subject_name ?? 'General' }}
             </span>
@@ -45,7 +45,7 @@
                     <i class="bi bi-vr me-1"></i>VR Experience
                 </span>
             @endif
-            <a href="{{ route('client.vr-experiments.show', $experiment) }}" class="btn btn-primary btn-sm">
+            <a href="{{ route('client.vr-experiments.show', $experiment) }}" class="badge bg-primary border">
                 View VR
             </a>
         </div>

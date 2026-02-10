@@ -1,12 +1,10 @@
 <x-app-layout>
-    <div class="page-heading">
-        <div>
-            <h3 class="mb-1">Members</h3>
-            <p class="text-muted mb-0">Manage students and teachers in your clubs.</p>
-        </div>
-    </div>
+    <div class="col-lg-9">
 
-    <div class="page-content">
+        <div class="dashboard-content-header">
+            <h2 class="title mb-1">Members</h2>
+        </div>
+
         <section class="row">
             <div class="col-12">
                 @if (session('status'))
@@ -24,12 +22,12 @@
                 @endif
 
                 @if ($teacherClubs->isEmpty())
-                    <div class="card border-0 shadow-sm">
+                    <div class="card border shadow-none">
                         <div class="card-body text-center py-5">
                             <i class="bi bi-people display-4 text-muted mb-3"></i>
                             <h5 class="fw-semibold mb-2">No clubs joined yet</h5>
                             <p class="text-muted mb-3">Join a club to start managing members.</p>
-                            <a href="{{ route('client.clubs.index') }}" class="btn btn-primary btn-sm">
+                            <a href="{{ route('client.clubs.index') }}" class="btn btn-primary text-white btn-sm">
                                 <i class="bi bi-school me-1"></i>Browse Clubs
                             </a>
                         </div>
@@ -54,17 +52,17 @@
                         <!-- Students Tab -->
                         @if(request('tab') !== 'teachers')
                         <div class="tab-pane fade show active" id="students" role="tabpanel" aria-labelledby="students-tab">
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="card border shadow-none">
+                                <div class="card-header bg-light-soft">
                                     <div>
                                         <h5 class="mb-0">All Registered Students</h5>
                                         <small class="text-muted">Students across all your schools and clubs.</small>
                                     </div>
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
+                                        <button type="button" class="btn btn-success text-white" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
                                             <i class="bi bi-upload me-1"></i>Bulk Upload
                                         </button>
-                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
+                                        <button type="button" class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
                                             <i class="bi bi-plus-circle me-1"></i>Register Student
                                         </button>
                                     </div>
@@ -78,7 +76,7 @@
                                         </div>
                                     @else
                                         <div class="table-responsive">
-                                            <table class="table table-bordered table-hover align-middle">
+                                            <table class="table table-bordered table-hover table-light-soft align-middle">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
@@ -115,7 +113,7 @@
                         @if(request('tab') === 'teachers')
                         <div class="tab-pane fade show active" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">
                             @if($clubsWithTeachers->isEmpty())
-                                <div class="card border-0 shadow-sm">
+                                <div class="card border shadow-none">
                                     <div class="card-body text-center py-5">
                                         <i class="bi bi-person-badge display-4 text-muted mb-3"></i>
                                         <h5 class="fw-semibold mb-2">No club memberships</h5>
@@ -124,7 +122,7 @@
                                 </div>
                             @else
                                 @foreach($clubsWithTeachers as $clubData)
-                                    <div class="card border-0 shadow-sm mb-4">
+                                    <div class="card border shadow-none mb-4">
                                         <div class="card-header">
                                             <h5 class="mb-0">
                                                 <i class="bi bi-school me-2"></i>
@@ -146,7 +144,7 @@
                                                 @else
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered table-hover mb-0">
-                                                            <thead class="table-light">
+                                                            <thead class="table-light-soft">
                                                                 <tr>
                                                                     <th>#</th>
                                                                     <th>Name</th>
@@ -190,7 +188,7 @@
                                                     </h6>
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered table-hover mb-0">
-                                                            <thead class="table-light">
+                                                            <thead class="table-light-soft">
                                                                 <tr>
                                                                     <th>#</th>
                                                                     <th>Name</th>
@@ -211,7 +209,7 @@
                                                                         <td class="text-end">
                                                                             <form method="POST" action="{{ route('client.clubs.approve-request', $request) }}" class="d-inline me-2">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Approve this request?')">
+                                                                                <button type="submit" class="btn btn-sm btn-success text-white" onclick="return confirm('Approve this request?')">
                                                                                     <i class="bi bi-check-circle me-1"></i>
                                                                                     Approve
                                                                                 </button>

@@ -1,21 +1,22 @@
 <x-app-layout>
-    <div class="page-heading d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <div>
-            <h3 class="mb-1">{{ $questionBank->title }}</h3>
-            <p class="text-muted mb-0">
-                <i class="bi bi-vr me-1"></i>{{ $questionBank->vrExperiment->name }}
-            </p>
-        </div>
-        <a href="{{ route('client.vr-assessments.index') }}" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left me-1"></i>Back to Quizzes
-        </a>
-    </div>
+    <div class="col-lg-9">
 
-    <div class="page-content">
+        <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+                <h2 class="title mb-1">{{ $questionBank->title }}</h2>
+                <p class="text-muted mb-0">
+                    <i class="bi bi-vr me-1"></i>{{ $questionBank->vrExperiment->name }}
+                </p>
+            </div>
+                <a href="{{ route('client.vr-assessments.index') }}" class="btn bg-light-soft text-dark btn-sm">
+                Back to Quizzes
+            </a>
+        </div>
+
         <div class="row">
             {{-- Quiz Info --}}
             <div class="col-lg-8 mb-4">
-                <div class="card border-0 shadow-sm">
+                <div class="card border shadow-none">
                     {{-- Experiment Banner --}}
                     <div class="position-relative" style="height: 200px;">
                         @if($questionBank->vrExperiment->thumbnail)
@@ -88,8 +89,8 @@
 
             {{-- Start Quiz Panel --}}
             <div class="col-lg-4 mb-4">
-                <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
-                    <div class="card-header bg-primary text-white">
+                <div class="card border shadow-none sticky-top" style="top: 20px;">
+                    <div class="card-header bg-light-soft">
                         <h5 class="mb-0"><i class="bi bi-play-circle me-2"></i>Start Quiz</h5>
                     </div>
                     <div class="card-body text-center">
@@ -100,7 +101,7 @@
                             </div>
                             <form action="{{ route('client.vr-assessments.start', $questionBank) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="btn btn-warning btn-lg w-100 mb-2">
+                                <button type="submit" class="btn btn-warning text-white btn-lg w-100 mb-2">
                                     <i class="bi bi-arrow-repeat me-1"></i>Continue Quiz
                                 </button>
                             </form>
@@ -118,7 +119,7 @@
                             </div>
                             <form action="{{ route('client.vr-assessments.start', $questionBank) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <button type="submit" class="btn btn-primary text-white btn-lg w-100">
                                     <i class="bi bi-play-fill me-1"></i>Start Quiz
                                 </button>
                             </form>
@@ -126,7 +127,7 @@
                     </div>
 
                     @if($previousAttempts->count() > 0)
-                        <div class="card-footer bg-light">
+                        <div class="card-footer bg-light-soft">
                             <h6 class="fw-semibold mb-2">Previous Attempts</h6>
                             <div class="list-group list-group-flush">
                                 @foreach($previousAttempts as $attempt)
