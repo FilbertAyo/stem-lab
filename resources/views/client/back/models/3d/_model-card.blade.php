@@ -1,4 +1,4 @@
-<div class="card h-100 border shadow-none hover-shadow-lg transition-all">
+<div class="card h-100 border-0 shadow-none hover-shadow-lg transition-all">
     <div class="position-relative" style="overflow: hidden; height: 280px;">
         @if($model->thumbnail)
             <img src="{{ asset('storage/' . $model->thumbnail) }}"
@@ -34,12 +34,12 @@
         </div>
 
         <h5 class="fw-semibold">{{ $model->name }}</h5>
-        <p class="text-muted small">
+        <!-- <p class="text-muted small">
             {{ Str::limit($model->description ?? 'No description provided yet.', 60) }}
-        </p>
+        </p> -->
         <div class="mt-auto d-flex justify-content-between align-items-center">
             <a href="#" target="_blank" class="text-muted small">
-                <i class="bi bi-box-arrow-up-right me-1"></i> model
+                <i class="bi bi-box-arrow-up-right me-1"></i>
             </a>
             <a href="{{ route('client.models.3d.show', $model) }}" class="badge bg-primary">
                 View model

@@ -16,7 +16,7 @@
         <div class="row">
             {{-- Quiz Info --}}
             <div class="col-lg-8 mb-4">
-                <div class="card border shadow-none">
+                <div class="card border-0 shadow-none">
                     {{-- Experiment Banner --}}
                     <div class="position-relative" style="height: 200px;">
                         @if($questionBank->vrExperiment->thumbnail)
@@ -89,7 +89,7 @@
 
             {{-- Start Quiz Panel --}}
             <div class="col-lg-4 mb-4">
-                <div class="card border shadow-none sticky-top" style="top: 20px;">
+                <div class="card border-0 shadow-none sticky-top" style="top: 20px;">
                     <div class="card-header bg-light-soft">
                         <h5 class="mb-0"><i class="bi bi-play-circle me-2"></i>Start Quiz</h5>
                     </div>

@@ -7,7 +7,7 @@
 
         <section class="row">
             <div class="col-12 col-lg-12 col-xl-12">
-                <div class="card border shadow-none">
+                <div class="card border-0 shadow-none">
                     <div class="card-body p-4">
 
                         <div class="mb-4">

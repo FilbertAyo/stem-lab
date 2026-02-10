@@ -34,7 +34,7 @@
                     @endif
 
                     <!-- Basic Info -->
-                    <div class="card border shadow-none mb-4">
+                    <div class="card border-0 shadow-none mb-4">
                         <div class="card-header bg-light-soft">
                             <h6 class="mb-0"><i class="bi bi-file-text me-2"></i>Submission Details</h6>
                         </div>
@@ -63,7 +63,7 @@
                     </div>
 
                     <!-- Experiment Details -->
-                    <div class="card border shadow-none mb-4">
+                    <div class="card border-0 shadow-none mb-4">
                         <div class="card-header bg-light-soft">
                             <h6 class="mb-0"><i class="bi bi-flask me-2"></i>Experiment Details</h6>
                         </div>
@@ -112,7 +112,7 @@
                     </div>
 
                     <!-- Additional Info -->
-                    <div class="card border shadow-none mb-4">
+                    <div class="card border-0 shadow-none mb-4">
                         <div class="card-header bg-light-soft">
                             <h6 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Additional Information</h6>
                         </div>
@@ -140,7 +140,7 @@
                     </div>
 
                     <!-- File Uploads -->
-                    <div class="card border shadow-none mb-4">
+                    <div class="card border-0 shadow-none mb-4">
                         <div class="card-header bg-light-soft">
                             <h6 class="mb-0"><i class="bi bi-paperclip me-2"></i>Attachments</h6>
                         </div>
@@ -201,7 +201,7 @@
                     </div>
 
                     <!-- Submit Actions -->
-                    <div class="card border shadow-none">
+                    <div class="card border-0 shadow-none">
                         <div class="card-body">
                             <div class="d-flex gap-2 flex-wrap">
                                 <button type="submit" name="submit_final" value="0" class="btn btn-primary text-white">
@@ -226,7 +226,7 @@
 
             <!-- Sidebar -->
             <div class="col-lg-4">
-                <div class="card border shadow-none mb-4 sticky-top" style="top: 20px;">
+                <div class="card border-0 shadow-none mb-4 sticky-top" style="top: 20px;">
                     <div class="card-header bg-transparent">
                         <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Competition Info</h6>
                     </div>

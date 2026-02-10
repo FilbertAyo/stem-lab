@@ -22,7 +22,7 @@
 
         <div class="page-content">
             @if ($errors->any())
-                <div class="card border shadow-none mb-4">
+                <div class="card border-0 shadow-none mb-4">
                     <div class="card-body alert alert-danger mb-0">
                         <strong>Please fix the following errors:</strong>
                         <ul class="mb-0 mt-2">
@@ -41,7 +41,7 @@
                 @endif
 
                 <!-- Progress Indicator -->
-                <div class="card border shadow-none mb-4">
+                <div class="card border-0 shadow-none mb-4">
                     <div class="card-body py-2">
                         <div class="d-flex align-items-center justify-content-between">
                             <small class="text-muted">Complete the sections below. All fields are optional.</small>
@@ -51,7 +51,7 @@
                 </div>
 
                 <!-- Session Info (Read-only) -->
-                <div class="card border shadow-none mb-4">
+                <div class="card border-0 shadow-none mb-4">
                     <div class="card-body">
                         <h6 class="fw-semibold mb-3"><i class="bi bi-info-circle me-2"></i>Session Information</h6>
                         <div class="row g-3">
@@ -79,11 +79,11 @@
                     </div>
                 </div>
 
-                <!-- The rest of the form is the same as before, just with card border shadow-none -->
+                <!-- The rest of the form is the same as before, just with card border-0 shadow-none -->
                 @include('client.back.weekly-sessions.report-form-fields', ['weeklySession' => $weeklySession, 'report' => $report ?? null, 'totalStudentsRegistered' => $totalStudentsRegistered ?? 0])
 
                 <!-- Submit Buttons -->
-                <div class="card border shadow-none mb-4">
+                <div class="card border-0 shadow-none mb-4">
                     <div class="card-body">
                         <div class="d-flex gap-2 flex-wrap">
                             <button type="submit" class="btn btn-success btn-lg">

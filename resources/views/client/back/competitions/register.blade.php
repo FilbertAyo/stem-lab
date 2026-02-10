@@ -14,7 +14,7 @@
 
         <div class="row">
             <div class="col-lg-8">
-                <div class="card border shadow-none">
+                <div class="card border-0 shadow-none">
                         <div class="card-header bg-light-soft">
                         <h5 class="mb-0">{{ $competition->name }}</h5>
                         <small class="text-muted">{{ $competition->club->name }}</small>
@@ -172,7 +172,7 @@
 
             <!-- Sidebar -->
             <div class="col-lg-4">
-                <div class="card border shadow-none mb-4">
+                <div class="card border-0 shadow-none mb-4">
                     <div class="card-header bg-light-soft">
                         <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Requirements</h6>
                     </div>
@@ -196,7 +196,7 @@
                     </div>
                 </div>
 
-                <div class="card border shadow-none bg-light-soft">
+                <div class="card border-0 shadow-none bg-light-soft">
                     <div class="card-body">
                         <h6><i class="bi bi-lightbulb me-2"></i>Tips</h6>
                         <ul class="small text-muted mb-0">

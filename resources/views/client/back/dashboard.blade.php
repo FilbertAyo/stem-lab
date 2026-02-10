@@ -25,7 +25,7 @@
 
         <section class="row mb-4">
             <div class="col-6 col-lg-3 col-md-6 mb-3">
-                <div class="card border shadow-none h-100">
+                <div class="card border-0 shadow-none h-100">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div class="flex-grow-1 ms-3">
@@ -38,7 +38,7 @@
             </div>
 
             <div class="col-6 col-lg-3 col-md-6 mb-3">
-                <div class="card border shadow-none h-100">
+                <div class="card border-0 shadow-none h-100">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div class="flex-grow-1 ms-3">
@@ -55,7 +55,7 @@
 
             @if($stats['total_competitions'] > 0 || $stats['total_students'] > 0)
                 <div class="col-6 col-lg-3 col-md-6 mb-3">
-                    <div class="card border shadow-none h-100">
+                    <div class="card border-0 shadow-none h-100">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 ms-3">
@@ -73,7 +73,7 @@
 
             @if($stats['total_students'] > 0)
                 <div class="col-6 col-lg-3 col-md-6 mb-3">
-                    <div class="card border shadow-none h-100">
+                    <div class="card border-0 shadow-none h-100">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 ms-3">
@@ -99,7 +99,7 @@
                             <div class="row">
                                 @foreach($latestModels as $model)
                                     <div class="col-md-6 col-lg-4 mb-3">
-                                        <div class="card border shadow-none h-100">
+                                        <div class="card border-0 shadow-none h-100">
                                             <div class="card-body">
                                                 <h6 class="fw-semibold mb-2">{{ $model->name }}</h6>
                                                 <p class="text-muted small mb-2">

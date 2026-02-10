@@ -14,19 +14,17 @@
     <div class="col-lg-12">
 
         <div class="dashboard-content-header">
-            <h2 class="title mb-1">3D Models Library</h2>
+            <h3 class="mb-1">3D Models Library</h3>
         </div>
 
         {{-- Search & Filter Bar --}}
-        <div class="card border shadow-none mb-4">
+        <div class="card border-0 shadow-none mb-4">
             <div class="card-body py-3">
                 <form method="GET" action="{{ route('client.models.3d.index') }}" id="filterForm">
                     <div class="row g-3 align-items-end">
                         {{-- Search Input --}}
                         <div class="col-12 col-md-4">
-                            <label for="search" class="form-label small text-muted mb-1">
-                                <i class="bi bi-search me-1"></i>Search models
-                            </label>
+                         
                             <input type="text"
                                    id="search"
                                    name="search"
@@ -37,9 +35,7 @@
 
                         {{-- Subject Filter --}}
                         <div class="col-6 col-md-3">
-                            <label for="subject-filter" class="form-label small text-muted mb-1">
-                                <i class="bi bi-book me-1"></i>Subject
-                            </label>
+                          
                             <select id="subject-filter"
                                     name="subject"
                                     class="form-select">
@@ -54,9 +50,7 @@
 
                         {{-- Sort Options --}}
                         <div class="col-6 col-md-3">
-                            <label for="sort" class="form-label small text-muted mb-1">
-                                <i class="bi bi-sort-down me-1"></i>Sort by
-                            </label>
+                           
                             <select id="sort" name="sort" class="form-select">
                                 <option value="by_subject" @selected($sort === 'by_subject')>By Subject</option>
                                 <option value="newest" @selected($sort === 'newest')>Newest first</option>
@@ -73,7 +67,7 @@
                                    Filter
                                 </button>
                                 @if($search || $selectedSubject || ($sort !== 'by_subject'))
-                                    <a href="{{ route('client.models.3d.index') }}" class="btn btn-secondary text-white" title="Clear all filters">
+                                    <a href="{{ route('client.models.3d.index') }}" class="badge bg-light-soft text-dark border d-inline-flex align-items-center gap-1 text-decoration-none" title="Clear all filters">
                                        Clear all filters
                                     </a>
                                 @endif
@@ -90,7 +84,7 @@
                 <span class="text-muted small">Active filters:</span>
                 @if($search)
                     <a href="{{ route('client.models.3d.index', array_merge(request()->except('search'), ['page' => 1])) }}"
-                       class="badge bg-light text-dark border d-inline-flex align-items-center gap-1 text-decoration-none">
+                       class="badge bg-light-soft text-dark border d-inline-flex align-items-center gap-1 text-decoration-none">
                         <i class="bi bi-search"></i>
                         "{{ Str::limit($search, 20) }}"
                         <i class="bi bi-x"></i>
@@ -113,7 +107,7 @@
                 @if($showGroupedView)
                     {{-- Grouped by Subject View --}}
                     @if($subjectsWithModels->isEmpty())
-                        <div class="card border shadow-none">
+                        <div class="card border-0 shadow-none">
                             <div class="card-body text-center py-5">
                                 <i class="bi bi-box display-4 text-muted mb-3"></i>
                                 <h5 class="fw-semibold mb-2">No 3D models published yet</h5>
@@ -155,7 +149,7 @@
                                             @if($subjectModels->count() > 8)
                                                 <div class="flex-shrink-0 d-flex align-items-stretch" style="width: 200px;">
                                                     <a href="{{ route('client.models.3d.index', ['subject' => $subject->id, 'sort' => 'newest']) }}"
-                                                       class="card border shadow-none h-100 w-100 text-decoration-none hover-shadow-lg transition-all">
+                                                       class="card border-0 shadow-none h-100 w-100 text-decoration-none hover-shadow-lg transition-all">
                                                         <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
                                                             <div class="bg-primary bg-opacity-10 rounded-circle p-3 mb-3">
                                                                 <i class="bi bi-plus-lg fs-3 text-primary"></i>
@@ -188,7 +182,7 @@
                     @endif
 
                     @if($model3ds->isEmpty())
-                        <div class="card border shadow-none">
+                        <div class="card border-0 shadow-none">
                             <div class="card-body text-center py-5">
                                 <i class="bi bi-box display-4 text-muted mb-3"></i>
                                 <h5 class="fw-semibold mb-2">
@@ -208,11 +202,11 @@
                                     @endif
                                 </p>
                                 @if($search || $selectedSubject)
-                                    <a href="{{ route('client.models.3d.index') }}" class="btn btn-primary btn-sm">
-                                        <i class="bi bi-arrow-counterclockwise me-1"></i>Clear all filters
+                                    <a href="{{ route('client.models.3d.index') }}" class="badge bg-light-soft text-dark border d-inline-flex align-items-center gap-1 text-decoration-none">
+                                        Clear all filters
                                     </a>
                                 @else
-                                    <a href="{{ route('dashboard') }}" class="btn btn-primary btn-sm">
+                                    <a href="{{ route('dashboard') }}" class="badge bg-light-soft text-dark border d-inline-flex align-items-center gap-1 text-decoration-none">
                                         Explore dashboard
                                     </a>
                                 @endif
@@ -241,66 +235,5 @@
         </section>
     </div>
 
-    {{-- Quick navigation scroll button --}}
-    <button type="button"
-            class="btn btn-primary btn-sm rounded-circle position-fixed shadow-lg d-none"
-            id="scrollTopBtn"
-            onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-            style="bottom: 2rem; right: 2rem; width: 45px; height: 45px; z-index: 1050;">
-        <i class="bi bi-arrow-up"></i>
-    </button>
-
-    @push('styles')
-    <style>
-        .hover-shadow-lg {
-            transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
-        }
-        .hover-shadow-lg:hover {
-            box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
-            transform: translateY(-2px);
-        }
-        .transition-all {
-            transition: all 0.2s ease-in-out;
-        }
-        #scrollTopBtn.show {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-        }
-        .scroll-mt-4 {
-            scroll-margin-top: 1.5rem;
-        }
-        .subject-scroll-container {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(0,0,0,.2) transparent;
-        }
-        .subject-scroll-container::-webkit-scrollbar {
-            height: 8px;
-        }
-        .subject-scroll-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .subject-scroll-container::-webkit-scrollbar-thumb {
-            background-color: rgba(0,0,0,.2);
-            border-radius: 4px;
-        }
-        .subject-scroll-container::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(0,0,0,.3);
-        }
-    </style>
-    @endpush
-
-    @push('scripts')
-    <script>
-        // Scroll to top button visibility
-        const scrollTopBtn = document.getElementById('scrollTopBtn');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                scrollTopBtn.classList.add('show');
-            } else {
-                scrollTopBtn.classList.remove('show');
-            }
-        });
-    </script>
-    @endpush
+    
 </x-app-layout>

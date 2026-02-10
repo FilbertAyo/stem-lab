@@ -21,7 +21,7 @@
                         $hasCompleted = $attempts->count() > 0;
                     @endphp
                     <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100 border shadow-none">
+                        <div class="card h-100 border-0 shadow-none">
                             {{-- Experiment Thumbnail --}}
                             <div class="position-relative" style="height: 160px;">
                                 @if($bank->vrExperiment->thumbnail)
@@ -103,7 +103,7 @@
                 @endforeach
             </div>
         @else
-            <div class="card border shadow-none">
+            <div class="card border-0 shadow-none">
                 <div class="card-body text-center py-5">
                     <i class="bi bi-question-circle text-muted" style="font-size: 4rem;"></i>
                     <h4 class="mt-3">No Quizzes Available</h4>

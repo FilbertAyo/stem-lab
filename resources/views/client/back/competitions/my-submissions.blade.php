@@ -22,7 +22,7 @@
                 @endif
 
                 @if($participants->isEmpty())
-                    <div class="card border shadow-none">
+                    <div class="card border-0 shadow-none">
                         <div class="card-body text-center py-5">
                             <i class="bi bi-file-earmark-text display-4 text-muted mb-3"></i>
                             <h5 class="fw-semibold mb-2">No registrations yet</h5>
@@ -36,7 +36,7 @@
                     </div>
                 @else
                     @foreach($participants as $participant)
-                        <div class="card border shadow-none mb-4">
+                        <div class="card border-0 shadow-none mb-4">
                             <div class="card-header bg-light-soft d-flex justify-content-between align-items-center">
                                 <div>
                                     <h5 class="mb-0">{{ $participant->competition->name }}</h5>

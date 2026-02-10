@@ -18,7 +18,7 @@
         <section class="row">
             <!-- 3D Model Viewer Column -->
             <div class="col-lg-8 col-12 mb-4">
-                <div class="card border shadow-none mb-4">
+                <div class="card border-0 shadow-none mb-4">
                     <div class="card-body p-0">
                         @if($model3d->file)
                             <div class="position-relative">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
 
-                <div class="card border shadow-none">
+                <div class="card border-0 shadow-none">
                     <div class="card-body">
                         <h5 class="fw-semibold mb-3">Model overview</h5>
                         <p class="text-muted mb-4">{{ $model3d->description ?? 'No description has been provided for this model yet.' }}</p>
@@ -68,7 +68,7 @@
 
             <!-- Questions Panel Column with Progress Bar on Top -->
             <div class="col-lg-4 col-12 mb-4">
-                <div class="card border shadow-none sticky-top" style="top: 20px;">
+                <div class="card border-0 shadow-none sticky-top" style="top: 20px;">
                     <!-- Progress (Score) Bar & Quick Status -->
                     @if($progress && $progress['has_attempted'])
                         <div class="border-bottom px-4 pt-3 pb-2">

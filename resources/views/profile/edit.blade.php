@@ -11,7 +11,7 @@
         <section class="row">
             <!-- Profile Overview Column -->
             <div class="col-lg-4 col-12 mb-4">
-                <div class="card border shadow-none">
+                <div class="card border-0 shadow-none">
                     <div class="card-body text-center py-4">
                         <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
                             <span class="text-primary fw-bold" style="font-size: 2.5rem;">
@@ -42,7 +42,7 @@
                 </div>
 
                 @if($user->role === 'teacher' && $user->teacherClubs->count() > 0)
-                    <div class="card border shadow-none mt-4">
+                    <div class="card border-0 shadow-none mt-4">
                         <div class="card-header bg-light-soft">
                             <h6 class="mb-0"><i class="bi bi-house me-2"></i>My Clubs</h6>
                         </div>
@@ -70,7 +70,7 @@
             <!-- Settings Column -->
             <div class="col-lg-8 col-12">
                 <!-- Profile Information Card -->
-                <div class="card border shadow-none mb-4">
+                <div class="card border-0 shadow-none mb-4">
                     <div class="card-header bg-light-soft d-flex align-items-center">
                         <i class="bi bi-person-circle fs-5 me-2 text-primary"></i>
                         <h5 class="mb-0">Profile Information</h5>
@@ -81,7 +81,7 @@
                 </div>
 
                 <!-- Update Password Card -->
-                <div class="card border shadow-none mb-4">
+                <div class="card border-0 shadow-none mb-4">
                     <div class="card-header bg-light-soft d-flex align-items-center">
                         <i class="bi bi-shield-lock fs-5 me-2 text-primary"></i>
                         <h5 class="mb-0">Update Password</h5>

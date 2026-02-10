@@ -31,7 +31,7 @@
                 @endif
 
                 @if($clubsWithPendingRequests->isEmpty())
-                    <div class="card border shadow-none">
+                    <div class="card border-0 shadow-none">
                         <div class="card-body text-center py-5">
                             <i class="bi bi-check-circle display-4 text-success mb-3"></i>
                             <h5 class="fw-semibold mb-2">No pending requests</h5>
@@ -45,7 +45,7 @@
                     </div>
                 @else
                     @foreach($clubsWithPendingRequests as $clubData)
-                        <div class="card border shadow-none mb-4">
+                        <div class="card border-0 shadow-none mb-4">
                             <div class="card-header bg-light-soft">
                                 <h5 class="mb-0">
                                     <i class="bi bi-school me-2"></i>

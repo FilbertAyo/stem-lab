@@ -33,7 +33,7 @@
             <!-- Main Content -->
             <div class="col-lg-8">
                 <!-- Session Information -->
-                <div class="card border shadow-none mb-4">
+                <div class="card border-0 shadow-none mb-4">
                     <div class="card-body">
                         <h5 class="fw-semibold mb-3">Session Objectives</h5>
                         <p class="text-muted mb-0">
@@ -43,7 +43,7 @@
                 </div>
 
                 <!-- Resources Section -->
-                <div class="card border shadow-none mb-4">
+                <div class="card border-0 shadow-none mb-4">
                     <div class="card-header bg-transparent">
                         <h6 class="mb-0"><i class="bi bi-package me-2"></i>Session Resources</h6>
                     </div>
@@ -102,7 +102,7 @@
                 </div>
 
                 <!-- Assigned Classes -->
-                <div class="card border shadow-none mb-4">
+                <div class="card border-0 shadow-none mb-4">
                     <div class="card-header bg-transparent">
                         <h6 class="mb-0"><i class="bi bi-book me-2"></i>Assigned Classes</h6>
                     </div>
@@ -128,7 +128,7 @@
 
                 <!-- Assigned Students -->
                 @if($students->count() > 0)
-                    <div class="card border shadow-none mb-4">
+                    <div class="card border-0 shadow-none mb-4">
                         <div class="card-header bg-transparent">
                             <h6 class="mb-0"><i class="bi bi-people me-2"></i>Assigned Students ({{ $students->count() }})</h6>
                         </div>
@@ -165,7 +165,7 @@
             <!-- Sidebar -->
             <div class="col-lg-4">
                 <!-- Session Details -->
-                <div class="card border shadow-none mb-4 sticky-top" style="top: 20px;">
+                <div class="card border-0 shadow-none mb-4 sticky-top" style="top: 20px;">
                     <div class="card-header bg-transparent">
                         <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Session Details</h6>
                     </div>
@@ -195,7 +195,7 @@
                 </div>
 
                 <!-- Report Actions -->
-                <div class="card border shadow-none">
+                <div class="card border-0 shadow-none">
                     <div class="card-header bg-transparent">
                         <h6 class="mb-0"><i class="bi bi-file-text me-2"></i>Session Report</h6>
                     </div>

@@ -60,7 +60,7 @@
                     @endif
                 </div>
 
-                <div class="card border shadow-none">
+                <div class="card border-0 shadow-none">
                     <div class="card-body">
                         <h5 class="fw-semibold mb-3">About this experiment</h5>
                         <div class="text-muted mb-4">
@@ -87,7 +87,7 @@
 
             <!-- Launch Panel Column -->
             <div class="col-lg-4 col-12 mb-4">
-                <div class="card border shadow-none">
+                <div class="card border-0 shadow-none">
                     <div class="card-header bg-gradient text-white">
                         <h5 class="fw-semibold mb-0">
                             View full page

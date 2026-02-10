@@ -1,5 +1,5 @@
-<div class="card h-100 border shadow-none hover-shadow-lg transition-all">
-    <div class="rounded-top position-relative" style="overflow: hidden; height: 220px;">
+<div class="card h-100 border-0 shadow-none hover-shadow-lg transition-all">
+    <div class="position-relative" style="overflow: hidden; height: 220px;">
         @if($experiment->thumbnail)
             <img src="{{ asset('storage/' . $experiment->thumbnail) }}"
                  alt="{{ $experiment->name }} thumbnail"
@@ -32,20 +32,20 @@
         </div>
 
         <h5 class="fw-semibold">{{ $experiment->name }}</h5>
-        <p class="text-muted small">
+        <!-- <p class="text-muted small">
             {{ Str::limit($experiment->description ?? 'No description provided yet.', 60) }}
-        </p>
+        </p> -->
         <div class="mt-auto d-flex justify-content-between align-items-center">
             @if($experiment->external_url)
                 <span class="text-muted small">
-                    <i class="bi bi-box-arrow-up-right me-1"></i>External VR
+                    <i class="bi bi-box-arrow-up-right me-1"></i>
                 </span>
             @else
                 <span class="text-muted small">
                     <i class="bi bi-vr me-1"></i>VR Experience
                 </span>
             @endif
-            <a href="{{ route('client.vr-experiments.show', $experiment) }}" class="badge bg-primary border">
+            <a href="{{ route('client.vr-experiments.show', $experiment) }}" class="badge bg-primary">
                 View VR
             </a>
         </div>

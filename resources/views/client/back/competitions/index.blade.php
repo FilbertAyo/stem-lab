@@ -29,7 +29,7 @@
                 @endif
 
                 @if($teacherClubs->isEmpty())
-                    <div class="card border shadow-none">
+                    <div class="card border-0 shadow-none">
                         <div class="card-body text-center py-5">
                             <i class="bi bi-trophy display-4 text-muted mb-3"></i>
                             <h5 class="fw-semibold mb-2">Join a club first</h5>
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 @elseif($competitions->isEmpty())
-                    <div class="card border shadow-none">
+                    <div class="card border-0 shadow-none">
                         <div class="card-body text-center py-5">
                             <i class="bi bi-trophy display-4 text-muted mb-3"></i>
                             <h5 class="fw-semibold mb-2">No competitions available</h5>
@@ -58,7 +58,7 @@
                     <div class="row g-4">
                         @foreach($competitions as $competition)
                             <div class="col-12 col-lg-6">
-                                <div class="card h-100 border shadow-none">
+                                <div class="card h-100 border-0 shadow-none">
                                     <div class="row g-0 h-100">
                                         <div class="col-md-4">
                                             @if($competition->cover_image)

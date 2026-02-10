@@ -22,7 +22,7 @@
                 @endif
 
                 @if ($teacherClubs->isEmpty())
-                    <div class="card border shadow-none">
+                    <div class="card border-0 shadow-none">
                         <div class="card-body text-center py-5">
                             <i class="bi bi-people display-4 text-muted mb-3"></i>
                             <h5 class="fw-semibold mb-2">No clubs joined yet</h5>
@@ -52,7 +52,7 @@
                         <!-- Students Tab -->
                         @if(request('tab') !== 'teachers')
                         <div class="tab-pane fade show active" id="students" role="tabpanel" aria-labelledby="students-tab">
-                            <div class="card border shadow-none">
+                            <div class="card border-0 shadow-none">
                                 <div class="card-header bg-light-soft">
                                     <div>
                                         <h5 class="mb-0">All Registered Students</h5>
@@ -113,7 +113,7 @@
                         @if(request('tab') === 'teachers')
                         <div class="tab-pane fade show active" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">
                             @if($clubsWithTeachers->isEmpty())
-                                <div class="card border shadow-none">
+                                <div class="card border-0 shadow-none">
                                     <div class="card-body text-center py-5">
                                         <i class="bi bi-person-badge display-4 text-muted mb-3"></i>
                                         <h5 class="fw-semibold mb-2">No club memberships</h5>
@@ -122,7 +122,7 @@
                                 </div>
                             @else
                                 @foreach($clubsWithTeachers as $clubData)
-                                    <div class="card border shadow-none mb-4">
+                                    <div class="card border-0 shadow-none mb-4">
                                         <div class="card-header">
                                             <h5 class="mb-0">
                                                 <i class="bi bi-school me-2"></i>
