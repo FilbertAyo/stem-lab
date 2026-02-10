@@ -83,6 +83,7 @@
       document.getElementById('dashboardNav')?.classList.toggle('show');
     });
   </script>
+  @stack('scripts')
 </body>
 
 </html>
