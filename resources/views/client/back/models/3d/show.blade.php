@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="col-lg-9">
+    <div class="col-lg-12">
 
         <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
             <div>

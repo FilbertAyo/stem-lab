@@ -6,14 +6,14 @@
 @section('content')
 <main>
     <section class="banner-section banner-inner-section position-relative overflow-hidden d-flex align-items-end"
-      style="background-image: url({{ asset('client/front-end/assets/images/backgrounds/privacy-policy-banner.jpg') }});">
+      style="background-image: url({{ asset('client/assets/images/backgrounds/privacy-policy-banner.jpg') }});">
       <div class="container">
         <div class="d-flex flex-column gap-4 pb-5 pb-xl-10 position-relative z-1">
           <div class="row align-items-center">
             <div class="col-xl-4">
               <div class="d-flex align-items-center gap-4" data-aos="fade-up" data-aos-delay="100"
                 data-aos-duration="1000">
-                <img src="{{ asset('client/front-end/assets/images/svgs/primary-leaf.svg') }}" alt="" class="img-fluid animate-spin">
+                <img src="{{ asset('client/assets/images/svgs/primary-leaf.svg') }}" alt="" class="img-fluid animate-spin">
                 <p class="mb-0 text-white fs-5 text-opacity-70">Understand the <span class="text-primary">Rules &
                     Guidelines</span> Before Using Our Services</p>
               </div>

@@ -18,11 +18,11 @@ class Model3dController extends Controller
     {
         $subjectId = $request->input('subject');
         $search = $request->input('search');
-        $sort = $request->input('sort', 'by_subject'); // Default to grouped by subject
+        $sort = $request->input('sort', 'by_subject');
         $userId = Auth::id();
 
-        // Check if we should show grouped view (default when no filters/search)
-        $showGroupedView = $sort === 'by_subject' && !$search && !$subjectId;
+        // Always use flat paginated list (no categories); user filters via search/subject/sort
+        $showGroupedView = false;
 
         // Get cached subjects
         $subjects = CacheService::getActiveSubjects();
@@ -33,52 +33,7 @@ class Model3dController extends Controller
         // Get cached user progress
         $studentAnswers = CacheService::getUserProgress($userId);
 
-        if ($showGroupedView) {
-            // Grouped view: Get all active models grouped by subject
-            $allModels = Model3d::active()
-                ->with('subject')
-                ->withCount('questions')
-                ->get();
-
-            // Calculate progress for each model using aggregated data
-            $modelProgress = [];
-            foreach ($allModels as $model) {
-                $answerData = $studentAnswers->get($model->id);
-                $totalQuestions = $model->questions_count;
-                $answeredQuestions = $answerData ? (int) $answerData->answered_count : 0;
-                $correctAnswers = $answerData ? (int) $answerData->correct_count : 0;
-                $percentage = $answeredQuestions > 0 ? round(($correctAnswers / $answeredQuestions) * 100, 2) : 0;
-                $isCompleted = $answeredQuestions > 0 && $answeredQuestions >= $totalQuestions;
-
-                $modelProgress[$model->id] = [
-                    'answered' => $answeredQuestions,
-                    'total' => $totalQuestions,
-                    'correct' => $correctAnswers,
-                    'percentage' => $percentage,
-                    'is_completed' => $isCompleted,
-                    'has_attempted' => $answeredQuestions > 0,
-                ];
-            }
-
-            // Group models by subject
-            $modelsBySubject = $allModels->groupBy('subject_id');
-            $subjectsWithModels = $subjects->filter(fn ($s) => $modelsBySubject->has($s->id));
-
-            return view('client.back.models.3d.index', [
-                'model3ds' => collect(),
-                'modelsBySubject' => $modelsBySubject,
-                'subjectsWithModels' => $subjectsWithModels,
-                'showGroupedView' => true,
-                'subjects' => $subjects,
-                'selectedSubject' => $subjectId,
-                'modelProgress' => $modelProgress,
-                'search' => $search,
-                'sort' => $sort,
-                'totalModels' => $totalModels,
-            ]);
-        }
-
-        // Standard paginated view with filters/sorting
+        // Paginated view with optional subject/search filter and sorting
         $query = Model3d::active()
             ->withSubject()
             ->withCount('questions')

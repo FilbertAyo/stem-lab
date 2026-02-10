@@ -1,18 +1,6 @@
 <div class="col-lg-3 dashboard-sidebar">
     <ul class="category-list">
         <li>
-            <a href="{{ route('client.vr-experiments.index') }}"
-               class="{{ request()->routeIs('client.vr-experiments.*') ? 'active' : '' }}">
-                Experiments <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-            </a>
-        </li>
-        <li>
-            <a href="{{ route('client.models.3d.index') }}"
-               class="{{ request()->routeIs('client.models.3d.*') ? 'active' : '' }}">
-                3D Models <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-            </a>
-        </li>
-        <li>
             <a href="{{ route('client.weekly-sessions.index') }}"
                class="{{ request()->routeIs('client.weekly-sessions.*') ? 'active' : '' }}">
                 Weekly Sessions <iconify-icon icon="lucide:chevron-right"></iconify-icon>

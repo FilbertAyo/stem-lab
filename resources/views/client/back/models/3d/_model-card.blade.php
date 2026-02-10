@@ -1,5 +1,5 @@
 <div class="card h-100 border shadow-none hover-shadow-lg transition-all">
-    <div class="rounded-top position-relative" style="overflow: hidden; height: 220px;">
+    <div class="position-relative" style="overflow: hidden; height: 280px;">
         @if($model->thumbnail)
             <img src="{{ asset('storage/' . $model->thumbnail) }}"
                  alt="{{ $model->name }} thumbnail"

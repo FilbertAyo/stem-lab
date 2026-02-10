@@ -8,7 +8,7 @@
             <div class="col-xl-4">
               <div class="d-flex align-items-center gap-4" data-aos="fade-up" data-aos-delay="100"
                 data-aos-duration="1000">
-                <!-- <img src="{{ asset('client/front-end/assets/images/svgs/primary-leaf.svg') }}" alt="" class="img-fluid animate-spin"> -->
+                <!-- <img src="{{ asset('client/assets/images/svgs/primary-leaf.svg') }}" alt="" class="img-fluid animate-spin"> -->
                 <p class="mb-0 text-white fs-5 text-opacity-70">
                   Empowering children through access to quality <span class="text-primary">STEM education</span> using innovative VR headsets and immersive, hands on learning experiences.
                 </p>

@@ -47,22 +47,22 @@
                   <ul class="header-menu list-unstyled mb-0 d-flex flex-column gap-2">
                     <li class="header-item">
                       <a href="{{ url('/#labs') }}" class="header-link hstack gap-2 fs-7 fw-bold text-dark"><img
-                          src="{{ asset('client/front-end/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
+                          src="{{ asset('client/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
                           class="img-fluid animate-spin">Labs</a>
                     </li>
                     <li class="header-item">
                       <a href="{{ url('/#impact') }}" class="header-link hstack gap-2 fs-7 fw-bold text-dark"><img
-                          src="{{ asset('client/front-end/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
+                          src="{{ asset('client/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
                           class="img-fluid animate-spin">Impact</a>
                     </li>
                     <li class="header-item">
                       <a href="{{ url('/#insights') }}" class="header-link hstack gap-2 fs-7 fw-bold text-dark"><img
-                          src="{{ asset('client/front-end/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
+                          src="{{ asset('client/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
                           class="img-fluid animate-spin">Insights</a>
                     </li>
                     <li class="header-item">
                       <a href="{{ route('competitions.public') }}" class="header-link hstack gap-2 fs-7 fw-bold text-dark"><img
-                          src="{{ asset('client/front-end/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
+                          src="{{ asset('client/assets/images/svgs/secondary-leaf.svg') }}" alt="" width="20" height="20"
                           class="img-fluid animate-spin">Competitions</a>
                     </li>
                   </ul>

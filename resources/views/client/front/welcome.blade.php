@@ -45,7 +45,7 @@
                 data-aos-duration="1000">
                 <a href="blog-detail.html"
                   class="resources-img resources-img-first position-relative overflow-hidden d-block">
-                  <img src="{{ asset('client/front-end/assets/images/resources/resources-1.jpg') }}" alt="resources" class="img-fluid">
+                  <img src="{{ asset('client/assets/images/resources/resources-1.jpg') }}" alt="resources" class="img-fluid">
                 </a>
                 <div class="resources-details">
                   <p class="mb-0">Jan 15, 2026</p>
@@ -57,7 +57,7 @@
               <div class="resources d-flex flex-column gap-6" data-aos="fade-up" data-aos-delay="200"
                 data-aos-duration="1000">
                 <a href="javascript:void(0)" class="resources-img position-relative overflow-hidden d-block">
-                  <img src="{{ asset('client/front-end/assets/images/resources/resources-2.jpg') }}" alt="resources" class="img-fluid">
+                  <img src="{{ asset('client/assets/images/resources/resources-2.jpg') }}" alt="resources" class="img-fluid">
                 </a>
                 <div class="resources-details">
                   <p class="mb-0">Jan 8, 2026</p>
@@ -69,7 +69,7 @@
               <div class="resources d-flex flex-column gap-6" data-aos="fade-up" data-aos-delay="300"
                 data-aos-duration="1000">
                 <a href="javascript:void(0)" class="resources-img position-relative overflow-hidden d-block">
-                  <img src="{{ asset('client/front-end/assets/images/resources/resources-3.jpg') }}" alt="resources" class="img-fluid">
+                  <img src="{{ asset('client/assets/images/resources/resources-3.jpg') }}" alt="resources" class="img-fluid">
                 </a>
                 <div class="resources-details">
                   <p class="mb-0">Dec 28, 2025</p>

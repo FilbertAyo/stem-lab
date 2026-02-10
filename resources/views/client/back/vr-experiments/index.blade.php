@@ -9,34 +9,44 @@
     @php($experimentsBySubject = $experimentsBySubject ?? collect())
     @php($subjectsWithExperiments = $subjectsWithExperiments ?? collect())
 
+    {{-- Labs/Experiments own sidebar: All Experiments + subject filter links (no global aside on this page) --}}
+    <div class="col-12">
+        <div class="row">
+            <div class="col-lg-3 dashboard-sidebar mb-4 mb-lg-0">
+                <ul class="category-list">
+                    <li>
+                        <a href="{{ route('client.vr-experiments.index', request()->only(['search', 'sort'])) }}"
+                           class="{{ !$selectedSubject ? 'active' : '' }}">
+                            All Experiments <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+                        </a>
+                    </li>
+                    @foreach($subjects as $subject)
+                        <li>
+                            <a href="{{ route('client.vr-experiments.index', array_merge(request()->only(['search', 'sort']), ['subject' => $subject->id])) }}"
+                               class="{{ (string) $subject->id === (string) $selectedSubject ? 'active' : '' }}">
+                                {{ $subject->subject_name }} <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
 
-    <div class="col-lg-9">
+            <div class="col-lg-9">
 
         <div class="dashboard-content-header">
             <h2 class="title mb-0">VR Experiments Library</h2>
         </div>
 
-        {{-- Quick Subject Navigation (only in grouped view) --}}
-        @if($showGroupedView && $subjectsWithExperiments->isNotEmpty())
-            <div class="d-none d-lg-block mb-3">
-                <span class="text-muted small me-2">Jump to:</span>
-                @foreach($subjectsWithExperiments as $subject)
-                    <a href="#subject-{{ $subject->id }}"
-                       class="text-decoration-none me-1"
-                       onclick="event.preventDefault(); document.getElementById('subject-{{ $subject->id }}').scrollIntoView({behavior: 'smooth', block: 'start'});">
-                        <span class="badge text-dark border">{{ $subject->subject_name }}</span>
-                    </a>
-                @endforeach
-            </div>
-        @endif
-
         {{-- Search & Filter Bar --}}
         <div class="card border shadow-none mb-4">
             <div class="card-body py-3">
                 <form method="GET" action="{{ route('client.vr-experiments.index') }}" id="filterForm">
+                    @if($selectedSubject)
+                        <input type="hidden" name="subject" value="{{ $selectedSubject }}">
+                    @endif
                     <div class="row g-3 align-items-end">
                         {{-- Search Input --}}
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-5">
                             <label for="search" class="form-label small text-muted mb-1">
                                 <i class="bi bi-search me-1"></i>Search experiments
                             </label>
@@ -46,23 +56,6 @@
                                    class="form-control"
                                    placeholder="Search by name or description..."
                                    value="{{ $search }}">
-                        </div>
-
-                        {{-- Subject Filter --}}
-                        <div class="col-6 col-md-3">
-                            <label for="subject-filter" class="form-label small text-muted mb-1">
-                                <i class="bi bi-book me-1"></i>Subject
-                            </label>
-                            <select id="subject-filter"
-                                    name="subject"
-                                    class="form-select">
-                                <option value="">All subjects</option>
-                                @foreach($subjects as $subject)
-                                    <option value="{{ $subject->id }}" @selected((string) $subject->id === (string) $selectedSubject)>
-                                        {{ $subject->subject_name }}
-                                    </option>
-                                @endforeach
-                            </select>
                         </div>
 
                         {{-- Sort Options --}}
@@ -103,7 +96,7 @@
                 <span class="text-muted small">Active filters:</span>
                 @if($search)
                     <a href="{{ route('client.vr-experiments.index', array_merge(request()->except('search'), ['page' => 1])) }}"
-                       class="badge bg-light text-dark border d-inline-flex align-items-center gap-1 text-decoration-none">
+                       class="badge bg-light-soft d-inline-flex align-items-center gap-1 text-dark">
                         <i class="bi bi-search"></i>
                         "{{ Str::limit($search, 20) }}"
                         <i class="bi bi-x"></i>
@@ -112,7 +105,7 @@
                 @if($selectedSubject)
                     @php($selectedSubjectName = $subjects->firstWhere('id', $selectedSubject)?->subject_name ?? 'Unknown')
                     <a href="{{ route('client.vr-experiments.index', array_merge(request()->except('subject'), ['page' => 1])) }}"
-                       class="badge bg-light text-dark border d-inline-flex align-items-center gap-1 text-decoration-none">
+                       class="badge bg-light-soft  d-inline-flex align-items-center gap-1 text-dark">
                         <i class="bi bi-book"></i>
                         {{ $selectedSubjectName }}
                         <i class="bi bi-x"></i>
@@ -251,6 +244,8 @@
                 @endif
             </div>
         </section>
+            </div>
+        </div>
     </div>
 
     {{-- Quick navigation scroll button --}}

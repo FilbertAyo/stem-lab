@@ -1,5 +1,29 @@
 <x-app-layout>
-    <div class="col-lg-9">
+    @php($subjects = $subjects ?? collect())
+
+    {{-- Same sidebar as index: All Experiments + subject links (no global aside on vr-experiments.*) --}}
+    <div class="col-12">
+        <div class="row">
+            <div class="col-lg-3 dashboard-sidebar mb-4 mb-lg-0">
+                <ul class="category-list">
+                    <li>
+                        <a href="{{ route('client.vr-experiments.index') }}"
+                           class="">
+                            All Experiments <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+                        </a>
+                    </li>
+                    @foreach($subjects as $subject)
+                        <li>
+                            <a href="{{ route('client.vr-experiments.index', ['subject' => $subject->id]) }}"
+                               class="{{ (string) $subject->id === (string) ($vrExperiment->subject_id ?? '') ? 'active' : '' }}">
+                                {{ $subject->subject_name }} <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+
+            <div class="col-lg-9">
 
         <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
             <div>
@@ -113,6 +137,8 @@
                 </div>
             </div>
         </section>
+            </div>
+        </div>
     </div>
 
     @push('scripts')

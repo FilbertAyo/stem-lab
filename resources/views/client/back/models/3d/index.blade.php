@@ -11,26 +11,11 @@
 
  
 
-    <div class="col-lg-9">
+    <div class="col-lg-12">
 
         <div class="dashboard-content-header">
             <h2 class="title mb-1">3D Models Library</h2>
-         
         </div>
-
-        {{-- Quick Subject Navigation (only in grouped view) --}}
-        @if($showGroupedView && $subjectsWithModels->isNotEmpty())
-            <div class="d-none d-lg-block mb-3">
-                <span class="text-muted small me-2">Jump to:</span>
-                @foreach($subjectsWithModels as $subject)
-                    <a href="#subject-{{ $subject->id }}"
-                       class="text-decoration-none me-1"
-                       onclick="event.preventDefault(); document.getElementById('subject-{{ $subject->id }}').scrollIntoView({behavior: 'smooth', block: 'start'});">
-                        <span class="badge text-dark border">{{ $subject->subject_name }}</span>    
-                    </a>
-                @endforeach
-            </div>
-        @endif
 
         {{-- Search & Filter Bar --}}
         <div class="card border shadow-none mb-4">
@@ -236,7 +221,7 @@
                     @else
                         <div class="row g-4">
                             @foreach($model3ds as $model)
-                                <div class="col-12 col-md-6 col-xl-4">
+                                <div class="col-12 col-md-3 col-xl-3">
                                     @include('client.back.models.3d._model-card', ['model' => $model])
                                 </div>
                             @endforeach

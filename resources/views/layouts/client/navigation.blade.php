@@ -7,7 +7,16 @@
         <nav class="dashboard-nav" id="dashboardNav">
           <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
           <a href="{{ route('client.vr-experiments.index') }}" class="{{ request()->routeIs('client.vr-experiments.*') ? 'active' : '' }}">Labs</a>
-      
+          <a href="{{ route('client.models.3d.index') }}" class="{{ request()->routeIs('client.models.3d.*') ? 'active' : '' }}">3D Models</a>
+          <a href="{{ route('client.weekly-sessions.index') }}"
+             class="{{ request()->routeIs('client.weekly-sessions.*')
+                        || request()->routeIs('client.clubs.*')
+                        || request()->routeIs('client.students.*')
+                        || request()->routeIs('client.vr-assessments.*')
+                        || request()->routeIs('client.competitions.*')
+                      ? 'active' : '' }}">
+            Activities
+          </a>
         </nav>
         <div class="d-flex align-items-center gap-3">
      

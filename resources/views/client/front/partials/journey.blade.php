@@ -41,7 +41,7 @@
                         <p class="mb-0">Months of development</p>
                       </div>
                       <div class="hstack gap-6 pt-6">
-                        <!-- <img src="{{ asset('client/front-end/assets/images/profile/avatar-1.png') }}" alt=""
+                        <!-- <img src="{{ asset('client/assets/images/profile/avatar-1.png') }}" alt=""
                           class="img-fluid rounded-circle overflow-hidden flex-shrink-0" width="64" height="64"> -->
                         <div>
                           <h5 class="mb-0">Design Iterations</h5>
@@ -50,7 +50,7 @@
                       </div>
                     </div>
                     <div class="position-absolute bottom-0 end-0">
-                      <img src="{{ asset('client/front-end/assets/images/backgrounds/customer-satisfaction-bg.svg') }}" alt="" class="img-fluid">
+                      <img src="{{ asset('client/assets/images/backgrounds/customer-satisfaction-bg.svg') }}" alt="" class="img-fluid">
                     </div>
                   </div>
                 </div>
@@ -58,7 +58,7 @@
               <div class="col-lg-4 mb-7 mb-lg-0">
                 <div class="d-flex flex-column gap-7" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
                   <div class="position-relative">
-                    <img src="{{ asset('client/front-end/assets/images/services/services-img-2.jpg') }}" alt="" class="img-fluid w-100">
+                    <img src="{{ asset('client/assets/images/services/services-img-2.jpg') }}" alt="" class="img-fluid w-100">
                   </div>
 
                   <div class="card bg-dark">
@@ -70,25 +70,25 @@
                       <ul class="d-flex align-items-center mb-0">
                         <li>
                           <a href="javascript:void(0)">
-                            <img src="{{ asset('client/front-end/assets/images/profile/user-1.jpg') }}" width="44" height="44"
+                            <img src="{{ asset('client/assets/images/profile/user-1.jpg') }}" width="44" height="44"
                               class="rounded-circle border border-2 border-dark" alt="sketch-1">
                           </a>
                         </li>
                         <li class="ms-n2">
                           <a href="javascript:void(0)">
-                            <img src="{{ asset('client/front-end/assets/images/profile/user-2.jpg') }}" width="44" height="44"
+                            <img src="{{ asset('client/assets/images/profile/user-2.jpg') }}" width="44" height="44"
                               class="rounded-circle border border-2 border-dark" alt="sketch-2">
                           </a>
                         </li>
                         <li class="ms-n2">
                           <a href="javascript:void(0)">
-                            <img src="{{ asset('client/front-end/assets/images/profile/user-3.jpg') }}" width="44" height="44"
+                            <img src="{{ asset('client/assets/images/profile/user-3.jpg') }}" width="44" height="44"
                               class="rounded-circle border border-2 border-dark" alt="sketch-3">
                           </a>
                         </li>
                         <li class="ms-n2">
                           <a href="javascript:void(0)">
-                            <img src="{{ asset('client/front-end/assets/images/profile/user-4.jpg') }}" width="44" height="44"
+                            <img src="{{ asset('client/assets/images/profile/user-4.jpg') }}" width="44" height="44"
                               class="rounded-circle border border-2 border-dark" alt="sketch-4">
                           </a>
                         </li>
@@ -109,7 +109,7 @@
                     </div>
                     <div class="d-flex flex-column gap-3">
                       <a href="javascript:void(0)" class="logo-dark">
-                        <img src="{{ asset('client/front-end/assets/images/logos/logo-dark.svg') }}" alt="logo" class="img-fluid">
+                        <img src="{{ asset('client/assets/images/logos/logo-dark.svg') }}" alt="logo" class="img-fluid">
                       </a>
                       <p class="mb-0 fs-5 text-dark">Real-world validation across diverse school environments, from urban centers to rural communities, ensuring Adilisha XR meets the needs of every learning space.</p>
                     </div>

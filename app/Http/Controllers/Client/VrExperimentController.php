@@ -18,10 +18,10 @@ class VrExperimentController extends Controller
     {
         $subjectId = $request->input('subject');
         $search = $request->input('search');
-        $sort = $request->input('sort', 'by_subject'); // Default to grouped by subject
+        $sort = $request->input('sort', 'by_subject');
 
-        // Check if we should show grouped view (default when no filters/search)
-        $showGroupedView = $sort === 'by_subject' && !$search && !$subjectId;
+        // Always use flat paginated list: "All Experiments" = all; sidebar subject = filter by that subject (no categories, no "View all")
+        $showGroupedView = false;
 
         // Get cached subjects
         $subjects = CacheService::getActiveSubjects();
@@ -29,32 +29,7 @@ class VrExperimentController extends Controller
         // Get total count for stats
         $totalExperiments = VrExperiment::where('is_active', true)->count();
 
-        if ($showGroupedView) {
-            // Grouped view: Get all active experiments grouped by subject using database query
-            $allExperiments = VrExperiment::active()
-                ->withSubject()
-                ->orderBy('subject_id')
-                ->orderBy('name')
-                ->get();
-
-            // Group experiments by subject (more efficient than loading all then grouping)
-            $experimentsBySubject = $allExperiments->groupBy('subject_id');
-            $subjectsWithExperiments = $subjects->filter(fn ($s) => $experimentsBySubject->has($s->id));
-
-            return view('client.back.vr-experiments.index', [
-                'vrExperiments' => collect(),
-                'experimentsBySubject' => $experimentsBySubject,
-                'subjectsWithExperiments' => $subjectsWithExperiments,
-                'showGroupedView' => true,
-                'subjects' => $subjects,
-                'selectedSubject' => $subjectId,
-                'search' => $search,
-                'sort' => $sort,
-                'totalExperiments' => $totalExperiments,
-            ]);
-        }
-
-        // Standard paginated view with filters/sorting
+        // Paginated view with optional subject/search filter and sorting
         $query = VrExperiment::active()
             ->withSubject()
             ->when($subjectId, fn ($q) => $q->forSubject($subjectId))
@@ -89,8 +64,9 @@ class VrExperimentController extends Controller
     public function show(VrExperiment $vrExperiment): View
     {
         $vrExperiment->load('subject');
+        $subjects = CacheService::getActiveSubjects();
 
-        return view('client.back.vr-experiments.show', compact('vrExperiment'));
+        return view('client.back.vr-experiments.show', compact('vrExperiment', 'subjects'));
     }
 }
 

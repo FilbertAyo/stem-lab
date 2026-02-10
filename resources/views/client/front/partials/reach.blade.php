@@ -31,6 +31,6 @@
         </div>
       </div>
       <div class="position-absolute bottom-0 start-0" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
-        <img src="{{ asset('client/front-end/assets/images/backgrounds/stats-facts-bg.svg') }}" alt="" class="img-fluid">
+        <img src="{{ asset('client/assets/images/backgrounds/stats-facts-bg.svg') }}" alt="" class="img-fluid">
       </div>
     </section>
