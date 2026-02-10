@@ -25,23 +25,26 @@ use App\Http\Controllers\ProfileController;
 use App\Models\Model3d;
 use Illuminate\Support\Facades\Route;
 
-// Root: redirect admin subdomain to login; show landing page on main domain
-Route::get('/', function () {
-    $competitions = \App\Http\Controllers\PublicCompetitionController::getFeaturedCompetitions(3);
-    return view('client.front.welcome', compact('competitions'));
-})->middleware('block.client.on.admin');
+// Public landing and explore routes (track visitors, block on admin subdomain)
+Route::middleware(['block.client.on.admin', 'track.landing.visitor'])->group(function () {
+    // Root: redirect admin subdomain to login; show landing page on main domain
+    Route::get('/', function () {
+        $competitions = \App\Http\Controllers\PublicCompetitionController::getFeaturedCompetitions(3);
+        return view('client.front.welcome', compact('competitions'));
+    });
 
-Route::get('/privacy-policy', function () {
-    return view('client.front.policy');
-})->name('privacy.policy');
+    Route::get('/privacy-policy', function () {
+        return view('client.front.policy');
+    })->name('privacy.policy');
 
-Route::get('/terms-conditions', function () {
-    return view('client.front.terms');
-})->name('terms.conditions');
+    Route::get('/terms-conditions', function () {
+        return view('client.front.terms');
+    })->name('terms.conditions');
 
-// Public Competitions (accessible without login)
-Route::get('/explore/competitions', [PublicCompetitionController::class, 'index'])->name('competitions.public');
-Route::get('/explore/competitions/{competition}', [PublicCompetitionController::class, 'show'])->name('competitions.public.show');
+    // Public Competitions (accessible without login)
+    Route::get('/explore/competitions', [PublicCompetitionController::class, 'index'])->name('competitions.public');
+    Route::get('/explore/competitions/{competition}', [PublicCompetitionController::class, 'show'])->name('competitions.public.show');
+});
 
 // Admin subdomain routes - MUST come before client routes to ensure proper domain matching
 Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilishastemlabs.com')->name('admin.')->group(function () {

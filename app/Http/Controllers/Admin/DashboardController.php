@@ -8,10 +8,11 @@ use App\Models\Student;
 use App\Models\Model3d;
 use App\Models\Competition;
 use App\Models\School;
-use App\Models\Club;
-use App\Models\ModelQuestionAnswer;
+use App\Models\VrExperiment;
 use App\Models\CompetitionSubmission;
 use App\Models\VrAssessmentAttempt;
+use App\Models\Visitor;
+use App\Models\VisitorWeeklyStat;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Support\Carbon;
@@ -26,15 +27,18 @@ class DashboardController extends Controller
         $stats = [
             'total_admins' => User::where('role', 'admin')->count(),
             'total_teachers' => User::where('role', 'teacher')->count(),
-            'total_students' => Student::count(),
+            'total_students' => User::where('role', 'student')->count(),
             'total_3d_models' => Model3d::count(),
             'active_3d_models' => Model3d::where('is_active', true)->count(),
+            'total_vr_experiments' => VrExperiment::count(),
+            'active_vr_experiments' => VrExperiment::where('is_active', true)->count(),
             'total_competitions' => Competition::count(),
             'active_competitions' => Competition::where('is_active', true)->count(),
             'total_schools' => School::count(),
-            'total_clubs' => Club::count(),
-            'total_answers' => ModelQuestionAnswer::count(),
-            'total_correct_answers' => ModelQuestionAnswer::where('is_correct', true)->count(),
+            'total_visitors' => Visitor::count(),
+            'visitors_today' => Visitor::whereDate('last_seen_at', today())->count(),
+            'total_landing_views' => Visitor::sum('landing_views'),
+            'visitors_not_converted' => Visitor::notConverted()->count(),
         ];
 
         // Get latest active admin user (based on session last_activity)
@@ -183,7 +187,22 @@ class DashboardController extends Controller
             ->sortByDesc('time')
             ->take(10);
 
-        return view('admin.dashboard', compact('stats', 'latestActiveAdmin', 'recentActivities'));
+        // Weekly visitor data for charts (last 12 weeks)
+        $chartWeeks = 12;
+        $visitorChartData = [
+            'labels' => [],
+            'unique_visitors' => [],
+            'landing_views' => [],
+        ];
+        for ($i = $chartWeeks - 1; $i >= 0; $i--) {
+            $weekStart = Carbon::now()->subWeeks($i)->startOfWeek();
+            $weekStr = $weekStart->toDateString();
+            $visitorChartData['labels'][] = $weekStart->format('d M');
+            $visitorChartData['unique_visitors'][] = VisitorWeeklyStat::where('week_start', $weekStr)->count();
+            $visitorChartData['landing_views'][] = (int) VisitorWeeklyStat::where('week_start', $weekStr)->sum('views');
+        }
+
+        return view('admin.dashboard', compact('stats', 'latestActiveAdmin', 'recentActivities', 'visitorChartData'));
     }
 }
 

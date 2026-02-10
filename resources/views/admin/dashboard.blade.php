@@ -8,182 +8,190 @@
                 </div>
             </div>
 
-            <!-- Statistics Cards -->
+            <!-- Statistics Cards (equal height) -->
             <div class="row mb-4">
                 <!-- Admins Card -->
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar avatar-md bg-danger text-white rounded">
-                                        <i class="ti ti-shield fs-4"></i>
-                                    </div>
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-danger text-white rounded">
+                                    <i class="ti ti-shield fs-4"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-muted">Total Admins</h6>
-                                    <h4 class="mb-0">{{ $stats['total_admins'] }}</h4>
-                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">Total Admins</h6>
+                                <h4 class="mb-0">{{ $stats['total_admins'] }}</h4>
+                                <small class="text-muted">&nbsp;</small>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Teachers Card -->
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar avatar-md bg-primary text-white rounded">
-                                        <i class="ti ti-user fs-4"></i>
-                                    </div>
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-primary text-white rounded">
+                                    <i class="ti ti-user fs-4"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-muted">Total Teachers</h6>
-                                    <h4 class="mb-0">{{ $stats['total_teachers'] }}</h4>
-                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">Total Teachers</h6>
+                                <h4 class="mb-0">{{ $stats['total_teachers'] }}</h4>
+                                <small class="text-muted">&nbsp;</small>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Students Card -->
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar avatar-md bg-info text-white rounded">
-                                        <i class="ti ti-user-circle fs-4"></i>
-                                    </div>
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-info text-white rounded">
+                                    <i class="ti ti-user-circle fs-4"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-muted">Total Students</h6>
-                                    <h4 class="mb-0">{{ $stats['total_students'] }}</h4>
-                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">Total Students</h6>
+                                <h4 class="mb-0">{{ $stats['total_students'] }}</h4>
+                                <small class="text-muted">&nbsp;</small>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 3D Models Card -->
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar avatar-md bg-success text-white rounded">
-                                        <i class="ti ti-box fs-4"></i>
-                                    </div>
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-success text-white rounded">
+                                    <i class="ti ti-box fs-4"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-muted">3D Models</h6>
-                                    <h4 class="mb-0">{{ $stats['active_3d_models'] }} / {{ $stats['total_3d_models'] }}</h4>
-                                    <small class="text-muted">Active / Total</small>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">3D Models</h6>
+                                <h4 class="mb-0">{{ $stats['active_3d_models'] }} / {{ $stats['total_3d_models'] }}</h4>
+                                <small class="text-muted">Active / Total</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VR Experiments Card -->
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-success text-white rounded">
+                                    <i class="ti ti-flask fs-4"></i>
                                 </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">VR Experiments</h6>
+                                <h4 class="mb-0">{{ $stats['active_vr_experiments'] }} / {{ $stats['total_vr_experiments'] }}</h4>
+                                <small class="text-muted">Active / Total</small>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Competitions Card -->
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar avatar-md bg-warning text-white rounded">
-                                        <i class="ti ti-trophy fs-4"></i>
-                                    </div>
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-warning text-white rounded">
+                                    <i class="ti ti-trophy fs-4"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-muted">Competitions</h6>
-                                    <h4 class="mb-0">{{ $stats['active_competitions'] }} / {{ $stats['total_competitions'] }}</h4>
-                                    <small class="text-muted">Active / Total</small>
-                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">Competitions</h6>
+                                <h4 class="mb-0">{{ $stats['active_competitions'] }} / {{ $stats['total_competitions'] }}</h4>
+                                <small class="text-muted">Active / Total</small>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Schools Card -->
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar avatar-md bg-secondary text-white rounded">
-                                        <i class="ti ti-building fs-4"></i>
-                                    </div>
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-secondary text-white rounded">
+                                    <i class="ti ti-building fs-4"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-muted">Schools</h6>
-                                    <h4 class="mb-0">{{ $stats['total_schools'] }}</h4>
-                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">Schools</h6>
+                                <h4 class="mb-0">{{ $stats['total_schools'] }}</h4>
+                                <small class="text-muted">&nbsp;</small>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Clubs Card -->
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar avatar-md bg-danger text-white rounded">
-                                        <i class="ti ti-users-group fs-4"></i>
-                                    </div>
+                <!-- Unique Visitors Card -->
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-primary text-white rounded">
+                                    <i class="ti ti-world fs-4"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-muted">Clubs</h6>
-                                    <h4 class="mb-0">{{ $stats['total_clubs'] }}</h4>
-                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">Unique Visitors</h6>
+                                <h4 class="mb-0">{{ $stats['total_visitors'] }}</h4>
+                                <small class="text-muted">{{ $stats['visitors_today'] }} today</small>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Total Answers Card -->
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar avatar-md bg-primary text-white rounded">
-                                        <i class="ti ti-check fs-4"></i>
-                                    </div>
+                <!-- Landing Page Views Card -->
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-info text-white rounded">
+                                    <i class="ti ti-eye fs-4"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-muted">Total Answers</h6>
-                                    <h4 class="mb-0">{{ $stats['total_answers'] }}</h4>
-                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">Landing Views</h6>
+                                <h4 class="mb-0">{{ number_format($stats['total_landing_views']) }}</h4>
+                                <small class="text-muted">{{ number_format($stats['visitors_not_converted']) }} not registered</small>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Correct Answers Card -->
-                <div class="col-md-3 col-sm-6 mb-3">
+            <!-- Visitor charts per week -->
+            <div class="row mb-4">
+                <div class="col-lg-6 mb-4">
                     <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-transparent border-bottom">
+                            <h6 class="mb-0">Unique Visitors per Week</h6>
+                        </div>
                         <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar avatar-md bg-success text-white rounded">
-                                        <i class="ti ti-check-circle fs-4"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-muted">Correct Answers</h6>
-                                    <h4 class="mb-0">{{ $stats['total_correct_answers'] }}</h4>
-                                    @if($stats['total_answers'] > 0)
-                                        <small class="text-muted">
-                                            {{ number_format(($stats['total_correct_answers'] / $stats['total_answers']) * 100, 1) }}% accuracy
-                                        </small>
-                                    @endif
-                                </div>
-                            </div>
+                            <div id="visitor-unique-week-chart" style="min-height: 280px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-transparent border-bottom">
+                            <h6 class="mb-0">Landing Page Views per Week</h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="visitor-views-week-chart" style="min-height: 280px;"></div>
                         </div>
                     </div>
                 </div>
@@ -269,4 +277,40 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var chartData = @json($visitorChartData);
+            if (typeof ApexCharts === 'undefined') return;
+
+            var uniqueOpts = {
+                chart: { type: 'bar', height: 280, toolbar: { show: false } },
+                plotOptions: { bar: { columnWidth: '60%', borderRadius: 4 } },
+                dataLabels: { enabled: false },
+                colors: ['#072649'],
+                series: [{ name: 'Unique Visitors', data: chartData.unique_visitors }],
+                xaxis: { categories: chartData.labels },
+                yaxis: { title: { text: 'Visitors' } },
+                grid: { strokeDashArray: 4 }
+            };
+            var uniqueChart = new ApexCharts(document.querySelector('#visitor-unique-week-chart'), uniqueOpts);
+            uniqueChart.render();
+
+            var viewsOpts = {
+                chart: { type: 'area', height: 280, toolbar: { show: false } },
+                dataLabels: { enabled: false },
+                stroke: { curve: 'smooth', width: 2 },
+                colors: ['#13c2c2'],
+                series: [{ name: 'Page Views', data: chartData.landing_views }],
+                xaxis: { categories: chartData.labels },
+                yaxis: { title: { text: 'Views' } },
+                grid: { strokeDashArray: 4 },
+                fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.1 } }
+            };
+            var viewsChart = new ApexCharts(document.querySelector('#visitor-views-week-chart'), viewsOpts);
+            viewsChart.render();
+        });
+    </script>
+    @endpush
 </x-admin-layout>

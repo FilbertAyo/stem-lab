@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'teacher' => \App\Http\Middleware\TeacherOnly::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'block.client.on.admin' => \App\Http\Middleware\BlockClientOnAdmin::class,
+            'track.landing.visitor' => \App\Http\Middleware\TrackLandingVisitor::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
