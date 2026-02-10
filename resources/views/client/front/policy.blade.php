@@ -4,6 +4,7 @@
 @section('page', 'privacy-policy')
 
 @section('content')
+
 <main>
     <section class="banner-section banner-inner-section position-relative overflow-hidden d-flex align-items-end"
       style="background-image: url({{ asset('client/front-end/assets/images/backgrounds/privacy-policy-banner.jpg') }});">

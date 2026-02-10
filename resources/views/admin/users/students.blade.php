@@ -3,16 +3,7 @@
     <div class="row">
         <div class="col-md-12 col-xl-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">Students & Teachers Management</h5>
-                <div class="d-flex gap-2">
-                    <form method="GET" action="{{ route('admin.users.students') }}" class="d-flex gap-2">
-                        <select name="role" class="form-select" style="width: auto;" onchange="this.form.submit()">
-                            <option value="all" {{ $selectedRole === 'all' ? 'selected' : '' }}>All Users</option>
-                            <option value="student" {{ $selectedRole === 'student' ? 'selected' : '' }}>Students</option>
-                            <option value="teacher" {{ $selectedRole === 'teacher' ? 'selected' : '' }}>Teachers</option>
-                        </select>
-                    </form>
-                </div>
+                <h5 class="mb-0">Students Management</h5>
             </div>
 
             @if(session('success'))
@@ -45,11 +36,7 @@
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>
-                                            @if($user->role === 'teacher')
-                                                <span class="badge bg-info">{{ ucfirst($user->role) }}</span>
-                                            @else
-                                                <span class="badge bg-success">{{ ucfirst($user->role) }}</span>
-                                            @endif
+                                            <span class="badge bg-success">{{ ucfirst($user->role) }}</span>
                                         </td>
                                         <td>
                                             @if($user->is_active ?? true)
@@ -86,7 +73,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No students or teachers found.</td>
+                                        <td colspan="8" class="text-center">No students found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

@@ -25,24 +25,27 @@ class UserController extends Controller
     }
 
     /**
-     * Display a listing of students and teachers.
+     * Display a listing of students.
      */
     public function students(Request $request): View
     {
-        $query = User::whereIn('role', ['student', 'teacher']);
-        
-        // Filter by role if provided
-        if ($request->has('role') && in_array($request->role, ['student', 'teacher'])) {
-            $query->where('role', $request->role);
-        }
-        
-        $users = $query->orderBy('role')
+        $users = User::where('role', 'student')
             ->orderBy('created_at', 'desc')
             ->get();
         
-        $selectedRole = $request->get('role', 'all');
+        return view('admin.users.students', compact('users'));
+    }
+
+    /**
+     * Display a listing of teachers.
+     */
+    public function teachers(Request $request): View
+    {
+        $users = User::where('role', 'teacher')
+            ->orderBy('created_at', 'desc')
+            ->get();
         
-        return view('admin.users.students', compact('users', 'selectedRole'));
+        return view('admin.users.teachers', compact('users'));
     }
 
     /**

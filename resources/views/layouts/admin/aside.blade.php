@@ -175,7 +175,13 @@
               <li class="pc-item">
                 <a href="{{ route('admin.users.students') }}" class="pc-link">
                   <span class="pc-micon"><i class="ti ti-school"></i></span>
-                  <span class="pc-mtext">Students & Teachers</span>
+                  <span class="pc-mtext">Students</span>
+                </a>
+              </li>
+              <li class="pc-item">
+                <a href="{{ route('admin.users.teachers') }}" class="pc-link">
+                  <span class="pc-micon"><i class="ti ti-user-check"></i></span>
+                  <span class="pc-mtext">Teachers</span>
                 </a>
               </li>
             </ul>
