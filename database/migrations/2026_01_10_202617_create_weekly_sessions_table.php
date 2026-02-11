@@ -20,6 +20,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('session_date');
             $table->enum('status', ['draft', 'scheduled', 'active', 'completed'])->default('draft');
+            $table->foreignId('subject_id')->nullable()->constrained('subjects')->onDelete('set null');
+            $table->index('subject_id');
             $table->timestamps();
 
             // Indexes for performance

@@ -17,6 +17,11 @@ return new class extends Migration
             $table->foreignId('club_id')->constrained('clubs')->onDelete('cascade');
             $table->foreignId('school_id')->nullable()->constrained('schools')->onDelete('cascade');
 
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->boolean('is_leader')->default(false);
+            $table->index('status');
+            $table->index(['club_id', 'is_leader']);
+
             $table->timestamps();
 
             // Ensure a teacher can only join a club once

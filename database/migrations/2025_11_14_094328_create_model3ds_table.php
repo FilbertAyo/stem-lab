@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('thumbnail')->nullable(); // Thumbnail image path
             $table->text('description')->nullable();
             $table->text('tags')->nullable(); // Comma-separated keywords
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             // Performance indexes

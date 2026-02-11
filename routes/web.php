@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CompetitionParticipantController;
 use App\Http\Controllers\Admin\CompetitionSubmissionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\Model3dController as AdminModel3dController;
+use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SubjectController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Admin\WeeklySessionController;
 use App\Http\Controllers\Client\ClubController as ClientClubController;
 use App\Http\Controllers\Client\CompetitionController as ClientCompetitionController;
 use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
+use App\Http\Controllers\Client\ProjectController as ClientProjectController;
 use App\Http\Controllers\PublicCompetitionController;
 use App\Http\Controllers\Client\Model3dController as ClientModel3dController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
@@ -23,6 +25,7 @@ use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentCont
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Model3d;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Public landing and explore routes (track visitors, block on admin subdomain)
@@ -50,7 +53,7 @@ Route::middleware(['block.client.on.admin', 'track.landing.visitor'])->group(fun
 Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilishastemlabs.com')->name('admin.')->group(function () {
     // Redirect root admin subdomain to login page (or dashboard if authenticated)
     Route::get('/', function () {
-        if (auth()->check() && auth()->user()->role === 'admin') {
+        if (Auth::check() && Auth::user()?->role === 'admin') {
             return redirect(config('app.admin_url', 'https://admin.adilishastemlabs.com') . '/dashboard');
         }
         return redirect(config('app.admin_url', 'https://admin.adilishastemlabs.com') . '/login');
@@ -84,6 +87,16 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::post('/{club}/transfer-leadership', [ClubController::class, 'transferLeadership'])->name('transfer-leadership');
             Route::post('/{teacherClub}/approve-request', [ClubController::class, 'approveRequest'])->name('approve-request');
             Route::post('/{teacherClub}/reject-request', [ClubController::class, 'rejectRequest'])->name('reject-request');
+        });
+
+        // Projects routes
+        Route::prefix('projects')->name('projects.')->group(function () {
+            Route::get('/', [AdminProjectController::class, 'index'])->name('index');
+            Route::get('/create', [AdminProjectController::class, 'create'])->name('create');
+            Route::post('/', [AdminProjectController::class, 'store'])->name('store');
+            Route::get('/{project}/edit', [AdminProjectController::class, 'edit'])->name('edit');
+            Route::put('/{project}', [AdminProjectController::class, 'update'])->name('update');
+            Route::delete('/{project}', [AdminProjectController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('schools')->name('schools.')->group(function () {
@@ -284,6 +297,12 @@ Route::middleware('auth')->group(function () {
         
         Route::get('/{model3d}', [ClientModel3dController::class, 'show'])->name('show');
     });
+
+        // Projects routes (client)
+        Route::prefix('projects')->name('client.projects.')->group(function () {
+            Route::get('/', [ClientProjectController::class, 'index'])->name('index');
+            Route::get('/{project}', [ClientProjectController::class, 'show'])->name('show');
+        });
 
     // VR Experiments routes
     Route::prefix('vr-experiments')->name('client.vr-experiments.')->group(function () {

@@ -2,7 +2,7 @@
     <div class="col-lg-9">
 
         <div class="dashboard-content-header">
-            <h2 class="title mb-1">School Clubs</h2>
+            <h3 class="mb-1">School Clubs</h3>
         </div>
 
         <section class="row">

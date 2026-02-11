@@ -30,8 +30,12 @@
     <div class="dashboard-main">
       <div class="container">
         <div class="row">
-          <!-- Left Sidebar (hidden on profile, dashboard, VR experiments, and 3D models — those pages use full width) -->
-          @if (!request()->routeIs('profile.*') && !request()->routeIs('dashboard') && !request()->routeIs('client.vr-experiments.*') && !request()->routeIs('client.models.3d.*'))
+          <!-- Left Sidebar (hidden on profile, dashboard, VR experiments, 3D models, and projects — those pages use full width/custom layout) -->
+          @if (!request()->routeIs('profile.*')
+               && !request()->routeIs('dashboard')
+               && !request()->routeIs('client.vr-experiments.*')
+               && !request()->routeIs('client.models.3d.*')
+               && !request()->routeIs('client.projects.*'))
             @include('layouts.client.aside')
           @endif
 

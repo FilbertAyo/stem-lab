@@ -60,7 +60,7 @@
           <li class="pc-item pc-hasmenu">
             <a href="#!" class="pc-link">
               <span class="pc-micon"><i class="ti ti-package"></i></span>
-              <span class="pc-mtext">3D & VR Resources</span>
+              <span class="pc-mtext">Resources</span>
               <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
             </a>
             <ul class="pc-submenu">
@@ -72,6 +72,11 @@
               <li class="pc-item">
                 <a href="{{ route('admin.vr-experiments.index') }}" class="pc-link">
                   <span class="pc-mtext">VR Experiments</span>
+                </a>
+              </li>
+              <li class="pc-item">
+                <a href="{{ route('admin.projects.index') }}" class="pc-link">
+                  <span class="pc-mtext">Projects</span>
                 </a>
               </li>
             </ul>

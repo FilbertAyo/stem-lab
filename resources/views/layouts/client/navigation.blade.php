@@ -8,6 +8,8 @@
           <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
           <a href="{{ route('client.vr-experiments.index') }}" class="{{ request()->routeIs('client.vr-experiments.*') ? 'active' : '' }}">Labs</a>
           <a href="{{ route('client.models.3d.index') }}" class="{{ request()->routeIs('client.models.3d.*') ? 'active' : '' }}">3D Models</a>
+          <a href="{{ route('client.projects.index') }}" class="{{ request()->routeIs('client.projects.*') ? 'active' : '' }}">Projects</a>
+
           @php($isTeacher = Auth::user()->role === 'teacher')
           <a href="{{ $isTeacher ? route('client.weekly-sessions.index') : route('client.vr-assessments.index') }}"
              class="{{ request()->routeIs('client.weekly-sessions.*')

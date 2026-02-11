@@ -3,7 +3,7 @@
 
         <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
             <div>
-                <h2 class="title mb-1">Pending Join Requests</h2>
+                <h3 class="mb-1">Pending Join Requests</h2>
                 <p class="text-muted mb-0">Approve or reject requests from teachers who want to join your clubs.</p>
             </div>
             <div>
