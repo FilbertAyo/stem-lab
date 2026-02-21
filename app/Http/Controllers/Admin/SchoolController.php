@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\School;
+use App\Models\TeacherClub;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -125,5 +126,28 @@ class SchoolController extends Controller
         $message = $school->is_active ? 'School enabled successfully.' : 'School disabled successfully.';
 
         return redirect()->route('admin.schools.index')->with('status', $message);
+    }
+
+    public function removeTeacherFromClub(TeacherClub $teacherClub): RedirectResponse
+    {
+        $school = $teacherClub->school;
+        $teacherName = $teacherClub->user->name;
+        $clubName = $teacherClub->club->name;
+
+        // Check if the teacher has any students in this club
+        $studentsCount = $teacherClub->students()->count();
+
+        if ($studentsCount > 0) {
+            return redirect()
+                ->route('admin.schools.show', $school)
+                ->with('error', "Cannot remove {$teacherName} from {$clubName} because they have {$studentsCount} registered student(s) in this club.");
+        }
+
+        // Delete the teacher-club relationship
+        $teacherClub->delete();
+
+        return redirect()
+            ->route('admin.schools.show', $school)
+            ->with('status', "{$teacherName} has been removed from {$clubName} successfully.");
     }
 }

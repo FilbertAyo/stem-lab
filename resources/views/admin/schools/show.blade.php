@@ -11,6 +11,23 @@
                 </a>
             </div>
 
+            <!-- Flash Messages -->
+            @if(session('status'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="ti ti-check-circle me-2"></i>
+                    {{ session('status') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="ti ti-alert-circle me-2"></i>
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <!-- School Information Card -->
             <div class="card mb-4">
                 <div class="card-header">
@@ -18,7 +35,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="text-muted small">School Name</label>
                                 <p class="mb-0 fw-semibold">{{ $school->name }}</p>
@@ -32,7 +49,7 @@
                                 <p class="mb-0">{{ $school->phone ?? '—' }}</p>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="text-muted small">District</label>
                                 <p class="mb-0">{{ $school->district ?? '—' }}</p>
@@ -50,7 +67,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-4">
                             <div class="mb-0">
                                 <label class="text-muted small">Address</label>
                                 <p class="mb-0">{{ $school->address ?? '—' }}</p>
@@ -76,13 +93,14 @@
                                 </div>
                             @else
                                 <div class="table-responsive">
-                                    <table class="table table-hover mb-0">
+                                    <table class="table table-hover table-bordered mb-0">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Clubs</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -96,8 +114,29 @@
                                                     <td>{{ $teacher->email }}</td>
                                                     <td>
                                                         @foreach($teacherClubs as $tc)
-                                                            <span class="badge bg-info">{{ $tc->club->name ?? 'N/A' }}</span>
+                                                            <div class="d-inline-flex align-items-center me-2 mb-2">
+                                                                <span class="badge bg-info">{{ $tc->club->name ?? 'N/A' }}</span>
+                                                            
+                                                            </div>
                                                         @endforeach
+                                                    </td>
+                                                    <td>
+            <form 
+                                                                            action="{{ route('admin.schools.remove-teacher-from-club', $tc) }}" 
+                                                                            method="POST" 
+                                                                            class="d-inline ms-1"
+                                                                            onsubmit="return confirm('Are you sure you want to remove {{ $teacher->name }} from {{ $tc->club->name ?? 'this club' }}? This action cannot be undone.')"
+                                                                        >
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button 
+                                                                                type="submit" 
+                                                                                class="btn btn-sm btn-outline-danger p-1" 
+                                                                                title="Remove from club"
+                                                                            >
+                                                                                remove
+                                                                            </button>
+                                                                        </form>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -124,7 +163,7 @@
                                 </div>
                             @else
                                 <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                                    <table class="table table-hover mb-0">
+                                    <table class="table table-hover table-bordered mb-0">
                                         <thead class="sticky-top bg-white">
                                             <tr>
                                                 <th>#</th>
@@ -161,36 +200,7 @@
                 </div>
             </div>
 
-            <!-- Summary Stats -->
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body text-center">
-                            <i class="ti ti-users fs-1"></i>
-                            <h3 class="mt-2 mb-0">{{ $teachers->count() }}</h3>
-                            <p class="mb-0">Total Teachers</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-success text-white">
-                        <div class="card-body text-center">
-                            <i class="ti ti-school fs-1"></i>
-                            <h3 class="mt-2 mb-0">{{ $students->count() }}</h3>
-                            <p class="mb-0">Total Students</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-info text-white">
-                        <div class="card-body text-center">
-                            <i class="ti ti-certificate fs-1"></i>
-                            <h3 class="mt-2 mb-0">{{ $school->teacherClubs->pluck('club_id')->unique()->count() }}</h3>
-                            <p class="mb-0">Clubs Active</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+         
         </div>
     </div>
 </x-admin-layout>
