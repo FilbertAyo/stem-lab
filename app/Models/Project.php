@@ -75,13 +75,15 @@ class Project extends Model
 
     /**
      * Retrieve the project for route model binding.
-     * For client routes, only allow active + published projects.
+     * On the admin subdomain: allow any project.
+     * On the client (main) domain: only allow active + published projects.
      */
     public function resolveRouteBinding($value, $field = null)
     {
-        $isAdminRoute = Request::is('admin/*');
+        $adminHost = parse_url(config('app.admin_url', 'https://admin.adilishastemlabs.com'), PHP_URL_HOST);
+        $isAdminRequest = $adminHost && Request::getHost() === $adminHost;
 
-        if (!$isAdminRoute) {
+        if (!$isAdminRequest) {
             return $this->where($field ?? $this->getRouteKeyName(), $value)
                 ->where('is_active', true)
                 ->where('is_published', true)
