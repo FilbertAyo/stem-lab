@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CompetitionParticipantController;
 use App\Http\Controllers\Admin\CompetitionSubmissionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\Model3dController as AdminModel3dController;
+use App\Http\Controllers\Admin\ProjectCategoryController as AdminProjectCategoryController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -99,6 +100,9 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::put('/{project}', [AdminProjectController::class, 'update'])->name('update');
             Route::delete('/{project}', [AdminProjectController::class, 'destroy'])->name('destroy');
         });
+
+        Route::delete('project-categories/{projectCategory}', [AdminProjectCategoryController::class, 'destroy'])
+            ->name('project-categories.destroy');
 
         Route::prefix('schools')->name('schools.')->group(function () {
             Route::get('/', [SchoolController::class, 'index'])->name('index');

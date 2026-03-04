@@ -79,19 +79,39 @@
 
                 @if($project->embedded_code)
                     <div class="card border-0 shadow-none mb-4">
-                        <div class="card-header bg-light-soft">
+                        <div class="card-header bg-light-soft d-flex justify-content-between align-items-center flex-wrap gap-2">
                             <h5 class="mb-0">
                                 <i class="bi bi-code-slash me-1"></i>Code
                             </h5>
+                            <button type="button" class="text-dark p-0 border-0" id="copyCodeBtn" title="Copy code" aria-label="Copy code">
+                                <i class="bi bi-clipboard" id="copyCodeIcon"></i>
+                            </button>
                         </div>
                         <div class="card-body">
                             <div style="height: 400px; overflow-y: auto;">
-                                <pre class="bg-dark text-white p-3 rounded small mb-0" style="white-space: pre; min-height: 100%; height: 100%; overflow-x: auto; margin-bottom: 0;">
-                         {{ $project->embedded_code }}
-                                </pre>
+                                <pre id="projectEmbeddedCode" class="bg-dark text-white p-3 rounded small mb-0" style="white-space: pre; min-height: 100%; height: 100%; overflow-x: auto; margin-bottom: 0;">{{ $project->embedded_code }}</pre>
                             </div>
                         </div>
                     </div>
+                    @push('scripts')
+                    <script>
+                        document.getElementById('copyCodeBtn')?.addEventListener('click', function () {
+                            var pre = document.getElementById('projectEmbeddedCode');
+                            var btn = this;
+                            var code = pre ? pre.textContent : '';
+                            if (!code) return;
+                            navigator.clipboard.writeText(code).then(function () {
+                                var icon = document.getElementById('copyCodeIcon');
+                                if (icon) { icon.className = 'bi bi-check2'; }
+                                btn.title = 'Copied!';
+                                setTimeout(function () {
+                                    if (icon) icon.className = 'bi bi-clipboard';
+                                    btn.title = 'Copy code';
+                                }, 2000);
+                            });
+                        });
+                    </script>
+                    @endpush
                 @endif
 
              
@@ -108,12 +128,11 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-sm align-middle mb-0">
+                                <table class="table table-sm table-bordered align-middle mb-0">
                                     <thead>
                                         <tr>
                                             <th>Item</th>
                                             <th style="width: 80px;">Qty</th>
-                                            <th style="width: 120px;">Notes</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -121,7 +140,6 @@
                                             <tr>
                                                 <td>{{ $item->name }}</td>
                                                 <td>{{ $item->pivot->quantity ?? '—' }}</td>
-                                                <td class="text-muted small">{{ $item->pivot->notes ?? '—' }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

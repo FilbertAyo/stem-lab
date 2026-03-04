@@ -11,6 +11,13 @@
                 </a>
             </div>
 
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     Please fix the errors below and try again.
@@ -71,6 +78,23 @@
                                     </div>
                                 </div>
 
+                                @if($categories->count() > 0)
+                                    <div class="mb-3">
+                                        <label class="form-label d-block">Delete category</label>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach($categories as $category)
+                                                <form method="POST" action="{{ route('admin.project-categories.destroy', $category) }}" class="d-inline" onsubmit="return confirm('Delete category “{{ $category->name }}”? Projects using it will become uncategorized.');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete {{ $category->name }}">
+                                                        <i class="ti ti-trash"></i> {{ $category->name }}
+                                                    </button>
+                                                </form>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div class="mb-3">
                                     <label class="form-label">Tags (comma-separated)</label>
                                     <input type="text" name="tags" class="form-control" value="{{ old('tags') }}" placeholder="e.g. iot, sensors, arduino">
@@ -109,9 +133,8 @@
                                     <table class="table table-bordered align-middle mb-0" id="equipmentTable">
                                         <thead>
                                             <tr>
-                                                <th style="width: 45%;">Item name</th>
-                                                <th style="width: 20%;">Quantity</th>
-                                                <th>Notes</th>
+                                                <th style="width: 60%;">Item name</th>
+                                                <th style="width: 25%;">Quantity</th>
                                                 <th style="width: 60px;"></th>
                                             </tr>
                                         </thead>
@@ -119,7 +142,6 @@
                                             <tr>
                                                 <td><input type="text" name="equipment_name[]" class="form-control" placeholder="e.g. Arduino UNO"></td>
                                                 <td><input type="text" name="equipment_quantity[]" class="form-control" placeholder="e.g. 1"></td>
-                                                <td><input type="text" name="equipment_notes[]" class="form-control" placeholder="e.g. Any compatible board"></td>
                                                 <td class="text-center">
                                                     <button type="button" class="btn btn-sm btn-outline-danger removeEquipmentRow" title="Remove">
                                                         <i class="ti ti-trash"></i>
@@ -220,7 +242,6 @@
                     tr.innerHTML = `
                         <td><input type="text" name="equipment_name[]" class="form-control" placeholder="e.g. Breadboard"></td>
                         <td><input type="text" name="equipment_quantity[]" class="form-control" placeholder="e.g. 1"></td>
-                        <td><input type="text" name="equipment_notes[]" class="form-control" placeholder="Optional"></td>
                         <td class="text-center">
                             <button type="button" class="btn btn-sm btn-outline-danger removeEquipmentRow" title="Remove">
                                 <i class="ti ti-trash"></i>

@@ -84,6 +84,23 @@
                                     </div>
                                 </div>
 
+                                @if($categories->count() > 0)
+                                    <div class="mb-3">
+                                        <label class="form-label d-block">Delete category</label>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach($categories as $category)
+                                                <form method="POST" action="{{ route('admin.project-categories.destroy', $category) }}" class="d-inline" onsubmit="return confirm('Delete category “{{ $category->name }}”? Projects using it will become uncategorized.');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete {{ $category->name }}">
+                                                        <i class="ti ti-trash"></i> {{ $category->name }}
+                                                    </button>
+                                                </form>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div class="mb-3">
                                     <label class="form-label">Tags (comma-separated)</label>
                                     <input type="text" name="tags" class="form-control" value="{{ old('tags', $tagsString) }}" placeholder="e.g. iot, sensors, arduino">
@@ -122,9 +139,8 @@
                                     <table class="table table-bordered align-middle mb-0" id="equipmentTable">
                                         <thead>
                                             <tr>
-                                                <th style="width: 45%;">Item name</th>
-                                                <th style="width: 20%;">Quantity</th>
-                                                <th>Notes</th>
+                                                <th style="width: 60%;">Item name</th>
+                                                <th style="width: 25%;">Quantity</th>
                                                 <th style="width: 60px;"></th>
                                             </tr>
                                         </thead>
@@ -136,7 +152,6 @@
                                                         return [
                                                             'name' => $eq->name,
                                                             'quantity' => $eq->pivot->quantity,
-                                                            'notes' => $eq->pivot->notes,
                                                         ];
                                                     })->values()->all();
                                                 } else {
@@ -144,18 +159,16 @@
                                                         return [
                                                             'name' => $name,
                                                             'quantity' => old('equipment_quantity.' . $i),
-                                                            'notes' => old('equipment_notes.' . $i),
                                                         ];
                                                     })->values()->all();
                                                 }
-                                                if (count($rows) === 0) $rows = [['name' => '', 'quantity' => '', 'notes' => '']];
+                                                if (count($rows) === 0) $rows = [['name' => '', 'quantity' => '']];
                                             @endphp
 
                                             @foreach($rows as $r)
                                                 <tr>
                                                     <td><input type="text" name="equipment_name[]" class="form-control" value="{{ $r['name'] }}" placeholder="e.g. Arduino UNO"></td>
                                                     <td><input type="text" name="equipment_quantity[]" class="form-control" value="{{ $r['quantity'] }}" placeholder="e.g. 1"></td>
-                                                    <td><input type="text" name="equipment_notes[]" class="form-control" value="{{ $r['notes'] }}" placeholder="Optional"></td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-sm btn-outline-danger removeEquipmentRow" title="Remove">
                                                             <i class="ti ti-trash"></i>
@@ -284,7 +297,6 @@
                     tr.innerHTML = `
                         <td><input type="text" name="equipment_name[]" class="form-control" placeholder="e.g. Breadboard"></td>
                         <td><input type="text" name="equipment_quantity[]" class="form-control" placeholder="e.g. 1"></td>
-                        <td><input type="text" name="equipment_notes[]" class="form-control" placeholder="Optional"></td>
                         <td class="text-center">
                             <button type="button" class="btn btn-sm btn-outline-danger removeEquipmentRow" title="Remove">
                                 <i class="ti ti-trash"></i>
