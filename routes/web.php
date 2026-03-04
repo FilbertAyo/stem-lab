@@ -105,7 +105,6 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::post('/', [SchoolController::class, 'store'])->name('store');
             Route::put('/{school}', [SchoolController::class, 'update'])->name('update');
             Route::post('/{school}/toggle-status', [SchoolController::class, 'toggleStatus'])->name('toggle-status');
-            Route::delete('/teacher-clubs/{teacherClub}', [SchoolController::class, 'removeTeacherFromClub'])->name('remove-teacher-from-club');
         });
 
         // Competitions routes
