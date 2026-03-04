@@ -124,6 +124,9 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
+                                                <a href="{{ route('admin.projects.show', $project) }}" class="btn btn-sm btn-outline-info" title="View">
+                                                    <i class="ti ti-eye"></i>
+                                                </a>
                                                 <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-sm btn-outline-primary" title="Edit">
                                                     <i class="ti ti-edit"></i>
                                                 </a>

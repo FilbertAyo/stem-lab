@@ -62,6 +62,13 @@ class ProjectController extends Controller
         return view('admin.projects.index', compact('projects'));
     }
 
+    public function show(Project $project): View
+    {
+        $project->load(['category', 'tags', 'equipment', 'author']);
+
+        return view('admin.projects.show', compact('project'));
+    }
+
     public function create(): View
     {
         $categories = ProjectCategory::ordered()->get();

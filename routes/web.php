@@ -94,6 +94,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/', [AdminProjectController::class, 'index'])->name('index');
             Route::get('/create', [AdminProjectController::class, 'create'])->name('create');
             Route::post('/', [AdminProjectController::class, 'store'])->name('store');
+            Route::get('/{project}', [AdminProjectController::class, 'show'])->name('show');
             Route::get('/{project}/edit', [AdminProjectController::class, 'edit'])->name('edit');
             Route::put('/{project}', [AdminProjectController::class, 'update'])->name('update');
             Route::delete('/{project}', [AdminProjectController::class, 'destroy'])->name('destroy');
