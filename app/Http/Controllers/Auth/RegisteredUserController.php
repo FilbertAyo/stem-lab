@@ -74,7 +74,8 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Auto "remember me" for new registrations so they stay logged in (e.g. 14 days).
+        Auth::login($user, true);
 
         $visitorToken = $request->cookie('stem_visitor');
         if ($visitorToken) {

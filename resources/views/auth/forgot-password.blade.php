@@ -44,7 +44,7 @@
             </div>
 
             <button type="submit" class="btn btn-dark w-100 justify-content-center py-2 fw-medium my-3 fs-5 lh-lg">
-              Email Password Reset Link
+              Reset 
             </button>
           </form>
         </div>

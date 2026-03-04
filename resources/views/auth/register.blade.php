@@ -13,7 +13,6 @@
             <img src="{{ asset('images/logo/logo-dark.png') }}" style="height:45px; width:auto;" alt="logo-dark" class="img-fluid">
           </a>
 
-       
 
           <form class="d-flex flex-column gap-3" method="POST" action="{{ route('register') }}" id="register-form">
             @csrf
@@ -115,9 +114,9 @@
 
           <p class="text-center mb-1 d-block fw-medium">
             By creating an account, you agree with our
-            <a class="text-dark" href="{{ url('/privacy-policy') }}">Privacy</a>
+            <a class="text-dark" href="{{ url('/privacy-policy') }}">Privacy Policy</a>
             and
-            <a class="text-dark" href="{{ url('/privacy-policy') }}">Policy</a>.
+            <a class="text-dark" href="{{ url('/terms-conditions') }}">Terms & Conditions</a>.
           </p>
 
           <p class="mb-0 fw-medium text-center">

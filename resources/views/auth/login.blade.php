@@ -48,6 +48,18 @@
               @enderror
             </div>
 
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="remember"
+                name="remember"
+                value="1"
+                {{ old('remember') ? 'checked' : '' }}
+              >
+              <label class="form-check-label fw-medium" for="remember">Remember me</label>
+            </div>
+
             <button type="submit" class="btn btn-dark w-100 justify-content-center py-2 fw-medium my-7 fs-4 lh-lg">
               Sign In
             </button>

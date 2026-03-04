@@ -2,13 +2,17 @@
 
 namespace App\Providers;
 
+use App\Listeners\SendWelcomeEmail;
 use App\Models\Club;
 use App\Models\Model3d;
 use App\Models\ModelQuestionAnswer;
 use App\Models\Subject;
 use App\Models\VrQuestionBank;
 use App\Services\CacheService;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -27,6 +31,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Event::listen(Registered::class, SendWelcomeEmail::class);
+
+        // Use custom "remember me" duration from config (e.g. 14 days) for client login
+        $rememberMinutes = config('auth.guards.web.remember');
+        if ($rememberMinutes > 0) {
+            /** @var \Illuminate\Auth\SessionGuard $guard */
+            $guard = Auth::guard('web');
+            $guard->setRememberDuration($rememberMinutes);
+        }
+
         // Clear caches when models are created, updated, or deleted
         $this->registerModelEvents();
         

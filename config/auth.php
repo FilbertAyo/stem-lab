@@ -39,6 +39,8 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+            // Remember me cookie validity (minutes). 14 days when user checks "Remember me".
+            'remember' => (int) env('AUTH_REMEMBER_DAYS', 14) * 24 * 60,
         ],
     ],
 
