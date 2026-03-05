@@ -59,7 +59,6 @@
                                     @endif
                                 </div>
                                 <div class="card-body d-flex flex-column">
-                                  
                                     <h3 class="card-title h6 fw-bold mb-2">{{ $project->name }}</h3>
                                     <p class="card-text small text-muted mb-2 flex-grow-1">
                                         {{ Str::limit($project->description ?? 'No description provided yet.', 100) }}
