@@ -65,9 +65,7 @@
                                     </p>
                                     <div class="d-flex flex-wrap gap-1 mb-2">
                                         <span class="badge bg-light bg-opacity-10 text-dark border text-capitalize">{{ $project->difficulty }}</span>
-                                        @if($project->estimated_time)
-                                            <span class="badge bg-light bg-opacity-10 text-dark border">{{ $project->estimated_time }} min</span>
-                                        @endif
+                                     
                                         @foreach($project->platforms->take(3) as $platform)
                                             <span class="badge bg-light bg-opacity-10 text-dark border">{{ $platform->name }}</span>
                                         @endforeach
@@ -75,19 +73,7 @@
                                             <span class="badge bg-light bg-opacity-10 text-dark border">+{{ $project->platforms->count() - 3 }}</span>
                                         @endif
                                     </div>
-                                    @if($project->steps_count || $project->codes_count || $project->resources_count)
-                                        <p class="small text-muted mb-0">
-                                            @if($project->steps_count)
-                                                <span>{{ $project->steps_count }} step{{ $project->steps_count !== 1 ? 's' : '' }}</span>
-                                            @endif
-                                            @if($project->codes_count)
-                                                <span>{{ $project->codes_count }} code block{{ $project->codes_count !== 1 ? 's' : '' }}</span>
-                                            @endif
-                                            @if($project->resources_count)
-                                                <span>{{ $project->resources_count }} resource{{ $project->resources_count !== 1 ? 's' : '' }}</span>
-                                            @endif
-                                        </p>
-                                    @endif
+                                
                                 </div>
                             </a>
                         </div>
