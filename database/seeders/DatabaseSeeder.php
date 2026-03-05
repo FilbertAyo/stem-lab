@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             ClassSeeder::class,
             SubjectSeeder::class,
             ProjectCategorySeeder::class,
+            PlatformSeeder::class,
         ]);
     }
 }

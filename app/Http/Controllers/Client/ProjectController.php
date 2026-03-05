@@ -26,7 +26,8 @@ class ProjectController extends Controller
 
         $projectsQuery = Project::published()
             ->active()
-            ->with('category')
+            ->with(['category', 'platforms'])
+            ->withCount(['steps', 'codes', 'resources'])
             ->ordered();
 
         $activeCategory = null;
@@ -59,7 +60,7 @@ class ProjectController extends Controller
             abort(404);
         }
 
-        $project->load(['category', 'tags', 'equipment']);
+        $project->load(['category', 'tags', 'equipment', 'steps', 'resources', 'codes', 'platforms']);
 
         // Categories for sidebar; highlight the current project's category
         $categories = ProjectCategory::active()

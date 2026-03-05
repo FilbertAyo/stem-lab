@@ -25,16 +25,18 @@ return new class extends Migration
             $table->string('slug')->unique();
 
             $table->enum('difficulty', ['beginner', 'intermediate', 'advanced'])->default('beginner');
+            $table->unsignedSmallInteger('estimated_time')->nullable(); // minutes
 
-            // Optional metadata
-            $table->string('platform')->nullable(); // e.g. Arduino IDE, MIT App Inventor, Tinkercad
+            // Media & links
             $table->string('cover_image')->nullable();
             $table->string('circuit_image')->nullable();
+            $table->string('youtube_url')->nullable();
+            $table->string('external_link')->nullable();
 
             // Content
             $table->longText('description')->nullable();
-            $table->longText('guide')->nullable(); // step-by-step guide (Markdown/HTML)
-            $table->longText('embedded_code')->nullable();
+            $table->longText('guide')->nullable(); // rich-text overview / fallback guide
+            $table->longText('embedded_code')->nullable(); // quick single code block fallback
 
             $table->boolean('is_published')->default(false);
             $table->boolean('is_active')->default(true);

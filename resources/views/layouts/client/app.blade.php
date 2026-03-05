@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="{{ asset('client/assets/css/dashboard.css') }}" />
 
   @stack('head')
+  @stack('styles')
 </head>
 
 <body>

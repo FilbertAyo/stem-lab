@@ -34,10 +34,23 @@
                                 @if($project->category)
                                     <span class="badge bg-light text-dark me-1">{{ $project->category->name }}</span>
                                 @endif
-                                @if($project->platform)
-                                    <span class="badge bg-light text-dark">{{ $project->platform }}</span>
+                                @if($project->estimated_time)
+                                    <span class="badge bg-info me-1">{{ $project->estimated_time }} min</span>
                                 @endif
+                                @foreach($project->platforms as $platform)
+                                    <span class="badge bg-light text-dark me-1">{{ $platform->name }}</span>
+                                @endforeach
                             </p>
+                            @if($project->youtube_url || $project->external_link)
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    @if($project->youtube_url)
+                                        <a href="{{ $project->youtube_url }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-danger"><i class="ti ti-brand-youtube me-1"></i> Watch video</a>
+                                    @endif
+                                    @if($project->external_link)
+                                        <a href="{{ $project->external_link }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary"><i class="ti ti-link me-1"></i> External link</a>
+                                    @endif
+                                </div>
+                            @endif
 
                             @if($project->description)
                                 <h6 class="fw-semibold mb-2">Description</h6>
@@ -45,12 +58,53 @@
                             @endif
 
                             @if($project->guide)
-                                <h6 class="fw-semibold mb-2">Step-by-step guide</h6>
+                                <h6 class="fw-semibold mb-2">Overview / guide</h6>
                                 <div class="text-muted mb-4" style="white-space: pre-wrap;">{{ $project->guide }}</div>
                             @endif
 
-                            @if($project->embedded_code)
-                                <h6 class="fw-semibold mb-2">Embedded code</h6>
+                            @if($project->steps->isNotEmpty())
+                                <h6 class="fw-semibold mb-3">Steps</h6>
+                                <div class="mb-4">
+                                    @foreach($project->steps as $step)
+                                        <div class="border rounded p-3 mb-2">
+                                            <div class="d-flex align-items-start gap-2">
+                                                <span class="badge bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; min-width: 28px;">{{ $step->step_number }}</span>
+                                                <div class="flex-grow-1">
+                                                    <strong>{{ $step->title }}</strong>
+                                                    @if($step->description)
+                                                        <p class="text-muted small mb-2 mt-1">{{ $step->description }}</p>
+                                                    @endif
+                                                    @if($step->image)
+                                                        <img src="{{ Storage::url($step->image) }}" alt="Step {{ $step->step_number }}" class="img-fluid rounded mb-2" style="max-height: 200px;">
+                                                    @endif
+                                                    @if($step->code_snippet)
+                                                        <pre class="bg-dark text-white p-2 rounded small mb-0" style="white-space: pre-wrap; font-size: 0.8rem;">{{ $step->code_snippet }}</pre>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            @if($project->codes->isNotEmpty())
+                                <h6 class="fw-semibold mb-2">Code blocks</h6>
+                                @foreach($project->codes as $code)
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="fw-semibold">{{ $code->title }}</span>
+                                            <span class="badge bg-secondary">{{ $code->language }}</span>
+                                        </div>
+                                        @if($code->description)
+                                            <p class="text-muted small mb-1">{{ $code->description }}</p>
+                                        @endif
+                                        <pre class="bg-dark text-white p-3 rounded small mb-0" style="white-space: pre; overflow-x: auto; max-height: 320px;">{{ $code->code }}</pre>
+                                    </div>
+                                @endforeach
+                            @endif
+
+                            @if($project->embedded_code && $project->codes->isEmpty())
+                                <h6 class="fw-semibold mb-2">Code</h6>
                                 <pre class="bg-dark text-white p-3 rounded small mb-0" style="white-space: pre; overflow-x: auto; max-height: 300px;">{{ $project->embedded_code }}</pre>
                             @endif
                         </div>
@@ -118,6 +172,30 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if($project->resources->isNotEmpty())
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h6 class="mb-0">Resources</h6>
+                            </div>
+                            <div class="card-body p-0">
+                                <ul class="list-group list-group-flush">
+                                    @foreach($project->resources as $res)
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>{{ $res->title }}</span>
+                                            @if($res->url)
+                                                <a href="{{ $res->url }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary"><i class="ti ti-external-link"></i></a>
+                                            @elseif($res->file_path)
+                                                <a href="{{ Storage::url($res->file_path) }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary"><i class="ti ti-download"></i></a>
+                                            @else
+                                                <span class="badge bg-light text-dark">{{ $res->type }}</span>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
                         </div>
                     @endif

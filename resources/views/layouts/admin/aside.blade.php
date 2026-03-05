@@ -79,6 +79,11 @@
                   <span class="pc-mtext">Projects</span>
                 </a>
               </li>
+              <li class="pc-item">
+                <a href="{{ route('admin.platforms.index') }}" class="pc-link">
+                  <span class="pc-mtext">Platforms</span>
+                </a>
+              </li>
             </ul>
           </li>
 

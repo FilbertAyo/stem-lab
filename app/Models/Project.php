@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Request;
 
 class Project extends Model
@@ -18,9 +20,11 @@ class Project extends Model
         'name',
         'slug',
         'difficulty',
-        'platform',
+        'estimated_time',
         'cover_image',
         'circuit_image',
+        'youtube_url',
+        'external_link',
         'description',
         'guide',
         'embedded_code',
@@ -45,17 +49,37 @@ class Project extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function tags()
+    public function tags(): BelongsToMany
     {
         return $this->belongsToMany(ProjectTag::class, 'project_tag')
             ->withTimestamps();
     }
 
-    public function equipment()
+    public function equipment(): BelongsToMany
     {
         return $this->belongsToMany(Equipment::class, 'equipment_project')
             ->withPivot(['quantity', 'notes'])
             ->withTimestamps();
+    }
+
+    public function steps(): HasMany
+    {
+        return $this->hasMany(ProjectStep::class)->orderBy('step_number');
+    }
+
+    public function resources(): HasMany
+    {
+        return $this->hasMany(ProjectResource::class)->orderBy('sort_order');
+    }
+
+    public function codes(): HasMany
+    {
+        return $this->hasMany(ProjectCode::class)->orderBy('sort_order');
+    }
+
+    public function platforms(): BelongsToMany
+    {
+        return $this->belongsToMany(Platform::class, 'project_platform');
     }
 
     public function scopeActive(Builder $query): Builder

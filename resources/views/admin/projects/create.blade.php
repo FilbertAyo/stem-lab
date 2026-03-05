@@ -51,10 +51,39 @@
                                         </select>
                                         @error('difficulty') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
-                                    <div class="col-md-8 mb-3">
-                                        <label class="form-label">Platform / App used (optional)</label>
-                                        <input type="text" name="platform" class="form-control" value="{{ old('platform') }}" placeholder="e.g. Arduino IDE, Tinkercad, MIT App Inventor">
-                                        @error('platform') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Time needed (minutes)</label>
+                                        <input type="number" name="estimated_time" class="form-control" value="{{ old('estimated_time') }}" min="0" placeholder="e.g. 120">
+                                        <small class="text-muted">e.g. 60 = 1 hour</small>
+                                        @error('estimated_time') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Platforms</label>
+                                        <div class="border rounded p-2" style="max-height: 120px; overflow-y: auto;">
+                                            @forelse($platforms as $platform)
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="platform_ids[]" value="{{ $platform->id }}" id="platform{{ $platform->id }}" {{ in_array($platform->id, old('platform_ids', [])) ? 'checked' : '' }}>
+                                                    <label class="form-check-label small" for="platform{{ $platform->id }}">{{ $platform->name }}</label>
+                                                </div>
+                                            @empty
+                                                <p class="small text-muted mb-0">No platforms yet. <a href="{{ route('admin.platforms.create') }}" target="_blank">Add platforms</a> first.</p>
+                                            @endforelse
+                                        </div>
+                                        @error('platform_ids') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">YouTube video URL (optional)</label>
+                                        <input type="url" name="youtube_url" class="form-control" value="{{ old('youtube_url') }}" placeholder="https://youtube.com/watch?v=...">
+                                        @error('youtube_url') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">External link (optional)</label>
+                                        <input type="url" name="external_link" class="form-control" value="{{ old('external_link') }}" placeholder="https://...">
+                                        <small class="text-muted">Tutorial, datasheet, etc.</small>
+                                        @error('external_link') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
 
@@ -115,8 +144,102 @@
 
                                 <div class="mb-3">
                                     <label class="form-label">Embedded code (optional)</label>
-                                    <textarea name="embedded_code" rows="10" class="form-control" placeholder="Paste code here (Arduino sketch, Python, etc).">{{ old('embedded_code') }}</textarea>
+                                    <textarea name="embedded_code" rows="6" class="form-control font-monospace small" placeholder="Quick single code block if you don’t use “Code blocks” below.">{{ old('embedded_code') }}</textarea>
                                     @error('embedded_code') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Step-by-step instructions (optional) --}}
+                        <div class="card mb-3">
+                            <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0"><i class="ti ti-list-numbers me-1"></i> Steps (optional)</h6>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="addStepRow">
+                                    <i class="ti ti-plus"></i> Add step
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">Add numbered steps with title, description, optional image and code snippet. Leave empty if you only use the guide text above.</p>
+                                <div id="stepsContainer">
+                                    <div class="step-row border rounded p-3 mb-2 position-relative">
+                                        <span class="badge bg-secondary position-absolute top-0 end-0">1</span>
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <input type="text" name="step_title[]" class="form-control" placeholder="Step title (e.g. Connect the sensor)">
+                                            </div>
+                                            <div class="col-12">
+                                                <textarea name="step_description[]" class="form-control small" rows="2" placeholder="What to do in this step"></textarea>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small mb-0">Image (optional)</label>
+                                                <input type="file" name="step_image[]" class="form-control form-control-sm" accept="image/*">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small mb-0">Code snippet (optional)</label>
+                                                <textarea name="step_code_snippet[]" class="form-control font-monospace small" rows="2" placeholder="Short code for this step"></textarea>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 removeStepRow"><i class="ti ti-trash"></i> Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Resources (PDFs, links, files) --}}
+                        <div class="card mb-3">
+                            <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0"><i class="ti ti-file me-1"></i> Resources (optional)</h6>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="addResourceRow">
+                                    <i class="ti ti-plus"></i> Add resource
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">Links, PDFs or files for students (circuit diagram, code download, etc.).</p>
+                                <div id="resourcesContainer">
+                                    <div class="resource-row border rounded p-3 mb-2">
+                                        <div class="row g-2">
+                                            <div class="col-12"><input type="text" name="resource_title[]" class="form-control" placeholder="Resource title"></div>
+                                            <div class="col-md-4">
+                                                <select name="resource_type[]" class="form-select form-select-sm">
+                                                    <option value="link">Link</option>
+                                                    <option value="pdf">PDF</option>
+                                                    <option value="image">Image</option>
+                                                    <option value="file">File</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input type="url" name="resource_url[]" class="form-control form-control-sm" placeholder="URL (or upload file below)">
+                                            </div>
+                                            <div class="col-12">
+                                                <input type="file" name="resource_file[]" class="form-control form-control-sm" placeholder="Or upload file">
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 removeResourceRow"><i class="ti ti-trash"></i> Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Code blocks (full programs) --}}
+                        <div class="card mb-3">
+                            <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0"><i class="ti ti-code me-1"></i> Code blocks (optional)</h6>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="addCodeRow">
+                                    <i class="ti ti-plus"></i> Add code block
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">Full programs (Arduino, Python, etc.) with language label. Students see them with syntax-style display.</p>
+                                <div id="codesContainer">
+                                    <div class="code-row border rounded p-3 mb-2">
+                                        <div class="row g-2">
+                                            <div class="col-md-6"><input type="text" name="code_title[]" class="form-control" placeholder="e.g. LED Blink"></div>
+                                            <div class="col-md-6"><input type="text" name="code_language[]" class="form-control" placeholder="e.g. Arduino C, Python"></div>
+                                            <div class="col-12"><textarea name="code_body[]" class="form-control font-monospace small" rows="6" placeholder="Paste code here"></textarea></div>
+                                            <div class="col-12"><input type="text" name="code_description[]" class="form-control form-control-sm" placeholder="Short description (optional)"></div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 removeCodeRow"><i class="ti ti-trash"></i> Remove</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -253,6 +376,88 @@
                 });
 
                 bindRemoveButtons();
+
+                // Steps
+                let stepCount = 1;
+                document.getElementById('addStepRow')?.addEventListener('click', function () {
+                    stepCount++;
+                    const div = document.createElement('div');
+                    div.className = 'step-row border rounded p-3 mb-2 position-relative';
+                    div.innerHTML = `
+                        <span class="badge bg-secondary position-absolute top-0 end-0">${stepCount}</span>
+                        <div class="row g-2">
+                            <div class="col-12"><input type="text" name="step_title[]" class="form-control" placeholder="Step title"></div>
+                            <div class="col-12"><textarea name="step_description[]" class="form-control small" rows="2" placeholder="What to do"></textarea></div>
+                            <div class="col-md-6"><label class="form-label small mb-0">Image (optional)</label><input type="file" name="step_image[]" class="form-control form-control-sm" accept="image/*"></div>
+                            <div class="col-12"><label class="form-label small mb-0">Code snippet (optional)</label><textarea name="step_code_snippet[]" class="form-control font-monospace small" rows="2"></textarea></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 removeStepRow"><i class="ti ti-trash"></i> Remove</button>
+                    `;
+                    document.getElementById('stepsContainer').appendChild(div);
+                    div.querySelector('.removeStepRow').onclick = function () { div.remove(); updateStepBadges(); stepCount--; };
+                    updateStepBadges();
+                });
+                document.querySelectorAll('.removeStepRow').forEach(btn => {
+                    btn.onclick = function () {
+                        const row = this.closest('.step-row');
+                        if (document.querySelectorAll('.step-row').length <= 1) return;
+                        row?.remove();
+                        updateStepBadges();
+                        stepCount--;
+                    };
+                });
+                function updateStepBadges() {
+                    document.querySelectorAll('.step-row').forEach((row, i) => {
+                        const badge = row.querySelector('.badge');
+                        if (badge) badge.textContent = i + 1;
+                    });
+                }
+
+                // Resources
+                document.getElementById('addResourceRow')?.addEventListener('click', function () {
+                    const div = document.createElement('div');
+                    div.className = 'resource-row border rounded p-3 mb-2';
+                    div.innerHTML = `
+                        <div class="row g-2">
+                            <div class="col-12"><input type="text" name="resource_title[]" class="form-control" placeholder="Resource title"></div>
+                            <div class="col-md-4"><select name="resource_type[]" class="form-select form-select-sm"><option value="link">Link</option><option value="pdf">PDF</option><option value="image">Image</option><option value="file">File</option></select></div>
+                            <div class="col-md-8"><input type="url" name="resource_url[]" class="form-control form-control-sm" placeholder="URL"></div>
+                            <div class="col-12"><input type="file" name="resource_file[]" class="form-control form-control-sm"></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 removeResourceRow"><i class="ti ti-trash"></i> Remove</button>
+                    `;
+                    document.getElementById('resourcesContainer').appendChild(div);
+                    div.querySelector('.removeResourceRow').onclick = function () { if (document.querySelectorAll('.resource-row').length > 1) div.remove(); };
+                });
+                document.querySelectorAll('.removeResourceRow').forEach(btn => {
+                    btn.onclick = function () {
+                        if (document.querySelectorAll('.resource-row').length <= 1) return;
+                        this.closest('.resource-row')?.remove();
+                    };
+                });
+
+                // Code blocks
+                document.getElementById('addCodeRow')?.addEventListener('click', function () {
+                    const div = document.createElement('div');
+                    div.className = 'code-row border rounded p-3 mb-2';
+                    div.innerHTML = `
+                        <div class="row g-2">
+                            <div class="col-md-6"><input type="text" name="code_title[]" class="form-control" placeholder="e.g. Main sketch"></div>
+                            <div class="col-md-6"><input type="text" name="code_language[]" class="form-control" placeholder="e.g. Arduino C"></div>
+                            <div class="col-12"><textarea name="code_body[]" class="form-control font-monospace small" rows="6" placeholder="Paste code"></textarea></div>
+                            <div class="col-12"><input type="text" name="code_description[]" class="form-control form-control-sm" placeholder="Description (optional)"></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 removeCodeRow"><i class="ti ti-trash"></i> Remove</button>
+                    `;
+                    document.getElementById('codesContainer').appendChild(div);
+                    div.querySelector('.removeCodeRow').onclick = function () { if (document.querySelectorAll('.code-row').length > 1) div.remove(); };
+                });
+                document.querySelectorAll('.removeCodeRow').forEach(btn => {
+                    btn.onclick = function () {
+                        if (document.querySelectorAll('.code-row').length <= 1) return;
+                        this.closest('.code-row')?.remove();
+                    };
+                });
             });
         </script>
     @endpush
