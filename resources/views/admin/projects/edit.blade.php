@@ -115,15 +115,14 @@
                                 @if($categories->count() > 0)
                                     <div class="mb-3">
                                         <label class="form-label d-block">Delete category</label>
-                                        <div class="d-flex flex-wrap gap-2">
+                                        <div class="d-flex flex-wrap gap-2" id="deleteCategoryButtons">
                                             @foreach($categories as $category)
-                                                <form method="POST" action="{{ route('admin.project-categories.destroy', $category) }}" class="d-inline" onsubmit="return confirm('Delete category “{{ $category->name }}”? Projects using it will become uncategorized.');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete {{ $category->name }}">
-                                                        <i class="ti ti-trash"></i> {{ $category->name }}
-                                                    </button>
-                                                </form>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-danger delete-category-btn"
+                                                    data-url="{{ route('admin.project-categories.destroy', $category) }}"
+                                                    data-name="{{ $category->name }}">
+                                                    <i class="ti ti-trash"></i> {{ $category->name }}
+                                                </button>
                                             @endforeach
                                         </div>
                                     </div>
@@ -463,6 +462,23 @@
                     div.querySelector('.removeCodeRow').onclick = function () { if (document.querySelectorAll('.code-row').length > 1) div.remove(); };
                 });
                 document.querySelectorAll('.removeCodeRow').forEach(btn => { btn.onclick = function () { if (document.querySelectorAll('.code-row').length > 1) this.closest('.code-row')?.remove(); }; });
+
+                // Delete-category buttons — create and submit a standalone form outside the main form
+                document.querySelectorAll('.delete-category-btn').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const name = this.dataset.name;
+                        if (!confirm('Delete category "' + name + '"? Projects using it will become uncategorized.')) return;
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = this.dataset.url;
+                        form.innerHTML = `
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="_method" value="DELETE">
+                        `;
+                        document.body.appendChild(form);
+                        form.submit();
+                    });
+                });
             });
         </script>
     @endpush
