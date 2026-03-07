@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
                 'string',
                 'min:8',
             ],
-            'role' => ['required', 'string', 'in:teacher,student'],
+            'role' => ['required', 'string', 'in:teacher,student,parent'],
         ], [
             'password.min' => 'The password must be at least 8 characters.',
         ]);

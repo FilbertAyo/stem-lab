@@ -20,7 +20,7 @@
                         </div>
                         <h4 class="fw-semibold mb-1">{{ $user->name }}</h4>
                         <p class="text-muted mb-2">{{ $user->email }}</p>
-                        <span class="badge {{ $user->role === 'teacher' ? 'bg-success' : ($user->role === 'student' ? 'bg-info' : 'bg-secondary') }} px-3 py-2">
+                        <span class="badge {{ $user->role === 'teacher' ? 'bg-success' : (in_array($user->role, ['student', 'parent']) ? 'bg-info' : 'bg-secondary') }} px-3 py-2">
                             <i class="bi {{ $user->role === 'teacher' ? 'bi-mortarboard' : 'bi-person' }} me-1"></i>
                             {{ ucfirst($user->role) }}
                         </span>

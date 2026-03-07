@@ -59,6 +59,7 @@
               >
                 <option value="" disabled {{ old('role') ? '' : 'selected' }}>Who are you?</option>
                 <option value="student" {{ old('role') === 'student' ? 'selected' : '' }}>Student</option>
+                <option value="parent" {{ old('role') === 'parent' ? 'selected' : '' }}>Parent</option>
                 <option value="teacher" {{ old('role') === 'teacher' ? 'selected' : '' }}>Teacher</option>
               </select>
               @error('role')

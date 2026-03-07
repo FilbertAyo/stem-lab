@@ -255,3 +255,19 @@
   background-color: #F1F3F5;
 }
 
+/* Platform subscription package cards */
+.dashboard-main .package-card {
+  border-radius: 12px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.dashboard-main .package-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+}
+.dashboard-main .package-card.package-featured {
+  border: 2px solid var(--bs-primary);
+  box-shadow: 0 4px 16px rgba(var(--bs-primary-rgb), 0.15);
+}
+.dashboard-main .package-card.package-featured:hover {
+  box-shadow: 0 8px 28px rgba(var(--bs-primary-rgb), 0.2) !important;
+}
+
