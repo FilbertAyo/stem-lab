@@ -46,6 +46,31 @@ Route::middleware(['block.client.on.admin', 'track.landing.visitor'])->group(fun
         return view('client.front.terms');
     })->name('terms.conditions');
 
+    Route::get('/support', function () {
+        return view('client.front.contact');
+    })->name('support');
+    Route::post('/support', function (\Illuminate\Http\Request $request) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'message' => 'required|string|max:5000',
+        ]);
+
+        try {
+            \Illuminate\Support\Facades\Mail::to('support@adilishastemlabs.com')
+                ->send(new \App\Mail\ContactSupportMail(
+                    $validated['name'],
+                    $validated['email'],
+                    $validated['message']
+                ));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Contact form mail failed', ['error' => $e->getMessage()]);
+            return redirect()->route('support')->with('error', 'We could not send your message. Please try again later or email us directly at support@adilishastemlabs.com.');
+        }
+
+        return redirect()->route('support')->with('success', 'Thank you! We have received your message and will get back to you soon.');
+    })->name('support.submit');
+
     // Public Competitions (accessible without login)
     Route::get('/explore/competitions', [PublicCompetitionController::class, 'index'])->name('competitions.public');
     Route::get('/explore/competitions/{competition}', [PublicCompetitionController::class, 'show'])->name('competitions.public.show');

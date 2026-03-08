@@ -148,7 +148,7 @@
           <ul class="list-unstyled d-flex flex-wrap gap-3 mb-0">
             <li><a href="{{ route('privacy.policy') }}" class="text-white text-opacity-70 link-hover">Privacy Policy</a></li>
             <li><a href="{{ route('terms.conditions') }}" class="text-white text-opacity-70 link-hover">Terms & Conditions</a></li>
-            <li><a href="#!" class="text-white text-opacity-70 link-hover">Support</a></li>
+            <li><a href="{{ route('support') }}" class="text-white text-opacity-70 link-hover">Support</a></li>
             @php
               $appVersion = \App\Models\Setting::get('app_version', '1.0.0');
             @endphp

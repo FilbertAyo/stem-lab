@@ -15,7 +15,7 @@ class RolePermissionSeeder extends Seeder
     {
         $admin = User::factory()->create([
             'name' => 'Filbert Ayo',
-            'email' => 'adminz@example.com',
+            'email' => 'admin@example.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
         ]);
