@@ -39,8 +39,7 @@
             <div class="col-xl-4 col-xxl-4">
               <div class="d-flex align-items-center gap-7 py-2" data-aos="fade-right" data-aos-delay="100"
                 data-aos-duration="1000">
-                <span
-                  class="round-36 flex-shrink-0 text-dark rounded-circle bg-primary hstack justify-content-center fw-medium">10</span>
+
                 <hr class="border-line bg-white">
                 <span class="badge text-bg-dark">Contact us</span>
               </div>
@@ -58,7 +57,7 @@
           </div>
           <div class="row justify-content-between gap-7 gap-xl-0">
             <div class="col-xl-3">
-              <p class="mb-0 fs-5" data-aos="fade-right" data-aos-delay="100" data-aos-duration="1000">Let’s collaborate and create something amazing! Tell us about your project or question—we’re here to help.</p>
+              <p class="mb-0 fs-5" data-aos="fade-right" data-aos-delay="100" data-aos-duration="1000">Let’s collaborate and create something amazing. Tell us about your project or question we’re here to help.</p>
             </div>
             <div class="col-xl-8">
               @if(session('success'))
