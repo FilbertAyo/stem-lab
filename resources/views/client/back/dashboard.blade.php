@@ -153,6 +153,37 @@
           </div>
         </div>
 
+        {{-- Modal: Public secondary school – learn more & join --}}
+        <div class="modal fade" id="public-school-modal" tabindex="-1" aria-labelledby="public-school-modal-label" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow">
+              <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-semibold" id="public-school-modal-label">Public secondary school – free access</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body pt-2">
+                <p class="text-muted small mb-4 lh-lg">
+                  Adilisha STEM Labs promotes gender equity and inclusive learning by creating a safe space, accessible, and engaging digital STEM for all learners. Our platform prioritizes underserved public schools, allowing them free subscription access, ensuring students in rural and marginalized communities can participate in practical experiments and project-based learning.
+                </p>
+                <p class="text-muted small mb-4 lh-lg">
+                  STEM Clubs within schools require at least 70% girl membership, directly encouraging female participation and building confidence through collaborative, hands-on activities. Virtual content features female scientists and mentors to challenge stereotypes and inspire girls in STEM. The system minimizes personal data collection and does not require sharing photos or sensitive information, reducing risks of harassment or discrimination.
+                </p>
+                <p class="text-muted small mb-4 lh-lg">
+                  Simple language, visual guides, and interactive design ensure learners with low literacy or limited English proficiency can fully engage. Our majority women leadership team further demonstrates a commitment to inclusive decision making and reinforces a gender balanced approach across the organization.
+                </p>
+                <div class="border-top pt-4">
+                  <p class="small fw-medium mb-2">Want your school to get free access?</p>
+                  <p class="small text-muted mb-3">Join <strong>Chomoza STEM Labs</strong> as a teacher or school representative. Once your request is approved, your school won’t need to subscribe—you’ll have full platform access at 0 TZS/month.</p>
+                  <a href="{{ route('client.clubs.join.form', ['club' => 1]) }}" class="btn w-100 justify-content-center">
+                    <span class="btn-text">Join Chomoza STEM Labs</span>
+                    <iconify-icon icon="lucide:arrow-up-right" class="btn-icon bg-white text-dark round-52 rounded-circle hstack justify-content-center fs-7 shadow-sm"></iconify-icon>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {{-- Toast: subscription action placeholder (replace with real flow later) --}}
         <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;">
           <div id="package-action-toast" class="toast align-items-center border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
@@ -275,10 +306,19 @@
   document.querySelectorAll('.js-package-action').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
-      var toastEl = document.getElementById('package-action-toast');
-      if (toastEl && typeof bootstrap !== 'undefined' && bootstrap.Toast) {
-        var toast = bootstrap.Toast.getOrCreateInstance(toastEl);
-        toast.show();
+      var packageType = btn.getAttribute('data-package');
+      if (packageType === 'public-school') {
+        var modalEl = document.getElementById('public-school-modal');
+        if (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+          var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+          modal.show();
+        }
+      } else {
+        var toastEl = document.getElementById('package-action-toast');
+        if (toastEl && typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+          var toast = bootstrap.Toast.getOrCreateInstance(toastEl);
+          toast.show();
+        }
       }
     });
   });
