@@ -315,6 +315,7 @@ Route::middleware('auth')->group(function () {
     // VR Experiments routes
     Route::prefix('vr-experiments')->name('client.vr-experiments.')->group(function () {
         Route::get('/', [ClientVrExperimentController::class, 'index'])->name('index');
+        Route::get('/experience/{slug}', [ClientVrExperimentController::class, 'showStatic'])->name('show.static');
         Route::get('/{vrExperiment}', [ClientVrExperimentController::class, 'show'])->name('show');
     });
 

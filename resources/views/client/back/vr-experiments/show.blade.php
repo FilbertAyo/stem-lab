@@ -25,6 +25,7 @@
 
             <div class="col-lg-9">
 
+        @php($isStatic = $isStatic ?? false)
         <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
             <div>
                 <h2 class="title mb-1">{{ $vrExperiment->name }}</h2>
@@ -42,23 +43,58 @@
         <section class="row">
             <!-- VR Experiment Preview Column -->
             <div class="col-lg-8 col-12 mb-4">
-                {{-- VR Experiment Iframe - Responsive --}}
-                <div id="vr-iframe-container" class="position-relative mb-4" style="width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 0.5rem; box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);">
-                    @if($vrExperiment->external_url)
+                @if($isStatic && !empty($vrExperiment->use_iframe))
+                    {{-- Static experiment with iframe (like PhET): try embedding; fallback link if blocked --}}
+                    <div id="vr-iframe-container" class="position-relative mb-2" style="width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 0.5rem; box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);">
                         <iframe id="vr-experiment-iframe" src="{{ $vrExperiment->external_url }}"
                                 class="position-absolute top-0 start-0 w-100 h-100"
                                 style="border: none;"
                                 allowfullscreen>
                         </iframe>
-                    @else
-                        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center"
-                             style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                            <i class="bi bi-vr text-white" style="font-size: 5rem;"></i>
-                            <span class="text-white-50 mt-3 fs-5">Virtual Reality Experience</span>
-                            <span class="text-white-50 mt-2 small">No URL available</span>
-                        </div>
-                    @endif
-                </div>
+                    </div>
+                    <p class="text-muted small mb-0">
+                        <a href="{{ $vrExperiment->external_url }}" class="text-decoration-none">
+                            <i class="bi bi-box-arrow-up-right me-1"></i>Open experience
+                        </a>
+                        @if(empty($vrExperiment->launch_url))
+                            — If the experience doesn’t load above, use this link and click “Launch experiment” on their page.
+                        @endif
+                    </p>
+                @elseif($isStatic)
+                    {{-- Static experiment: preview image + open in new tab (no iframe) --}}
+                    <div class="position-relative mb-4 rounded overflow-hidden" style="box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);">
+                        @if(!empty($vrExperiment->image))
+                            <img src="{{ asset($vrExperiment->image) }}"
+                                 alt="{{ $vrExperiment->name }}"
+                                 class="w-100"
+                                 style="aspect-ratio: 16/9; object-fit: cover;">
+                        @else
+                            <div class="d-flex flex-column justify-content-center align-items-center bg-primary py-5"
+                                 style="aspect-ratio: 16/9;">
+                                <i class="bi bi-vr text-white" style="font-size: 5rem;"></i>
+                                <span class="text-white-50 mt-3 fs-5">Virtual Reality Experience</span>
+                            </div>
+                        @endif
+                    </div>
+                @else
+                    {{-- DB experiment: embed iframe when allowed --}}
+                    <div id="vr-iframe-container" class="position-relative mb-4" style="width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 0.5rem; box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);">
+                        @if($vrExperiment->external_url)
+                            <iframe id="vr-experiment-iframe" src="{{ $vrExperiment->external_url }}"
+                                    class="position-absolute top-0 start-0 w-100 h-100"
+                                    style="border: none;"
+                                    allowfullscreen>
+                            </iframe>
+                        @else
+                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center"
+                                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <i class="bi bi-vr text-white" style="font-size: 5rem;"></i>
+                                <span class="text-white-50 mt-3 fs-5">Virtual Reality Experience</span>
+                                <span class="text-white-50 mt-2 small">No URL available</span>
+                            </div>
+                        @endif
+                    </div>
+                @endif
 
                 <div class="card border-0 shadow-none">
                     <div class="card-body">
@@ -75,9 +111,9 @@
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="p-3 bg-light-soft  h-100">
+                                <div class="p-3 bg-light-soft h-100">
                                     <span class="text-muted text-uppercase small d-block mb-1">Added</span>
-                                    <span class="fw-semibold">{{ $vrExperiment->created_at?->format('M d, Y') }}</span>
+                                    <span class="fw-semibold">{{ isset($vrExperiment->created_at) ? (\Carbon\Carbon::parse($vrExperiment->created_at)->format('M d, Y')) : '—' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -90,13 +126,12 @@
                 <div class="card border-0 shadow-none">
                     <div class="card-header bg-gradient text-white">
                         <h5 class="fw-semibold mb-0">
-                            View full page
+                            {{ $isStatic ? 'Open experience' : 'View full page' }}
                         </h5>
                     </div>
                     <div class="card-body">
                         <div class="text-center py-4">
-                                <i class="bi bi-arrow-up-right-circle-fill fs-12 text-primary"></i>
-                        
+                            <i class="bi bi-arrow-up-right-circle-fill fs-12 text-primary"></i>
                             <h5 class="fw-semibold mb-2">Ready to explore?</h5>
                             <p class="text-muted small mb-4">
                                 This browser-based interactive experience will help you understand
@@ -105,12 +140,18 @@
 
                             @if($vrExperiment->external_url)
                                 <div class="d-grid gap-2 text-center">
-                                    <button type="button"
-                                            id="fullscreen-btn" 
-                                            class="btn btn-primary btn-sm text-white">
-                                        View full page
-                                    </button>
-                                  
+                                    @if($isStatic)
+                                        <a href="{{ $vrExperiment->external_url }}"
+                                           class="btn btn-primary btn-sm text-white text-decoration-none">
+                                            <i class="bi bi-box-arrow-up-right me-2"></i>Open experience
+                                        </a>
+                                    @else
+                                        <button type="button"
+                                                id="fullscreen-btn"
+                                                class="btn btn-primary btn-sm text-white">
+                                            View full page
+                                        </button>
+                                    @endif
                                 </div>
                             @else
                                 <div class="alert alert-warning mb-0">
@@ -142,6 +183,7 @@
     </div>
 
     @push('scripts')
+    @if(!$isStatic || !empty($vrExperiment->use_iframe))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const fullscreenBtn = document.getElementById('fullscreen-btn');
@@ -197,6 +239,7 @@
             }
         });
     </script>
+    @endif
     @endpush
 </x-app-layout>
 

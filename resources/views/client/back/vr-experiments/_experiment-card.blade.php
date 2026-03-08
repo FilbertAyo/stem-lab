@@ -1,7 +1,14 @@
 <div class="card h-100 border-0 shadow-none hover-shadow-lg transition-all">
     <div class="position-relative" style="overflow: hidden; height: 220px;">
-        @if($experiment->thumbnail)
+        @if($experiment->thumbnail ?? null)
             <img src="{{ asset('storage/' . $experiment->thumbnail) }}"
+                 alt="{{ $experiment->name }} thumbnail"
+                 class="w-100 h-100"
+                 style="object-fit: cover;"
+                 loading="lazy"
+                 decoding="async">
+        @elseif(!empty($experiment->image))
+            <img src="{{ asset($experiment->image) }}"
                  alt="{{ $experiment->name }} thumbnail"
                  class="w-100 h-100"
                  style="object-fit: cover;"
@@ -9,7 +16,6 @@
                  decoding="async">
         @else
             <div class="d-flex flex-column justify-content-center align-items-center bg-primary h-100 w-100">
-               
                 <span class="text-white-50 small mt-2">VR Experience</span>
             </div>
         @endif
@@ -24,7 +30,7 @@
         <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="badge border text-dark">
                 <i class="bi bi-book me-1"></i>
-                {{ $experiment->subject->subject_name ?? 'General' }}
+                {{ $experiment->subject->subject_name ?? $experiment->subject_name ?? 'General' }}
             </span>
             <small class="text-muted">
                 {{ $experiment->created_at?->format('M d, Y') }}
@@ -45,9 +51,15 @@
                     <i class="bi bi-vr me-1"></i>VR Experience
                 </span>
             @endif
-            <a href="{{ route('client.vr-experiments.show', $experiment) }}" class="badge bg-primary">
-                View VR
-            </a>
+            @if(!empty($experiment->is_static))
+                <a href="{{ route('client.vr-experiments.show.static', $experiment->slug) }}" class="badge bg-primary">
+                    View VR
+                </a>
+            @else
+                <a href="{{ route('client.vr-experiments.show', $experiment) }}" class="badge bg-primary">
+                    View VR
+                </a>
+            @endif
         </div>
     </div>
 </div>
