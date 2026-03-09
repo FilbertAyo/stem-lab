@@ -52,6 +52,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the SmileyTutor credential assigned to this user (if any).
+     */
+    public function smileyTutorCredential()
+    {
+        return $this->hasOne(SmileyTutorCredential::class);
+    }
+
+    /**
      * Get all model question answers for this user.
      */
     public function modelQuestionAnswers()

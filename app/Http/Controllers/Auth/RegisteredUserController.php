@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\SmileyTutorCredential;
 use App\Models\User;
 use App\Models\Visitor;
 use Illuminate\Auth\Events\Registered;
@@ -71,6 +72,9 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
+
+        // Assign a SmileyTutor credential so the learner can practice math (username/password for tutor-web.net).
+        SmileyTutorCredential::assignToUser($user);
 
         event(new Registered($user));
 

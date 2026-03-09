@@ -340,6 +340,8 @@ Route::middleware('auth')->group(function () {
     // VR Experiments routes
     Route::prefix('vr-experiments')->name('client.vr-experiments.')->group(function () {
         Route::get('/', [ClientVrExperimentController::class, 'index'])->name('index');
+        Route::get('/math/practice', [ClientVrExperimentController::class, 'mathPractice'])->name('math.practice');
+        Route::get('/math', [ClientVrExperimentController::class, 'math'])->name('math');
         Route::get('/experience/{slug}', [ClientVrExperimentController::class, 'showStatic'])->name('show.static');
         Route::get('/{vrExperiment}', [ClientVrExperimentController::class, 'show'])->name('show');
     });

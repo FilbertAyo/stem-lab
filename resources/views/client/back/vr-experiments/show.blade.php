@@ -20,6 +20,12 @@
                             </a>
                         </li>
                     @endforeach
+                    <li>
+                        <a href="{{ route('client.vr-experiments.math') }}"
+                           class="{{ request()->routeIs('client.vr-experiments.math') ? 'active' : '' }}">
+                            Mathematics <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+                        </a>
+                    </li>
                 </ul>
             </div>
 

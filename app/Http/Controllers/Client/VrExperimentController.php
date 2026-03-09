@@ -99,6 +99,34 @@ class VrExperimentController extends Controller
     }
 
     /**
+     * Mathematics subject page: SmileyTutor partnership and practice link.
+     */
+    public function math(): View
+    {
+        $subjects = CacheService::getActiveSubjects();
+        $smileyTutorCredential = auth()->user()?->smileyTutorCredential;
+
+        return view('client.back.vr-experiments.math', [
+            'subjects' => $subjects,
+            'smileyTutorCredential' => $smileyTutorCredential,
+        ]);
+    }
+
+    /**
+     * Mathematics practice page: SmileyTutor embedded in iframe.
+     */
+    public function mathPractice(): View
+    {
+        $subjects = CacheService::getActiveSubjects();
+        $smileyTutorCredential = auth()->user()?->smileyTutorCredential;
+
+        return view('client.back.vr-experiments.math-practice', [
+            'subjects' => $subjects,
+            'smileyTutorCredential' => $smileyTutorCredential,
+        ]);
+    }
+
+    /**
      * Display a specific VR experiment.
      */
     public function show(VrExperiment $vrExperiment): View
