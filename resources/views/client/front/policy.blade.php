@@ -81,7 +81,7 @@
         </p>
         
         <h4 class="my-4">Contact Us</h4>
-        <p class="fs-5 text-dark fw-medium mb-0">If you have questions about this Privacy Statement or our data practices, please contact us at: <a class="fw-bold" href="mailto:info@adilishastemlabs.com" class="text-primary">info@adilishastemlabs.com</a> or through your school administrator.
+        <p class="fs-5 text-dark fw-medium mb-0">If you have questions about this Privacy Statement or our data practices, please contact us at: <a class="fw-bold" href="mailto:support@adilishastemlabs.com" class="text-primary">support@adilishastemlabs.com</a> or through your school administrator.
         </p>
         <p class="fs-5 text-dark fw-medium mt-3 mb-0"><strong>Last Updated:</strong> {{ now()->format('F d, Y') }}</p>
       </div>
