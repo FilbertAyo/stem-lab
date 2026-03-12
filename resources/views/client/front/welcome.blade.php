@@ -11,7 +11,7 @@
     @include('client.front.partials.concept')
     @include('client.front.partials.labs')
     @include('client.front.partials.xr')
-    @include('client.front.partials.outcomes')
+    <!-- include('client.front.partials.outcomes') -->
   
     @include('client.front.partials.insights')
     
