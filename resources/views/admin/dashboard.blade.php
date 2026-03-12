@@ -29,7 +29,7 @@
                 </div>
 
                 <!-- Teachers Card -->
-                <div class="col-md-2 col-sm-6 mb-3">
+                <!-- <div class="col-md-2 col-sm-6 mb-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body d-flex align-items-center">
                             <div class="flex-shrink-0">
@@ -44,10 +44,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Students Card -->
-                <div class="col-md-2 col-sm-6 mb-3">
+                <!-- <div class="col-md-2 col-sm-6 mb-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body d-flex align-items-center">
                             <div class="flex-shrink-0">
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- 3D Models Card -->
                 <div class="col-md-2 col-sm-6 mb-3">
@@ -168,8 +168,6 @@
                                 <h6 class="mb-0 text-muted">Active Clubs</h6>
                                 <h4 class="mb-0">192</h4>
                                 <!-- <h4 class="mb-0">{{ $stats['active_clubs'] ?? 192 }}</h4> -->
-
-
                                 <small class="text-muted">&nbsp;</small>
                             </div>
                         </div>
