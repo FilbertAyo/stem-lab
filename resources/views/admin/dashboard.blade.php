@@ -119,7 +119,7 @@
                 </div>
 
                 <!-- Schools Card -->
-                <div class="col-md-2 col-sm-6 mb-3">
+                <!-- <div class="col-md-2 col-sm-6 mb-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body d-flex align-items-center">
                             <div class="flex-shrink-0">
@@ -134,10 +134,68 @@
                             </div>
                         </div>
                     </div>
+                </div> -->
+
+                     <!-- Active Learners Card -->
+                     <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-primary text-white rounded">
+                                    <i class="ti ti-school fs-4"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">Active Learners</h6>
+                                <h4 class="mb-0">{{ number_format($stats['active_learners'] ?? 14400) }}</h4>
+                                <small class="text-muted">&nbsp;</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Unique Visitors Card -->
+             
+                <!-- Active Clubs Card -->
                 <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-success text-white rounded">
+                                    <i class="ti ti-users-group fs-4"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">Active Clubs</h6>
+                                <h4 class="mb-0">192</h4>
+                                <!-- <h4 class="mb-0">{{ $stats['active_clubs'] ?? 192 }}</h4> -->
+
+
+                                <small class="text-muted">&nbsp;</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subscribers Card -->
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-md bg-warning text-white rounded">
+                                    <i class="ti ti-mail fs-4"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3 min-w-0">
+                                <h6 class="mb-0 text-muted">Subscribers</h6>
+                                <h4 class="mb-0">{{ $stats['subscribers'] ?? 100 }}</h4>
+                                <small class="text-muted">&nbsp;</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                   <!-- Unique Visitors Card -->
+                   <div class="col-md-2 col-sm-6 mb-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body d-flex align-items-center">
                             <div class="flex-shrink-0">
@@ -154,8 +212,8 @@
                     </div>
                 </div>
 
-                <!-- Landing Page Views Card -->
-                <div class="col-md-2 col-sm-6 mb-3">
+                                <!-- Landing Page Views Card -->
+                                <div class="col-md-2 col-sm-6 mb-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body d-flex align-items-center">
                             <div class="flex-shrink-0">
@@ -171,6 +229,9 @@
                         </div>
                     </div>
                 </div>
+
+           
+
             </div>
 
             <!-- Visitor charts per week -->

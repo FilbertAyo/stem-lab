@@ -13,6 +13,7 @@ use App\Models\CompetitionSubmission;
 use App\Models\VrAssessmentAttempt;
 use App\Models\Visitor;
 use App\Models\VisitorWeeklyStat;
+use App\Models\Club;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Support\Carbon;
@@ -39,6 +40,9 @@ class DashboardController extends Controller
             'visitors_today' => Visitor::whereDate('last_seen_at', today())->count(),
             'total_landing_views' => Visitor::sum('landing_views'),
             'visitors_not_converted' => Visitor::notConverted()->count(),
+            'active_learners' => 14400,
+            'active_clubs' => Club::active()->count(),
+            'subscribers' => 100,
         ];
 
         // Get latest active admin user (based on session last_activity)

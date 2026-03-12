@@ -40,8 +40,6 @@
                     </a>
                 </div>
 
-             
-
                 <div class="position-relative rounded overflow-hidden border mb-3" style="box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);">
                     <iframe
                         src="https://tutor-web.net/math"
