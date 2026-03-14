@@ -11,8 +11,7 @@
     @include('client.front.partials.concept')
     @include('client.front.partials.labs')
     @include('client.front.partials.xr')
-    <!-- include('client.front.partials.outcomes') -->
-  
+    @include('client.front.partials.outcomes')
     @include('client.front.partials.insights')
     
     <!-- <section class="Recent-news bg-light-gray py-5 py-lg-11 py-xl-12">
