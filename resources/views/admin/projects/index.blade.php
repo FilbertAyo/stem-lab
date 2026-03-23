@@ -11,6 +11,29 @@
                 </a>
             </div>
 
+            <ul class="nav nav-tabs mb-3" id="projects-platforms-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a
+                        class="nav-link {{ request()->routeIs('admin.projects.index') ? 'active' : '' }}"
+                        href="{{ route('admin.projects.index') }}"
+                        role="tab"
+                        aria-selected="{{ request()->routeIs('admin.projects.index') ? 'true' : 'false' }}"
+                    >
+                        Projects
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                        class="nav-link {{ request()->routeIs('admin.platforms.*') ? 'active' : '' }}"
+                        href="{{ route('admin.platforms.index') }}"
+                        role="tab"
+                        aria-selected="{{ request()->routeIs('admin.platforms.*') ? 'true' : 'false' }}"
+                    >
+                        Platforms
+                    </a>
+                </li>
+            </ul>
+
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}

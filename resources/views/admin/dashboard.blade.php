@@ -9,16 +9,12 @@
             </div>
 
             <!-- Statistics Cards (equal height) -->
-            <div class="row mb-4">
+            <div class="row">
                 <!-- Admins Card -->
                 <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
+                    <div class="card border shadow-none">
                         <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-danger text-white rounded">
-                                    <i class="ti ti-shield fs-4"></i>
-                                </div>
-                            </div>
+                          
                             <div class="flex-grow-1 ms-3 min-w-0">
                                 <h6 class="mb-0 text-muted">Total Admins</h6>
                                 <h4 class="mb-0">{{ $stats['total_admins'] }}</h4>
@@ -29,14 +25,9 @@
                 </div>
 
                 <!-- Teachers Card -->
-                <!-- <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border shadow-none">
                         <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-primary text-white rounded">
-                                    <i class="ti ti-user fs-4"></i>
-                                </div>
-                            </div>
                             <div class="flex-grow-1 ms-3 min-w-0">
                                 <h6 class="mb-0 text-muted">Total Teachers</h6>
                                 <h4 class="mb-0">{{ $stats['total_teachers'] }}</h4>
@@ -44,17 +35,12 @@
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div>
 
                 <!-- Students Card -->
-                <!-- <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border shadow-none">
                         <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-info text-white rounded">
-                                    <i class="ti ti-user-circle fs-4"></i>
-                                </div>
-                            </div>
                             <div class="flex-grow-1 ms-3 min-w-0">
                                 <h6 class="mb-0 text-muted">Total Students</h6>
                                 <h4 class="mb-0">{{ $stats['total_students'] }}</h4>
@@ -62,17 +48,13 @@
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div>
 
                 <!-- 3D Models Card -->
                 <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
+                    <div class="card border shadow-none">
                         <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-success text-white rounded">
-                                    <i class="ti ti-box fs-4"></i>
-                                </div>
-                            </div>
+                         
                             <div class="flex-grow-1 ms-3 min-w-0">
                                 <h6 class="mb-0 text-muted">3D Models</h6>
                                 <h4 class="mb-0">{{ $stats['active_3d_models'] }} / {{ $stats['total_3d_models'] }}</h4>
@@ -84,13 +66,8 @@
 
                 <!-- VR Experiments Card -->
                 <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
+                    <div class="card border shadow-none">
                         <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-success text-white rounded">
-                                    <i class="ti ti-flask fs-4"></i>
-                                </div>
-                            </div>
                             <div class="flex-grow-1 ms-3 min-w-0">
                                 <h6 class="mb-0 text-muted">VR Experiments</h6>
                                 <h4 class="mb-0">{{ $stats['active_vr_experiments'] }} / {{ $stats['total_vr_experiments'] }}</h4>
@@ -102,13 +79,8 @@
 
                 <!-- Competitions Card -->
                 <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
+                    <div class="card border shadow-none">
                         <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-warning text-white rounded">
-                                    <i class="ti ti-trophy fs-4"></i>
-                                </div>
-                            </div>
                             <div class="flex-grow-1 ms-3 min-w-0">
                                 <h6 class="mb-0 text-muted">Competitions</h6>
                                 <h4 class="mb-0">{{ $stats['active_competitions'] }} / {{ $stats['total_competitions'] }}</h4>
@@ -119,35 +91,12 @@
                 </div>
 
                 <!-- Schools Card -->
-                <!-- <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
+                <div class="col-md-2 col-sm-6 mb-3">
+                    <div class="card border shadow-none">
                         <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-secondary text-white rounded">
-                                    <i class="ti ti-building fs-4"></i>
-                                </div>
-                            </div>
                             <div class="flex-grow-1 ms-3 min-w-0">
-                                <h6 class="mb-0 text-muted">Schools</h6>
+                                <h6 class="mb-0 text-muted">STEM Clubs</h6>
                                 <h4 class="mb-0">{{ $stats['total_schools'] }}</h4>
-                                <small class="text-muted">&nbsp;</small>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-
-                     <!-- Active Learners Card -->
-                     <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-primary text-white rounded">
-                                    <i class="ti ti-school fs-4"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3 min-w-0">
-                                <h6 class="mb-0 text-muted">Active Learners</h6>
-                                <h4 class="mb-0">{{ number_format($stats['active_learners'] ?? 14400) }}</h4>
                                 <small class="text-muted">&nbsp;</small>
                             </div>
                         </div>
@@ -155,52 +104,11 @@
                 </div>
 
              
-                <!-- Active Clubs Card -->
-                <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-success text-white rounded">
-                                    <i class="ti ti-users-group fs-4"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3 min-w-0">
-                                <h6 class="mb-0 text-muted">Active Clubs</h6>
-                                <h4 class="mb-0">192</h4>
-                                <!-- <h4 class="mb-0">{{ $stats['active_clubs'] ?? 192 }}</h4> -->
-                                <small class="text-muted">&nbsp;</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Subscribers Card -->
-                <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-warning text-white rounded">
-                                    <i class="ti ti-mail fs-4"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3 min-w-0">
-                                <h6 class="mb-0 text-muted">Subscribers</h6>
-                                <h4 class="mb-0">{{ $stats['subscribers'] ?? 100 }}</h4>
-                                <small class="text-muted">&nbsp;</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+            
                    <!-- Unique Visitors Card -->
                    <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
+                    <div class="card border shadow-none">
                         <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-primary text-white rounded">
-                                    <i class="ti ti-world fs-4"></i>
-                                </div>
-                            </div>
                             <div class="flex-grow-1 ms-3 min-w-0">
                                 <h6 class="mb-0 text-muted">Unique Visitors</h6>
                                 <h4 class="mb-0">{{ $stats['total_visitors'] }}</h4>
@@ -211,14 +119,9 @@
                 </div>
 
                                 <!-- Landing Page Views Card -->
-                                <div class="col-md-2 col-sm-6 mb-3">
-                    <div class="card border-0 shadow-sm h-100">
+                <div class="col-md-2 col-sm-6 mb-3">
+                        <div class="card border shadow-none">
                         <div class="card-body d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="avatar avatar-md bg-info text-white rounded">
-                                    <i class="ti ti-eye fs-4"></i>
-                                </div>
-                            </div>
                             <div class="flex-grow-1 ms-3 min-w-0">
                                 <h6 class="mb-0 text-muted">Landing Views</h6>
                                 <h4 class="mb-0">{{ number_format($stats['total_landing_views']) }}</h4>
@@ -232,25 +135,34 @@
 
             </div>
 
-            <!-- Visitor charts per week -->
-            <div class="row mb-4">
-                <div class="col-lg-6 mb-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-transparent border-bottom">
-                            <h6 class="mb-0">Unique Visitors per Week</h6>
+            <!-- Visitor charts per week (combined) -->
+            <div class="row mb-2">
+                <div class="col-lg-12 mb-4">
+                    <div class="card border shadow-none">
+                        <div class="card-header bg-transparent border-bottom d-flex align-items-center justify-content-between gap-3">
+                            <h6 class="mb-0">Visitors Overview (Weekly)</h6>
+
+                            <ul class="nav nav-pills" id="visitor-week-view" role="tablist" aria-label="Visitor chart view">
+                                <li class="nav-item" role="presentation">
+                                    <button type="button" class="nav-link active" data-vis-view="both">
+                                        Both
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button type="button" class="nav-link" data-vis-view="unique">
+                                        Unique Visitors
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button type="button" class="nav-link" data-vis-view="views">
+                                        Landing Views
+                                    </button>
+                                </li>
+                            </ul>
                         </div>
+
                         <div class="card-body">
-                            <div id="visitor-unique-week-chart" style="min-height: 280px;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-transparent border-bottom">
-                            <h6 class="mb-0">Landing Page Views per Week</h6>
-                        </div>
-                        <div class="card-body">
-                            <div id="visitor-views-week-chart" style="min-height: 280px;"></div>
+                            <div id="visitor-week-combined-chart" style="min-height: 280px;"></div>
                         </div>
                     </div>
                 </div>
@@ -260,7 +172,7 @@
             <div class="row mb-4">
                 <!-- Latest Active Admin -->
                 <div class="col-md-4 mb-4">
-                    <div class="card border-0 shadow-sm">
+                    <div class="card border shadow-none">
                         <div class="card-header bg-transparent border-bottom">
                             <h6 class="mb-0">Latest Active Admin</h6>
                         </div>
@@ -297,7 +209,7 @@
 
                 <!-- Recent Activities -->
                 <div class="col-md-8 mb-4">
-                    <div class="card border-0 shadow-sm">
+                    <div class="card border shadow-none">
                         <div class="card-header bg-transparent border-bottom">
                             <h6 class="mb-0">Recent Activities (Today)</h6>
                         </div>
@@ -338,37 +250,66 @@
     </div>
 
     @push('scripts')
+    <script type="application/json" id="visitor-week-chart-data">
+        {!! json_encode($visitorChartData) !!}
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var chartData = @json($visitorChartData);
+            var chartData = JSON.parse(document.getElementById('visitor-week-chart-data').textContent);
             if (typeof ApexCharts === 'undefined') return;
 
-            var uniqueOpts = {
-                chart: { type: 'bar', height: 280, toolbar: { show: false } },
-                plotOptions: { bar: { columnWidth: '60%', borderRadius: 4 } },
-                dataLabels: { enabled: false },
-                colors: ['#072649'],
-                series: [{ name: 'Unique Visitors', data: chartData.unique_visitors }],
-                xaxis: { categories: chartData.labels },
-                yaxis: { title: { text: 'Visitors' } },
-                grid: { strokeDashArray: 4 }
-            };
-            var uniqueChart = new ApexCharts(document.querySelector('#visitor-unique-week-chart'), uniqueOpts);
-            uniqueChart.render();
-
-            var viewsOpts = {
-                chart: { type: 'area', height: 280, toolbar: { show: false } },
+            var combinedOpts = {
+                chart: { type: 'line', height: 280, toolbar: { show: false } },
                 dataLabels: { enabled: false },
                 stroke: { curve: 'smooth', width: 2 },
-                colors: ['#13c2c2'],
-                series: [{ name: 'Page Views', data: chartData.landing_views }],
+                colors: ['#072649', '#13c2c2'],
+                series: [
+                    { name: 'Unique Visitors', data: chartData.unique_visitors },
+                    { name: 'Landing Views', data: chartData.landing_views },
+                ],
                 xaxis: { categories: chartData.labels },
-                yaxis: { title: { text: 'Views' } },
+                yaxis: { title: { text: 'Count' } },
                 grid: { strokeDashArray: 4 },
-                fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.1 } }
+                legend: { position: 'top', horizontalAlign: 'left' },
             };
-            var viewsChart = new ApexCharts(document.querySelector('#visitor-views-week-chart'), viewsOpts);
-            viewsChart.render();
+
+            var combinedChart = new ApexCharts(
+                document.querySelector('#visitor-week-combined-chart'),
+                combinedOpts
+            );
+            combinedChart.render();
+
+            function setVisitorView(view) {
+                if (view === 'unique') {
+                    combinedChart.updateSeries([
+                        { name: 'Unique Visitors', data: chartData.unique_visitors },
+                    ]);
+                    return;
+                }
+
+                if (view === 'views') {
+                    combinedChart.updateSeries([
+                        { name: 'Landing Views', data: chartData.landing_views },
+                    ]);
+                    return;
+                }
+
+                combinedChart.updateSeries([
+                    { name: 'Unique Visitors', data: chartData.unique_visitors },
+                    { name: 'Landing Views', data: chartData.landing_views },
+                ]);
+            }
+
+            document.querySelectorAll('#visitor-week-view [data-vis-view]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var view = this.getAttribute('data-vis-view');
+                    document.querySelectorAll('#visitor-week-view [data-vis-view]').forEach(function (b) {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    setVisitorView(view);
+                });
+            });
         });
     </script>
     @endpush

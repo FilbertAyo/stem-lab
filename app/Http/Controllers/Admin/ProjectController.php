@@ -14,6 +14,7 @@ use App\Models\ProjectTag;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -198,6 +199,13 @@ class ProjectController extends Controller
                 $validated['equipment_notes'] ?? []
             );
 
+            $this->logProjectActivity('created', $project, [
+                'status' => [
+                    'is_active' => $project->is_active,
+                    'is_published' => $project->is_published,
+                ],
+            ]);
+
             return redirect()
                 ->route('admin.projects.edit', $project)
                 ->with('success', 'Project created successfully.');
@@ -220,6 +228,21 @@ class ProjectController extends Controller
 
     public function update(Request $request, Project $project): RedirectResponse
     {
+        $originalData = Arr::only($project->getOriginal(), [
+            'name',
+            'slug',
+            'difficulty',
+            'project_category_id',
+            'estimated_time',
+            'youtube_url',
+            'external_link',
+            'is_active',
+            'is_published',
+            'published_at',
+            'cover_image',
+            'circuit_image',
+        ]);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'difficulty' => ['required', 'in:beginner,intermediate,advanced'],
@@ -273,7 +296,7 @@ class ProjectController extends Controller
             'remove_circuit_image' => ['nullable', 'boolean'],
         ]);
 
-        return DB::transaction(function () use ($request, $validated, $project) {
+        return DB::transaction(function () use ($request, $validated, $project, $originalData) {
             $categoryId = $validated['project_category_id'] ?? null;
 
             if (!empty($validated['new_category'])) {
@@ -351,6 +374,18 @@ class ProjectController extends Controller
                 $validated['equipment_notes'] ?? []
             );
 
+            $updatedData = Arr::only($project->fresh()->toArray(), array_keys($originalData));
+            $changedFields = collect(array_keys($originalData))
+                ->filter(fn ($field) => ($originalData[$field] ?? null) != ($updatedData[$field] ?? null))
+                ->values()
+                ->all();
+
+            $this->logProjectActivity('updated', $project, [
+                'changed_fields' => $changedFields,
+                'old_values' => Arr::only($originalData, $changedFields),
+                'new_values' => Arr::only($updatedData, $changedFields),
+            ]);
+
             return redirect()
                 ->route('admin.projects.edit', $project)
                 ->with('success', 'Project updated successfully.');
@@ -360,6 +395,9 @@ class ProjectController extends Controller
     public function destroy(Project $project): RedirectResponse
     {
         $project->load(['steps', 'resources']);
+        $projectName = $project->name;
+        $projectSlug = $project->slug;
+        $projectId = $project->id;
 
         if ($project->cover_image && Storage::disk('public')->exists($project->cover_image)) {
             Storage::disk('public')->delete($project->cover_image);
@@ -379,6 +417,15 @@ class ProjectController extends Controller
         }
 
         $project->delete();
+        activity('admin_projects')
+            ->causedBy(Auth::user())
+            ->withProperties([
+                'project_id' => $projectId,
+                'project_name' => $projectName,
+                'project_slug' => $projectSlug,
+                'action' => 'deleted',
+            ])
+            ->log('Admin deleted project');
 
         return redirect()
             ->route('admin.projects.index')
@@ -572,6 +619,20 @@ class ProjectController extends Controller
                 'sort_order' => $order,
             ]);
         }
+    }
+
+    private function logProjectActivity(string $action, Project $project, array $properties = []): void
+    {
+        activity('admin_projects')
+            ->performedOn($project)
+            ->causedBy(Auth::user())
+            ->withProperties(array_merge([
+                'project_id' => $project->id,
+                'project_name' => $project->name,
+                'project_slug' => $project->slug,
+                'action' => $action,
+            ], $properties))
+            ->log("Admin {$action} project");
     }
 }
 
