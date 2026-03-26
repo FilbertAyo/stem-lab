@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ClassController;
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\ClubController;
 use App\Http\Controllers\Admin\CompetitionController;
 use App\Http\Controllers\Admin\CompetitionParticipantController;
@@ -94,7 +95,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             ->name('login.store');
     });
 
-    Route::middleware(['auth', 'admin'])->group(function () {
+    Route::middleware(['auth', 'admin', 'track.admin.activity'])->group(function () {
         Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
@@ -210,6 +211,10 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::put('/', [SettingsController::class, 'update'])->name('update');
         });
 
+        // Audit Logs
+        Route::get('activity-logs', [ActivityLogController::class, 'index'])
+            ->name('activity-logs.index');
+
         // Weekly Sessions routes
         Route::prefix('weekly-sessions')->name('weekly-sessions.')->group(function () {
             Route::get('/', [WeeklySessionController::class, 'index'])->name('index');
@@ -295,7 +300,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
 
 // Subjects routes - separate domain group without name prefix to use 'subjects.*' names
 Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilishastemlabs.com')->group(function () {
-    Route::middleware(['auth', 'admin'])->group(function () {
+    Route::middleware(['auth', 'admin', 'track.admin.activity'])->group(function () {
         Route::get('subjects', [SubjectController::class, 'index'])->name('subjects.index');
         Route::get('subjects/create', [SubjectController::class, 'create'])->name('subjects.create');
         Route::post('subjects', [SubjectController::class, 'store'])->name('subjects.store');
