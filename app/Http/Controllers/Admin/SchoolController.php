@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Region;
 use App\Models\School;
 use App\Models\TeacherClub;
 use Illuminate\Http\RedirectResponse;
@@ -14,7 +15,13 @@ class SchoolController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = School::query();
+        $query = School::query()->with('regionModel');
+        $allowedPerPage = [10, 15, 25, 50, 100];
+        $perPage = (int) $request->query('per_page', 15);
+
+        if (! in_array($perPage, $allowedPerPage, true)) {
+            $perPage = 15;
+        }
 
         // Search functionality
         if ($request->filled('search')) {
@@ -23,9 +30,11 @@ class SchoolController extends Controller
                 $q->where('name', 'like', '%' . $search . '%')
                   ->orWhere('address', 'like', '%' . $search . '%')
                   ->orWhere('district', 'like', '%' . $search . '%')
-                  ->orWhere('region', 'like', '%' . $search . '%')
                   ->orWhere('email', 'like', '%' . $search . '%')
-                  ->orWhere('phone', 'like', '%' . $search . '%');
+                  ->orWhere('phone', 'like', '%' . $search . '%')
+                  ->orWhereHas('regionModel', function ($regionQuery) use ($search) {
+                      $regionQuery->where('name', 'like', '%' . $search . '%');
+                  });
             });
         }
 
@@ -35,8 +44,8 @@ class SchoolController extends Controller
         }
 
         // Filter by region
-        if ($request->filled('region')) {
-            $query->where('region', $request->region);
+        if ($request->filled('region_id')) {
+            $query->where('region_id', $request->integer('region_id'));
         }
 
         // Filter by district
@@ -44,10 +53,10 @@ class SchoolController extends Controller
             $query->where('district', $request->district);
         }
 
-        $schools = $query->ordered()->paginate(15)->withQueryString();
+        $schools = $query->ordered()->paginate($perPage)->withQueryString();
 
-        // Get unique regions and districts for filter dropdowns
-        $regions = School::whereNotNull('region')->distinct()->orderBy('region')->pluck('region');
+        // Get regions and districts for filter dropdowns
+        $regions = Region::query()->orderBy('name')->get(['id', 'name']);
         $districts = School::whereNotNull('district')->distinct()->orderBy('district')->pluck('district');
 
         return view('admin.schools.index', compact('schools', 'regions', 'districts'));
@@ -55,6 +64,8 @@ class SchoolController extends Controller
 
     public function show(School $school): View
     {
+        $school->load('regionModel');
+
         // Load teachers with their clubs and students
         $school->load([
             'teacherClubs.user',
@@ -84,7 +95,8 @@ class SchoolController extends Controller
             'phone' => ['nullable', 'string', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],
             'district' => ['nullable', 'string', 'max:255'],
-            'region' => ['nullable', 'string', 'max:255'],
+            'ward' => ['nullable', 'string', 'max:255'],
+            'region_id' => ['nullable', 'exists:regions,id'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
@@ -108,7 +120,8 @@ class SchoolController extends Controller
             'phone' => ['nullable', 'string', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],
             'district' => ['nullable', 'string', 'max:255'],
-            'region' => ['nullable', 'string', 'max:255'],
+            'ward' => ['nullable', 'string', 'max:255'],
+            'region_id' => ['nullable', 'exists:regions,id'],
             'is_active' => ['required', 'boolean'],
         ]);
 

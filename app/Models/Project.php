@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPublicUlid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Request;
 
 class Project extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicUlid;
 
     protected $fillable = [
         'project_category_id',

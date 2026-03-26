@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Club extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'ulid',
         'name',
         'description',
         'image_path',
@@ -20,6 +22,20 @@ class Club extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $club): void {
+            if (blank($club->ulid)) {
+                $club->ulid = (string) Str::ulid();
+            }
+        });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'ulid';
+    }
 
     /**
      * Get the teachers that belong to this club.

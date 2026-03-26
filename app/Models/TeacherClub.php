@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPublicUlid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TeacherClub extends Model
 {
+    use HasPublicUlid;
+
     protected $table = 'teacher_clubs';
 
     protected $fillable = [

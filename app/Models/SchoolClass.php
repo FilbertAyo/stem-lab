@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPublicUlid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class SchoolClass extends Model
 {
+    use HasPublicUlid;
+
     protected $fillable = [
         'name',
         'description',

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Club;
+use App\Models\Region;
 use App\Models\School;
 use App\Models\SchoolClass;
 use App\Models\TeacherClub;
@@ -93,9 +94,11 @@ class ClubController extends Controller
         // Get all active schools for dropdown (only if teacher doesn't have a school yet)
         $schools = $existingSchool 
             ? collect() 
-            : School::active()->ordered()->get();
+            : School::active()->with('regionModel')->ordered()->get();
 
-        return view('client.back.clubs.join', compact('club', 'schools', 'existingSchool'));
+        $regions = Region::query()->orderBy('name')->get(['id', 'name']);
+
+        return view('client.back.clubs.join', compact('club', 'schools', 'existingSchool', 'regions'));
     }
 
     /**
@@ -137,7 +140,8 @@ class ClubController extends Controller
                     'school_phone' => ['nullable', 'string', 'max:50'],
                     'school_email' => ['nullable', 'email', 'max:255'],
                     'school_district' => ['nullable', 'string', 'max:255'],
-                    'school_region' => ['nullable', 'string', 'max:255'],
+                    'school_ward' => ['nullable', 'string', 'max:255'],
+                    'school_region_id' => ['nullable', 'exists:regions,id'],
                 ]);
 
                 // Create new school as inactive (admin needs to approve)
@@ -147,7 +151,8 @@ class ClubController extends Controller
                     'phone' => $validated['school_phone'] ?? null,
                     'email' => $validated['school_email'] ?? null,
                     'district' => $validated['school_district'] ?? null,
-                    'region' => $validated['school_region'] ?? null,
+                    'ward' => $validated['school_ward'] ?? null,
+                    'region_id' => $validated['school_region_id'] ?? null,
                     'is_active' => false, // Inactive until admin approves
                 ]);
 

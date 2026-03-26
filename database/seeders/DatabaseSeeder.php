@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             ProjectCategorySeeder::class,
             PlatformSeeder::class,
             SmileyTutorCredentialSeeder::class,
+            RegionSeeder::class,
         ]);
     }
 }

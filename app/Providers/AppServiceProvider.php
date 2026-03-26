@@ -4,15 +4,32 @@ namespace App\Providers;
 
 use App\Listeners\SendWelcomeEmail;
 use App\Models\Club;
+use App\Models\Competition;
+use App\Models\CompetitionAward;
+use App\Models\CompetitionParticipant;
+use App\Models\CompetitionSubmission;
 use App\Models\Model3d;
 use App\Models\ModelQuestionAnswer;
+use App\Models\Platform;
+use App\Models\Project;
+use App\Models\ProjectCategory;
+use App\Models\School;
+use App\Models\SchoolClass;
+use App\Models\SubmissionAttachment;
 use App\Models\Subject;
+use App\Models\TeacherClub;
+use App\Models\User;
+use App\Models\VrAssessmentAttempt;
+use App\Models\VrExperiment;
 use App\Models\VrQuestionBank;
+use App\Models\WeeklySession;
+use App\Models\WeeklySessionReport;
 use App\Services\CacheService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,6 +48,27 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->bindUlidWithLegacyId('school', School::class);
+        $this->bindUlidWithLegacyId('club', Club::class);
+        $this->bindUlidWithLegacyId('schoolClass', SchoolClass::class);
+        $this->bindUlidWithLegacyId('teacherClub', TeacherClub::class);
+        $this->bindUlidWithLegacyId('project', Project::class);
+        $this->bindUlidWithLegacyId('projectCategory', ProjectCategory::class);
+        $this->bindUlidWithLegacyId('platform', Platform::class);
+        $this->bindUlidWithLegacyId('competition', Competition::class);
+        $this->bindUlidWithLegacyId('award', CompetitionAward::class);
+        $this->bindUlidWithLegacyId('participant', CompetitionParticipant::class);
+        $this->bindUlidWithLegacyId('submission', CompetitionSubmission::class);
+        $this->bindUlidWithLegacyId('user', User::class);
+        $this->bindUlidWithLegacyId('model3d', Model3d::class);
+        $this->bindUlidWithLegacyId('weeklySession', WeeklySession::class);
+        $this->bindUlidWithLegacyId('report', WeeklySessionReport::class);
+        $this->bindUlidWithLegacyId('vrExperiment', VrExperiment::class);
+        $this->bindUlidWithLegacyId('questionBank', VrQuestionBank::class);
+        $this->bindUlidWithLegacyId('attempt', VrAssessmentAttempt::class);
+        $this->bindUlidWithLegacyId('subject', Subject::class);
+        $this->bindUlidWithLegacyId('attachment', SubmissionAttachment::class);
+
         Event::listen(Registered::class, SendWelcomeEmail::class);
 
         // Use custom "remember me" duration from config (e.g. 14 days) for client login
@@ -99,6 +137,24 @@ class AppServiceProvider extends ServiceProvider
 
         Club::deleted(function () {
             Cache::forget('active_clubs');
+        });
+    }
+
+    /**
+     * Resolve route model bindings by ULID with numeric ID fallback.
+     */
+    protected function bindUlidWithLegacyId(string $parameter, string $modelClass): void
+    {
+        Route::bind($parameter, function (string $value) use ($modelClass) {
+            return $modelClass::query()
+                ->where(function ($query) use ($value): void {
+                    $query->where('ulid', $value);
+
+                    if (ctype_digit($value)) {
+                        $query->orWhere('id', (int) $value);
+                    }
+                })
+                ->firstOrFail();
         });
     }
 }

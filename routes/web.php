@@ -135,6 +135,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
 
         Route::prefix('schools')->name('schools.')->group(function () {
             Route::get('/', [SchoolController::class, 'index'])->name('index');
+            Route::delete('/teacher-clubs/{teacherClub}', [SchoolController::class, 'removeTeacherFromClub'])->name('remove-teacher-from-club');
             Route::get('/{school}', [SchoolController::class, 'show'])->name('show');
             Route::post('/', [SchoolController::class, 'store'])->name('store');
             Route::put('/{school}', [SchoolController::class, 'update'])->name('update');

@@ -109,15 +109,15 @@
               aria-live="polite"
             >
               <span class="register-spinner" aria-hidden="true"></span>
-              <span class="sr-only">Creating your account...</span>
+              <span class="sr-only text-primary">Creating your account...</span>
             </div>
           </form>
 
-          <p class="text-center mb-1 d-block fw-medium">
+          <p class="text-center mb-3 d-block fw-medium">
             By creating an account, you agree with our
-            <a class="text-dark" href="{{ url('/privacy-policy') }}">Privacy Policy</a>
+            <a class="text-primary" href="{{ url('/privacy-policy') }}">Privacy Policy</a>
             and
-            <a class="text-dark" href="{{ url('/terms-conditions') }}">Terms & Conditions</a>.
+            <a class="text-primary" href="{{ url('/terms-conditions') }}">Terms & Conditions</a>.
           </p>
 
           <p class="mb-0 fw-medium text-center">

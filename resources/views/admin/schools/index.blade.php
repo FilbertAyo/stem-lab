@@ -29,9 +29,9 @@
             <div class="card mb-3">
                 <div class="card-body py-3">
                     <form method="GET" action="{{ route('admin.schools.index') }}" class="row g-3 align-items-end">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label small">Search</label>
-                            <input type="text" name="search" class="form-control" placeholder="Search by name, address, district, region, email, or phone..." value="{{ request('search') }}">
+                            <input type="text" name="search" class="form-control" placeholder="Search by name, address, district, ward, region, email, or phone..." value="{{ request('search') }}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label small">Status</label>
@@ -43,11 +43,11 @@
                         </div>
                         <div class="col-md-2">
                             <label class="form-label small">Region</label>
-                            <select name="region" class="form-select">
+                            <select name="region_id" class="form-select">
                                 <option value="">All Regions</option>
                                 @foreach($regions as $region)
-                                    <option value="{{ $region }}" {{ request('region') === $region ? 'selected' : '' }}>
-                                        {{ $region }}
+                                    <option value="{{ $region->id }}" {{ (string) request('region_id') === (string) $region->id ? 'selected' : '' }}>
+                                        {{ $region->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -63,11 +63,21 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md-1">
+                            <label class="form-label small">Rows</label>
+                            <select name="per_page" class="form-select">
+                                @foreach([10, 15, 25, 50, 100] as $size)
+                                    <option value="{{ $size }}" {{ (int) request('per_page', 15) === $size ? 'selected' : '' }}>
+                                        {{ $size }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-outline-primary me-2">
                                 <i class="ti ti-filter"></i> Filter
                             </button>
-                            @if(request('search') || request('status') || request('region') || request('district'))
+                            @if(request('search') || request('status') || request('region_id') || request('district') || request('per_page'))
                                 <a href="{{ route('admin.schools.index') }}" class="btn btn-outline-secondary">
                                     <i class="ti ti-x"></i> Clear
                                 </a>
@@ -88,6 +98,7 @@
                                     <th>Address</th>
                                     <th>Contact</th>
                                     <th>District</th>
+                                    <th>Ward</th>
                                     <th>Region</th>
                                     <th>Status</th>
                                     <th>Last Updated</th>
@@ -115,7 +126,8 @@
                                             @endif
                                         </td>
                                         <td>{{ $school->district ?? '—' }}</td>
-                                        <td>{{ $school->region ?? '—' }}</td>
+                                        <td>{{ $school->ward ?? '—' }}</td>
+                                        <td>{{ $school->regionModel?->name ?? $school->region ?? '—' }}</td>
                                         <td>
                                             <span class="badge {{ $school->is_active ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $school->is_active ? 'Active' : 'Disabled' }}
@@ -141,7 +153,8 @@
                                                     data-phone="{{ $school->phone }}"
                                                     data-email="{{ $school->email }}"
                                                     data-district="{{ $school->district }}"
-                                                    data-region="{{ $school->region }}"
+                                                    data-region-id="{{ $school->region_id }}"
+                                                    data-ward="{{ $school->ward }}"
                                                     data-active="{{ $school->is_active ? '1' : '0' }}"
                                                     title="Edit"
                                                 >
@@ -163,7 +176,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="text-center text-muted py-4">
+                                        <td colspan="10" class="text-center text-muted py-4">
                                             No schools found. Use the "Add School" button to create the first one.
                                         </td>
                                     </tr>
@@ -190,7 +203,7 @@
 
     <!-- Create Modal -->
     <div class="modal fade" id="createSchoolModal" tabindex="-1" aria-labelledby="createSchoolModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createSchoolModalLabel">Add School</h5>
@@ -214,8 +227,7 @@
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
-                        <div class="row">
+                      
                             <div class="col-md-6 mb-3">
                                 <label for="schoolPhone" class="form-label">Phone</label>
                                 <input type="text" name="phone" id="schoolPhone" class="form-control" value="{{ old('phone') }}" placeholder="+255 XXX XXX XXX">
@@ -224,21 +236,35 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
+                                <label for="schoolRegion" class="form-label">Region</label>
+                                <select name="region_id" id="schoolRegion" class="form-select">
+                                    <option value="">Select region</option>
+                                    @foreach($regions as $region)
+                                        <option value="{{ $region->id }}" {{ (string) old('region_id') === (string) $region->id ? 'selected' : '' }}>
+                                            {{ $region->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('region_id')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-3">
                                 <label for="schoolDistrict" class="form-label">District</label>
                                 <input type="text" name="district" id="schoolDistrict" class="form-control" value="{{ old('district') }}" placeholder="District name">
                                 @error('district')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="schoolRegion" class="form-label">Region</label>
-                                <input type="text" name="region" id="schoolRegion" class="form-control" value="{{ old('region') }}" placeholder="Region name">
-                                @error('region')
+                                <label for="schoolWard" class="form-label">Ward</label>
+                                <input type="text" name="ward" id="schoolWard" class="form-control" value="{{ old('ward') }}" placeholder="Ward name">
+                                @error('ward')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
+
                             <div class="col-md-6 mb-3">
                                 <label for="schoolActiveToggle" class="form-label d-block">Status</label>
                                 <div class="form-check form-switch mt-2">
@@ -270,7 +296,7 @@
 
     <!-- Edit Modal -->
     <div class="modal fade" id="editSchoolModal" tabindex="-1" aria-labelledby="editSchoolModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editSchoolModalLabel">Edit School</h5>
@@ -295,8 +321,7 @@
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
-                        <div class="row">
+                      
                             <div class="col-md-6 mb-3">
                                 <label for="editSchoolPhone" class="form-label">Phone</label>
                                 <input type="text" name="phone" id="editSchoolPhone" class="form-control">
@@ -304,6 +329,21 @@
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
+                          
+                      
+                            <div class="col-md-6 mb-3">
+                                <label for="editSchoolRegion" class="form-label">Region</label>
+                                <select name="region_id" id="editSchoolRegion" class="form-select">
+                                    <option value="">Select region</option>
+                                    @foreach($regions as $region)
+                                        <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('region_id')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="col-md-6 mb-3">
                                 <label for="editSchoolDistrict" class="form-label">District</label>
                                 <input type="text" name="district" id="editSchoolDistrict" class="form-control">
@@ -311,12 +351,11 @@
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
-                        <div class="row">
+                            
                             <div class="col-md-6 mb-3">
-                                <label for="editSchoolRegion" class="form-label">Region</label>
-                                <input type="text" name="region" id="editSchoolRegion" class="form-control">
-                                @error('region')
+                                <label for="editSchoolWard" class="form-label">Ward</label>
+                                <input type="text" name="ward" id="editSchoolWard" class="form-control">
+                                @error('ward')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -382,6 +421,7 @@
                 const editEmail = document.getElementById('editSchoolEmail');
                 const editDistrict = document.getElementById('editSchoolDistrict');
                 const editRegion = document.getElementById('editSchoolRegion');
+                const editWard = document.getElementById('editSchoolWard');
                 const editToggle = document.getElementById('editSchoolActiveToggle');
                 const editStatusInput = document.getElementById('editSchoolIsActive');
 
@@ -393,7 +433,8 @@
                     const phone = button.getAttribute('data-phone') || '';
                     const email = button.getAttribute('data-email') || '';
                     const district = button.getAttribute('data-district') || '';
-                    const region = button.getAttribute('data-region') || '';
+                    const regionId = button.getAttribute('data-region-id') || '';
+                    const ward = button.getAttribute('data-ward') || '';
                     const isActive = button.getAttribute('data-active') === '1';
 
                     editForm.setAttribute('action', action);
@@ -402,7 +443,8 @@
                     editPhone.value = phone;
                     editEmail.value = email;
                     editDistrict.value = district;
-                    editRegion.value = region;
+                    editRegion.value = regionId;
+                    editWard.value = ward;
                     editToggle.checked = isActive;
                     editStatusInput.value = isActive ? '1' : '0';
                 });

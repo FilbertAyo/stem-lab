@@ -55,8 +55,12 @@
                                 <p class="mb-0">{{ $school->district ?? '—' }}</p>
                             </div>
                             <div class="mb-3">
+                                <label class="text-muted small">Ward</label>
+                                <p class="mb-0">{{ $school->ward ?? '—' }}</p>
+                            </div>
+                            <div class="mb-3">
                                 <label class="text-muted small">Region</label>
-                                <p class="mb-0">{{ $school->region ?? '—' }}</p>
+                                <p class="mb-0">{{ $school->regionModel?->name ?? $school->region ?? '—' }}</p>
                             </div>
                             <div class="mb-3">
                                 <label class="text-muted small">Status</label>
