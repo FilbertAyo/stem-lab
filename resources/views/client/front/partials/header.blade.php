@@ -1,4 +1,4 @@
-<header class="header position-fixed start-0 top-0 w-100">
+<header class="header position-fixed start-0 top-0 w-100 shadow-none border-bottom">
     <div class="container px-3">
       <div class="header-wrapper d-flex align-items-center justify-content-between">
         <div class="logo">
@@ -11,8 +11,8 @@
         </div>
         
         <!-- Desktop Navigation - Visible on large screens -->
-        <nav class="d-none d-lg-flex align-items-center">
-          <ul class="header-menu list-unstyled mb-0 d-flex align-items-center">
+        <nav class="d-none d-lg-flex align-items-center gap-3">
+          <ul class="header-menu list-unstyled mb-0 d-flex align-items-center gap-3">
             <li class="header-item">
               <a href="{{ url('/#labs') }}" class="header-link text-white fw-semibold">Labs</a>
             </li>

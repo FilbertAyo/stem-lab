@@ -16526,6 +16526,9 @@ textarea.form-control-lg {
 .header.fixed-header .light-dark {
   color: var(--bs-dark) !important;
 }
+.header.fixed-header .header-menu .header-item .header-link {
+  color: var(--bs-dark) !important;
+}
 .header.fixed-header .toggle-menu {
   background-color: var(--bs-white) !important;
   border: 1px solid rgba(0, 0, 0, 0.1) !important;

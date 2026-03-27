@@ -27,6 +27,14 @@
             color: var(--bs-dark) !important;
         }
 
+        .header-menu {
+            .header-item {
+                .header-link {
+                    color: var(--bs-dark) !important;
+                }
+            }
+        }
+
         .toggle-menu {
             background-color: var(--bs-white) !important;
             border: 1px solid rgba(0, 0, 0, 0.1) !important;
