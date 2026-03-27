@@ -250,6 +250,27 @@
   box-shadow: none !important;
 }
 
+/* Ensure semantic badge backgrounds always render on dashboard pages */
+.dashboard-main .badge.bg-info {
+  background-color: #0dcaf0 !important;
+  color: #072649 !important;
+}
+
+.dashboard-main .badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: #072649 !important;
+}
+
+.dashboard-main .badge.bg-danger {
+  background-color: #dc3545 !important;
+  color: #fff !important;
+}
+
+.dashboard-main .badge.bg-success {
+  background-color: #198754 !important;
+  color: #fff !important;
+}
+
 /* Softer light background for meta/info boxes (fade white) */
 .dashboard-main .bg-light-soft {
   background-color: #F1F3F5;

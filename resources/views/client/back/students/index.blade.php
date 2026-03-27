@@ -7,19 +7,8 @@
 
         <section class="row">
             <div class="col-12">
-                @if (session('status'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('status') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
 
-                @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <pre class="mb-0" style="white-space: pre-wrap;">{{ session('error') }}</pre>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
+           @include('elements.client-validation')
 
                 @if ($teacherClubs->isEmpty())
                     <div class="card border-0 shadow-none">
@@ -56,13 +45,12 @@
                                 <div class="card-header bg-light-soft">
                                     <div>
                                         <h5 class="mb-0">All Registered Students</h5>
-                                        <small class="text-muted">Students across all your schools and clubs.</small>
-                                    </div>
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-success text-white" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
+                                   </div>
+                                    <div class="btn-group mt-3" role="group">
+                                        <button type="button" class="btn btn-sm btn-success text-white" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
                                             <i class="bi bi-upload me-1"></i>Bulk Upload
                                         </button>
-                                        <button type="button" class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
+                                        <button type="button" class="btn btn-sm btn-primary text-white" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
                                             <i class="bi bi-plus-circle me-1"></i>Register Student
                                         </button>
                                     </div>
@@ -244,7 +232,7 @@
     <!-- Register Student Modal -->
     @if($teacherClubs->isNotEmpty())
         <div class="modal fade" id="registerStudentModal" tabindex="-1" aria-labelledby="registerStudentModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-dialog modal-lg mt-5">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="registerStudentModalLabel">
@@ -261,7 +249,7 @@
                                     <label for="teacher_club_id" class="form-label">
                                         Select Club & School <span class="text-danger">*</span>
                                     </label>
-                                    <select class="form-select @error('teacher_club_id') is-invalid @enderror"
+                                    <select class="form-select border @error('teacher_club_id') is-invalid @enderror"
                                             id="teacher_club_id"
                                             name="teacher_club_id"
                                             required>
@@ -286,7 +274,7 @@
                                     Student Name <span class="text-danger">*</span>
                                 </label>
                                 <input type="text"
-                                       class="form-control @error('name') is-invalid @enderror"
+                                       class="form-control border p-2 @error('name') is-invalid @enderror"
                                        id="name"
                                        name="name"
                                        value="{{ old('name') }}"
@@ -298,18 +286,17 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="age" class="form-label">
-                                        Age <span class="text-danger">*</span>
+                                    <label for="date_of_birth" class="form-label">
+                                        Date of Birth <span class="text-danger">*</span>
                                     </label>
-                                    <input type="number"
-                                           class="form-control @error('age') is-invalid @enderror"
-                                           id="age"
-                                           name="age"
-                                           value="{{ old('age') }}"
-                                           min="1"
-                                           max="150"
+                                    <input type="date"
+                                           class="form-control border p-2 @error('date_of_birth') is-invalid @enderror"
+                                           id="date_of_birth"
+                                           name="date_of_birth"
+                                           value="{{ old('date_of_birth') }}"
+                                           max="{{ now()->toDateString() }}"
                                            required>
-                                    @error('age')
+                                    @error('date_of_birth')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -318,7 +305,7 @@
                                     <label for="gender" class="form-label">
                                         Gender <span class="text-danger">*</span>
                                     </label>
-                                    <select class="form-select @error('gender') is-invalid @enderror"
+                                    <select class="form-select border p-2 @error('gender') is-invalid @enderror"
                                             id="gender"
                                             name="gender"
                                             required>
@@ -336,7 +323,7 @@
                                 <label for="school_class_id" class="form-label">
                                     Class <span class="text-danger">*</span>
                                 </label>
-                                <select class="form-select @error('school_class_id') is-invalid @enderror"
+                                <select class="form-select border p-2 @error('school_class_id') is-invalid @enderror"
                                         id="school_class_id"
                                         name="school_class_id"
                                         required>
@@ -353,9 +340,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle me-1"></i>
+                        <button type="submit" class="btn btn-sm btn-primary text-white">
                                 Register Student
                             </button>
                         </div>
@@ -366,7 +351,7 @@
 
         <!-- Bulk Upload Modal -->
         <div class="modal fade" id="bulkUploadModal" tabindex="-1" aria-labelledby="bulkUploadModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-lg mt-5">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="bulkUploadModalLabel">
@@ -380,7 +365,15 @@
                         <div class="modal-body">
                             <div class="alert alert-info">
                                 <i class="bi bi-info-circle me-2"></i>
-                                <strong>CSV Format Required:</strong> Your CSV file must include columns: name, age, gender, class_name
+                                <strong>CSV Format Required:</strong> Use columns:
+                                <code>name,date_of_birth,gender,class_name</code>
+                                (date format: YYYY-MM-DD). Use valid classes like <code>Form 1</code>, <code>Form 2</code>, <code>Form 3</code>, <code>Form 4</code>.
+                            </div>
+
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-sm btn-download-template" id="downloadStudentTemplateBtn">
+                                    <i class="bi bi-download me-1"></i>Download CSV Template
+                                </button>
                             </div>
 
                             @if($teacherClubs->count() > 1)
@@ -388,7 +381,7 @@
                                     <label for="bulk_teacher_club_id" class="form-label">
                                         Select Club & School <span class="text-danger">*</span>
                                     </label>
-                                    <select class="form-select @error('teacher_club_id') is-invalid @enderror"
+                                    <select class="form-select border p-2 @error('teacher_club_id') is-invalid @enderror"
                                             id="bulk_teacher_club_id"
                                             name="teacher_club_id"
                                             required>
@@ -412,7 +405,7 @@
                                     CSV File <span class="text-danger">*</span>
                                 </label>
                                 <input type="file"
-                                       class="form-control @error('csv_file') is-invalid @enderror"
+                                       class="form-control border @error('csv_file') is-invalid @enderror"
                                        id="csv_file"
                                        name="csv_file"
                                        accept=".csv,.txt"
@@ -424,8 +417,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="btn btn-sm text-white">
                                 <i class="bi bi-upload me-1"></i>
                                 Upload CSV
                             </button>
@@ -435,4 +427,67 @@
             </div>
         </div>
     @endif
+
+    <input type="hidden" id="has_register_errors" value="{{ ($errors->has('name') || $errors->has('date_of_birth') || $errors->has('gender') || $errors->has('school_class_id') || ($errors->has('teacher_club_id') && !$errors->has('csv_file'))) ? '1' : '0' }}">
+    <input type="hidden" id="has_bulk_errors" value="{{ ($errors->has('csv_file') || ($errors->has('teacher_club_id') && !$errors->has('name') && !$errors->has('date_of_birth'))) ? '1' : '0' }}">
+
+    <style>
+        .btn-download-template {
+            color: #072649;
+            border: 1px solid #072649;
+            background-color: transparent;
+        }
+
+        .btn-download-template:hover,
+        .btn-download-template:focus {
+            color: #fff;
+            background-color: #072649;
+            border-color: #072649;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dobInput = document.getElementById('date_of_birth');
+            const templateButton = document.getElementById('downloadStudentTemplateBtn');
+            const hasRegisterErrors = document.getElementById('has_register_errors')?.value === '1';
+            const hasBulkErrors = document.getElementById('has_bulk_errors')?.value === '1';
+
+            if (templateButton) {
+                templateButton.addEventListener('click', function () {
+                    const csvContent = [
+                        'name,date_of_birth,gender,class_name',
+                        'Jane Doe,2011-07-14,female,Form 1',
+                        'John Smith,2010-10-03,male,Form 2'
+                    ].join('\n');
+
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'students_bulk_upload_template.csv';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                });
+            }
+
+            if (hasRegisterErrors) {
+                const registerModalEl = document.getElementById('registerStudentModal');
+                if (registerModalEl) {
+                    const registerModal = new bootstrap.Modal(registerModalEl);
+                    registerModal.show();
+                }
+            }
+
+            if (hasBulkErrors) {
+                const bulkModalEl = document.getElementById('bulkUploadModal');
+                if (bulkModalEl) {
+                    const bulkModal = new bootstrap.Modal(bulkModalEl);
+                    bulkModal.show();
+                }
+            }
+        });
+    </script>
 </x-app-layout>

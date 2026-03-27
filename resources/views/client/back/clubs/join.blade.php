@@ -52,10 +52,16 @@
                             @else
                                 {{-- Teacher needs to select or register a school --}}
                                 <div class="mb-4">
+                                    <label for="school_search" class="form-label">Search School</label>
+                                    <input type="text"
+                                           class="form-control border bg-light-soft  p-2 mb-2"
+                                           id="school_search"
+                                           placeholder="Type school name, district, or region...">
+
                                     <label for="school_id" class="form-label">
                                         Select School <span class="text-danger">*</span>
                                     </label>
-                                    <select class="form-select border border-dark p-2 @error('school_id') is-invalid @enderror"
+                                    <select class="form-select border  p-2 @error('school_id') is-invalid @enderror"
                                             id="school_id"
                                             name="school_id"
                                             required>
@@ -89,10 +95,6 @@
                                 <hr class="my-4">
                                 <h6 class="mb-3">New School Information</h6>
 
-                               
-
-                               
-
                                 <div class="row">
 
                                 <div class="col-md-6 mb-3">
@@ -100,7 +102,7 @@
                                         School Name <span class="text-danger">*</span>
                                     </label>
                                     <input type="text"
-                                           class="form-control border border-dark p-2 @error('school_name') is-invalid @enderror"
+                                           class="form-control border  p-2 @error('school_name') is-invalid @enderror"
                                            id="school_name"
                                            name="school_name"
                                            value="{{ old('school_name') }}">
@@ -111,7 +113,7 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="school_phone" class="form-label">School Phone</label>
                                         <input type="text"
-                                               class="form-control border border-dark p-2 @error('school_phone') is-invalid @enderror"
+                                               class="form-control border p-2 @error('school_phone') is-invalid @enderror"
                                                id="school_phone"
                                                name="school_phone"
                                                value="{{ old('school_phone') }}">
@@ -123,7 +125,7 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="school_email" class="form-label">School Email</label>
                                         <input type="email"
-                                               class="form-control border border-dark p-2 @error('school_email') is-invalid @enderror"
+                                               class="form-control border p-2 @error('school_email') is-invalid @enderror"
                                                id="school_email"
                                                name="school_email"
                                                value="{{ old('school_email') }}">
@@ -134,7 +136,7 @@
 
                                     <div class="col-md-6 mb-3">
                                     <label for="school_region_id" class="form-label">Region</label>
-                                    <select class="form-select border border-dark p-2 @error('school_region_id') is-invalid @enderror"
+                                    <select class="form-select border p-2 @error('school_region_id') is-invalid @enderror"
                                             id="school_region_id"
                                             name="school_region_id">
                                         <option value="">-- Select region --</option>
@@ -152,7 +154,7 @@
                                 <div class="col-md-6 mb-3">
                                         <label for="school_district" class="form-label">District</label>
                                         <input type="text"
-                                               class="form-control border border-dark p-2 @error('school_district') is-invalid @enderror"
+                                               class="form-control border p-2 @error('school_district') is-invalid @enderror"
                                                id="school_district"
                                                name="school_district"
                                                value="{{ old('school_district') }}">
@@ -164,7 +166,7 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="school_ward" class="form-label">Ward</label>
                                         <input type="text"
-                                               class="form-control border border-dark p-2 @error('school_ward') is-invalid @enderror"
+                                               class="form-control border p-2 @error('school_ward') is-invalid @enderror"
                                                id="school_ward"
                                                name="school_ward"
                                                value="{{ old('school_ward') }}">
@@ -181,7 +183,7 @@
                               
                                 <div class="mb-3">
                                     <label for="school_address" class="form-label">School Address</label>
-                                    <textarea class="form-control border border-dark p-2 @error('school_address') is-invalid @enderror"
+                                    <textarea class="form-control border p-2 @error('school_address') is-invalid @enderror"
                                               id="school_address"
                                               name="school_address"
                                               rows="3">{{ old('school_address') }}</textarea>
@@ -191,15 +193,9 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex gap-2 mt-4">
-                                <a href="{{ route('client.clubs.index') }}" class="btn bg-light-soft text-dark">
-                                    <i class="bi bi-arrow-left me-1"></i>
-                                    Cancel
-                                </a>
-                                <button type="submit" class="btn w-100 justify-content-center">
-                                    <span class="btn-text">Join Club</span>
-                                    <iconify-icon icon="lucide:arrow-up-right"
-                                        class="btn-icon bg-white text-dark round-52 rounded-circle hstack justify-content-center fs-7 shadow-sm"></iconify-icon>
+                            <div class="d-flex mt-3">
+                                <button type="submit" class="btn w-100 btn-primary btn-sm text-white justify-content-center">
+                                    Join Club
                                 </button>
                             </div>
                         </form>
@@ -218,6 +214,7 @@
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const schoolSelect = document.getElementById('school_id');
+                const schoolSearchInput = document.getElementById('school_search');
                 const isNewSchoolCheckbox = document.getElementById('is_new_school');
                 const newSchoolFields = document.getElementById('newSchoolFields');
                 const schoolNameInput = document.getElementById('school_name');
@@ -226,6 +223,13 @@
 
                 // Only initialize if school selection fields exist (teacher doesn't have existing school)
                 if (schoolSelect && isNewSchoolCheckbox) {
+                    const schoolOptions = Array.from(schoolSelect.options)
+                        .filter(option => option.value !== '')
+                        .map(option => ({
+                            value: option.value,
+                            label: option.text,
+                        }));
+
                     // Initialize Choices.js only when library is available.
                     if (typeof Choices !== 'undefined') {
                         choicesInstance = new Choices(schoolSelect, {
@@ -238,11 +242,39 @@
                         });
                     }
 
+                    function applySchoolFilter(query) {
+                        const searchText = (query || '').trim().toLowerCase();
+                        const filteredOptions = schoolOptions.filter(option =>
+                            option.label.toLowerCase().includes(searchText)
+                        );
+
+                        if (choicesInstance) {
+                            choicesInstance.clearChoices();
+                            choicesInstance.setChoices(filteredOptions, 'value', 'label', true);
+                        } else {
+                            const currentValue = schoolSelect.value;
+                            schoolSelect.innerHTML = '<option value="">-- Select a school --</option>';
+
+                            filteredOptions.forEach(option => {
+                                const optionElement = document.createElement('option');
+                                optionElement.value = option.value;
+                                optionElement.textContent = option.label;
+                                if (option.value === currentValue) {
+                                    optionElement.selected = true;
+                                }
+                                schoolSelect.appendChild(optionElement);
+                            });
+                        }
+                    }
+
                     function toggleNewSchoolFields() {
                         if (isNewSchoolCheckbox.checked) {
                             newSchoolFields.style.display = 'block';
                             if (choicesInstance) {
                                 choicesInstance.disable();
+                            }
+                            if (schoolSearchInput) {
+                                schoolSearchInput.setAttribute('disabled', 'disabled');
                             }
                             schoolSelect.removeAttribute('required');
                             if (schoolNameInput) {
@@ -253,6 +285,9 @@
                             if (choicesInstance) {
                                 choicesInstance.enable();
                             }
+                            if (schoolSearchInput) {
+                                schoolSearchInput.removeAttribute('disabled');
+                            }
                             schoolSelect.setAttribute('required', 'required');
                             if (schoolNameInput) {
                                 schoolNameInput.removeAttribute('required');
@@ -262,6 +297,12 @@
 
                     // Initialize on page load
                     toggleNewSchoolFields();
+
+                    if (schoolSearchInput) {
+                        schoolSearchInput.addEventListener('input', function () {
+                            applySchoolFilter(this.value);
+                        });
+                    }
 
                     // Toggle when checkbox changes
                     isNewSchoolCheckbox.addEventListener('change', toggleNewSchoolFields);

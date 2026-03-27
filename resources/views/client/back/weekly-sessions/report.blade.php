@@ -14,8 +14,8 @@
                 <p class="text-muted mb-0">{{ $weeklySession->title }}</p>
             </div>
             <div class="d-flex gap-2">
-                <a href="{{ route('client.weekly-sessions.show', $weeklySession) }}" class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-arrow-left me-1"></i> Back to Session
+                <a href="{{ route('client.weekly-sessions.show', $weeklySession) }}" class="btn btn-dark btn-sm">
+                    <i class="bi bi-arrow-left"></i> 
                 </a>
             </div>
         </div>
@@ -85,12 +85,12 @@
                 <!-- Submit Buttons -->
                 <div class="card border-0 shadow-none mb-4">
                     <div class="card-body">
-                        <div class="d-flex gap-2 flex-wrap">
-                            <button type="submit" class="btn btn-success btn-lg">
-                                <i class="bi bi-check-circle me-1"></i> {{ $report ? 'Update Report' : 'Submit Report' }}
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-sm text-white">
+                                {{ $report ? 'Update Report' : 'Submit Report' }}
                             </button>
-                            <a href="{{ route('client.weekly-sessions.show', $weeklySession) }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-x me-1"></i> Cancel
+                            <a href="{{ route('client.weekly-sessions.show', $weeklySession) }}" class="btn btn-light btn-sm">
+                                Cancel
                             </a>
                         </div>
                         <small class="text-muted d-block mt-2">

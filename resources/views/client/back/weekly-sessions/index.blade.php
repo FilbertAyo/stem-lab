@@ -5,44 +5,7 @@
             <h2 class="title mb-1">Weekly Sessions</h2>
         </div>
 
-        @if (session('status'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('status') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        {{-- Filter Tabs --}}
-        <div class="card border-0 shadow-none mb-4">
-            <div class="card-body py-3">
-                <div class="d-flex flex-wrap gap-2 align-items-center">
-                    <span class="text-muted small me-2">Filter:</span>
-                    <a href="{{ route('client.weekly-sessions.index', ['status' => 'all']) }}" 
-                       class="badge bg-light-soft   border d-inline-flex align-items-center gap-1 text-decoration-none {{ $statusFilter === 'all' ? 'bg-primary' : 'bg-secondary' }}">
-                        All Sessions
-                    </a>
-                    <a href="{{ route('client.weekly-sessions.index', ['status' => 'upcoming']) }}" 
-                       class="badge bg-light-soft border d-inline-flex align-items-center gap-1 text-decoration-none {{ $statusFilter === 'upcoming' ? 'bg-primary' : 'bg-secondary' }}">
-                        Upcoming
-                    </a>
-                    <a href="{{ route('client.weekly-sessions.index', ['status' => 'active']) }}" 
-                       class="badge bg-light-soft border d-inline-flex align-items-center gap-1 text-decoration-none {{ $statusFilter === 'active' ? 'bg-primary' : 'bg-secondary' }}">
-                        Active
-                    </a>
-                    <a href="{{ route('client.weekly-sessions.index', ['status' => 'completed']) }}" 
-                       class="badge bg-light-soft  border d-inline-flex align-items-center gap-1 text-decoration-none {{ $statusFilter === 'completed' ? 'bg-primary' : 'bg-secondary' }}">
-                        Completed
-                    </a>
-                </div>
-            </div>
-        </div>
+     @include('elements.client-validation')
 
         @if($sessions->isEmpty())
             <div class="card border-0 shadow-none">
@@ -81,12 +44,7 @@
                                     </span>
                                 </div>
 
-                                <div class="mb-2">
-                                    <span class="badge bg-info">{{ $session->club->name }}</span>
-                                    @if($session->subject)
-                                        <span class="badge bg-secondary ms-1">{{ $session->subject->subject_name }}</span>
-                                    @endif
-                                </div>
+                           
 
                                 @if($session->description)
                                     <p class="card-text text-muted small mb-3" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
@@ -124,11 +82,11 @@
                                 </div>
 
                                 <div class="mt-auto d-flex gap-2">
-                                    <a href="{{ route('client.weekly-sessions.show', $session) }}" class="btn btn-primary btn-sm flex-grow-1">
-                                        <i class="bi bi-eye"></i> View Session
+                                    <a href="{{ route('client.weekly-sessions.show', $session) }}" class="badge bg-primary btn-sm text-white">
+                                        <i class="bi bi-eye"></i> Session
                                     </a>
                                     @if(!$session->teacherReport)
-                                        <a href="{{ route('client.weekly-sessions.report.create', $session) }}" class="btn btn-outline-success btn-sm">
+                                        <a href="{{ route('client.weekly-sessions.report.create', $session) }}" class="badge bg-light btn-sm">
                                             <i class="bi bi-file-text"></i> Report
                                         </a>
                                     @endif

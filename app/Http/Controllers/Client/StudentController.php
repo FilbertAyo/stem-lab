@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SchoolClass;
 use App\Models\Student;
 use App\Models\TeacherClub;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -105,7 +106,7 @@ class StudentController extends Controller
         $validated = $request->validate([
             'teacher_club_id' => ['required', 'exists:teacher_clubs,id'],
             'name' => ['required', 'string', 'max:255'],
-            'age' => ['required', 'integer', 'min:1', 'max:150'],
+            'date_of_birth' => ['required', 'date_format:Y-m-d', 'before_or_equal:today'],
             'gender' => ['required', 'string', 'in:male,female,other'],
             'school_class_id' => ['required', 'exists:school_classes,id'],
         ]);
@@ -116,7 +117,20 @@ class StudentController extends Controller
             ->approved()
             ->firstOrFail();
 
-        Student::create($validated);
+        $age = Carbon::parse($validated['date_of_birth'])->age;
+        if ($age < 1 || $age > 150) {
+            return redirect()->route('client.students.index')
+                ->withErrors(['date_of_birth' => 'Date of birth must result in age between 1 and 150.'])
+                ->withInput();
+        }
+
+        Student::create([
+            'teacher_club_id' => $teacherClub->id,
+            'name' => $validated['name'],
+            'age' => $age,
+            'gender' => $validated['gender'],
+            'school_class_id' => $validated['school_class_id'],
+        ]);
 
         return redirect()->route('client.students.index')
             ->with('status', 'Student registered successfully!');
@@ -190,11 +204,19 @@ class StudentController extends Controller
             // fgetcsv() already handles CSV quote removal automatically
             $header = array_map(fn($h) => strtolower(trim($h)), $header);
             
-            // Validate required columns
-            $requiredColumns = ['name', 'age', 'gender', 'class_name'];
-            $missingColumns = array_diff($requiredColumns, $header);
-            
-            if (!empty($missingColumns)) {
+            // Validate required columns. Support new template (date_of_birth)
+            // and old template (age) for backward compatibility.
+            $baseRequiredColumns = ['name', 'gender', 'class_name'];
+            $missingBaseColumns = array_diff($baseRequiredColumns, $header);
+            $hasDobColumn = in_array('date_of_birth', $header, true);
+            $hasAgeColumn = in_array('age', $header, true);
+
+            if (!empty($missingBaseColumns) || (!$hasDobColumn && !$hasAgeColumn)) {
+                $missingColumns = $missingBaseColumns;
+                if (!$hasDobColumn && !$hasAgeColumn) {
+                    $missingColumns[] = 'date_of_birth (or age)';
+                }
+
                 fclose($handle);
                 @unlink($tempPath);
                 return redirect()->route('client.students.index')
@@ -204,6 +226,7 @@ class StudentController extends Controller
             // Get column indices
             $nameIndex = array_search('name', $header);
             $ageIndex = array_search('age', $header);
+            $dobIndex = array_search('date_of_birth', $header);
             $genderIndex = array_search('gender', $header);
             $classIndex = array_search('class_name', $header);
 
@@ -226,9 +249,17 @@ class StudentController extends Controller
                 }
 
                 $name = trim($row[$nameIndex] ?? '');
-                $age = trim($row[$ageIndex] ?? '');
+                $age = null;
+                $dob = null;
                 $gender = strtolower(trim($row[$genderIndex] ?? ''));
                 $className = trim($row[$classIndex] ?? '');
+
+                if ($dobIndex !== false) {
+                    $dob = trim($row[$dobIndex] ?? '');
+                }
+                if ($ageIndex !== false) {
+                    $age = trim($row[$ageIndex] ?? '');
+                }
 
                 // Validate name
                 if (empty($name)) {
@@ -241,15 +272,33 @@ class StudentController extends Controller
                     continue;
                 }
 
-                // Validate age
-                if (empty($age) || !is_numeric($age)) {
-                    $errors[] = "Line {$lineNumber}: Age must be a valid number.";
+                // Validate date_of_birth first when present; otherwise fallback to age.
+                if (!empty($dob)) {
+                    try {
+                        $parsedDob = Carbon::createFromFormat('Y-m-d', $dob);
+
+                        if ($parsedDob->format('Y-m-d') !== $dob) {
+                            throw new \Exception('Invalid date format');
+                        }
+
+                        if ($parsedDob->isFuture()) {
+                            $errors[] = "Line {$lineNumber}: Date of birth cannot be in the future.";
+                            continue;
+                        }
+                        $age = $parsedDob->age;
+                    } catch (\Exception $e) {
+                        $errors[] = "Line {$lineNumber}: Invalid date_of_birth format. Use YYYY-MM-DD.";
+                        continue;
+                    }
+                } elseif (!empty($age) && is_numeric($age)) {
+                    $age = (int) $age;
+                } else {
+                    $errors[] = "Line {$lineNumber}: Provide date_of_birth (preferred) or a valid age.";
                     continue;
                 }
 
-                $age = (int) $age;
                 if ($age < 1 || $age > 150) {
-                    $errors[] = "Line {$lineNumber}: Age must be between 1 and 150.";
+                    $errors[] = "Line {$lineNumber}: Computed age must be between 1 and 150.";
                     continue;
                 }
 
