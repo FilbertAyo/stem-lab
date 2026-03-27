@@ -5,10 +5,10 @@
 // colors
 $white: #fff !default;
 $gray-100: rgba(31, 42, 46, 0.12) !default;
-$gray-200: #F4F8FA !default;
+$gray-200: #f4f8fa !default;
 $gray-300: rgba(31, 42, 46, 0.6) !default;
 $gray-400: rgba(31, 42, 46, 0.7) !default;
-$gray-500: #1F2A2E !default;
+$gray-500: #1f2a2e !default;
 $black: #000 !default;
 
 // Color
@@ -17,21 +17,23 @@ $blue: #0d78b8 !default;
 // Main Colors
 $primary: #0d78b8 !default;
 $secondary: #0f2749 !default;
-$light: $gray-100 !default;
-$muted: $gray-300 !default;
-$dark: $gray-500 !default;
-$dark-light: $gray-400 !default;
-$light-gray: $gray-200 !default; 
+$success: #198754 !default;
+$info: #0dcaf0 !default;
+$warning: #ffc107 !default;
+$danger: #dc3545 !default;
+$light: #f8f9fa !default;
+$dark: #212529 !default;
 
-// Theme Colorss
+// Theme Colors
 $theme-colors: (
   "primary": $primary,
   "secondary": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
   "light": $light,
   "dark": $dark,
-  "muted": $muted,
-  "dark-light": $dark-light,
-  "light-gray": $light-gray,
   ) !default;
 
 // Spacer
@@ -80,7 +82,7 @@ $enable-negative-margins: true !default;
 $enable-shadows: true !default;
 
 // Global
-$text-muted: $muted !default;
+$text-muted: $gray-300 !default;
 $grid-gutter-width: 32px !default;
 
 // Font Weight

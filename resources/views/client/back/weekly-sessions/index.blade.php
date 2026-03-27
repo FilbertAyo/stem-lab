@@ -86,7 +86,7 @@
                                         <i class="bi bi-eye"></i> Session
                                     </a>
                                     @if(!$session->teacherReport)
-                                        <a href="{{ route('client.weekly-sessions.report.create', $session) }}" class="badge bg-light btn-sm">
+                                        <a href="{{ route('client.weekly-sessions.report.create', $session) }}" class="badge bg-light text-dark">
                                             <i class="bi bi-file-text"></i> Report
                                         </a>
                                     @endif

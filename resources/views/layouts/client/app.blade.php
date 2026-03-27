@@ -27,7 +27,7 @@
 @include('layouts.client.navigation')
 
   <!-- Page Wrapper -->
-  <div class="page-wrapper overflow-hidden bg-light-gray" style="padding-top: 70px;">
+  <div class="page-wrapper overflow-hidden bg-light" style="padding-top: 70px;">
     <div class="dashboard-main">
       <div class="container">
         <div class="row">
