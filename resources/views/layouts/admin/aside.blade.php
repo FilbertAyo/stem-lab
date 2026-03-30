@@ -139,16 +139,6 @@
                   <span class="pc-mtext">All Competitions</span>
                 </a>
               </li>
-              <li class="pc-item">
-                <a href="{{ route('admin.competitions.create') }}" class="pc-link">
-                  <span class="pc-mtext">Create Competition</span>
-            </a>
-              </li>
-              <li class="pc-item">
-                <a href="{{ route('admin.competitions.all-participants') }}" class="pc-link">
-                  <span class="pc-mtext">Manage Participants</span>
-                </a>
-              </li>
             </ul>
           </li>
 
@@ -159,12 +149,7 @@
             </a>
           </li>
 
-          <li class="pc-item">
-            <a href="{{ route('admin.activity-logs.index') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-history"></i></span>
-              <span class="pc-mtext">Audit Logs</span>
-            </a>
-          </li>
+        
 
           <li class="pc-item pc-caption">
             <label>Settings</label>
@@ -210,6 +195,12 @@
             <a href="{{ route('admin.settings.index') }}" class="pc-link">
               <span class="pc-micon"><i class="ti ti-settings"></i></span>
               <span class="pc-mtext">System Settings</span>
+            </a>
+          </li>
+          <li class="pc-item">
+            <a href="{{ route('admin.activity-logs.index') }}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-history"></i></span>
+              <span class="pc-mtext">Audit Logs</span>
             </a>
           </li>
 

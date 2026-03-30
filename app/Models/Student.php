@@ -10,10 +10,18 @@ class Student extends Model
     protected $fillable = [
         'teacher_club_id',
         'name',
+        'date_of_birth',
         'age',
         'gender',
         'school_class_id',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'date_of_birth' => 'date',
+        ];
+    }
 
     /**
      * Get the teacher-club relationship this student belongs to.
@@ -31,21 +39,8 @@ class Student extends Model
         return $this->belongsTo(SchoolClass::class);
     }
 
-    /**
-     * Get competition participations for this student.
-     */
-    public function competitionParticipations()
+    public function competitionRegistrationMembers()
     {
-        return $this->hasMany(CompetitionParticipantStudent::class);
-    }
-
-    /**
-     * Get competitions this student is participating in.
-     */
-    public function competitions()
-    {
-        return $this->belongsToMany(CompetitionParticipant::class, 'competition_participant_students')
-            ->withPivot(['role'])
-            ->withTimestamps();
+        return $this->hasMany(CompetitionRegistrationStudent::class);
     }
 }

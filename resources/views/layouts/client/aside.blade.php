@@ -26,13 +26,6 @@
                 VR Quizzes <iconify-icon icon="lucide:chevron-right"></iconify-icon>
             </a>
         </li>
-        @if(Auth::user()->role === 'teacher')
-            <li>
-                <a href="{{ route('client.competitions.index') }}"
-                   class="{{ request()->routeIs('client.competitions.*') ? 'active' : '' }}">
-                    Competitions <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-                </a>
-            </li>
-        @endif
+       
     </ul>
 </div>

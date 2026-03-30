@@ -367,7 +367,7 @@
                                 <i class="bi bi-info-circle me-2"></i>
                                 <strong>CSV Format Required:</strong> Use columns:
                                 <code>name,date_of_birth,gender,class_name</code>
-                                (date format: YYYY-MM-DD). Use valid classes like <code>Form 1</code>, <code>Form 2</code>, <code>Form 3</code>, <code>Form 4</code>.
+                                (date: <strong>DD-MM-YYYY</strong>, <strong>DD/MM/YYYY</strong>, or <strong>YYYY-MM-DD</strong>). Use valid classes like <code>Form 1</code>, <code>Form 2</code>, <code>Form 3</code>, <code>Form 4</code>.
                             </div>
 
                             <div class="mb-3">
@@ -457,8 +457,8 @@
                 templateButton.addEventListener('click', function () {
                     const csvContent = [
                         'name,date_of_birth,gender,class_name',
-                        'Jane Doe,2011-07-14,female,Form 1',
-                        'John Smith,2010-10-03,male,Form 2'
+                        'Jane Doe,14-07-2011,female,Form 1',
+                        'John Smith,03-10-2010,male,Form 2'
                     ].join('\n');
 
                     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });

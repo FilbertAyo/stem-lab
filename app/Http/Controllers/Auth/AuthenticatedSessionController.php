@@ -21,6 +21,8 @@ class AuthenticatedSessionController extends Controller
             return view('admin.auth.login');
         }
 
+        $this->rememberSafeIntendedUrl($request);
+
         return view('auth.login');
     }
 
@@ -53,7 +55,7 @@ class AuthenticatedSessionController extends Controller
 
         return redirect(
             $user && $user->role === 'admin'
-                ? config('app.admin_url') . '/login'
+                ? config('app.admin_url').'/login'
                 : route('login')
         );
     }
@@ -64,10 +66,33 @@ class AuthenticatedSessionController extends Controller
 
         if ($user && $user->role === 'admin') {
             // Use absolute URL with admin subdomain
-            return config('app.admin_url') . '/dashboard';
+            return config('app.admin_url').'/dashboard';
         }
 
         return route('dashboard', absolute: false);
+    }
+
+    /**
+     * Store a return URL from ?redirect= for post-login navigation (same app only; prevents open redirects).
+     */
+    protected function rememberSafeIntendedUrl(Request $request): void
+    {
+        $target = $request->query('redirect');
+        if (! is_string($target) || $target === '') {
+            return;
+        }
+
+        $appUrl = rtrim((string) config('app.url'), '/');
+
+        if (str_starts_with($target, '/') && ! str_starts_with($target, '//')) {
+            $request->session()->put('url.intended', $appUrl.$target);
+
+            return;
+        }
+
+        if (str_starts_with($target, $appUrl.'/') || $target === $appUrl) {
+            $request->session()->put('url.intended', $target);
+        }
     }
 
     /**
@@ -77,7 +102,7 @@ class AuthenticatedSessionController extends Controller
     {
         $host = $request->getHost();
         $adminHost = parse_url(config('app.admin_url'), PHP_URL_HOST);
-        
+
         return $host === $adminHost;
     }
 }

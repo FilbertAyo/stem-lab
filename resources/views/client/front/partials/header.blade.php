@@ -1,4 +1,4 @@
-<header class="header position-fixed start-0 top-0 w-100 shadow-none border-bottom">
+<header class="header position-fixed start-0 top-0 w-100">
     <div class="container px-3">
       <div class="header-wrapper d-flex align-items-center justify-content-between">
         <div class="logo">

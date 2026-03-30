@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="{{ asset('client/assets/css/styles.css') }}" />
 
   @stack('head')
+  @stack('styles')
 </head>
 
 <body>
@@ -50,6 +51,7 @@
     <script src="{{ asset('client/assets/js/custom.js') }}"></script>
   <!-- solar icons -->
   <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+  @stack('scripts')
 </body>
 
 </html>

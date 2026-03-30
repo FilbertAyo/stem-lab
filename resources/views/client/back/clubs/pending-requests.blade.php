@@ -16,19 +16,8 @@
 
         <section class="row">
             <div class="col-12">
-                @if (session('status'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('status') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
+                          @include('elements.client-validation')
 
-                @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
 
                 @if($clubsWithPendingRequests->isEmpty())
                     <div class="card border-0 shadow-none">

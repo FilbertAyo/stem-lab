@@ -1,6 +1,5 @@
 <x-app-layout>
-    <div class="col-lg-9">
-
+    <div class="col-12">
         <div class="dashboard-content-header mb-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
@@ -8,7 +7,112 @@
                     <li class="breadcrumb-item active">{{ $competition->name }}</li>
                 </ol>
             </nav>
+        </div>
+
+        <div class="dashboard-content-header mb-3">
+           
             <h2 class="title mb-0">{{ $competition->name }}</h2>
+        </div>
+
+        @php
+            $phaseLiveNow = $competition->phases->first(fn ($p) => $p->isOpenNow());
+            $phaseModelCurrent = $competition->currentPhase();
+            $wizardFocusPhase = $phaseLiveNow ?? $phaseModelCurrent ?? $competition->phases->firstWhere('status', 'upcoming');
+            if (! $wizardFocusPhase && $competition->phases->isNotEmpty()) {
+                $wizardFocusPhase = $competition->phases->last();
+            }
+            $hasUpcomingPhase = $competition->phases->contains(fn ($p) => $p->status === 'upcoming');
+        @endphp
+
+        <div class="card border-0 shadow-none mb-4 phase-wizard-card">
+            <div class="card-body py-3 px-3 px-md-4">
+                <div class="d-flex flex-column flex-md-row flex-md-wrap align-items-md-center justify-content-md-between gap-3 mb-3">
+                    <div>
+                      
+                        @if($phaseLiveNow)
+                            <p class="mb-0 fs-5 fw-semibold d-flex align-items-center flex-wrap gap-2">
+                                <span>{{ $phaseLiveNow->name }}</span>
+                                <span class="badge bg-success">Active phase</span>
+                            </p>
+                            <p class="text-muted small mb-0 mt-1">This phase is open for actions now.</p>
+                        @elseif($phaseModelCurrent)
+                            <p class="mb-0 fs-5 fw-semibold d-flex align-items-center flex-wrap gap-2">
+                                <span>{{ $phaseModelCurrent->name }}</span>
+                                <span class="badge bg-primary rounded-pill">{{ ucfirst(str_replace('_', ' ', $phaseModelCurrent->status)) }}</span>
+                            </p>
+                            <p class="text-muted small mb-0 mt-1">Marked as the current phase (check dates below if actions are not yet available).</p>
+                        @elseif($wizardFocusPhase)
+                            <p class="mb-0 fs-5 fw-semibold d-flex align-items-center flex-wrap gap-2">
+                                <span>{{ $wizardFocusPhase->name }}</span>
+                                @if($hasUpcomingPhase)
+                                    <span class="badge bg-secondary rounded-pill">Next up</span>
+                                @else
+                                    <span class="badge bg-secondary rounded-pill">Timeline</span>
+                                @endif
+                            </p>
+                            <p class="text-muted small mb-0 mt-1">
+                                @if($hasUpcomingPhase)
+                                    No phase is live yet — this is the next stage in the journey.
+                                @else
+                                    No phase is open for actions right now; use the steps below to see where things stand.
+                                @endif
+                            </p>
+                        @else
+                            <p class="mb-0 text-muted">No phases configured for this competition.</p>
+                        @endif
+                    </div>
+                </div>
+
+                @if($competition->phases->isNotEmpty())
+                    <div class="phase-wizard-track position-relative pt-2">
+                        <div class="d-flex align-items-stretch justify-content-between gap-0 flex-nowrap overflow-auto pb-1" style="scrollbar-width: thin;">
+                            @foreach($competition->phases as $phase)
+                                @php
+                                    $isLive = $phase->isOpenNow();
+                                    $isClosed = $phase->status === 'closed' || ($phase->closes_at && now()->gt($phase->closes_at));
+                                    $isFocus = $wizardFocusPhase && (int) $wizardFocusPhase->id === (int) $phase->id;
+                                @endphp
+                                <div class="phase-wizard-step flex-grow-1 text-center px-1" style="min-width: 4.5rem; max-width: 9rem;">
+                                    <div class="position-relative mx-auto mb-2" style="width: 2.5rem; height: 2.5rem;">
+                                 
+                                        <div class="rounded-circle w-100 h-100 d-flex align-items-center justify-content-center fw-bold border border-2 mx-auto
+                                            @if($isLive) bg-success text-white border-success
+                                            @elseif($isClosed) bg-light text-muted border-secondary
+                                            @elseif($isFocus) bg-primary text-white border-primary
+                                            @else bg-white text-muted border-secondary @endif"
+                                            style="font-size: 0.9rem;">
+                                            @if($isClosed)
+                                                <i class="bi bi-check-lg"></i>
+                                            @else
+                                                {{ $phase->sequence }}
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="small fw-semibold lh-sm text-truncate" title="{{ $phase->name }}">{{ $phase->name }}</div>
+                                    <div class="text-muted" style="font-size: 0.65rem;">
+                                        @if($phase->opens_at || $phase->closes_at)
+                                            @if($phase->opens_at)
+                                                <span>{{ $phase->opens_at->format('j M') }}</span>
+                                            @endif
+                                            @if($phase->opens_at && $phase->closes_at)
+                                                <span>–</span>
+                                            @endif
+                                            @if($phase->closes_at)
+                                                <span>{{ $phase->closes_at->format('j M') }}</span>
+                                            @endif
+                                        @else
+                                            {{ ucfirst(str_replace('_', ' ', $phase->status)) }}
+                                        @endif
+                                    </div>
+                                </div>
+                                @if(!$loop->last)
+                                    <div class="phase-wizard-connector flex-shrink-0 align-self-center border-top border-2 border-secondary mx-n1 opacity-25" style="width: 0.75rem; margin-top: 1.25rem;"></div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
         </div>
 
         @if (session('status'))
@@ -25,254 +129,49 @@
             </div>
         @endif
 
-        <div class="row">
-            <!-- Main Content -->
-            <div class="col-lg-8">
-                <!-- Cover Image -->
-                @if($competition->cover_image)
-                    <div class="card border-0 shadow-none mb-4">
-                        <img src="{{ Storage::url($competition->cover_image) }}" 
-                             class="card-img-top rounded" 
-                             alt="{{ $competition->name }}"
-                             style="max-height: 350px; object-fit: cover;">
-                    </div>
-                @endif
-
-                <!-- Description -->
-                <div class="card border-0 shadow-none mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title fw-semibold mb-3">About this Competition</h5>
-                        <p class="card-text">{{ $competition->description ?: 'No description provided.' }}</p>
-                    </div>
-                </div>
-
-                <!-- Terms & Conditions -->
-                @if($competition->terms_and_conditions)
-                    <div class="card border-0 shadow-none mb-4">
-                        <div class="card-header bg-transparent">
-                            <h6 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Terms and Conditions</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="prose">{!! nl2br(e($competition->terms_and_conditions)) !!}</div>
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Instructions -->
-                @if($competition->instructions)
-                    <div class="card border-0 shadow-none mb-4">
-                        <div class="card-header bg-transparent">
-                            <h6 class="mb-0"><i class="bi bi-list-check me-2"></i>How to Participate</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="prose">{!! nl2br(e($competition->instructions)) !!}</div>
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Awards -->
-                @if($competition->awards->count() > 0)
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-transparent">
-                            <h6 class="mb-0"><i class="bi bi-trophy me-2"></i>Awards</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                @foreach($competition->awards as $award)
-                                    <div class="col-md-4">
-                                        <div class="text-center p-3 border rounded {{ $award->position <= 3 ? 'border-warning' : '' }}">
-                                            @if($award->prize_image)
-                                                <img src="{{ Storage::url($award->prize_image) }}" alt="{{ $award->title }}" class="mb-2" style="max-height: 60px;">
-                                            @else
-                                                <i class="bi bi-award display-5 {{ $award->position == 1 ? 'text-warning' : ($award->position == 2 ? 'text-secondary' : 'text-danger') }}"></i>
-                                            @endif
-                                            <h6 class="fw-semibold mb-1">{{ $award->title }}</h6>
-                                            <small class="text-muted">{{ $award->position_label }}</small>
-                                            @if($award->prize_value)
-                                                <div class="fw-bold text-success mt-1">{{ number_format($award->prize_value) }} TZS</div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
-                <!-- My Registration Status -->
-                @if($existingParticipant)
-                    <div class="card border-0 shadow-none mb-4 border-start border-4 border-{{ $existingParticipant->status_badge }}">
-                        <div class="card-header bg-transparent">
-                            <h6 class="mb-0"><i class="bi bi-check-circle me-2"></i>Your Registration</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p class="mb-2"><strong>Team:</strong> {{ $existingParticipant->team_name ?: 'Team #'.$existingParticipant->id }}</p>
-                                    <p class="mb-2">
-                                        <strong>Status:</strong> 
-                                        <span class="badge bg-{{ $existingParticipant->status_badge }}">{{ ucfirst($existingParticipant->status) }}</span>
-                                    </p>
-                                    @if($existingParticipant->rejection_reason)
-                                        <p class="text-danger mb-2"><strong>Reason:</strong> {{ $existingParticipant->rejection_reason }}</p>
-                                    @endif
-                                    @if($existingParticipant->award)
-                                        <p class="mb-2"><strong>Award:</strong> <span class="badge bg-warning text-dark">{{ $existingParticipant->award->title }}</span></p>
-                                    @endif
-                                    @if($existingParticipant->final_score !== null)
-                                        <p class="mb-2"><strong>Score:</strong> {{ number_format($existingParticipant->final_score, 1) }}/100</p>
-                                    @endif
-                                </div>
-                                <div class="col-md-6">
-                                    <p class="mb-2"><strong>Students ({{ $existingParticipant->participantStudents->count() }}):</strong></p>
-                                    <ul class="list-unstyled mb-0">
-                                        @foreach($existingParticipant->participantStudents as $ps)
-                                            <li class="mb-1">
-                                                <i class="bi bi-person text-muted"></i> {{ $ps->student->name }}
-                                                @if($ps->role) <small class="text-muted">({{ $ps->role }})</small> @endif
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!-- Submissions -->
-                            @if($existingParticipant->submissions->count() > 0)
-                                <hr>
-                                <h6>Your Submissions</h6>
-                                @foreach($existingParticipant->submissions as $submission)
-                                    <div class="border rounded p-3 mb-2">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <strong>{{ $submission->title }}</strong>
-                                                <span class="badge bg-{{ $submission->status_badge }} ms-2">{{ ucfirst(str_replace('_', ' ', $submission->status)) }}</span>
-                                                @if($submission->score !== null)
-                                                    <span class="badge bg-primary ms-1">Score: {{ number_format($submission->score, 1) }}</span>
-                                                @endif
-                                            </div>
-                                            <small class="text-muted">{{ $submission->submitted_at?->format('d M Y') ?? 'Draft' }}</small>
-                                        </div>
-                                        @if($submission->judge_feedback)
-                                            <div class="alert alert-info mt-2 mb-0 small">
-                                                <strong>Feedback:</strong> {{ $submission->judge_feedback }}
-                                            </div>
-                                        @endif
-                                    </div>
-                                @endforeach
-                            @endif
-
-                            @if($existingParticipant->status === 'approved' && $competition->canAcceptSubmissions())
-                                <div class="mt-3">
-                                    <a href="{{ route('client.competitions.submit', $competition) }}" class="btn btn-success">
-                                        <i class="bi bi-upload me-1"></i> 
-                                        {{ $existingParticipant->submissions->count() > 0 ? 'Update Submission' : 'Submit Your Work' }}
-                                    </a>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @endif
+        @if ($errors->any())
+            <div class="alert alert-danger" role="alert">
+                <strong>Please fix the following:</strong>
+                <ul class="mb-0 mt-2">
+                    @foreach ($errors->all() as $err)
+                        <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
             </div>
+        @endif
 
-            <!-- Sidebar -->
-            <div class="col-lg-4">
-                <!-- Quick Info -->
-                <div class="card border-0 shadow-none mb-4">
-                    <div class="card-header bg-transparent">
-                        <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Quick Info</h6>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled mb-0">
-                            <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted">Club</span>
-                                <span class="badge bg-info">{{ $competition->club->name }}</span>
-                            </li>
-                            <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted">Status</span>
-                                <span class="badge bg-{{ $competition->status_badge }}">{{ ucfirst($competition->status) }}</span>
-                            </li>
-                            <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted">Team Size</span>
-                                <span>{{ $competition->min_members }}-{{ $competition->max_members ?? '∞' }} members</span>
-                            </li>
-                            @if($competition->min_age || $competition->max_age)
-                                <li class="d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-muted">Age Range</span>
-                                    <span>{{ $competition->min_age ?? 'Any' }}-{{ $competition->max_age ?? 'Any' }} years</span>
-                                </li>
-                            @endif
-                        </ul>
-                    </div>
-                </div>
+@if($competition->isPhaseOpen('registration'))
+       @include('client.back.competitions.phases.registration')
+@endif
 
-                <!-- Timeline -->
-                <div class="card border-0 shadow-none mb-4">
-                    <div class="card-header bg-transparent">
-                        <h6 class="mb-0"><i class="bi bi-calendar-event me-2"></i>Timeline</h6>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled mb-0">
-                            @if($competition->registration_start)
-                                <li class="d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-muted">Registration Opens</span>
-                                    <span>{{ $competition->registration_start->format('d M Y') }}</span>
-                                </li>
-                            @endif
-                            @if($competition->registration_deadline)
-                                <li class="d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-muted">Registration Closes</span>
-                                    <span>{{ $competition->registration_deadline->format('d M Y') }}</span>
-                                </li>
-                            @endif
-                            <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted">Competition Start</span>
-                                <span class="text-success fw-semibold">{{ $competition->competition_start->format('d M Y') }}</span>
-                            </li>
-                            <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted">Competition End</span>
-                                <span class="text-danger fw-semibold">{{ $competition->competition_end->format('d M Y') }}</span>
-                            </li>
-                            @if($competition->results_announcement_date)
-                                <li class="d-flex justify-content-between py-2">
-                                    <span class="text-muted">Results</span>
-                                    <span>{{ $competition->results_announcement_date->format('d M Y') }}</span>
-                                </li>
-                            @endif
-                        </ul>
-                    </div>
-                </div>
+@if($competition->isPhaseOpen('idea_submission'))
+    @include('client.back.competitions.phases.idea_submission')
+@endif
 
-                <!-- Registration Action -->
-                <div class="card border-0 shadow-none">
-                    <div class="card-body">
-                        @if($existingParticipant)
-                            <div class="text-center">
-                                <i class="bi bi-check-circle-fill text-success display-6"></i>
-                                <p class="mb-0 mt-2">You are registered for this competition</p>
-                            </div>
-                        @elseif($teacherClubs->isEmpty())
-                            <div class="alert alert-warning mb-0">
-                                <i class="bi bi-exclamation-triangle me-2"></i>
-                                You need to join <strong>{{ $competition->club->name }}</strong> club first.
-                                <a href="{{ route('client.clubs.index') }}" class="alert-link">Join Now</a>
-                            </div>
-                        @elseif(!$competition->isRegistrationOpen())
-                            <div class="alert alert-secondary mb-0">
-                                <i class="bi bi-clock me-2"></i>
-                                Registration is currently closed.
-                            </div>
-                        @else
-                            <a href="{{ route('client.competitions.register', $competition) }}" class="btn btn-primary btn-lg w-100">
-                                <i class="bi bi-person-plus me-2"></i> Register Now
-                            </a>
-                            <small class="text-muted d-block text-center mt-2">
-                                Registration deadline: {{ $competition->registration_deadline?->format('d M Y, H:i') ?? 'No deadline' }}
-                            </small>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
+@if($competition->isPhaseOpen('idea_shortlisting'))
+    @include('client.back.competitions.phases.idea_shortlisting')
+@endif
+
+@if($competition->isPhaseOpen('prototype_development'))
+    @include('client.back.competitions.phases.prototype_development')
+@endif
+
+@if($competition->isPhaseOpen('prototype_shortlisting'))
+    @include('client.back.competitions.phases.prototype_shortlisting')
+@endif
+
+@if($competition->isPhaseOpen('mentor_onboarding'))
+    @include('client.back.competitions.phases.mentor_onboarding')
+@endif
+
+@if($competition->isPhaseOpen('prototype_modification'))
+    @include('client.back.competitions.phases.prototype_modification')
+@endif
+
+@if($competition->isPhaseOpen('pitch_winner'))
+    @include('client.back.competitions.phases.pitch_winner')
+@endif
+
     </div>
 </x-app-layout>
 

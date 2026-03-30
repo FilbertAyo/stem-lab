@@ -27,6 +27,7 @@
                         </div>
                         <div class="col-md-3">
                             <select name="club_id" class="form-select">
+                                <option value="">All Clubs</option>
                                 @foreach($clubs as $club)
                                     <option value="{{ $club->id }}" {{ request('club_id') == $club->id ? 'selected' : '' }}>
                                         {{ $club->name }}
@@ -67,10 +68,10 @@
                                     <th>Competition</th>
                                     <th>Club</th>
                                     <th>Timeline</th>
+                                    <th>Phases</th>
                                     <th>Requirements</th>
-                                    <th>Participants</th>
                                     <th>Status</th>
-                                    <th class="text-center" style="width: 140px;">Actions</th>
+                                    <th class="text-center" style="width: 220px;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -91,7 +92,9 @@
                                                     <a href="{{ route('admin.competitions.show', $competition) }}" class="fw-semibold text-dark">
                                                         {{ $competition->name }}
                                                     </a>
-                                                    <div class="small text-muted">{{ $competition->awards_count }} award(s)</div>
+                                                    <div class="small text-muted">
+                                                        Created {{ $competition->created_at?->format('d M Y') }}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -100,20 +103,26 @@
                                         </td>
                                         <td>
                                             <div class="small">
-                                                <div><i class="ti ti-calendar-event text-success"></i> {{ $competition->competition_start->format('d M Y') }}</div>
-                                                <div><i class="ti ti-calendar-off text-danger"></i> {{ $competition->competition_end->format('d M Y') }}</div>
+                                                <div>
+                                                    <i class="ti ti-calendar-event text-success"></i>
+                                                    {{ $competition->competition_start?->format('d M Y') ?? 'Not set' }}
+                                                </div>
+                                                <div>
+                                                    <i class="ti ti-calendar-off text-danger"></i>
+                                                    {{ $competition->competition_end?->format('d M Y') ?? 'Not set' }}
+                                                </div>
                                             </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-light text-dark">{{ $competition->phases()->count() }}</span>
                                         </td>
                                         <td>
                                             <div class="small">
-                                                <div><i class="ti ti-users"></i> {{ $competition->min_members }}{{ $competition->max_members ? '-'.$competition->max_members : '+' }} members</div>
+                                                <div><i class="ti ti-users"></i> Pool {{ $competition->min_members }}{{ $competition->max_members ? '–'.$competition->max_members : '+' }} · {{ $competition->representative_count ?? 10 }} reps</div>
                                                 @if($competition->min_age || $competition->max_age)
                                                     <div><i class="ti ti-user"></i> {{ $competition->min_age ?? 'Any' }}-{{ $competition->max_age ?? 'Any' }} years</div>
                                                 @endif
                                             </div>
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="badge bg-secondary">{{ $competition->participants_count }}</span>
                                         </td>
                                         <td>
                                             <span class="badge bg-{{ $competition->status_badge }}">
@@ -132,6 +141,14 @@
                                                 <a href="{{ route('admin.competitions.edit', $competition) }}" 
                                                    class="btn btn-sm btn-outline-primary" title="Edit">
                                                     <i class="ti ti-edit"></i>
+                                                </a>
+                                                <a href="{{ route('admin.competitions.registrations.index', $competition) }}"
+                                                   class="btn btn-sm btn-outline-success" title="Registrations">
+                                                    <i class="ti ti-users"></i>
+                                                </a>
+                                                <a href="{{ route('admin.competitions.ideas.index', $competition) }}"
+                                                   class="btn btn-sm btn-outline-warning" title="Ideas">
+                                                    <i class="ti ti-bulb"></i>
                                                 </a>
                                                 <button type="button" class="btn btn-sm btn-outline-danger" 
                                                         data-bs-toggle="modal" data-bs-target="#deleteModal"
@@ -175,7 +192,7 @@
                     @csrf
                     @method('DELETE')
                     <div class="modal-body">
-                        <p class="mb-0">Are you sure you want to delete <strong id="deleteName"></strong>? This will also delete all awards, participants, and submissions.</p>
+                        <p class="mb-0">Are you sure you want to delete <strong id="deleteName"></strong>?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>

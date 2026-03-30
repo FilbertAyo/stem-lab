@@ -1,11 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\ClubController;
 use App\Http\Controllers\Admin\CompetitionController;
-use App\Http\Controllers\Admin\CompetitionParticipantController;
-use App\Http\Controllers\Admin\CompetitionSubmissionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\Model3dController as AdminModel3dController;
 use App\Http\Controllers\Admin\PlatformController as AdminPlatformController;
@@ -17,16 +15,17 @@ use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VrExperimentController;
 use App\Http\Controllers\Admin\WeeklySessionController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Client\ClubController as ClientClubController;
 use App\Http\Controllers\Client\CompetitionController as ClientCompetitionController;
 use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
-use App\Http\Controllers\Client\ProjectController as ClientProjectController;
-use App\Http\Controllers\PublicCompetitionController;
 use App\Http\Controllers\Client\Model3dController as ClientModel3dController;
+use App\Http\Controllers\Client\ProjectController as ClientProjectController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
 use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicCompetitionController;
+use App\Http\Controllers\PublicCompetitionJoinController;
 use App\Models\Model3d;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +35,7 @@ Route::middleware(['block.client.on.admin', 'track.landing.visitor'])->group(fun
     // Root: redirect admin subdomain to login; show landing page on main domain
     Route::get('/', function () {
         $competitions = \App\Http\Controllers\PublicCompetitionController::getFeaturedCompetitions(3);
+
         return view('client.front.welcome', compact('competitions'));
     });
 
@@ -66,6 +66,7 @@ Route::middleware(['block.client.on.admin', 'track.landing.visitor'])->group(fun
                 ));
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('Contact form mail failed', ['error' => $e->getMessage()]);
+
             return redirect()->route('support')->with('error', 'We could not send your message. Please try again later or email us directly at support@adilishastemlabs.com.');
         }
 
@@ -75,6 +76,9 @@ Route::middleware(['block.client.on.admin', 'track.landing.visitor'])->group(fun
     // Public Competitions (accessible without login)
     Route::get('/explore/competitions', [PublicCompetitionController::class, 'index'])->name('competitions.public');
     Route::get('/explore/competitions/{competition}', [PublicCompetitionController::class, 'show'])->name('competitions.public.show');
+    Route::post('/explore/competitions/{competition}/join-as-teacher', [PublicCompetitionJoinController::class, 'store'])
+        ->middleware(['guest', 'throttle:10,1'])
+        ->name('competitions.public.join-as-teacher');
 });
 
 // Admin subdomain routes - MUST come before client routes to ensure proper domain matching
@@ -82,9 +86,10 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
     // Redirect root admin subdomain to login page (or dashboard if authenticated)
     Route::get('/', function () {
         if (Auth::check() && Auth::user()?->role === 'admin') {
-            return redirect(config('app.admin_url', 'https://admin.adilishastemlabs.com') . '/dashboard');
+            return redirect(config('app.admin_url', 'https://admin.adilishastemlabs.com').'/dashboard');
         }
-        return redirect(config('app.admin_url', 'https://admin.adilishastemlabs.com') . '/login');
+
+        return redirect(config('app.admin_url', 'https://admin.adilishastemlabs.com').'/login');
     });
 
     Route::middleware('guest')->group(function () {
@@ -146,40 +151,39 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
         Route::prefix('competitions')->name('competitions.')->group(function () {
             Route::get('/', [CompetitionController::class, 'index'])->name('index');
             Route::get('/create', [CompetitionController::class, 'create'])->name('create');
-            Route::get('/all-participants', [CompetitionParticipantController::class, 'allParticipants'])->name('all-participants');
             Route::post('/', [CompetitionController::class, 'store'])->name('store');
             Route::get('/{competition}', [CompetitionController::class, 'show'])->name('show');
             Route::get('/{competition}/edit', [CompetitionController::class, 'edit'])->name('edit');
             Route::put('/{competition}', [CompetitionController::class, 'update'])->name('update');
+            Route::post('/{competition}/prototype-evidence-link', [CompetitionController::class, 'updatePrototypeEvidenceFormLink'])
+                ->name('prototype-evidence-link.update');
+            Route::post('/{competition}/prototype-modification-evidence-link', [CompetitionController::class, 'updatePrototypeModificationEvidenceFormLink'])
+                ->name('prototype-modification-evidence-link.update');
+            Route::get('/{competition}/prototype-shortlisting', [CompetitionController::class, 'prototypeShortlistingIndex'])
+                ->name('prototype-shortlisting.index');
+            Route::get('/{competition}/prototype-shortlisting/submissions/{submission}', [CompetitionController::class, 'prototypeShortlistingShow'])
+                ->name('prototype-shortlisting.show');
+            Route::post('/{competition}/prototype-shortlisting/submissions/{submission}/shortlist', [CompetitionController::class, 'shortlistPrototype'])
+                ->name('prototype-shortlisting.shortlist');
+            Route::post('/{competition}/prototype-shortlisting/submissions/{submission}/mentors', [CompetitionController::class, 'storePrototypeMentor'])
+                ->name('prototype-shortlisting.mentors.store');
+            Route::get('/{competition}/prototype-modification', [CompetitionController::class, 'prototypeModificationIndex'])
+                ->name('prototype-modification.index');
+            Route::get('/{competition}/prototype-modification/submissions/{modification}', [CompetitionController::class, 'prototypeModificationShow'])
+                ->name('prototype-modification.show');
+            Route::post('/{competition}/prototype-modification/submissions/{modification}/shortlist', [CompetitionController::class, 'shortlistPrototypeModification'])
+                ->name('prototype-modification.shortlist');
+            Route::get('/{competition}/pitch-winner', [CompetitionController::class, 'pitchWinnerIndex'])
+                ->name('pitch-winner.index');
             Route::delete('/{competition}', [CompetitionController::class, 'destroy'])->name('destroy');
-            Route::post('/{competition}/update-status', [CompetitionController::class, 'updateStatus'])->name('update-status');
-
-            // Awards routes
-            Route::post('/{competition}/awards', [CompetitionController::class, 'storeAward'])->name('awards.store');
-            Route::put('/{competition}/awards/{award}', [CompetitionController::class, 'updateAward'])->name('awards.update');
-            Route::delete('/{competition}/awards/{award}', [CompetitionController::class, 'destroyAward'])->name('awards.destroy');
-
-            // Participants routes
-            Route::prefix('{competition}/participants')->name('participants.')->group(function () {
-                Route::get('/', [CompetitionParticipantController::class, 'index'])->name('index');
-                Route::get('/{participant}', [CompetitionParticipantController::class, 'show'])->name('show');
-                Route::post('/{participant}/approve', [CompetitionParticipantController::class, 'approve'])->name('approve');
-                Route::post('/{participant}/reject', [CompetitionParticipantController::class, 'reject'])->name('reject');
-                Route::post('/{participant}/disqualify', [CompetitionParticipantController::class, 'disqualify'])->name('disqualify');
-                Route::post('/{participant}/update-score', [CompetitionParticipantController::class, 'updateScore'])->name('update-score');
-                Route::post('/{participant}/assign-award', [CompetitionParticipantController::class, 'assignAward'])->name('assign-award');
-                Route::post('/bulk-approve', [CompetitionParticipantController::class, 'bulkApprove'])->name('bulk-approve');
-                Route::post('/auto-assign-awards', [CompetitionParticipantController::class, 'autoAssignAwards'])->name('auto-assign-awards');
-            });
-
-            // Submissions routes
-            Route::prefix('{competition}/submissions')->name('submissions.')->group(function () {
-                Route::get('/', [CompetitionSubmissionController::class, 'index'])->name('index');
-                Route::get('/{submission}', [CompetitionSubmissionController::class, 'show'])->name('show');
-                Route::post('/{submission}/judge', [CompetitionSubmissionController::class, 'judge'])->name('judge');
-                Route::post('/{submission}/request-revision', [CompetitionSubmissionController::class, 'requestRevision'])->name('request-revision');
-                Route::post('/{submission}/mark-under-review', [CompetitionSubmissionController::class, 'markUnderReview'])->name('mark-under-review');
-            });
+            Route::get('/{competition}/registrations', [CompetitionController::class, 'registrations'])->name('registrations.index');
+            Route::get('/{competition}/registrations/{registration}', [CompetitionController::class, 'showRegistration'])->name('registrations.show');
+            Route::post('/{competition}/registrations/{registration}/approve', [CompetitionController::class, 'approveRegistration'])->name('registrations.approve');
+            Route::post('/{competition}/registrations/{registration}/reject', [CompetitionController::class, 'rejectRegistration'])->name('registrations.reject');
+            Route::get('/{competition}/ideas', [CompetitionController::class, 'ideas'])->name('ideas.index');
+            Route::get('/{competition}/ideas/{idea}', [CompetitionController::class, 'showIdea'])->name('ideas.show');
+            Route::post('/{competition}/ideas/{idea}/score', [CompetitionController::class, 'scoreIdea'])->name('ideas.score');
+            Route::post('/{competition}/ideas/{idea}/shortlist', [CompetitionController::class, 'shortlistIdea'])->name('ideas.shortlist');
         });
 
         // Progress & Tracking routes
@@ -221,13 +225,13 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/', [WeeklySessionController::class, 'index'])->name('index');
             Route::get('/create', [WeeklySessionController::class, 'create'])->name('create');
             Route::post('/', [WeeklySessionController::class, 'store'])->name('store');
-            
+
             // Reports routes (must come before {weeklySession} route to avoid route conflicts)
             Route::prefix('reports')->name('reports.')->group(function () {
                 Route::get('/', [WeeklySessionController::class, 'reportsIndex'])->name('index');
                 Route::get('/{report}', [WeeklySessionController::class, 'showReport'])->name('show');
             });
-            
+
             Route::get('/{weeklySession}', [WeeklySessionController::class, 'show'])->name('show');
             Route::get('/{weeklySession}/edit', [WeeklySessionController::class, 'edit'])->name('edit');
             Route::put('/{weeklySession}', [WeeklySessionController::class, 'update'])->name('update');
@@ -235,67 +239,66 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::post('/{weeklySession}/update-status', [WeeklySessionController::class, 'updateStatus'])->name('update-status');
         });
 
+        // 3D Models routes - outer group already has 'admin.' prefix, so use 'models.' here
+        Route::prefix('models')->name('models.')->group(function () {
+            Route::get('3d', [AdminModel3dController::class, 'index'])->name('3d.index');
+            Route::get('3d/create', [AdminModel3dController::class, 'create'])->name('3d.create');
+            Route::post('3d', [AdminModel3dController::class, 'store'])->name('3d.store');
+            Route::get('3d/{model3d}', [AdminModel3dController::class, 'show'])->name('3d.show');
+            Route::get('3d/{model3d}/edit', [AdminModel3dController::class, 'edit'])->name('3d.edit');
+            Route::put('3d/{model3d}', [AdminModel3dController::class, 'update'])->name('3d.update');
+            Route::delete('3d/{model3d}', [AdminModel3dController::class, 'destroy'])->name('3d.destroy');
 
-    // 3D Models routes - outer group already has 'admin.' prefix, so use 'models.' here
-    Route::prefix('models')->name('models.')->group(function () {
-        Route::get('3d', [AdminModel3dController::class, 'index'])->name('3d.index');
-        Route::get('3d/create', [AdminModel3dController::class, 'create'])->name('3d.create');
-        Route::post('3d', [AdminModel3dController::class, 'store'])->name('3d.store');
-        Route::get('3d/{model3d}', [AdminModel3dController::class, 'show'])->name('3d.show');
-        Route::get('3d/{model3d}/edit', [AdminModel3dController::class, 'edit'])->name('3d.edit');
-        Route::put('3d/{model3d}', [AdminModel3dController::class, 'update'])->name('3d.update');
-        Route::delete('3d/{model3d}', [AdminModel3dController::class, 'destroy'])->name('3d.destroy');
-
-        // Questions routes
-        Route::get('3d/{model3d}/questions', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'index'])->name('3d.questions.index');
-        Route::get('3d/{model3d}/questions/create', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'create'])->name('3d.questions.create');
-        Route::post('3d/{model3d}/questions', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'store'])->name('3d.questions.store');
-        Route::get('3d/{model3d}/questions/{question}/edit', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'edit'])->name('3d.questions.edit');
-        Route::put('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'update'])->name('3d.questions.update');
-        Route::delete('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'destroy'])->name('3d.questions.destroy');
-        Route::post('3d/{model3d}/questions/order', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'updateOrder'])->name('3d.questions.order');
-    });
-
-    // VR Experiments routes - outer group already has 'admin.' prefix
-    Route::prefix('vr-experiments')->name('vr-experiments.')->group(function () {
-        Route::get('/', [VrExperimentController::class, 'index'])->name('index');
-        Route::get('/create', [VrExperimentController::class, 'create'])->name('create');
-        Route::post('/', [VrExperimentController::class, 'store'])->name('store');
-        Route::get('/{vrExperiment}/edit', [VrExperimentController::class, 'edit'])->name('edit');
-        Route::put('/{vrExperiment}', [VrExperimentController::class, 'update'])->name('update');
-        Route::delete('/{vrExperiment}', [VrExperimentController::class, 'destroy'])->name('destroy');
-    });
-
-    // VR Assessment routes - outer group already has 'admin.' prefix
-    Route::prefix('vr-assessments')->name('vr-assessments.')->group(function () {
-        // Question Banks routes
-        Route::prefix('question-banks')->name('question-banks.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'index'])->name('index');
-            Route::get('/create', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'create'])->name('create');
-            Route::post('/', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'store'])->name('store');
-            Route::get('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'show'])->name('show');
-            Route::get('/{questionBank}/edit', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'edit'])->name('edit');
-            Route::put('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'update'])->name('update');
-            Route::delete('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'destroy'])->name('destroy');
-            Route::post('/{questionBank}/toggle-status', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'toggleStatus'])->name('toggle-status');
+            // Questions routes
+            Route::get('3d/{model3d}/questions', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'index'])->name('3d.questions.index');
+            Route::get('3d/{model3d}/questions/create', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'create'])->name('3d.questions.create');
+            Route::post('3d/{model3d}/questions', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'store'])->name('3d.questions.store');
+            Route::get('3d/{model3d}/questions/{question}/edit', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'edit'])->name('3d.questions.edit');
+            Route::put('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'update'])->name('3d.questions.update');
+            Route::delete('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'destroy'])->name('3d.questions.destroy');
+            Route::post('3d/{model3d}/questions/order', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'updateOrder'])->name('3d.questions.order');
         });
 
-        // Questions routes (nested under question banks)
-        Route::prefix('question-banks/{questionBank}/questions')->name('questions.')->group(function () {
-            Route::get('/create', [\App\Http\Controllers\Admin\VrQuestionController::class, 'create'])->name('create');
-            Route::post('/', [\App\Http\Controllers\Admin\VrQuestionController::class, 'store'])->name('store');
-            Route::get('/{question}/edit', [\App\Http\Controllers\Admin\VrQuestionController::class, 'edit'])->name('edit');
-            Route::put('/{question}', [\App\Http\Controllers\Admin\VrQuestionController::class, 'update'])->name('update');
-            Route::delete('/{question}', [\App\Http\Controllers\Admin\VrQuestionController::class, 'destroy'])->name('destroy');
-            Route::post('/order', [\App\Http\Controllers\Admin\VrQuestionController::class, 'updateOrder'])->name('order');
+        // VR Experiments routes - outer group already has 'admin.' prefix
+        Route::prefix('vr-experiments')->name('vr-experiments.')->group(function () {
+            Route::get('/', [VrExperimentController::class, 'index'])->name('index');
+            Route::get('/create', [VrExperimentController::class, 'create'])->name('create');
+            Route::post('/', [VrExperimentController::class, 'store'])->name('store');
+            Route::get('/{vrExperiment}/edit', [VrExperimentController::class, 'edit'])->name('edit');
+            Route::put('/{vrExperiment}', [VrExperimentController::class, 'update'])->name('update');
+            Route::delete('/{vrExperiment}', [VrExperimentController::class, 'destroy'])->name('destroy');
         });
 
-        // Assessment Results routes
-        Route::prefix('results')->name('results.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Admin\VrAssessmentResultController::class, 'index'])->name('index');
-            Route::get('/{attempt}', [\App\Http\Controllers\Admin\VrAssessmentResultController::class, 'show'])->name('show');
+        // VR Assessment routes - outer group already has 'admin.' prefix
+        Route::prefix('vr-assessments')->name('vr-assessments.')->group(function () {
+            // Question Banks routes
+            Route::prefix('question-banks')->name('question-banks.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'index'])->name('index');
+                Route::get('/create', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'create'])->name('create');
+                Route::post('/', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'store'])->name('store');
+                Route::get('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'show'])->name('show');
+                Route::get('/{questionBank}/edit', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'edit'])->name('edit');
+                Route::put('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'update'])->name('update');
+                Route::delete('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'destroy'])->name('destroy');
+                Route::post('/{questionBank}/toggle-status', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'toggleStatus'])->name('toggle-status');
+            });
+
+            // Questions routes (nested under question banks)
+            Route::prefix('question-banks/{questionBank}/questions')->name('questions.')->group(function () {
+                Route::get('/create', [\App\Http\Controllers\Admin\VrQuestionController::class, 'create'])->name('create');
+                Route::post('/', [\App\Http\Controllers\Admin\VrQuestionController::class, 'store'])->name('store');
+                Route::get('/{question}/edit', [\App\Http\Controllers\Admin\VrQuestionController::class, 'edit'])->name('edit');
+                Route::put('/{question}', [\App\Http\Controllers\Admin\VrQuestionController::class, 'update'])->name('update');
+                Route::delete('/{question}', [\App\Http\Controllers\Admin\VrQuestionController::class, 'destroy'])->name('destroy');
+                Route::post('/order', [\App\Http\Controllers\Admin\VrQuestionController::class, 'updateOrder'])->name('order');
+            });
+
+            // Assessment Results routes
+            Route::prefix('results')->name('results.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Admin\VrAssessmentResultController::class, 'index'])->name('index');
+                Route::get('/{attempt}', [\App\Http\Controllers\Admin\VrAssessmentResultController::class, 'show'])->name('show');
+            });
         });
-    });
     });
 });
 
@@ -317,8 +320,9 @@ Route::get('/dashboard', function () {
     // Prevent client dashboard from being accessed on admin subdomain
     $adminHost = parse_url(config('app.admin_url'), PHP_URL_HOST);
     if (request()->getHost() === $adminHost) {
-        return redirect(config('app.admin_url') . '/dashboard');
+        return redirect(config('app.admin_url').'/dashboard');
     }
+
     return app(ClientDashboardController::class)->index();
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -329,19 +333,19 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('models/3d')->name('client.models.3d.')->group(function () {
         Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
-        
+
         // Question routes (must come before /{model3d} to avoid route conflicts)
         Route::get('/{model3d}/questions', [\App\Http\Controllers\Client\ModelQuestionController::class, 'getQuestions'])->name('questions.get');
         Route::post('/{model3d}/questions/submit', [\App\Http\Controllers\Client\ModelQuestionController::class, 'submitAnswers'])->name('questions.submit');
-        
+
         Route::get('/{model3d}', [ClientModel3dController::class, 'show'])->name('show');
     });
 
-        // Projects routes (client)
-        Route::prefix('projects')->name('client.projects.')->group(function () {
-            Route::get('/', [ClientProjectController::class, 'index'])->name('index');
-            Route::get('/{project}', [ClientProjectController::class, 'show'])->name('show');
-        });
+    // Projects routes (client)
+    Route::prefix('projects')->name('client.projects.')->group(function () {
+        Route::get('/', [ClientProjectController::class, 'index'])->name('index');
+        Route::get('/{project}', [ClientProjectController::class, 'show'])->name('show');
+    });
 
     // VR Experiments routes
     Route::prefix('vr-experiments')->name('client.vr-experiments.')->group(function () {
@@ -377,6 +381,8 @@ Route::middleware('auth')->group(function () {
         // Student registration routes
         Route::get('/students', [ClientStudentController::class, 'index'])->name('client.students.index');
         Route::post('/students', [ClientStudentController::class, 'store'])->name('client.students.store');
+        Route::put('/students/{student}', [ClientStudentController::class, 'update'])->name('client.students.update');
+        Route::delete('/students/{student}', [ClientStudentController::class, 'destroy'])->name('client.students.destroy');
         Route::post('/students/bulk', [ClientStudentController::class, 'bulkStore'])->name('client.students.bulk-store');
 
         // Weekly Sessions routes
@@ -393,13 +399,20 @@ Route::middleware('auth')->group(function () {
         // Competition routes for teachers
         Route::prefix('competitions')->name('client.competitions.')->group(function () {
             Route::get('/', [ClientCompetitionController::class, 'index'])->name('index');
-            Route::get('/my-submissions', [ClientCompetitionController::class, 'mySubmissions'])->name('my-submissions');
-            Route::get('/{competition}', [ClientCompetitionController::class, 'show'])->name('show');
+            Route::get('/{competition}/register/representatives', [ClientCompetitionController::class, 'registerRepresentatives'])->name('register.representatives');
+            Route::post('/{competition}/register/representatives', [ClientCompetitionController::class, 'storeRegistrationRepresentatives'])->name('register.representatives.store');
+            Route::post('/{competition}/register/bulk-students', [ClientCompetitionController::class, 'bulkImportStudents'])->name('register.bulk-students');
+            Route::get('/{competition}/register/csv-template', [ClientCompetitionController::class, 'downloadRegistrationCsvTemplate'])->name('register.csv-template');
             Route::get('/{competition}/register', [ClientCompetitionController::class, 'register'])->name('register');
             Route::post('/{competition}/register', [ClientCompetitionController::class, 'storeRegistration'])->name('register.store');
-            Route::get('/{competition}/submit', [ClientCompetitionController::class, 'createSubmission'])->name('submit');
-            Route::post('/{competition}/submit', [ClientCompetitionController::class, 'storeSubmission'])->name('submit.store');
-            Route::delete('/{competition}/attachment/{attachment}', [ClientCompetitionController::class, 'deleteAttachment'])->name('attachment.delete');
+            Route::get('/{competition}/idea', [ClientCompetitionController::class, 'createIdea'])->name('idea');
+            Route::post('/{competition}/idea', [ClientCompetitionController::class, 'storeIdea'])->name('idea.store');
+            Route::get('/{competition}/prototype', [ClientCompetitionController::class, 'createPrototype'])->name('prototype');
+            Route::post('/{competition}/prototype', [ClientCompetitionController::class, 'storePrototype'])->name('prototype.store');
+            Route::get('/{competition}/prototype-modification', [ClientCompetitionController::class, 'createPrototypeModification'])->name('prototype-modification');
+            Route::post('/{competition}/prototype-modification', [ClientCompetitionController::class, 'storePrototypeModification'])->name('prototype-modification.store');
+            Route::delete('/{competition}/attachment', [ClientCompetitionController::class, 'deleteAttachment'])->name('attachment.delete');
+            Route::get('/{competition}', [ClientCompetitionController::class, 'show'])->name('show');
         });
     });
 });
@@ -409,9 +422,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/', function () {
         return redirect(config('app.admin_url'), 301);
     });
-    
+
     Route::any('{any}', function ($any) {
-        return redirect(config('app.admin_url') . '/' . $any, 301);
+        return redirect(config('app.admin_url').'/'.$any, 301);
     })->where('any', '.*');
 });
 

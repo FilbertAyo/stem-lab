@@ -1,259 +1,341 @@
 <x-app-layout>
-    <div class="col-lg-9">
+    <div class="col-12">
+        @php($girlsInPool = $students->where('gender', 'female')->count())
+        @php($poolCount = $students->count())
+        @php($poolRatio = $poolCount > 0 ? round(($girlsInPool / $poolCount) * 100, 2) : 0)
+        @php($poolMin = max(1, (int) $competition->min_members))
+        @php($poolMax = $competition->max_members !== null ? (int) $competition->max_members : null)
+        @php($repCount = max(1, (int) ($competition->representative_count ?? 10)))
+        @php($poolOk = $poolCount >= $poolMin && $poolRatio >= 70 && ($poolMax === null || $poolCount <= $poolMax))
+        @php($registerReturnPath = route('client.competitions.register', $competition, absolute: false))
 
         <div class="dashboard-content-header mb-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item"><a href="{{ route('client.competitions.index') }}">Competitions</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('client.competitions.show', $competition) }}">{{ $competition->name }}</a></li>
-                    <li class="breadcrumb-item active">Register</li>
+                    <li class="breadcrumb-item active" aria-current="page">Participants</li>
                 </ol>
             </nav>
-            <h2 class="title mb-0">Register for Competition</h2>
+          
+        </div>
+        <div class="mb-3">
+            <h2 class="title mb-1">Upload Students</h2>
+            <p class="text-muted small mb-0">
+                Add students with CSV import. They are stored on your club roster and listed here for this competition.
+                When the pool meets the rules, submit your school details for <strong>admin approval</strong>. Further steps (such as representatives) come after approval.
+            </p>
         </div>
 
         <div class="row">
             <div class="col-lg-8">
-                <div class="card border-0 shadow-none">
-                        <div class="card-header bg-light-soft">
-                        <h5 class="mb-0">{{ $competition->name }}</h5>
-                        <small class="text-muted">{{ $competition->club->name }}</small>
+                @include('elements.client-validation')
+
+                @if($poolOk)
+                    <div class="alert alert-success small mb-4">
+                        <strong>Pool requirements met.</strong> Confirm school details below, then submit for admin approval.
+                    </div>
+                @else
+                    <div class="alert alert-warning small mb-4">
+                        <strong>In progress.</strong> Import students and adjust your list until the sidebar rules are satisfied (size, girls %, classes, ages). You can submit only after the pool qualifies.
+                    </div>
+                @endif
+
+                <div class="card border-0 shadow-none mb-4">
+                    <div class="card-header bg-light-soft d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <h5 class="mb-0"> Students CSV import</h5>
+                        <a href="{{ route('client.competitions.register.csv-template', $competition) }}" class="badge bg-dark text-white">
+                            <i class="bi bi-download me-1"></i>Download template
+                        </a>
                     </div>
                     <div class="card-body">
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #ffebeb; border-color: #ffc2c2;">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-exclamation-triangle me-2 fs-5 mt-1"></i>
-                                    <div>
-                                        <ul class="mb-0">
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <p class="text-muted small mb-3">
+                            Required columns: <code>name</code>, <code>gender</code> (<code>male</code> / <code>female</code>), <code>class_name</code>, and either <code>date_of_birth</code> (<strong>DD-MM-YYYY</strong>).
+                            @if(! empty($allowedClassIds))
+                                Rows must use a class in this competition&rsquo;s allowed range.
+                            @endif
+                            @if($competition->min_age !== null || $competition->max_age !== null)
+                                Ages must fall within {{ $competition->min_age ?? '—' }}–{{ $competition->max_age ?? '—' }}.
+                            @endif
+                        </p>
+                        <form action="{{ route('client.competitions.register.bulk-students', $competition) }}" method="POST" enctype="multipart/form-data" class="row g-3 align-items-end">
+                            @csrf
+                            <div class="col-md-8">
+                                <label class="form-label small mb-1" for="csv_file">CSV file</label>
+                                <input type="file" name="csv_file" id="csv_file" accept=".csv,.txt" class="form-control border p-2" required>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary text-white w-100">
+                                    <i class="bi bi-upload me-1"></i>Import students
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-none mb-4">
+                    <div class="card-header bg-light-soft d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <h5 class="mb-0">Students in your pool</h5>
+                        <span class="badge bg-secondary">{{ $poolCount }} {{ Str::plural('student', $poolCount) }}</span>
+                    </div>
+                    <div class="card-body">
+                        @if($students->isEmpty())
+                            <div class="text-center text-muted py-5 px-3">
+                                <i class="bi bi-inbox display-6 d-block mb-2"></i>
+                                <p class="mb-1 fw-medium">No students yet</p>
+                                <p class="small mb-0">Download the template, fill it in, and import a CSV. Imported students will appear here immediately.</p>
+                            </div>
+                        @else
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered table-light-soft align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Gender</th>
+                                            <th>Class</th>
+                                            <th>Age</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($students as $index => $student)
+                                            <tr>
+                                                <td class="text-muted small">{{ $index + 1 }}</td>
+                                                <td>{{ $student->name }}</td>
+                                                <td>{{ ucfirst((string) $student->gender) }}</td>
+                                                <td>{{ $student->schoolClass->name ?? '—' }}</td>
+                                                <td>{{ $student->date_of_birth?->age ?? $student->age ?? '—' }}</td>
+                                                <td>
+                                                    <a role="button"
+                                                       href="javascript:void(0)"
+                                                       class="small text-primary text-decoration-none me-3"
+                                                       data-bs-toggle="modal"
+                                                       data-bs-target="#editStudentModal"
+                                                       data-update-url="{{ route('client.students.update', $student) }}"
+                                                       data-student-name="{{ e($student->name) }}"
+                                                       data-student-gender="{{ e($student->gender) }}"
+                                                       data-student-class-id="{{ $student->school_class_id }}"
+                                                       data-student-dob="{{ $student->date_of_birth?->format('Y-m-d') }}">Edit</a>
+                                                    <a role="button"
+                                                       href="javascript:void(0)"
+                                                       class="small text-danger text-decoration-none"
+                                                       data-bs-toggle="modal"
+                                                       data-bs-target="#deleteStudentModal"
+                                                       data-destroy-url="{{ route('client.students.destroy', $student) }}"
+                                                       data-student-name="{{ e($student->name) }}">Delete</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-none">
+                    <div class="card-header bg-light-soft">
+                        <h5 class="mb-0">School &amp; teacher contact</h5>
+                        <small class="text-muted">Included when you submit for admin approval (after the pool qualifies).</small>
+                    </div>
+                    <div class="card-body">
+                        @if($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
                         @endif
 
                         <form action="{{ route('client.competitions.register.store', $competition) }}" method="POST">
                             @csrf
 
-                            <!-- Team Information -->
-                            <div class="mb-4">
-                                <h6 class="fw-semibold border-bottom pb-2 mb-3">
-                                    <i class="bi bi-people me-2"></i>Team Information
-                                </h6>
-                                
-                                <div class="mb-3">
-                                    <label for="team_name" class="form-label">Team Name</label>
-                                    <input type="text" class="form-control @error('team_name') is-invalid @enderror" 
-                                           id="team_name" name="team_name" value="{{ old('team_name') }}"
-                                           placeholder="e.g., Science Innovators">
-                                    @error('team_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <small class="text-muted">Optional. If not provided, your team will be named automatically.</small>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small">Teacher name</label>
+                                    <input type="text" class="form-control border p-2 bg-light" value="{{ auth()->user()->name }}" disabled>
                                 </div>
-
-                                <div class="mb-3">
-                                    <label for="team_description" class="form-label">Team Description</label>
-                                    <textarea class="form-control @error('team_description') is-invalid @enderror" 
-                                              id="team_description" name="team_description" rows="3"
-                                              placeholder="Briefly describe your team and what you hope to achieve...">{{ old('team_description') }}</textarea>
-                                    @error('team_description')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                <div class="col-md-6">
+                                    <label class="form-label small">Teacher email</label>
+                                    <input type="text" class="form-control border p-2 bg-light" value="{{ auth()->user()->email }}" disabled>
                                 </div>
-                            </div>
-
-                            <!-- Student Selection -->
-                            <div class="mb-4">
-                                <h6 class="fw-semibold border-bottom pb-2 mb-3">
-                                    <i class="bi bi-person-check me-2"></i>Select Students
-                                    <span class="badge bg-info ms-2">{{ $competition->min_members }}-{{ $competition->max_members ?? '∞' }} required</span>
-                                </h6>
-
-                                @if($students->isEmpty())
-                                    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: #fff3cd; border-color: #ffeeba;">
-                                        <i class="bi bi-exclamation-triangle me-2"></i>
-                                        @if($competition->min_age || $competition->max_age)
-                                            No students match the age requirements ({{ $competition->min_age ?? 'Any' }}-{{ $competition->max_age ?? 'Any' }} years). 
-                                            Please <a href="{{ route('client.students.index') }}">register eligible students</a> first.
-                                        @else
-                                            You have no students registered. Please <a href="{{ route('client.students.index') }}">register students</a> first.
-                                        @endif
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                @else
-                                    <div class="alert alert-info small mb-3 alert-dismissible fade show" role="alert" style="background-color: #e7f5ff; border-color: #b6d4fe;">
-                                        <i class="bi bi-info-circle me-2"></i>
-                                        Select between {{ $competition->min_members }} and {{ $competition->max_members ?? 'unlimited' }} students for your team.
-                                        @if($competition->min_age || $competition->max_age)
-                                            <br>Age requirement: {{ $competition->min_age ?? 'Any' }} - {{ $competition->max_age ?? 'Any' }} years.
-                                        @endif
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-
-                                    <div class="table-responsive">
-                                        <table class="table table-hover table-light-soft">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width: 50px;">Select</th>
-                                                    <th>Student Name</th>
-                                                    <th>Age</th>
-                                                    <th>Class</th>
-                                                    <th>Role (Optional)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($students as $student)
-                                                    <tr>
-                                                        <td>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input student-checkbox" type="checkbox" 
-                                                                       name="student_ids[]" value="{{ $student->id }}"
-                                                                       id="student_{{ $student->id }}"
-                                                                       {{ in_array($student->id, old('student_ids', [])) ? 'checked' : '' }}>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <label for="student_{{ $student->id }}" class="mb-0 fw-semibold">
-                                                                {{ $student->name }}
-                                                            </label>
-                                                        </td>
-                                                        <td>{{ $student->age }} years</td>
-                                                        <td>{{ $student->schoolClass->name ?? '—' }}</td>
-                                                        <td>
-                                                            <input type="text" class="form-control form-control-sm" 
-                                                                   name="student_roles[{{ $student->id }}]"
-                                                                   value="{{ old("student_roles.{$student->id}") }}"
-                                                                   placeholder="e.g., Team Leader">
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center mt-2">
-                                        <span class="text-muted">
-                                            Selected: <strong id="selectedCount">0</strong> / {{ $competition->max_members ?? '∞' }}
-                                        </span>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary" id="selectAll">Select All</button>
-                                    </div>
-                                @endif
-                            </div>
-
-                            <!-- School Info -->
-                            <div class="mb-4">
-                                <h6 class="fw-semibold border-bottom pb-2 mb-3">
-                                    <i class="bi bi-building me-2"></i>School Information
-                                </h6>
-                                <div class="bg-light rounded p-3">
-                                    <p class="mb-1"><strong>School:</strong> {{ $teacherClub->school->name ?? 'Not specified' }}</p>
-                                    <p class="mb-0"><strong>Club:</strong> {{ $teacherClub->club->name }}</p>
+                                <div class="col-md-6">
+                                    <label class="form-label small" for="teacher_phone">Teacher phone</label>
+                                    <input type="text" id="teacher_phone" class="form-control border p-2" name="teacher_phone" value="{{ old('teacher_phone', $registration->teacher_phone ?? $teacherClub->school?->phone) }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small" for="school_name">School name <span class="text-danger">*</span></label>
+                                    <input type="text" id="school_name" class="form-control border p-2" name="school_name" value="{{ old('school_name', $registration->school_name ?? $teacherClub->school?->name) }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small" for="school_district">District</label>
+                                    <input type="text" id="school_district" class="form-control border p-2" name="school_district" value="{{ old('school_district', $registration->school_district ?? $teacherClub->school?->district) }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small" for="school_ward">Ward</label>
+                                    <input type="text" id="school_ward" class="form-control border p-2" name="school_ward" value="{{ old('school_ward', $registration->school_ward ?? $teacherClub->school?->ward) }}">
                                 </div>
                             </div>
 
-                            <!-- Submit -->
-                            <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary" {{ $students->isEmpty() ? 'disabled' : '' }}>
-                                    <i class="bi bi-check-circle me-1"></i> Register Team
+                            <div class="d-flex flex-wrap gap-2 mt-4">
+                                <button type="submit" class="btn btn-sm btn-primary text-white" @if(! $poolOk) disabled title="Meet eligibility in the sidebar first" @endif>
+                                    Submit registration for approval
                                 </button>
-                                <a href="{{ route('client.competitions.show', $competition) }}" class="btn btn-secondary text-white">
-                                    Cancel
-                                </a>
-                            </div>
+                          </div>
+                            @if(! $poolOk)
+                                <p class="text-danger small mt-2 mb-0">
+                                    Meet the pool rules in the sidebar first: at least {{ $poolMin }} students
+                                    @if($poolMax !== null)
+                                        and at most {{ $poolMax }}
+                                    @endif
+                                    , and at least 70% girls, before you can continue.
+                                </p>
+                            @endif
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Sidebar -->
             <div class="col-lg-4">
-                <div class="card border-0 shadow-none mb-4">
-                    <div class="card-header bg-light-soft">
-                        <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Requirements</h6>
-                    </div>
+                <div class="card border-0 shadow-none mb-3">
+                    <div class="card-header bg-light-soft"><h6 class="mb-0">Eligibility (competition pool)</h6></div>
                     <div class="card-body">
-                        <ul class="list-unstyled mb-0">
-                            <li class="mb-2">
-                                <i class="bi bi-check-circle text-success me-2"></i>
-                                <strong>Team Size:</strong> {{ $competition->min_members }}-{{ $competition->max_members ?? '∞' }} members
-                            </li>
-                            @if($competition->min_age || $competition->max_age)
-                                <li class="mb-2">
-                                    <i class="bi bi-check-circle text-success me-2"></i>
-                                    <strong>Age Range:</strong> {{ $competition->min_age ?? 'Any' }}-{{ $competition->max_age ?? 'Any' }} years
-                                </li>
-                            @endif
-                            <li class="mb-2">
-                                <i class="bi bi-clock text-warning me-2"></i>
-                                <strong>Deadline:</strong> {{ $competition->registration_deadline?->format('d M Y, H:i') ?? 'No deadline' }}
-                            </li>
-                        </ul>
+                        <p class="mb-1"><strong>Students in pool:</strong> {{ $poolCount }} (min {{ $poolMin }}@if($poolMax !== null), max {{ $poolMax }}@endif)</p>
+                        <p class="mb-1"><strong>Girls in pool:</strong> {{ $poolRatio }}% / 70% min</p>
                     </div>
                 </div>
-
-                <div class="card border-0 shadow-none bg-light-soft">
+                <div class="card border-0 shadow-none mb-3">
+                    <div class="card-header"><h6 class="mb-0">Class range</h6></div>
                     <div class="card-body">
-                        <h6><i class="bi bi-lightbulb me-2"></i>Tips</h6>
-                        <ul class="small text-muted mb-0">
-                            <li>Select students who meet the age requirements</li>
-                            <li>Assign roles to help organize your team</li>
-                            <li>Your registration will be reviewed by admins</li>
-                            <li>You'll be notified once approved</li>
-                        </ul>
+                        @if(empty($allowedClassIds))
+                            <span class="text-muted small">All classes count toward this competition&rsquo;s pool.</span>
+                        @else
+                            <p class="text-muted small mb-2">Only students in these classes are counted for eligibility:</p>
+                            <ul class="small mb-0 ps-3">
+                                @foreach($competition->classRequirements as $req)
+                                    <li class='badge bg-dark text-white'>{{ $req->schoolClass->name ?? 'Class #'.$req->school_class_id }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+                </div>
+                <div class="card border-0 shadow-none">
+                    <div class="card-header bg-light-soft"><h6 class="mb-0">After registration closes</h6></div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-0">
+                            Submitting sends your participant list and school details for admin review. When this registration phase ends, <strong>no further uploads</strong> are allowed here—you&rsquo;ll follow the competition schedule for the next stage from your hub.
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    @push('scripts')
+        <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editStudentModalLabel">Edit student</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="editStudentForm" method="POST" action="#">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="redirect_to" value="{{ $registerReturnPath }}">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label small" for="editStudentName">Name</label>
+                                <input type="text" name="name" id="editStudentName" class="form-control border p-2" required maxlength="255">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small" for="editStudentGender">Gender</label>
+                                <select name="gender" id="editStudentGender" class="form-select border p-2" required>
+                                <option value="female">Female</option>    
+                                <option value="male">Male</option>
+                               
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small" for="editStudentClassId">Class</label>
+                                <select name="school_class_id" id="editStudentClassId" class="form-select border p-2" required>
+                                    @foreach($classes as $class)
+                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-0">
+                                <label class="form-label small" for="editStudentDob">Date of birth</label>
+                                <input type="date" name="date_of_birth" id="editStudentDob" class="form-control border p-2" required max="{{ now()->format('Y-m-d') }}">
+                                <p class="text-muted small mt-1 mb-0">Age is calculated from this date and stays correct each year.</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                         <button type="submit" class="btn btn-sm btn-primary text-white">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteStudentModal" tabindex="-1" aria-labelledby="deleteStudentModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteStudentModalLabel">Remove student</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="deleteStudentForm" method="POST" action="#">
+                        @csrf
+                        @method('DELETE')
+                        <input type="hidden" name="redirect_to" value="{{ $registerReturnPath }}">
+                        <div class="modal-body">
+                            <p class="mb-0">Remove <strong id="deleteStudentNameDisplay"></strong> from your club roster? They will disappear from this pool. If they were linked to a draft registration, those links are removed too.</p>
+                        </div>
+                        <div class="modal-footer">
+                         <button type="submit" class="btn btn-sm btn-primary text-white">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const checkboxes = document.querySelectorAll('.student-checkbox');
-                const countEl = document.getElementById('selectedCount');
-                const selectAllBtn = document.getElementById('selectAll');
-                const maxMembers = {{ $competition->max_members ?? 'null' }};
-
-                function updateCount() {
-                    const checked = document.querySelectorAll('.student-checkbox:checked').length;
-                    countEl.textContent = checked;
+            document.addEventListener('DOMContentLoaded', function () {
+                const editModal = document.getElementById('editStudentModal');
+                if (editModal) {
+                    editModal.addEventListener('show.bs.modal', function (event) {
+                        const btn = event.relatedTarget;
+                        if (!btn) {
+                            return;
+                        }
+                        const form = document.getElementById('editStudentForm');
+                        form.action = btn.getAttribute('data-update-url') || '#';
+                        document.getElementById('editStudentName').value = btn.getAttribute('data-student-name') || '';
+                        document.getElementById('editStudentGender').value = btn.getAttribute('data-student-gender') || 'male';
+                        const classId = btn.getAttribute('data-student-class-id');
+                        const classSelect = document.getElementById('editStudentClassId');
+                        if (classId && classSelect.querySelector('option[value="' + classId + '"]')) {
+                            classSelect.value = classId;
+                        }
+                        const dob = btn.getAttribute('data-student-dob');
+                        document.getElementById('editStudentDob').value = dob && dob.length ? dob : '';
+                    });
                 }
 
-                checkboxes.forEach(cb => {
-                    cb.addEventListener('change', function() {
-                        if (maxMembers !== null) {
-                            const checked = document.querySelectorAll('.student-checkbox:checked').length;
-                            if (checked > maxMembers) {
-                                this.checked = false;
-                                alert(`Maximum ${maxMembers} students allowed.`);
-                            }
+                const deleteModal = document.getElementById('deleteStudentModal');
+                if (deleteModal) {
+                    deleteModal.addEventListener('show.bs.modal', function (event) {
+                        const btn = event.relatedTarget;
+                        if (!btn) {
+                            return;
                         }
-                        updateCount();
+                        document.getElementById('deleteStudentForm').action = btn.getAttribute('data-destroy-url') || '#';
+                        document.getElementById('deleteStudentNameDisplay').textContent = btn.getAttribute('data-student-name') || '';
                     });
-                });
-
-                selectAllBtn?.addEventListener('click', function() {
-                    const allChecked = document.querySelectorAll('.student-checkbox:checked').length === checkboxes.length;
-                    let count = 0;
-                    checkboxes.forEach(cb => {
-                        if (allChecked) {
-                            cb.checked = false;
-                        } else if (maxMembers === null || count < maxMembers) {
-                            cb.checked = true;
-                            count++;
-                        }
-                    });
-                    updateCount();
-                });
-
-                updateCount();
+                }
             });
         </script>
-    @endpush
+    </div>
 </x-app-layout>
-

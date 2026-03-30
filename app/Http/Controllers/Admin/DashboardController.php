@@ -3,20 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Student;
-use App\Models\Model3d;
+use App\Models\Club;
 use App\Models\Competition;
+use App\Models\Model3d;
 use App\Models\School;
-use App\Models\VrExperiment;
-use App\Models\CompetitionSubmission;
-use App\Models\VrAssessmentAttempt;
+use App\Models\Student;
+use App\Models\User;
 use App\Models\Visitor;
 use App\Models\VisitorWeeklyStat;
-use App\Models\Club;
+use App\Models\VrAssessmentAttempt;
+use App\Models\VrExperiment;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
@@ -47,7 +46,7 @@ class DashboardController extends Controller
 
         // Get latest active admin user (based on session last_activity)
         $latestActiveAdmin = null;
-        
+
         // Try to get admin with recent session activity (today)
         $todayTimestamp = now()->startOfDay()->timestamp;
         $recentSession = DB::table('sessions')
@@ -69,7 +68,7 @@ class DashboardController extends Controller
             $latestAdminUser = User::where('role', 'admin')
                 ->orderBy('created_at', 'desc')
                 ->first();
-            
+
             if ($latestAdminUser) {
                 $latestActiveAdmin = [
                     'user' => $latestAdminUser,
@@ -111,23 +110,6 @@ class DashboardController extends Controller
                     'time' => $student->created_at,
                     'icon' => 'ti-user-circle',
                     'color' => 'info',
-                ];
-            });
-
-        // Recent competition submissions today
-        $todaySubmissions = CompetitionSubmission::where('submitted_at', '>=', $today)
-            ->with(['participant.competition'])
-            ->orderBy('submitted_at', 'desc')
-            ->get()
-            ->map(function ($submission) {
-                $competitionName = $submission->participant?->competition?->name ?? 'Competition';
-                return [
-                    'type' => 'submission_submitted',
-                    'title' => "Submission for: {$competitionName}",
-                    'user' => null,
-                    'time' => $submission->submitted_at,
-                    'icon' => 'ti-file-text',
-                    'color' => 'success',
                 ];
             });
 
@@ -184,7 +166,6 @@ class DashboardController extends Controller
         // Combine all activities and sort by time
         $recentActivities = $todayCompetitions
             ->concat($todayStudents)
-            ->concat($todaySubmissions)
             ->concat($todayUsers)
             ->concat($todayAttempts)
             ->concat($todayModels)
@@ -209,4 +190,3 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact('stats', 'latestActiveAdmin', 'recentActivities', 'visitorChartData'));
     }
 }
-

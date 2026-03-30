@@ -5,9 +5,6 @@ namespace App\Providers;
 use App\Listeners\SendWelcomeEmail;
 use App\Models\Club;
 use App\Models\Competition;
-use App\Models\CompetitionAward;
-use App\Models\CompetitionParticipant;
-use App\Models\CompetitionSubmission;
 use App\Models\Model3d;
 use App\Models\ModelQuestionAnswer;
 use App\Models\Platform;
@@ -15,7 +12,6 @@ use App\Models\Project;
 use App\Models\ProjectCategory;
 use App\Models\School;
 use App\Models\SchoolClass;
-use App\Models\SubmissionAttachment;
 use App\Models\Subject;
 use App\Models\TeacherClub;
 use App\Models\User;
@@ -56,9 +52,6 @@ class AppServiceProvider extends ServiceProvider
         $this->bindUlidWithLegacyId('projectCategory', ProjectCategory::class);
         $this->bindUlidWithLegacyId('platform', Platform::class);
         $this->bindUlidWithLegacyId('competition', Competition::class);
-        $this->bindUlidWithLegacyId('award', CompetitionAward::class);
-        $this->bindUlidWithLegacyId('participant', CompetitionParticipant::class);
-        $this->bindUlidWithLegacyId('submission', CompetitionSubmission::class);
         $this->bindUlidWithLegacyId('user', User::class);
         $this->bindUlidWithLegacyId('model3d', Model3d::class);
         $this->bindUlidWithLegacyId('weeklySession', WeeklySession::class);
@@ -67,7 +60,6 @@ class AppServiceProvider extends ServiceProvider
         $this->bindUlidWithLegacyId('questionBank', VrQuestionBank::class);
         $this->bindUlidWithLegacyId('attempt', VrAssessmentAttempt::class);
         $this->bindUlidWithLegacyId('subject', Subject::class);
-        $this->bindUlidWithLegacyId('attachment', SubmissionAttachment::class);
 
         Event::listen(Registered::class, SendWelcomeEmail::class);
 
@@ -81,7 +73,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Clear caches when models are created, updated, or deleted
         $this->registerModelEvents();
-        
+
         // Ensure admin routes generate URLs with admin subdomain
         // This is handled automatically by Route::domain(), but we ensure it's set correctly
         if (request()->getHost() === parse_url(config('app.admin_url'), PHP_URL_HOST)) {

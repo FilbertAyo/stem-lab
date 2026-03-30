@@ -31,12 +31,13 @@
     <div class="dashboard-main">
       <div class="container">
         <div class="row">
-          <!-- Left Sidebar (hidden on profile, dashboard, VR experiments, 3D models, and projects — those pages use full width/custom layout) -->
+          <!-- Left Sidebar (hidden on profile, dashboard, VR experiments, 3D models, projects, competitions — full width) -->
           @if (!request()->routeIs('profile.*')
                && !request()->routeIs('dashboard')
                && !request()->routeIs('client.vr-experiments.*')
                && !request()->routeIs('client.models.3d.*')
-               && !request()->routeIs('client.projects.*'))
+               && !request()->routeIs('client.projects.*')
+               && !request()->routeIs('client.competitions.*'))
             @include('layouts.client.aside')
           @endif
 

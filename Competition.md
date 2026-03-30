@@ -53,3 +53,5 @@ Impact & Reporting Module
 At the end of the competition, the system must be able to generate a structured impact report pulling from all the data collected. This includes total participants by gender, by region, by school type, number of ideas submitted, prototype quality scores, mentor engagement rates, and winner profiles. This data feeds directly into the policy evidence outputs required by the framework.
 The reporting module does not need to be complex but it must be accurate, exportable, and reflect the full competition lifecycle from registration to winner.
 
+
+

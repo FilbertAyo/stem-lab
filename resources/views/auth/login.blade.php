@@ -22,7 +22,7 @@
                 class="form-control border-bottom @error('email') is-invalid @enderror"
                 id="email"
                 name="email"
-                value="{{ old('email') }}"
+                value="{{ old('email', request('email')) }}"
                 placeholder="Email"
                 required
                 autofocus

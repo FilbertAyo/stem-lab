@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Model3d;
 use App\Models\ModelQuestionAnswer;
-use App\Models\VrAssessmentAttempt;
-use App\Models\CompetitionParticipant;
-use App\Models\CompetitionSubmission;
 use App\Models\Student;
+use App\Models\VrAssessmentAttempt;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -19,6 +17,7 @@ class DashboardController extends Controller
      */
     public function index(): View
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $userId = $user->id;
 
@@ -32,21 +31,13 @@ class DashboardController extends Controller
         $completedVrAttempts = VrAssessmentAttempt::where('user_id', $userId)->whereNotNull('completed_at')->count();
         $passedVrAttempts = VrAssessmentAttempt::where('user_id', $userId)->where('passed', true)->count();
 
-        // Get user's competition participations (through teacher clubs)
+        // Get user's competition participations (disabled for phase-1 admin competition setup)
         $teacherClubs = $user->teacherClubs()->pluck('id');
         $totalCompetitions = 0;
         $totalSubmissions = 0;
         $totalStudents = 0;
-        
+
         if ($teacherClubs->isNotEmpty()) {
-            $competitionParticipants = CompetitionParticipant::whereIn('teacher_club_id', $teacherClubs);
-            $totalCompetitions = $competitionParticipants->count();
-            
-            $participantIds = $competitionParticipants->pluck('id');
-            if ($participantIds->isNotEmpty()) {
-                $totalSubmissions = CompetitionSubmission::whereIn('competition_participant_id', $participantIds)->count();
-            }
-            
             // Get user's students (if they're a teacher)
             $totalStudents = Student::whereIn('teacher_club_id', $teacherClubs)->count();
         }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPublicUlid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,17 @@ class Competition extends Model
 {
     use HasFactory, HasPublicUlid, SoftDeletes;
 
+    public const DEFAULT_PHASE_TEMPLATE = [
+        ['phase_key' => 'registration', 'name' => 'Registration', 'action_type' => 'registration', 'is_required_action' => true],
+        ['phase_key' => 'idea_submission', 'name' => 'Idea Submission', 'action_type' => 'idea', 'is_required_action' => true],
+        ['phase_key' => 'idea_shortlisting', 'name' => 'Idea Shortlisting', 'action_type' => 'shortlisting', 'is_required_action' => false],
+        ['phase_key' => 'prototype_development', 'name' => 'Prototype Development', 'action_type' => 'prototype_development', 'is_required_action' => false],
+        ['phase_key' => 'prototype_shortlisting', 'name' => 'Prototype Shortlisting', 'action_type' => 'prototype_shortlisting', 'is_required_action' => false],
+        ['phase_key' => 'mentor_onboarding', 'name' => 'Mentor Onboarding', 'action_type' => 'mentor', 'is_required_action' => false],
+        ['phase_key' => 'prototype_modification', 'name' => 'Prototype Modification', 'action_type' => 'prototype_modification', 'is_required_action' => false],
+        ['phase_key' => 'pitch_winner', 'name' => 'Pitch & Winner', 'action_type' => 'pitch', 'is_required_action' => false],
+    ];
+
     protected $fillable = [
         'name',
         'slug',
@@ -24,6 +36,7 @@ class Competition extends Model
         'club_id',
         'min_members',
         'max_members',
+        'representative_count',
         'min_age',
         'max_age',
         'registration_start',
@@ -45,64 +58,95 @@ class Competition extends Model
         'is_active' => 'boolean',
         'min_members' => 'integer',
         'max_members' => 'integer',
+        'representative_count' => 'integer',
         'min_age' => 'integer',
         'max_age' => 'integer',
     ];
 
-    /**
-     * Boot the model.
-     */
-    protected static function boot()
+    protected static function booted(): void
     {
-        parent::boot();
-
-        static::creating(function ($competition) {
-            if (empty($competition->slug)) {
+        static::creating(function (self $competition): void {
+            if (blank($competition->slug) && filled($competition->name)) {
                 $competition->slug = Str::slug($competition->name);
             }
         });
     }
 
-    /**
-     * Get the club this competition belongs to.
-     */
     public function club(): BelongsTo
     {
         return $this->belongsTo(Club::class);
     }
 
-    /**
-     * Get the admin who created this competition.
-     */
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    /**
-     * Get the awards for this competition.
-     */
-    public function awards(): HasMany
+    public function phases(): HasMany
     {
-        return $this->hasMany(CompetitionAward::class)->orderBy('position');
+        return $this->hasMany(CompetitionPhase::class)->orderBy('sequence');
     }
 
-    /**
-     * Get the participants for this competition.
-     */
-    public function participants(): HasMany
+    public function classRequirements(): HasMany
     {
-        return $this->hasMany(CompetitionParticipant::class);
+        return $this->hasMany(CompetitionClassRequirement::class);
     }
 
-    /**
-     * Check if registration is currently open.
-     */
+    public function registrations(): HasMany
+    {
+        return $this->hasMany(CompetitionRegistration::class);
+    }
+
+    public function ideas(): HasMany
+    {
+        return $this->hasMany(CompetitionIdea::class);
+    }
+
+    public function judgeAssignments(): HasMany
+    {
+        return $this->hasMany(CompetitionJudgeAssignment::class);
+    }
+
+    public function ideaScores(): HasMany
+    {
+        return $this->hasMany(CompetitionIdeaScore::class);
+    }
+
+    public function shortlists(): HasMany
+    {
+        return $this->hasMany(CompetitionShortlist::class);
+    }
+
+    public function prototypeSubmissions(): HasMany
+    {
+        return $this->hasMany(CompetitionPrototypeSubmission::class);
+    }
+
+    public function prototypeShortlists(): HasMany
+    {
+        return $this->hasMany(CompetitionPrototypeShortlist::class);
+    }
+
+    public function prototypeModifications(): HasMany
+    {
+        return $this->hasMany(CompetitionPrototypeModification::class);
+    }
+
+    public function prototypeModificationShortlists(): HasMany
+    {
+        return $this->hasMany(CompetitionPrototypeModificationShortlist::class);
+    }
+
+    public function stageEvents(): HasMany
+    {
+        return $this->hasMany(CompetitionStageEvent::class)->latest();
+    }
+
     public function isRegistrationOpen(): bool
     {
         $now = now();
-        
-        if ($this->status !== 'published' && $this->status !== 'ongoing') {
+
+        if (! in_array($this->status, ['published', 'ongoing'], true)) {
             return false;
         }
 
@@ -117,29 +161,67 @@ class Competition extends Model
         return true;
     }
 
-    /**
-     * Check if the competition is currently active/ongoing.
-     */
     public function isOngoing(): bool
     {
         $now = now();
+
+        if (! $this->competition_start || ! $this->competition_end) {
+            return false;
+        }
+
         return $now->gte($this->competition_start) && $now->lte($this->competition_end);
     }
 
-    /**
-     * Check if submissions are allowed.
-     */
     public function canAcceptSubmissions(): bool
     {
-        return in_array($this->status, ['ongoing', 'published']) && $this->isOngoing();
+        $phase = $this->currentPhase();
+
+        if (! $phase) {
+            return false;
+        }
+
+        return $phase->action_type === 'idea' && $phase->isOpenNow();
+    }
+
+    public function currentPhase(): ?CompetitionPhase
+    {
+        $loadedPhases = $this->relationLoaded('phases') ? $this->phases : $this->phases()->get();
+
+        $openPhase = $loadedPhases->first(function (CompetitionPhase $phase) {
+            return $phase->isOpenNow();
+        });
+
+        if ($openPhase) {
+            return $openPhase;
+        }
+
+        return $loadedPhases->firstWhere('status', 'open');
+    }
+
+    public function isPhaseOpen(string $phaseKey): bool
+    {
+        $phase = $this->phases()->where('phase_key', $phaseKey)->first();
+
+        return $phase?->isOpenNow() ?? false;
     }
 
     /**
-     * Get the status badge color.
+     * Teacher self-signup on the public explore competition page.
+     * Only when status is ongoing and the registration phase is open.
+     * Published / “coming soon” competitions stay browse-only until an admin sets status to ongoing.
      */
+    public function allowsPublicTeacherRegistration(): bool
+    {
+        if (! $this->is_active || $this->status !== 'ongoing') {
+            return false;
+        }
+
+        return $this->isPhaseOpen('registration');
+    }
+
     public function getStatusBadgeAttribute(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             'draft' => 'secondary',
             'published' => 'info',
             'ongoing' => 'success',
@@ -150,36 +232,23 @@ class Competition extends Model
         };
     }
 
-    /**
-     * Scope for active competitions.
-     */
-    public function scopeActive($query)
+    public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
     }
 
-    /**
-     * Scope for published competitions.
-     */
-    public function scopePublished($query)
+    public function scopePublished(Builder $query): Builder
     {
         return $query->whereIn('status', ['published', 'ongoing']);
     }
 
-    /**
-     * Scope for public visible competitions.
-     */
-    public function scopePublicVisible($query)
+    public function scopePublicVisible(Builder $query): Builder
     {
         return $query->whereIn('status', ['published', 'ongoing', 'completed']);
     }
 
-    /**
-     * Scope for competitions by club.
-     */
-    public function scopeForClub($query, $clubId)
+    public function scopeForClub(Builder $query, int|string $clubId): Builder
     {
         return $query->where('club_id', $clubId);
     }
 }
-
