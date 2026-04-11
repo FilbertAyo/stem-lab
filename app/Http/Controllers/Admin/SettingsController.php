@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -195,18 +196,57 @@ class SettingsController extends Controller
                 ->with('status', 'Legal pages saved. No notification emails were sent because there are no eligible users.');
         }
 
-        $chunks = array_chunk($recipientIds, 50);
-        $jobs = [];
-        foreach ($chunks as $chunk) {
-            $jobs[] = new SendLegalUpdateNotificationsChunkJob($chunk);
+        if ($this->pendingLegalNotifyBatchExists()) {
+            $message = 'Legal notification emails are already queued or sending. Wait until that finishes before sending again, or clear the queue if it was a mistake.';
+
+            if ($request->wantsJson()) {
+                return response()->json(['message' => $message], 409);
+            }
+
+            return redirect()->route('admin.settings.index', ['tab' => 'legal'])
+                ->withErrors(['notify_users' => $message]);
         }
 
-        $adminId = (int) $request->user()->id;
-        $batch = Bus::batch($jobs)
-            ->name('legal-notify-'.$adminId)
-            ->dispatch();
+        $lock = Cache::lock('legal-notify-dispatch', 30);
 
-        Cache::put('legal_batch_owner:'.$batch->id, $adminId, now()->addHours(24));
+        if (! $lock->get()) {
+            $message = 'Another legal notification send is in progress. Please wait a moment and try again.';
+
+            if ($request->wantsJson()) {
+                return response()->json(['message' => $message], 429);
+            }
+
+            return redirect()->route('admin.settings.index', ['tab' => 'legal'])
+                ->withErrors(['notify_users' => $message]);
+        }
+
+        try {
+            if ($this->pendingLegalNotifyBatchExists()) {
+                $message = 'Legal notification emails are already queued or sending. Wait until that finishes before sending again.';
+
+                if ($request->wantsJson()) {
+                    return response()->json(['message' => $message], 409);
+                }
+
+                return redirect()->route('admin.settings.index', ['tab' => 'legal'])
+                    ->withErrors(['notify_users' => $message]);
+            }
+
+            $chunks = array_chunk($recipientIds, 50);
+            $jobs = [];
+            foreach ($chunks as $chunk) {
+                $jobs[] = new SendLegalUpdateNotificationsChunkJob($chunk);
+            }
+
+            $adminId = (int) $request->user()->id;
+            $batch = Bus::batch($jobs)
+                ->name('legal-notify-'.$adminId)
+                ->dispatch();
+
+            Cache::put('legal_batch_owner:'.$batch->id, $adminId, now()->addHours(24));
+        } finally {
+            $lock->release();
+        }
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -251,5 +291,21 @@ class SettingsController extends Controller
             'pending_jobs' => $pending,
             'progress' => $progress,
         ]);
+    }
+
+    /**
+     * True when a prior legal-notification batch still has jobs pending (queued or in progress).
+     */
+    protected function pendingLegalNotifyBatchExists(): bool
+    {
+        if (! Schema::hasTable('job_batches')) {
+            return false;
+        }
+
+        return DB::table('job_batches')
+            ->where('name', 'like', 'legal-notify-%')
+            ->whereNull('cancelled_at')
+            ->where('pending_jobs', '>', 0)
+            ->exists();
     }
 }

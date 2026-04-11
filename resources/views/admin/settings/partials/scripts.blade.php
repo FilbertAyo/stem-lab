@@ -8,6 +8,7 @@
     const overlayProgress = document.getElementById('legal-notify-overlay-progress');
     const legalBatchStatusUrlTemplate = cfg && cfg.dataset.batchUrlTemplate ? cfg.dataset.batchUrlTemplate : '';
     const settingsIndexUrl = cfg && cfg.dataset.settingsIndexUrl ? cfg.dataset.settingsIndexUrl : '';
+    var legalNotifySubmitting = false;
 
     function initTinyMCE() {
         if (typeof tinymce === 'undefined' || !legalForm) {
@@ -84,6 +85,18 @@
                 return;
             }
             e.preventDefault();
+            if (legalNotifySubmitting) {
+                return;
+            }
+            legalNotifySubmitting = true;
+            const silentBtn = document.getElementById('legal-save-silent-btn');
+            const notifyBtn = document.getElementById('legal-save-notify-btn');
+            if (silentBtn) {
+                silentBtn.disabled = true;
+            }
+            if (notifyBtn) {
+                notifyBtn.disabled = true;
+            }
             if (typeof tinymce !== 'undefined') {
                 tinymce.triggerSave();
             }
@@ -114,6 +127,13 @@
             } catch (err) {
                 hideOverlay();
                 alert('Network error while saving.');
+                legalNotifySubmitting = false;
+                if (silentBtn) {
+                    silentBtn.disabled = false;
+                }
+                if (notifyBtn) {
+                    notifyBtn.disabled = false;
+                }
                 return;
             }
 
@@ -122,12 +142,26 @@
             if (res.status === 422) {
                 hideOverlay();
                 alert(payload.message || 'Could not send notifications.');
+                legalNotifySubmitting = false;
+                if (silentBtn) {
+                    silentBtn.disabled = false;
+                }
+                if (notifyBtn) {
+                    notifyBtn.disabled = false;
+                }
                 return;
             }
 
             if (!res.ok) {
                 hideOverlay();
                 alert(payload.message || ('Request failed (' + res.status + ').'));
+                legalNotifySubmitting = false;
+                if (silentBtn) {
+                    silentBtn.disabled = false;
+                }
+                if (notifyBtn) {
+                    notifyBtn.disabled = false;
+                }
                 return;
             }
 
@@ -135,6 +169,13 @@
             if (!batchId) {
                 hideOverlay();
                 alert('Missing batch id from server.');
+                legalNotifySubmitting = false;
+                if (silentBtn) {
+                    silentBtn.disabled = false;
+                }
+                if (notifyBtn) {
+                    notifyBtn.disabled = false;
+                }
                 return;
             }
 
@@ -143,6 +184,13 @@
             } catch (err) {
                 hideOverlay();
                 alert(err.message || 'Batch failed.');
+                legalNotifySubmitting = false;
+                if (silentBtn) {
+                    silentBtn.disabled = false;
+                }
+                if (notifyBtn) {
+                    notifyBtn.disabled = false;
+                }
                 return;
             }
 
