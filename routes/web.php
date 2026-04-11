@@ -214,6 +214,9 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
         Route::prefix('settings')->name('settings.')->group(function () {
             Route::get('/', [SettingsController::class, 'index'])->name('index');
             Route::put('/', [SettingsController::class, 'update'])->name('update');
+            Route::put('/legal', [SettingsController::class, 'updateLegal'])->name('legal');
+            Route::get('/legal-notification-batch/{batchId}', [SettingsController::class, 'legalNotificationBatchStatus'])
+                ->name('legal-notification-batch');
         });
 
         // Audit Logs
