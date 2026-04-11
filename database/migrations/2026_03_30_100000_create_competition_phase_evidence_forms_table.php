@@ -33,7 +33,6 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->unique('competition_phase_id', 'cpef_phase_unique');
-            $table->index('google_form_url', 'cpef_url_index');
         });
     }
 
