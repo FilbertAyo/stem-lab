@@ -221,8 +221,8 @@
                         </div>
 
                         @if(method_exists($logs, 'hasPages') && $logs->hasPages())
-                            <div class="mt-3">
-                                {{ $logs->links() }}
+                            <div class="mt-3 d-flex justify-content-end">
+                                {{ $logs->links('pagination::bootstrap-5') }}
                             </div>
                         @endif
                     </div>
