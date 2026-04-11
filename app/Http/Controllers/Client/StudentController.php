@@ -28,8 +28,10 @@ class StudentController extends Controller
             ->with(['club', 'school'])
             ->get();
 
-        // Get all students
-        $students = Student::whereIn('teacher_club_id', $teacherClubs->pluck('id'))
+        // Students registered by any approved teacher at the same club + school
+        $coMemberTeacherClubIds = $user->approvedCoMemberTeacherClubIds();
+        $students = Student::query()
+            ->whereIn('teacher_club_id', $coMemberTeacherClubIds)
             ->with(['schoolClass', 'teacherClub.club', 'teacherClub.school'])
             ->orderBy('name')
             ->get();
@@ -214,16 +216,47 @@ class StudentController extends Controller
         );
     }
 
+    /**
+     * Delete multiple students owned by the current teacher (approved clubs).
+     */
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'student_ids' => ['required', 'array', 'min:1'],
+            'student_ids.*' => ['integer', 'exists:students,id'],
+        ]);
+
+        $manageableTeacherClubIds = $user->approvedCoMemberTeacherClubIds();
+
+        $query = Student::query()
+            ->whereIn('id', $validated['student_ids'])
+            ->whereIn('teacher_club_id', $manageableTeacherClubIds);
+
+        $deleted = $query->delete();
+        $requested = count(array_unique($validated['student_ids']));
+
+        if ($deleted === 0) {
+            return redirect()->route('client.students.index')
+                ->with('error', 'No students could be removed. Refresh the page and try again.');
+        }
+
+        if ($deleted < $requested) {
+            return redirect()->route('client.students.index')
+                ->with('status', "Removed {$deleted} student(s). Some rows were skipped because they are no longer in your club roster.");
+        }
+
+        return redirect()->route('client.students.index')
+            ->with('status', "Removed {$deleted} student(s).");
+    }
+
     private function authorizeStudentForTeacher(Student $student): void
     {
         $user = Auth::user();
-        $owns = TeacherClub::query()
-            ->where('id', $student->teacher_club_id)
-            ->where('user_id', $user->id)
-            ->approved()
-            ->exists();
+        $canManage = $user->approvedCoMemberTeacherClubIds()->contains($student->teacher_club_id);
 
-        abort_unless($owns, 403);
+        abort_unless($canManage, 403);
     }
 
     private function redirectAfterStudentMutation(Request $request, string $message): RedirectResponse

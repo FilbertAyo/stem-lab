@@ -12,6 +12,9 @@
         'total_students' => 0,
     ];
     $latestModels = $latestModels ?? collect();
+    $topCompetitionReminders = $topCompetitionReminders ?? collect();
+    $competitionNotificationCount = $competitionNotificationCount ?? 0;
+    $competitionShortcuts = $competitionShortcuts ?? [];
 @endphp
 
 <x-app-layout>
@@ -22,6 +25,80 @@
         <div class="dashboard-content-header">
             <h2 class="title mb-0">Dashboard</h2>
         </div>
+
+        {{-- Competition reminders and quick shortcuts --}}
+        <section class="row mb-4">
+          <div class="col-12">
+            <div class="card border-0 shadow-none">
+              <div class="card-body">
+                <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-3">
+                  <div>
+                    <h5 class="mb-1 fw-semibold">
+                      <i class="bi bi-trophy me-2"></i>Competition reminders
+                    </h5>
+                    <p class="mb-0 text-muted small">Quick status updates for your latest competition tasks.</p>
+                  </div>
+                  <div>
+                    <a href="{{ route('client.competitions.index') }}" class="badge bg-primary border-0 text-white">
+                      Open competitions
+                    </a>
+                  </div>
+                </div>
+
+                <div class="alert {{ $competitionNotificationCount > 0 ? 'alert-warning' : 'alert-success' }} py-2 px-3 mb-3">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="small fw-medium">
+                      @if($competitionNotificationCount > 0)
+                        You have {{ $competitionNotificationCount }} competition notification{{ $competitionNotificationCount > 1 ? 's' : '' }} to review.
+                      @else
+                        No urgent competition tasks right now.
+                      @endif
+                    </span>
+                    <span class="badge {{ $competitionNotificationCount > 0 ? 'text-bg-warning' : 'text-bg-success' }}">
+                      {{ $competitionNotificationCount }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="row g-2 mb-3">
+                  @foreach($competitionShortcuts as $shortcut)
+                    <div class="col-6 col-lg-4">
+                      <a href="{{ $shortcut['route'] }}" class="text-decoration-none">
+                        <div class="border rounded p-3 h-100">
+                          <p class="small text-muted mb-1">{{ $shortcut['label'] }}</p>
+                          <h5 class="mb-0 fw-bold text-dark">{{ $shortcut['value'] }}</h5>
+                        </div>
+                      </a>
+                    </div>
+                  @endforeach
+                </div>
+
+                @if($topCompetitionReminders->isNotEmpty())
+                  <div class="list-group list-group-flush">
+                    @foreach($topCompetitionReminders as $reminder)
+                      <div class="list-group-item px-0 py-2 border-0 border-bottom">
+                        <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+                          <div>
+                            <h6 class="mb-1 fw-semibold">{{ $reminder['competition']->name }}</h6>
+                            <p class="small text-muted mb-0">{{ $reminder['label'] }}</p>
+                          </div>
+                          <div class="text-md-end">
+                            @if($reminder['time'])
+                              <p class="small text-muted mb-1">Updated {{ $reminder['time']->diffForHumans() }}</p>
+                            @endif
+                            <a href="{{ $reminder['route'] }}" class="btn btn-sm btn-primary">
+                              {{ $reminder['route_label'] }}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    @endforeach
+                  </div>
+                @endif
+              </div>
+            </div>
+          </div>
+        </section>
 
         {{-- Platform subscription packages --}}
         <div class="col-12 mb-3">

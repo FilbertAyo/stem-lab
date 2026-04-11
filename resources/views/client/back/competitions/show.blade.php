@@ -22,9 +22,24 @@
                 $wizardFocusPhase = $competition->phases->last();
             }
             $hasUpcomingPhase = $competition->phases->contains(fn ($p) => $p->status === 'upcoming');
+
+            // Progression gates: a team can only move to later phases after clearing the previous milestone.
+            $registrationApproved = $registration && $registration->status === 'approved';
+            $ideaSubmitted = $idea && $idea->status !== 'draft';
+
+            $ideaDecisionStatus = $idea?->shortlist?->status;
+            if ($ideaDecisionStatus === null && $idea && $idea->status === 'shortlisted') {
+                $ideaDecisionStatus = 'shortlisted';
+            }
+            $ideaShortlisted = $ideaDecisionStatus === 'shortlisted';
+
+            $prototypeSubmitted = $idea?->prototypeSubmission && $idea->prototypeSubmission->status === 'submitted';
+            $prototypeShortlisted = $idea?->prototypeSubmission?->prototypeShortlist?->status === 'shortlisted';
+
+            $modificationSubmitted = $idea?->prototypeModification && $idea->prototypeModification->status === 'submitted';
         @endphp
 
-        <div class="card border-0 shadow-none mb-4 phase-wizard-card">
+        <div class="card border-0 shadow-lg mb-4 phase-wizard-card">
             <div class="card-body py-3 px-3 px-md-4">
                 <div class="d-flex flex-column flex-md-row flex-md-wrap align-items-md-center justify-content-md-between gap-3 mb-3">
                     <div>
@@ -144,31 +159,31 @@
        @include('client.back.competitions.phases.registration')
 @endif
 
-@if($competition->isPhaseOpen('idea_submission'))
+@if($competition->isPhaseOpen('idea_submission') && $registrationApproved)
     @include('client.back.competitions.phases.idea_submission')
 @endif
 
-@if($competition->isPhaseOpen('idea_shortlisting'))
+@if($competition->isPhaseOpen('idea_shortlisting') && $registrationApproved && $ideaSubmitted)
     @include('client.back.competitions.phases.idea_shortlisting')
 @endif
 
-@if($competition->isPhaseOpen('prototype_development'))
+@if($competition->isPhaseOpen('prototype_development') && $registrationApproved && $ideaSubmitted && $ideaShortlisted)
     @include('client.back.competitions.phases.prototype_development')
 @endif
 
-@if($competition->isPhaseOpen('prototype_shortlisting'))
+@if($competition->isPhaseOpen('prototype_shortlisting') && $registrationApproved && $ideaSubmitted && $ideaShortlisted && $prototypeSubmitted)
     @include('client.back.competitions.phases.prototype_shortlisting')
 @endif
 
-@if($competition->isPhaseOpen('mentor_onboarding'))
+@if($competition->isPhaseOpen('mentor_onboarding') && $registrationApproved && $ideaSubmitted && $ideaShortlisted && $prototypeSubmitted && $prototypeShortlisted)
     @include('client.back.competitions.phases.mentor_onboarding')
 @endif
 
-@if($competition->isPhaseOpen('prototype_modification'))
+@if($competition->isPhaseOpen('prototype_modification') && $registrationApproved && $ideaSubmitted && $ideaShortlisted && $prototypeSubmitted && $prototypeShortlisted)
     @include('client.back.competitions.phases.prototype_modification')
 @endif
 
-@if($competition->isPhaseOpen('pitch_winner'))
+@if($competition->isPhaseOpen('pitch_winner') && $registrationApproved && $ideaSubmitted && $ideaShortlisted && $prototypeSubmitted && $prototypeShortlisted && $modificationSubmitted)
     @include('client.back.competitions.phases.pitch_winner')
 @endif
 

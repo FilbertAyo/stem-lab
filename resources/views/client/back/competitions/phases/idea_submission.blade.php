@@ -3,6 +3,17 @@
     $selectedRepIds = old(
         'representative_student_ids',
         $registration?->representativeStudents->pluck('student_id')->all() ?? []);
+    $stemCategoryOptions = [
+        'Science',
+        'Technology',
+        'Engineering',
+        'Mathematics',
+        'Integrated STEM',
+        'Environmental Science',
+    ];
+    $selectedStemCategory = (string) old('stem_category', $idea?->stem_category);
+    $isCustomStemCategory = $selectedStemCategory !== '' && ! in_array($selectedStemCategory, $stemCategoryOptions, true);
+    $selectedStemCategoryOther = (string) old('stem_category_other', $isCustomStemCategory ? $selectedStemCategory : '');
 @endphp
 
 <div id="idea-submission" class="row">
@@ -10,8 +21,11 @@
         <div class="card border-0 shadow-none mb-4">
             <div class="card-header bg-transparent d-flex flex-wrap align-items-center justify-content-between gap-2">
                 <div>
-                    <h6 class="mb-0">Idea submission</h6>
+                    <h4 class="mb-0 text-uppercase">Idea submission</h4>
                     <p class="text-muted small mb-0 mt-1">
+                        {{ $competition->description ?: 'Share your school’s problem and proposed STEM solution for this competition phase.' }}
+                    </p>
+                    <p class="text-primary small mb-0 mt-3">
                         Submit one idea for your school. Select exactly <strong>{{ $repCount }}</strong> student representatives from your pool;
                         at least <strong>70%</strong> must be girls.
                     </p>
@@ -61,16 +75,27 @@
                         <div class="row g-2">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">STEM discipline <span class="text-danger">*</span></label>
-                                <input type="text" name="stem_category" class="form-control @error('stem_category') is-invalid @enderror border p-2" value="{{ old('stem_category', $idea?->stem_category) }}" required maxlength="120" list="stem-category-suggestions">
-                                <datalist id="stem-category-suggestions">
-                                    <option value="Science"></option>
-                                    <option value="Technology"></option>
-                                    <option value="Engineering"></option>
-                                    <option value="Mathematics"></option>
-                                    <option value="Integrated STEM"></option>
-                                    <option value="Environmental Science"></option>
-                                </datalist>
+                                <select name="stem_category" class="form-select @error('stem_category') is-invalid @enderror border p-2" required>
+                                    <option value="">Select discipline</option>
+                                    @foreach($stemCategoryOptions as $option)
+                                        <option value="{{ $option }}" @selected($selectedStemCategory === $option)>{{ $option }}</option>
+                                    @endforeach
+                                    <option value="Other" @selected($selectedStemCategory === 'Other' || $isCustomStemCategory)>Other</option>
+                                </select>
                                 @error('stem_category')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="col-md-6 mb-3" id="stemCategoryOtherWrap" @if(!($selectedStemCategory === 'Other' || $isCustomStemCategory)) style="display: none;" @endif>
+                                <label class="form-label">Other STEM discipline <span class="text-danger">*</span></label>
+                                <input
+                                    type="text"
+                                    id="stemCategoryOtherInput"
+                                    name="stem_category_other"
+                                    class="form-control @error('stem_category_other') is-invalid @enderror border p-2"
+                                    value="{{ $selectedStemCategoryOther }}"
+                                    maxlength="120"
+                                    @if($selectedStemCategory === 'Other' || $isCustomStemCategory) required @endif
+                                >
+                                @error('stem_category_other')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Community region</label>
@@ -82,12 +107,13 @@
                                 </select>
                                 @error('community_region_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Community / location</label>
+                                <input type="text" name="community_location" class="form-control @error('community_location') is-invalid @enderror border p-2" value="{{ old('community_location', $idea?->community_location) }}" maxlength="255">
+                                @error('community_location')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Community / location</label>
-                            <input type="text" name="community_location" class="form-control @error('community_location') is-invalid @enderror border p-2" value="{{ old('community_location', $idea?->community_location) }}" maxlength="255">
-                            @error('community_location')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                        </div>
+                      
                         <div class="mb-4">
                             <label class="form-label">Supporting notes</label>
                             <textarea name="supporting_notes" class="form-control @error('supporting_notes') is-invalid @enderror border p-2" rows="3">{{ old('supporting_notes', $idea?->supporting_notes) }}</textarea>
@@ -167,6 +193,19 @@
                 const checkboxes = Array.from(form.querySelectorAll('.idea-rep-checkbox'));
                 const selectedCountEl = document.getElementById('ideaSelectedCount');
                 const selectedGirlsRatioEl = document.getElementById('ideaSelectedGirlsRatio');
+                const stemCategorySelect = form.querySelector('select[name="stem_category"]');
+                const stemCategoryOtherWrap = document.getElementById('stemCategoryOtherWrap');
+                const stemCategoryOtherInput = document.getElementById('stemCategoryOtherInput');
+
+                function toggleStemCategoryOther() {
+                    if (!stemCategorySelect || !stemCategoryOtherWrap || !stemCategoryOtherInput) return;
+                    const isOther = stemCategorySelect.value === 'Other';
+                    stemCategoryOtherWrap.style.display = isOther ? '' : 'none';
+                    stemCategoryOtherInput.required = isOther;
+                    if (!isOther) {
+                        stemCategoryOtherInput.value = '';
+                    }
+                }
 
                 function updateIdeaRepSelection() {
                     const checked = checkboxes.filter(function (el) { return el.checked; });
@@ -188,6 +227,11 @@
                     });
                 });
 
+                if (stemCategorySelect) {
+                    stemCategorySelect.addEventListener('change', toggleStemCategoryOther);
+                }
+
+                toggleStemCategoryOther();
                 updateIdeaRepSelection();
             });
         </script>

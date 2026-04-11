@@ -133,6 +133,55 @@
 
             </div>
 
+            <div class="row mb-2">
+                <div class="col-lg-12 mb-4">
+                    <div class="card border shadow-none">
+                        <div class="card-header bg-transparent border-bottom d-flex align-items-center justify-content-between">
+                            <h6 class="mb-0">Competition Phases & Actions</h6>
+                            <small class="text-muted">Open a competition to view phase actions</small>
+                        </div>
+                        <div class="card-body">
+                            @if($dashboardCompetitions->isEmpty())
+                                <p class="text-muted mb-0 small">No competitions found.</p>
+                            @else
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Competition</th>
+                                                <th>Club</th>
+                                                <th>Phases</th>
+                                                <th class="text-end">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($dashboardCompetitions as $competition)
+                                                <tr>
+                                                    <td class="fw-semibold">{{ $competition->name }}</td>
+                                                    <td class="text-muted small">{{ $competition->club?->name ?? '—' }}</td>
+                                                    <td>{{ $competition->phases->count() }}</td>
+                                                    <td class="text-end">
+                                                        <button
+                                                            class="btn btn-success btn-sm"
+                                                            type="button"
+                                                            data-bs-toggle="offcanvas"
+                                                            data-bs-target="#competitionPhasesCanvas{{ $competition->id }}"
+                                                            aria-controls="competitionPhasesCanvas{{ $competition->id }}"
+                                                        >
+                                                            View phases
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Visitor charts per week (combined) -->
             <div class="row mb-2">
                 <div class="col-lg-12 mb-4">
@@ -165,6 +214,8 @@
                     </div>
                 </div>
             </div>
+
+            
 
             <!-- Latest Active Admin & Recent Activities Row -->
             <div class="row mb-4">
@@ -246,6 +297,75 @@
             </div>
         </div>
     </div>
+
+    @foreach($dashboardCompetitions as $competition)
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="competitionPhasesCanvas{{ $competition->id }}" aria-labelledby="competitionPhasesCanvasLabel{{ $competition->id }}" style="--bs-offcanvas-width: 640px;">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="competitionPhasesCanvasLabel{{ $competition->id }}">
+                    {{ $competition->name }} - Phases
+                </h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                @if($competition->phases->isEmpty())
+                    <p class="text-muted small mb-0">No phases configured for this competition.</p>
+                @else
+                    <ul class="list-unstyled mb-0">
+                        @foreach($competition->phases as $phase)
+                            @php
+                                $phaseAction = match ($phase->phase_key) {
+                                    'registration' => [
+                                        'label' => 'Registrations',
+                                        'route' => route('admin.competitions.registrations.index', $competition),
+                                        'btn' => 'btn-outline-success',
+                                        'icon' => 'ti ti-users',
+                                    ],
+                                    'idea_submission', 'idea_shortlisting' => [
+                                        'label' => 'Ideas',
+                                        'route' => route('admin.competitions.ideas.index', $competition),
+                                        'btn' => 'btn-outline-warning',
+                                        'icon' => 'ti ti-bulb',
+                                    ],
+                                    'prototype_development', 'prototype_shortlisting' => [
+                                        'label' => 'Prototype Submissions',
+                                        'route' => route('admin.competitions.prototype-shortlisting.index', $competition),
+                                        'btn' => 'btn-outline-info',
+                                        'icon' => 'ti ti-list-check',
+                                    ],
+                                    'mentor_onboarding', 'prototype_modification' => [
+                                        'label' => 'Prototype Modifications',
+                                        'route' => route('admin.competitions.prototype-modification.index', $competition),
+                                        'btn' => 'btn-outline-dark',
+                                        'icon' => 'ti ti-adjustments',
+                                    ],
+                                    'pitch_winner' => [
+                                        'label' => 'Pitch & Winner',
+                                        'route' => route('admin.competitions.pitch-winner.index', $competition),
+                                        'btn' => 'btn-outline-success',
+                                        'icon' => 'ti ti-microphone',
+                                    ],
+                                    default => null,
+                                };
+                            @endphp
+                            <li class="border rounded p-3 mb-2">
+                                <div class="d-flex justify-content-between align-items-start gap-2">
+                                    <div>
+                                        <div class="fw-semibold">{{ $phase->sequence }}. {{ $phase->name }}</div>
+                                        <div class="small text-muted">{{ ucfirst(str_replace('_', ' ', $phase->status)) }}</div>
+                                    </div>
+                                    @if($phaseAction)
+                                        <a href="{{ $phaseAction['route'] }}" class="btn btn-sm {{ $phaseAction['btn'] }}">
+                                            <i class="{{ $phaseAction['icon'] }}"></i> {{ $phaseAction['label'] }}
+                                        </a>
+                                    @endif
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </div>
+    @endforeach
 
     @push('scripts')
     <script type="application/json" id="visitor-week-chart-data">

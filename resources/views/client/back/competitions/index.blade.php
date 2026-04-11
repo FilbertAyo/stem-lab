@@ -48,7 +48,7 @@
                                         <div class="col-md-8">
                                             <div class="card-body d-flex flex-column h-100">
                                                 <div class="d-flex justify-content-between align-items-start mb-2">
-                                                    <span class="badge bg-primary text-white">{{ $competition->club->name }}</span>
+                                                    <span class="badge bg-light text-dark border">{{ $competition->club->name }}</span>
                                                     @if($registration)
                                                         @php($regBadge = $registration->status === 'approved' ? 'success' : ($registration->status === 'rejected' ? 'danger' : ($registration->status === 'draft' ? 'secondary' : 'warning')))
                                                         <span class="badge bg-{{ $regBadge }}">
@@ -63,9 +63,9 @@
                                                     <div class="small text-primary fw-semibold mb-1">Continue here — next steps for this competition</div>
                                                 @endif
 
-                                                <h5 class="card-title fw-semibold">{{ $competition->name }}</h5>
-                                                <p class="card-text text-muted small flex-grow-1">
-                                                    {{ Str::limit($competition->description, 100) }}
+                                                <h5 class="card-title fw-semibold mt-3">{{ $competition->name }}</h5>
+                                                <p class="card-text flex-grow-1">
+                                                    {{ Str::limit($competition->description, 300) }}
                                                 </p>
 
                                                 @if(! $teacherClub)

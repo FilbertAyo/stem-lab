@@ -65,7 +65,7 @@
                                 <input type="file" name="csv_file" id="csv_file" accept=".csv,.txt" class="form-control border p-2" required>
                             </div>
                             <div class="col-md-4">
-                                <button type="submit" class="btn btn-primary text-white w-100">
+                                <button type="submit" class="badge bg-primary border-0">
                                     <i class="bi bi-upload me-1"></i>Import students
                                 </button>
                             </div>
@@ -76,7 +76,17 @@
                 <div class="card border-0 shadow-none mb-4">
                     <div class="card-header bg-light-soft d-flex flex-wrap align-items-center justify-content-between gap-2">
                         <h5 class="mb-0">Students in your pool</h5>
-                        <span class="badge bg-secondary">{{ $poolCount }} {{ Str::plural('student', $poolCount) }}</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-white text-muted">{{ $poolCount }} {{ Str::plural('student', $poolCount) }}</span>
+                            @if($students->isNotEmpty())
+                                <button type="button"
+                                        class="badge bg-danger border-0"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#clearPoolStudentsModal">
+                                    Delete all students
+                                </button>
+                            @endif
+                        </div>
                     </div>
                     <div class="card-body">
                         @if($students->isEmpty())
@@ -86,6 +96,9 @@
                                 <p class="small mb-0">Download the template, fill it in, and import a CSV. Imported students will appear here immediately.</p>
                             </div>
                         @else
+                            <p class="text-muted small mb-3">
+                                Need to fix many records quickly? Use <strong>Delete all in pool</strong> to clear this competition pool, then upload a corrected CSV.
+                            </p>
                             <div class="table-responsive">
                                 <table class="table table-hover table-bordered table-light-soft align-middle mb-0">
                                     <thead class="table-light">
@@ -181,7 +194,7 @@
                             </div>
 
                             <div class="d-flex flex-wrap gap-2 mt-4">
-                                <button type="submit" class="btn btn-sm btn-primary text-white" @if(! $poolOk) disabled title="Meet eligibility in the sidebar first" @endif>
+                                <button type="submit" class="badge bg-primary border-0" @if(! $poolOk) disabled title="Meet eligibility in the sidebar first" @endif>
                                     Submit registration for approval
                                 </button>
                           </div>
@@ -216,7 +229,7 @@
                             <p class="text-muted small mb-2">Only students in these classes are counted for eligibility:</p>
                             <ul class="small mb-0 ps-3">
                                 @foreach($competition->classRequirements as $req)
-                                    <li class='badge bg-dark text-white'>{{ $req->schoolClass->name ?? 'Class #'.$req->school_class_id }}</li>
+                                    <li class='badge bg-light text-muted mb-2'>{{ $req->schoolClass->name ?? 'Class #'.$req->school_class_id }}</li>
                                 @endforeach
                             </ul>
                         @endif
@@ -272,7 +285,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                         <button type="submit" class="btn btn-sm btn-primary text-white">Save changes</button>
+                         <button type="submit" class="badge bg-primary border-0">Save changes</button>
                         </div>
                     </form>
                 </div>
@@ -294,7 +307,33 @@
                             <p class="mb-0">Remove <strong id="deleteStudentNameDisplay"></strong> from your club roster? They will disappear from this pool. If they were linked to a draft registration, those links are removed too.</p>
                         </div>
                         <div class="modal-footer">
-                         <button type="submit" class="btn btn-sm btn-primary text-white">Delete</button>
+                         <button type="submit" class="badge bg-danger border-0">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="clearPoolStudentsModal" tabindex="-1" aria-labelledby="clearPoolStudentsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="clearPoolStudentsModalLabel">Delete all pool students</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="{{ route('client.competitions.register.pool-students.clear', $competition) }}">
+                        @csrf
+                        @method('DELETE')
+                        <div class="modal-body">
+                            <p class="mb-2">
+                                Remove all <strong>{{ $poolCount }}</strong> students currently listed in this competition pool?
+                            </p>
+                            <p class="text-muted small mb-0">
+                                This is intended for fixing bulk import mistakes quickly before you upload a corrected CSV.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                         <button type="submit" class="badge bg-danger border-0">Delete all</button>
                         </div>
                     </form>
                 </div>

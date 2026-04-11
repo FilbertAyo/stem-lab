@@ -106,20 +106,20 @@
                         @if(filled($prototypeModificationEvidenceFormUrl))
                             <div class="alert alert-light border mb-4">
                                 <div class="small text-muted mb-1"><strong>Google Form link (modification evidence)</strong></div>
-                                <a href="{{ $prototypeModificationEvidenceFormUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary mb-2">
+                                <a href="{{ $prototypeModificationEvidenceFormUrl }}" target="_blank" rel="noopener noreferrer" class="badge bg-primary border-0 mb-2 text-white">
                                     Open Google Form
                                 </a>
                                 <div class="small text-muted mb-1"><strong>Google Form identifier</strong></div>
-                                <div class="input-group" style="max-width: 720px;">
-                                    <input id="modificationEvidenceIdentifierInput" type="text" class="form-control font-monospace" value="{{ $modificationEvidenceIdentifier }}" readonly>
-                                    <button type="button" class="btn btn-outline-primary" id="copyModificationEvidenceIdentifierBtn">Copy ID</button>
+                                <div class="input-group bg-white" style="max-width: 720px;">
+                                    <input id="modificationEvidenceIdentifierInput" type="text" class="form-control font-monospace border p-2" value="{{ $modificationEvidenceIdentifier }}" readonly>
+                                    <button type="button" class="badge bg-info border-0 text-white" id="copyModificationEvidenceIdentifierBtn">Copy ID</button>
                                 </div>
                             </div>
                         @endif
 
                         <div class="d-flex flex-wrap gap-2 mt-2">
-                            <button type="submit" class="btn btn-dark btn-sm" name="submit_final" value="0">Save draft</button>
-                            <button type="submit" class="btn btn-primary text-white btn-sm" name="submit_final" value="1">Submit modification</button>
+                            <button type="submit" class="badge bg-dark border-0" name="submit_final" value="0">Save draft</button>
+                            <button type="submit" class="badge bg-primary border-0" name="submit_final" value="1">Submit modification</button>
                         </div>
                     </form>
                 @endif

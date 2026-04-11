@@ -147,7 +147,6 @@
         <div class="mb-3">
           @if($allowPublicTeacherSignup)
             <span class="badge rounded-pill bg-success text-white">Registration open</span>
-            <span class="text-muted small ms-2">New teachers can join from this page while this window is open.</span>
           @else
             <span class="badge rounded-pill bg-danger text-white">Registration closed</span>
         @endif

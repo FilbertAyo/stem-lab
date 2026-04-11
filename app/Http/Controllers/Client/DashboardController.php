@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Competition;
+use App\Models\CompetitionRegistration;
 use App\Models\Model3d;
 use App\Models\ModelQuestionAnswer;
 use App\Models\Student;
@@ -33,13 +35,135 @@ class DashboardController extends Controller
 
         // Get user's competition participations (disabled for phase-1 admin competition setup)
         $teacherClubs = $user->teacherClubs()->pluck('id');
+        $teacherClubIds = $user->teacherClubs()
+            ->where('status', 'approved')
+            ->pluck('club_id')
+            ->unique()
+            ->filter()
+            ->values();
+        $competitions = collect();
+        $competitionReminders = collect();
         $totalCompetitions = 0;
         $totalSubmissions = 0;
         $totalStudents = 0;
 
         if ($teacherClubs->isNotEmpty()) {
-            // Get user's students (if they're a teacher)
-            $totalStudents = Student::whereIn('teacher_club_id', $teacherClubs)->count();
+            // Students for any approved teacher at the same club + school as this user
+            $totalStudents = Student::whereIn('teacher_club_id', $user->approvedCoMemberTeacherClubIds())->count();
+        }
+
+        if ($teacherClubIds->isNotEmpty()) {
+            $competitions = Competition::query()
+                ->active()
+                ->published()
+                ->whereIn('club_id', $teacherClubIds)
+                ->with(['phases'])
+                ->orderByDesc('competition_start')
+                ->get();
+
+            $registrations = CompetitionRegistration::query()
+                ->where('teacher_user_id', $userId)
+                ->whereIn('competition_id', $competitions->pluck('id'))
+                ->with([
+                    'idea.shortlist',
+                    'prototypeSubmission.prototypeShortlist',
+                    'prototypeModification',
+                ])
+                ->get()
+                ->keyBy('competition_id');
+
+            $competitionReminders = $competitions->map(function (Competition $competition) use ($registrations) {
+                $registration = $registrations->get($competition->id);
+                $registrationStatus = $registration?->status;
+                $idea = $registration?->idea;
+                $ideaDecisionStatus = $idea?->shortlist?->status;
+                if (! $ideaDecisionStatus && $idea?->status === 'shortlisted') {
+                    $ideaDecisionStatus = 'shortlisted';
+                }
+
+                $prototype = $registration?->prototypeSubmission;
+                $prototypeDecisionStatus = $prototype?->prototypeShortlist?->status;
+                $prototypeModification = $registration?->prototypeModification;
+
+                if (! $registration && $competition->isPhaseOpen('registration')) {
+                    return [
+                        'priority' => 100,
+                        'kind' => 'action_required',
+                        'label' => 'Registration is open - submit your team.',
+                        'competition' => $competition,
+                        'route' => route('client.competitions.register', $competition),
+                        'route_label' => 'Register now',
+                        'time' => $competition->registration_deadline,
+                    ];
+                }
+
+                if ($registrationStatus === 'pending') {
+                    return [
+                        'priority' => 90,
+                        'kind' => 'pending',
+                        'label' => 'Registration submitted and waiting for approval.',
+                        'competition' => $competition,
+                        'route' => route('client.competitions.show', $competition),
+                        'route_label' => 'View status',
+                        'time' => $registration->submitted_at,
+                    ];
+                }
+
+                if ($registrationStatus === 'rejected') {
+                    return [
+                        'priority' => 95,
+                        'kind' => 'action_required',
+                        'label' => 'Registration was rejected - update and resubmit.',
+                        'competition' => $competition,
+                        'route' => route('client.competitions.register', $competition),
+                        'route_label' => 'Fix registration',
+                        'time' => $registration->updated_at,
+                    ];
+                }
+
+                if ($registrationStatus === 'approved' && $competition->isPhaseOpen('idea_submission') && (! $idea || $idea->status === 'draft')) {
+                    return [
+                        'priority' => 85,
+                        'kind' => 'action_required',
+                        'label' => 'Idea submission phase is open - submit your idea.',
+                        'competition' => $competition,
+                        'route' => route('client.competitions.show', $competition).'#idea-submission',
+                        'route_label' => 'Submit idea',
+                        'time' => $competition->competition_end,
+                    ];
+                }
+
+                if ($registrationStatus === 'approved' && $competition->isPhaseOpen('prototype_development') && $ideaDecisionStatus === 'shortlisted' && (! $prototype || $prototype->status === 'draft')) {
+                    return [
+                        'priority' => 80,
+                        'kind' => 'action_required',
+                        'label' => 'Prototype phase is open for shortlisted teams.',
+                        'competition' => $competition,
+                        'route' => route('client.competitions.show', $competition).'#prototype-development',
+                        'route_label' => 'Submit prototype',
+                        'time' => $competition->competition_end,
+                    ];
+                }
+
+                if ($registrationStatus === 'approved' && $competition->isPhaseOpen('prototype_modification') && $prototypeDecisionStatus === 'shortlisted' && (! $prototypeModification || $prototypeModification->status === 'draft')) {
+                    return [
+                        'priority' => 75,
+                        'kind' => 'action_required',
+                        'label' => 'Prototype modification phase is open for your team.',
+                        'competition' => $competition,
+                        'route' => route('client.competitions.show', $competition).'#prototype-modification',
+                        'route_label' => 'Submit modification',
+                        'time' => $competition->competition_end,
+                    ];
+                }
+
+                return null;
+            })->filter()->values();
+
+            $totalCompetitions = $competitions->count();
+            $totalSubmissions = $registrations->filter(function (CompetitionRegistration $registration) {
+                return in_array($registration->status, ['pending', 'approved'], true);
+            })->count();
         }
 
         // Get latest active models
@@ -61,6 +185,35 @@ class DashboardController extends Controller
             'total_students' => $totalStudents,
         ];
 
-        return view('client.back.dashboard', compact('stats', 'latestModels'));
+        $competitionNotificationCount = $competitionReminders->count();
+        $topCompetitionReminders = $competitionReminders
+            ->sortByDesc('priority')
+            ->take(4)
+            ->values();
+        $competitionShortcuts = [
+            [
+                'label' => 'All competitions',
+                'value' => $totalCompetitions,
+                'route' => route('client.competitions.index'),
+            ],
+            [
+                'label' => 'Action needed',
+                'value' => $competitionReminders->where('kind', 'action_required')->count(),
+                'route' => route('client.competitions.index'),
+            ],
+            [
+                'label' => 'Pending approvals',
+                'value' => $competitionReminders->where('kind', 'pending')->count(),
+                'route' => route('client.competitions.index'),
+            ],
+        ];
+
+        return view('client.back.dashboard', compact(
+            'stats',
+            'latestModels',
+            'topCompetitionReminders',
+            'competitionNotificationCount',
+            'competitionShortcuts'
+        ));
     }
 }

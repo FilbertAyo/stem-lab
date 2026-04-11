@@ -371,6 +371,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('teacher')->group(function () {
         Route::prefix('clubs')->name('client.clubs.')->group(function () {
             Route::get('/', [ClientClubController::class, 'index'])->name('index');
+            Route::post('/transfer-leadership', [ClientClubController::class, 'transferLeadership'])->name('transfer-leadership');
             Route::get('/{club}/join', [ClientClubController::class, 'showJoinForm'])->name('join.form');
             Route::post('/{club}/join', [ClientClubController::class, 'join'])->name('join');
             Route::get('/pending-requests', [ClientClubController::class, 'pendingRequests'])->name('pending-requests');
@@ -384,6 +385,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/students/{student}', [ClientStudentController::class, 'update'])->name('client.students.update');
         Route::delete('/students/{student}', [ClientStudentController::class, 'destroy'])->name('client.students.destroy');
         Route::post('/students/bulk', [ClientStudentController::class, 'bulkStore'])->name('client.students.bulk-store');
+        Route::post('/students/bulk-destroy', [ClientStudentController::class, 'bulkDestroy'])->name('client.students.bulk-destroy');
 
         // Weekly Sessions routes
         Route::prefix('weekly-sessions')->name('client.weekly-sessions.')->group(function () {
@@ -402,6 +404,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{competition}/register/representatives', [ClientCompetitionController::class, 'registerRepresentatives'])->name('register.representatives');
             Route::post('/{competition}/register/representatives', [ClientCompetitionController::class, 'storeRegistrationRepresentatives'])->name('register.representatives.store');
             Route::post('/{competition}/register/bulk-students', [ClientCompetitionController::class, 'bulkImportStudents'])->name('register.bulk-students');
+            Route::delete('/{competition}/register/pool-students', [ClientCompetitionController::class, 'clearPoolStudents'])->name('register.pool-students.clear');
             Route::get('/{competition}/register/csv-template', [ClientCompetitionController::class, 'downloadRegistrationCsvTemplate'])->name('register.csv-template');
             Route::get('/{competition}/register', [ClientCompetitionController::class, 'register'])->name('register');
             Route::post('/{competition}/register', [ClientCompetitionController::class, 'storeRegistration'])->name('register.store');

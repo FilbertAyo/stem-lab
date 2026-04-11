@@ -16,21 +16,6 @@
                     <a href="{{ route('admin.competitions.edit', $competition) }}" class="btn btn-primary me-2">
                         <i class="ti ti-edit"></i> Edit
                     </a>
-                    <a href="{{ route('admin.competitions.registrations.index', $competition) }}" class="btn btn-outline-success me-2">
-                        <i class="ti ti-users"></i> Registrations
-                    </a>
-                    <a href="{{ route('admin.competitions.ideas.index', $competition) }}" class="btn btn-outline-warning me-2">
-                        <i class="ti ti-bulb"></i> Ideas
-                    </a>
-                    <a href="{{ route('admin.competitions.prototype-shortlisting.index', $competition) }}" class="btn btn-outline-info me-2">
-                        <i class="ti ti-list-check"></i> Prototype Submissions
-                    </a>
-                    <a href="{{ route('admin.competitions.prototype-modification.index', $competition) }}" class="btn btn-outline-dark me-2">
-                        <i class="ti ti-adjustments"></i> Prototype Modifications
-                    </a>
-                    <a href="{{ route('admin.competitions.pitch-winner.index', $competition) }}" class="btn btn-outline-success me-2">
-                        <i class="ti ti-microphone"></i> Pitch & Winner
-                    </a>
                     <a href="{{ route('admin.competitions.index') }}" class="btn btn-outline-secondary">
                         <i class="ti ti-arrow-left"></i> Back
                     </a>
@@ -85,6 +70,68 @@
                 </div>
 
                 <div class="col-lg-4">
+
+                <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="ti ti-list me-2"></i>Phase Timeline</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                @foreach($competition->phases as $phase)
+                                    @php
+                                        $phaseAction = match ($phase->phase_key) {
+                                            'registration' => [
+                                                'label' => 'Registrations',
+                                                'route' => route('admin.competitions.registrations.index', $competition),
+                                                'btn' => 'btn-outline-success',
+                                                'icon' => 'ti ti-users',
+                                            ],
+                                            'idea_submission', 'idea_shortlisting' => [
+                                                'label' => 'Ideas',
+                                                'route' => route('admin.competitions.ideas.index', $competition),
+                                                'btn' => 'btn-outline-warning',
+                                                'icon' => 'ti ti-bulb',
+                                            ],
+                                            'prototype_development', 'prototype_shortlisting' => [
+                                                'label' => 'Prototype Submissions',
+                                                'route' => route('admin.competitions.prototype-shortlisting.index', $competition),
+                                                'btn' => 'btn-outline-info',
+                                                'icon' => 'ti ti-list-check',
+                                            ],
+                                            'mentor_onboarding', 'prototype_modification' => [
+                                                'label' => 'Prototype Modifications',
+                                                'route' => route('admin.competitions.prototype-modification.index', $competition),
+                                                'btn' => 'btn-outline-dark',
+                                                'icon' => 'ti ti-adjustments',
+                                            ],
+                                            'pitch_winner' => [
+                                                'label' => 'Pitch & Winner',
+                                                'route' => route('admin.competitions.pitch-winner.index', $competition),
+                                                'btn' => 'btn-outline-success',
+                                                'icon' => 'ti ti-microphone',
+                                            ],
+                                            default => null,
+                                        };
+                                    @endphp
+                                    <li class="py-2 border-bottom">
+                                        <div>
+                                            <div class="fw-semibold">{{ $phase->sequence }}. {{ $phase->name }}</div>
+                                            <small class="text-muted">{{ ucfirst(str_replace('_', ' ', $phase->status)) }}</small>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between gap-2 mt-1">
+                                            <small class="text-muted">{{ $phase->opens_at?->format('d M') ?? '—' }}</small>
+                                            @if($phaseAction)
+                                                <a href="{{ $phaseAction['route'] }}" class="btn btn-sm {{ $phaseAction['btn'] }}">
+                                                    <i class="{{ $phaseAction['icon'] }}"></i> {{ $phaseAction['label'] }}
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+
                     <div class="card mb-3">
                         <div class="card-header">
                             <h6 class="mb-0"><i class="ti ti-info-circle me-2"></i>Quick Info</h6>
@@ -175,25 +222,7 @@
                         </div>
                     </div>
 
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h6 class="mb-0"><i class="ti ti-list me-2"></i>Phase Timeline</h6>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-unstyled mb-0">
-                                @foreach($competition->phases as $phase)
-                                    <li class="d-flex justify-content-between py-2 border-bottom">
-                                        <div>
-                                            <div class="fw-semibold">{{ $phase->sequence }}. {{ $phase->name }}</div>
-                                            <small class="text-muted">{{ ucfirst(str_replace('_', ' ', $phase->status)) }}</small>
-                                        </div>
-                                        <small class="text-muted">{{ $phase->opens_at?->format('d M') ?? '—' }}</small>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-
+                
                     <div class="card mb-3">
                         <div class="card-header">
                             <h6 class="mb-0"><i class="ti ti-file-upload me-2"></i>Prototype Evidence (Google Form)</h6>
@@ -282,17 +311,9 @@
                         <div class="card-body">
                             <div class="d-grid gap-2">
                                 <a href="{{ route('admin.competitions.edit', $competition) }}" class="btn btn-outline-primary">
-                                    <i class="ti ti-edit"></i> Edit Competition
+                                    <i class="ti ti-edit"></i> Update Competition
                                 </a>
-                                <a href="{{ route('admin.competitions.prototype-shortlisting.index', $competition) }}" class="btn btn-outline-warning">
-                                    <i class="ti ti-list-check"></i> Prototype Shortlisting
-                                </a>
-                                <a href="{{ route('admin.competitions.prototype-modification.index', $competition) }}" class="btn btn-outline-dark">
-                                    <i class="ti ti-adjustments"></i> Prototype Modifications
-                                </a>
-                                <a href="{{ route('admin.competitions.pitch-winner.index', $competition) }}" class="btn btn-outline-success">
-                                    <i class="ti ti-microphone"></i> Pitch & Winner
-                                </a>
+                              
                                 <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteCompetitionModal">
                                     <i class="ti ti-trash"></i> Delete Competition
                                 </button>

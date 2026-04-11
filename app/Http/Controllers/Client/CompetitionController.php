@@ -245,6 +245,34 @@ class CompetitionController extends Controller
             ->with('status', "Successfully imported {$result['success_count']} student(s). Refresh the eligibility panel if counts look stale.");
     }
 
+    public function clearPoolStudents(Competition $competition): RedirectResponse
+    {
+        $user = Auth::user();
+        $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
+
+        if (! $teacherClub) {
+            return redirect()->route('client.competitions.index')
+                ->with('error', 'You must join this club first.');
+        }
+
+        if (! $competition->isPhaseOpen('registration')) {
+            return redirect()->route('client.competitions.show', $competition)
+                ->with('error', 'Registration phase is currently closed.');
+        }
+
+        $allowedClassIds = $competition->classRequirements()->pluck('school_class_id')->all();
+
+        $query = $teacherClub->students()
+            ->when(! empty($allowedClassIds), fn ($builder) => $builder->whereIn('school_class_id', $allowedClassIds));
+
+        $deleted = (clone $query)->count();
+        $query->delete();
+
+        return redirect()
+            ->route('client.competitions.register', $competition)
+            ->with('status', "Removed {$deleted} student(s) from this competition pool. You can upload a corrected CSV now.");
+    }
+
     /**
      * Download a CSV template with headers and one example row (same format as bulk import).
      */
@@ -564,6 +592,7 @@ class CompetitionController extends Controller
             'problem_statement' => ['required', 'string'],
             'proposed_solution' => ['required', 'string'],
             'stem_category' => ['required', 'string', 'max:120'],
+            'stem_category_other' => ['nullable', 'string', 'max:120'],
             'community_region_id' => ['nullable', 'exists:regions,id'],
             'community_location' => ['nullable', 'string', 'max:255'],
             'supporting_notes' => ['nullable', 'string'],
@@ -584,6 +613,16 @@ class CompetitionController extends Controller
 
         $validated = $request->validate($rules);
 
+        $stemCategory = trim((string) $validated['stem_category']);
+        if ($stemCategory === 'Other') {
+            $stemCategory = trim((string) ($validated['stem_category_other'] ?? ''));
+            if ($stemCategory === '') {
+                return back()->withErrors([
+                    'stem_category_other' => 'Please enter the STEM discipline when selecting Other.',
+                ])->withInput();
+            }
+        }
+
         $idea = CompetitionIdea::firstOrNew([
             'competition_registration_id' => $registration->id,
         ]);
@@ -593,7 +632,7 @@ class CompetitionController extends Controller
             'problem_title' => $validated['problem_title'],
             'problem_statement' => $validated['problem_statement'],
             'proposed_solution' => $validated['proposed_solution'],
-            'stem_category' => $validated['stem_category'],
+            'stem_category' => $stemCategory,
             'community_region_id' => $validated['community_region_id'] ?? null,
             'community_location' => $validated['community_location'] ?? null,
             'supporting_notes' => $validated['supporting_notes'] ?? null,

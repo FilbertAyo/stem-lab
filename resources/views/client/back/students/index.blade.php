@@ -46,13 +46,22 @@
                                     <div>
                                         <h5 class="mb-0">All Registered Students</h5>
                                    </div>
-                                    <div class="btn-group mt-3" role="group">
-                                        <button type="button" class="btn btn-sm btn-success text-white" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
+                                    <div class="mt-3 gap-2 d-flex flex-wrap align-items-center" role="group">
+                                        <button type="button" class="badge bg-success text-white border-0" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
                                             <i class="bi bi-upload me-1"></i>Bulk Upload
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-primary text-white" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
+                                        <button type="button" class="badge bg-primary text-white border-0" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
                                             <i class="bi bi-plus-circle me-1"></i>Register Student
                                         </button>
+                                        @if($students->isNotEmpty())
+                                            <button type="submit"
+                                                    form="bulkDeleteStudentsForm"
+                                                    class="badge bg-danger text-white border-0"
+                                                    id="deleteSelectedStudentsBtn"
+                                                    disabled>
+                                                <i class="bi bi-trash me-1"></i>Delete selected
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -63,34 +72,47 @@
                                             <p class="text-muted mb-3">Click the "Register Student" button above to add your first student.</p>
                                         </div>
                                     @else
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered table-hover table-light-soft align-middle">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Student</th>
-                                                        <th>Age</th>
-                                                        <th>Gender</th>
-                                                        <th>Class</th>
-                                                        <th>Club</th>
-                                                        <th>School</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($students as $student)
+                                        <form method="POST" action="{{ route('client.students.bulk-destroy') }}" id="bulkDeleteStudentsForm" class="mb-0">
+                                            @csrf
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-hover table-light-soft align-middle">
+                                                    <thead class="table-dark">
                                                         <tr>
-                                                            <td>{{ $loop->iteration }}</td>
-                                                            <td class="fw-semibold">{{ $student->name }}</td>
-                                                            <td>{{ $student->age }}</td>
-                                                            <td>{{ ucfirst($student->gender) }}</td>
-                                                            <td>{{ $student->schoolClass->name ?? '—' }}</td>
-                                                            <td>{{ $student->teacherClub->club->name ?? '—' }}</td>
-                                                            <td>{{ $student->teacherClub->school->name ?? '—' }}</td>
+                                                            <th class="text-center bg-light" style="width: 2.75rem;">
+                                                                <input type="checkbox" class="form-check-input" id="selectAllStudents" title="Select all" aria-label="Select all students">
+                                                            </th>
+                                                            <th>#</th>
+                                                            <th>Student</th>
+                                                            <th>Age</th>
+                                                            <th>Gender</th>
+                                                            <th>Class</th>
+                                                            <th>Club</th>
+                                                            <th>School</th>
                                                         </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($students as $student)
+                                                            <tr>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox"
+                                                                           class="form-check-input student-row-checkbox"
+                                                                           name="student_ids[]"
+                                                                           value="{{ $student->id }}"
+                                                                           aria-label="Select {{ $student->name }}">
+                                                                </td>
+                                                                <td>{{ $loop->iteration }}</td>
+                                                                <td class="fw-semibold">{{ $student->name }}</td>
+                                                                <td>{{ $student->age }}</td>
+                                                                <td>{{ ucfirst($student->gender) }}</td>
+                                                                <td>{{ $student->schoolClass->name ?? '—' }}</td>
+                                                                <td>{{ $student->teacherClub->club->name ?? '—' }}</td>
+                                                                <td>{{ $student->teacherClub->school->name ?? '—' }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </form>
                                     @endif
                                 </div>
                             </div>
@@ -113,7 +135,6 @@
                                     <div class="card border-0 shadow-none mb-4">
                                         <div class="card-header">
                                             <h5 class="mb-0">
-                                                <i class="bi bi-school me-2"></i>
                                                 {{ $clubData['club']->name }}
                                             </h5>
                                             @if(isset($clubData['school']))
@@ -123,16 +144,29 @@
                                         <div class="card-body">
                                             <!-- Approved Teachers Section -->
                                             <div class="mb-4">
+                                                @php
+                                                    $transferCandidates = $clubData['approvedTeachers']->where('is_leader', false)->values();
+                                                @endphp
                                                 <h6 class="fw-semibold mb-3">
                                                     <i class="bi bi-check-circle text-success me-2"></i>
                                                     Approved Teachers ({{ $clubData['approvedTeachers']->count() }})
                                                 </h6>
+                                                @if($clubData['isLeader'] && $transferCandidates->isNotEmpty())
+                                                    <div class="mb-3">
+                                                        <button type="button"
+                                                                class="badge bg-primary text-white border-0"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#transferLeaderModal-{{ $loop->index }}">
+                                                            <i class="bi bi-arrow-left-right me-1"></i>Transfer leadership
+                                                        </button>
+                                                    </div>
+                                                @endif
                                                 @if($clubData['approvedTeachers']->isEmpty())
                                                     <p class="text-muted">No approved teachers yet.</p>
                                                 @else
                                                     <div class="table-responsive">
-                                                        <table class="table table-bordered table-hover mb-0">
-                                                            <thead class="table-light-soft">
+                                                        <table class="table table-bordered table-hover table-light-soft align-middle mb-0">
+                                                            <thead>
                                                                 <tr>
                                                                     <th>#</th>
                                                                     <th>Name</th>
@@ -147,7 +181,9 @@
                                                                         <td>{{ $loop->iteration }}</td>
                                                                         <td class="fw-semibold">
                                                                             {{ $teacherClub->user->name }}
-                                                                          
+                                                                            @if($teacherClub->user_id === auth()->id())
+                                                                                <span class="text-muted small fw-normal">(you)</span>
+                                                                            @endif
                                                                         </td>
                                                                         <td>{{ $teacherClub->user->email }}</td>
                                                                         <td>{{ $teacherClub->school->name ?? 'N/A' }}</td>
@@ -155,13 +191,54 @@
                                                                             @if($teacherClub->is_leader)
                                                                                 <span class="badge bg-primary">Club Leader</span>
                                                                             @else
-                                                                                <span class="badge bg-info">Member</span>
+                                                                                <span class="badge bg-secondary-subtle text-secondary-emphasis border">Member</span>
                                                                             @endif
                                                                         </td>
                                                                     </tr>
                                                                 @endforeach
                                                             </tbody>
                                                         </table>
+                                                    </div>
+                                                @endif
+                                                @if($clubData['isLeader'] && $transferCandidates->isNotEmpty())
+                                                    <div class="modal fade"
+                                                         id="transferLeaderModal-{{ $loop->index }}"
+                                                         tabindex="-1"
+                                                         aria-labelledby="transferLeaderModalLabel-{{ $loop->index }}"
+                                                         aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="transferLeaderModalLabel-{{ $loop->index }}">
+                                                                        <i class="bi bi-arrow-left-right me-2"></i>Transfer leadership
+                                                                    </h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <form method="POST"
+                                                                      action="{{ route('client.clubs.transfer-leadership') }}"
+                                                                      class="transfer-leadership-form">
+                                                                    @csrf
+                                                                    <div class="modal-body">
+                                                                        <p class="text-muted small mb-3">
+                                                                            Choose the approved teacher who will become club leader for <strong>{{ $clubData['club']->name }}</strong>@if(isset($clubData['school'])) ({{ $clubData['school']->name }})@endif. You will become a member and lose leader controls (for example approving join requests).
+                                                                        </p>
+                                                                        <label for="new_leader_teacher_club_id-{{ $loop->index }}" class="form-label">New leader <span class="text-danger">*</span></label>
+                                                                        <select class="form-select border"
+                                                                                id="new_leader_teacher_club_id-{{ $loop->index }}"
+                                                                                name="new_leader_teacher_club_id"
+                                                                                required>
+                                                                            <option value="" selected disabled>Select a teacher…</option>
+                                                                            @foreach($transferCandidates as $candidate)
+                                                                                <option value="{{ $candidate->id }}">{{ $candidate->user->name }} — {{ $candidate->user->email }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="submit" class="badge bg-primary text-white border-0">Confirm transfer</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 @endif
                                             </div>
@@ -176,7 +253,7 @@
                                                     </h6>
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered table-hover mb-0">
-                                                            <thead class="table-light-soft">
+                                                            <thead class="table-dark">
                                                                 <tr>
                                                                     <th>#</th>
                                                                     <th>Name</th>
@@ -197,14 +274,14 @@
                                                                         <td class="text-end">
                                                                             <form method="POST" action="{{ route('client.clubs.approve-request', $request) }}" class="d-inline me-2">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-sm btn-success text-white" onclick="return confirm('Approve this request?')">
+                                                                                <button type="submit" class="badge bg-success text-white border-0" onclick="return confirm('Approve this request?')">
                                                                                     <i class="bi bi-check-circle me-1"></i>
                                                                                     Approve
                                                                                 </button>
                                                                             </form>
                                                                             <form method="POST" action="{{ route('client.clubs.reject-request', $request) }}" class="d-inline">
                                                                                 @csrf
-                                                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Reject this request?')">
+                                                                                <button type="submit" class="badge bg-danger text-white border-0" onclick="return confirm('Reject this request?')">
                                                                                     <i class="bi bi-x-circle me-1"></i>
                                                                                     Reject
                                                                                 </button>
@@ -487,6 +564,62 @@
                     const bulkModal = new bootstrap.Modal(bulkModalEl);
                     bulkModal.show();
                 }
+            }
+
+            const bulkDeleteForm = document.getElementById('bulkDeleteStudentsForm');
+            const selectAllStudents = document.getElementById('selectAllStudents');
+            const deleteSelectedBtn = document.getElementById('deleteSelectedStudentsBtn');
+
+            function getStudentRowCheckboxes() {
+                return bulkDeleteForm ? bulkDeleteForm.querySelectorAll('.student-row-checkbox') : [];
+            }
+
+            function syncSelectAllAndDeleteButton() {
+                const boxes = getStudentRowCheckboxes();
+                if (!selectAllStudents || !deleteSelectedBtn) {
+                    return;
+                }
+                const total = boxes.length;
+                let checked = 0;
+                boxes.forEach(function (cb) {
+                    if (cb.checked) {
+                        checked += 1;
+                    }
+                });
+                deleteSelectedBtn.disabled = checked === 0;
+                if (total === 0) {
+                    selectAllStudents.checked = false;
+                    selectAllStudents.indeterminate = false;
+                    return;
+                }
+                selectAllStudents.checked = checked === total;
+                selectAllStudents.indeterminate = checked > 0 && checked < total;
+            }
+
+            if (selectAllStudents && bulkDeleteForm) {
+                selectAllStudents.addEventListener('change', function () {
+                    const on = selectAllStudents.checked;
+                    getStudentRowCheckboxes().forEach(function (cb) {
+                        cb.checked = on;
+                    });
+                    syncSelectAllAndDeleteButton();
+                });
+                bulkDeleteForm.addEventListener('change', function (e) {
+                    if (e.target && e.target.classList && e.target.classList.contains('student-row-checkbox')) {
+                        syncSelectAllAndDeleteButton();
+                    }
+                });
+                bulkDeleteForm.addEventListener('submit', function (e) {
+                    const selected = bulkDeleteForm.querySelectorAll('.student-row-checkbox:checked');
+                    if (selected.length === 0) {
+                        e.preventDefault();
+                        return;
+                    }
+                    if (!window.confirm('Delete ' + selected.length + ' student(s)? This cannot be undone.')) {
+                        e.preventDefault();
+                    }
+                });
+                syncSelectAllAndDeleteButton();
             }
         });
     </script>

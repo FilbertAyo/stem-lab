@@ -2,7 +2,7 @@
             <div class="col-lg-12">
                 <div class="card border-0 shadow-none mb-4">
                     <div class="card-header bg-transparent d-flex flex-wrap align-items-center justify-content-between gap-2">
-                        <h6 class="mb-0">Your registration</h6>
+                        <h4 class="mb-0 text-uppercase">Your registration submission</h4>
                         @if($registration && $registration->submitted_at)
                             <span class="text-muted small">Submitted {{ $registration->submitted_at->timezone(config('app.timezone'))->format('j M Y, H:i') }}</span>
                         @endif
@@ -13,7 +13,7 @@
                         @elseif(!$registration)
                             <p class="text-muted">No registration snapshot submitted yet.</p>
                             @if($competition->isPhaseOpen('registration'))
-                                <a href="{{ route('client.competitions.register', $competition) }}" class="btn btn-primary text-white">Complete registration (participants)</a>
+                                <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-primary border-0">Complete registration (participants)</a>
                             @endif
                         @else
                             @php
@@ -81,7 +81,7 @@
 
                             <hr class="my-3 opacity-25">
 
-                            <h3 class="text-uppercase mb-2">Eligibility snapshot</h3>
+                            <h5 class="text-uppercase mb-2">Eligibility snapshot</h5>
                             <p class="mb-2">
                                 <strong>{{ $registration->student_count_snapshot ?? '—' }}</strong> students in pool
                                 @if($registration->girls_count_snapshot !== null)

@@ -12,6 +12,7 @@ use App\Services\TeacherClubJoinService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ClubController extends Controller
@@ -156,6 +157,58 @@ class ClubController extends Controller
         return view('client.back.clubs.pending-requests', [
             'clubsWithPendingRequests' => $clubsWithPendingRequests,
         ]);
+    }
+
+    /**
+     * Transfer school-specific club leadership to another approved member.
+     */
+    public function transferLeadership(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'new_leader_teacher_club_id' => ['required', 'exists:teacher_clubs,id'],
+        ]);
+
+        $newLeaderMembership = TeacherClub::query()
+            ->whereKey((int) $validated['new_leader_teacher_club_id'])
+            ->where('status', 'approved')
+            ->with('user')
+            ->firstOrFail();
+
+        $clubId = $newLeaderMembership->club_id;
+        $schoolId = $newLeaderMembership->school_id;
+
+        $isCurrentSchoolLeader = $user->teacherClubs()
+            ->where('club_id', $clubId)
+            ->where('school_id', $schoolId)
+            ->where('is_leader', true)
+            ->approved()
+            ->exists();
+
+        if (! $isCurrentSchoolLeader) {
+            abort(403, 'Only the club leader for this school can transfer leadership.');
+        }
+
+        if ($newLeaderMembership->user_id === $user->id) {
+            return redirect()->route('client.students.index', ['tab' => 'teachers'])
+                ->with('error', 'You are already the leader. Choose another teacher.');
+        }
+
+        $newLeaderName = $newLeaderMembership->user->name;
+
+        DB::transaction(function () use ($clubId, $schoolId, $newLeaderMembership): void {
+            TeacherClub::query()
+                ->where('club_id', $clubId)
+                ->where('school_id', $schoolId)
+                ->where('is_leader', true)
+                ->update(['is_leader' => false]);
+
+            $newLeaderMembership->update(['is_leader' => true]);
+        });
+
+        return redirect()->route('client.students.index', ['tab' => 'teachers'])
+            ->with('status', "Leadership transferred to {$newLeaderName}. You are now a member.");
     }
 
     /**

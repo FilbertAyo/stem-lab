@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 
 class User extends Authenticatable
 {
@@ -85,6 +86,36 @@ class User extends Authenticatable
     public function teacherClubs()
     {
         return $this->hasMany(TeacherClub::class);
+    }
+
+    /**
+     * All approved teacher_clubs.id values for the same club + school as any of this user's approved memberships.
+     * Used so every approved teacher at that school sees and can manage the shared student roster.
+     */
+    public function approvedCoMemberTeacherClubIds(): Collection
+    {
+        $memberships = $this->teacherClubs()
+            ->where('status', 'approved')
+            ->get(['club_id', 'school_id']);
+
+        if ($memberships->isEmpty()) {
+            return collect();
+        }
+
+        $ids = collect();
+        foreach ($memberships as $membership) {
+            $query = TeacherClub::query()
+                ->where('club_id', $membership->club_id)
+                ->where('status', 'approved');
+            if ($membership->school_id === null) {
+                $query->whereNull('school_id');
+            } else {
+                $query->where('school_id', $membership->school_id);
+            }
+            $ids = $ids->merge($query->pluck('id'));
+        }
+
+        return $ids->unique()->values();
     }
 
     /**

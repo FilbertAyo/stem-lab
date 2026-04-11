@@ -187,6 +187,18 @@ class DashboardController extends Controller
             $visitorChartData['landing_views'][] = (int) VisitorWeeklyStat::where('week_start', $weekStr)->sum('views');
         }
 
-        return view('admin.dashboard', compact('stats', 'latestActiveAdmin', 'recentActivities', 'visitorChartData'));
+        $dashboardCompetitions = Competition::query()
+            ->with(['club', 'phases' => fn ($query) => $query->orderBy('sequence')])
+            ->latest('created_at')
+            ->limit(8)
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'stats',
+            'latestActiveAdmin',
+            'recentActivities',
+            'visitorChartData',
+            'dashboardCompetitions'
+        ));
     }
 }

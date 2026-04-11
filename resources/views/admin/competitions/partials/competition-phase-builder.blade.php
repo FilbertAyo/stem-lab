@@ -51,9 +51,9 @@
         { name: 'Registration', description: 'Schools register teams and confirm representatives against eligibility rules.', status: 'upcoming' },
         { name: 'Idea submission', description: 'Teams submit their problem framing, initial idea, and required documentation.', status: 'upcoming' },
         { name: 'Idea shortlisting', description: 'Reviewers shortlist ideas; unsuccessful teams exit or revise per rules.', status: 'upcoming' },
-        { name: 'Prototype shortlisting', description: 'Prototype concepts reviewed; selected teams move to build phase.', status: 'upcoming' },
-        { name: 'Mentor onboarding', description: 'Mentors assigned; introductions and expectations shared with teams.', status: 'upcoming' },
         { name: 'Prototype development', description: 'Build and document the working prototype within the allotted window.', status: 'upcoming' },
+        { name: 'Prototype shortlisting', description: 'Prototype concepts reviewed; selected teams move to mentor support.', status: 'upcoming' },
+        { name: 'Mentor onboarding', description: 'Mentors assigned; introductions and expectations shared with teams.', status: 'upcoming' },
         { name: 'Prototype modification', description: 'Iterate on feedback from mentors or judges before final showcase.', status: 'upcoming' },
         { name: 'Pitch & winner', description: 'Final pitch, demonstration, and winner announcement per rubric.', status: 'upcoming' }
     ];
