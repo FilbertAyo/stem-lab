@@ -6,12 +6,27 @@
                 <h5 class="mb-0">Teachers Management</h5>
             </div>
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            
+
+            <div class="card mb-3">
+                <div class="card-body py-3">
+                    <form method="GET" action="{{ route('admin.users.teachers') }}" class="row g-3 align-items-end">
+                        <div class="col-md-8 col-lg-6">
+                            <label class="form-label small mb-1">Search</label>
+                            <input type="search" name="q" class="form-control" placeholder="Search by name or email..."
+                                value="{{ request('q') }}" autocomplete="off">
+                        </div>
+                        <div class="col-auto d-flex flex-wrap gap-2">
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="ti ti-search"></i> Search
+                            </button>
+                            @if(request()->filled('q'))
+                                <a href="{{ route('admin.users.teachers') }}" class="btn btn-outline-secondary">Clear</a>
+                            @endif
+                        </div>
+                    </form>
                 </div>
-            @endif
+            </div>
 
             <div class="card tbl-card">
                 <div class="card-body">
@@ -32,7 +47,7 @@
                             <tbody>
                                 @forelse($users as $index => $user)
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $users->firstItem() + $index }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>
@@ -79,6 +94,24 @@
                             </tbody>
                         </table>
                     </div>
+                    @if($users->hasPages() || request()->filled('q'))
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                @if($users->total() > 0)
+                                    <div class="text-muted small">
+                                        Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} results
+                                    </div>
+                                @else
+                                    <div class="text-muted small">No teachers match your search.</div>
+                                @endif
+                                @if($users->hasPages())
+                                    <div>
+                                        {{ $users->links('pagination::bootstrap-5') }}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

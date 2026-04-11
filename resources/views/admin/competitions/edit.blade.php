@@ -8,15 +8,7 @@
                 <p class="mb-0 text-white-50">Update phase windows, class eligibility, and publishing setup.</p>
             </div>
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            
 
             <form action="{{ route('admin.competitions.update', $competition) }}" method="POST" enctype="multipart/form-data">
                 @csrf

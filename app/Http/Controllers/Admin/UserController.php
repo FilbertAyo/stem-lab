@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,12 +16,15 @@ class UserController extends Controller
     /**
      * Display a listing of admin users.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $adminUsers = User::where('role', 'admin')
+        $adminUsers = User::query()
+            ->where('role', 'admin')
+            ->tap(fn (Builder $query) => $this->applyNameEmailSearch($query, $request))
             ->orderBy('created_at', 'desc')
-            ->get();
-        
+            ->paginate(15)
+            ->withQueryString();
+
         return view('admin.users.index', compact('adminUsers'));
     }
 
@@ -29,10 +33,13 @@ class UserController extends Controller
      */
     public function students(Request $request): View
     {
-        $users = User::where('role', 'student')
+        $users = User::query()
+            ->where('role', 'student')
+            ->tap(fn (Builder $query) => $this->applyNameEmailSearch($query, $request))
             ->orderBy('created_at', 'desc')
-            ->get();
-        
+            ->paginate(15)
+            ->withQueryString();
+
         return view('admin.users.students', compact('users'));
     }
 
@@ -41,11 +48,41 @@ class UserController extends Controller
      */
     public function teachers(Request $request): View
     {
-        $users = User::where('role', 'teacher')
+        $users = User::query()
+            ->where('role', 'teacher')
+            ->tap(fn (Builder $query) => $this->applyNameEmailSearch($query, $request))
             ->orderBy('created_at', 'desc')
-            ->get();
-        
+            ->paginate(15)
+            ->withQueryString();
+
         return view('admin.users.teachers', compact('users'));
+    }
+
+    /**
+     * Filter users by name or email (case-insensitive where supported).
+     */
+    protected function applyNameEmailSearch(Builder $query, Request $request): void
+    {
+        $term = $request->string('q')->trim()->value();
+        if ($term === '') {
+            return;
+        }
+
+        $like = '%'.$term.'%';
+        $query->where(function (Builder $inner) use ($like): void {
+            $inner->where('name', 'like', $like)
+                ->orWhere('email', 'like', $like);
+        });
+    }
+
+    protected function redirectToAdminUsersIndex(Request $request): RedirectResponse
+    {
+        $query = [];
+        if ($request->filled('q')) {
+            $query['q'] = $request->input('q');
+        }
+
+        return redirect()->route('admin.users.index', $query);
     }
 
     /**
@@ -67,7 +104,7 @@ class UserController extends Controller
             'is_active' => true,
         ]);
 
-        return redirect()->route('admin.users.index')
+        return $this->redirectToAdminUsersIndex($request)
             ->with('success', 'Admin user created successfully.');
     }
 
@@ -87,35 +124,34 @@ class UserController extends Controller
             'email' => $validated['email'],
         ];
 
-        if (!empty($validated['password'])) {
+        if (! empty($validated['password'])) {
             $updateData['password'] = Hash::make($validated['password']);
         }
 
         $user->update($updateData);
 
-        return redirect()->route('admin.users.index')
+        return $this->redirectToAdminUsersIndex($request)
             ->with('success', 'Admin user updated successfully.');
     }
 
     /**
      * Toggle the active status of the specified admin user.
      */
-    public function toggleStatus(User $user): RedirectResponse
+    public function toggleStatus(Request $request, User $user): RedirectResponse
     {
         // Prevent disabling yourself
         if ($user->id === auth()->id()) {
-            return redirect()->route('admin.users.index')
+            return $this->redirectToAdminUsersIndex($request)
                 ->with('error', 'You cannot disable your own account.');
         }
 
         $user->update([
-            'is_active' => !$user->is_active,
+            'is_active' => ! $user->is_active,
         ]);
 
         $status = $user->is_active ? 'enabled' : 'disabled';
-        
-        return redirect()->route('admin.users.index')
+
+        return $this->redirectToAdminUsersIndex($request)
             ->with('success', "Admin user {$status} successfully.");
     }
 }
-

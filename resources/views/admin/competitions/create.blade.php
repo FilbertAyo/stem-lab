@@ -8,15 +8,7 @@
                 <p class="mb-0 text-white-50">Configure club, classes, and full phase timeline (default 8 stages + optional extras).</p>
             </div>
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            
 
             <form action="{{ route('admin.competitions.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf

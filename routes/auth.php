@@ -37,7 +37,7 @@ Route::middleware('block.client.on.admin')->group(function () {
             ->name('password.store');
     });
 
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', 'track.client.activity'])->group(function () {
         Route::get('verify-email', EmailVerificationPromptController::class)
             ->name('verification.notice');
 

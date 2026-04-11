@@ -9,10 +9,7 @@
                 <a href="{{ route('admin.competitions.show', $competition) }}" class="btn btn-outline-secondary">Back</a>
             </div>
 
-            @if(session('status'))
-                <div class="alert alert-success">{{ session('status') }}</div>
-            @endif
-
+            
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">

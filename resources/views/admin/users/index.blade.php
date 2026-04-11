@@ -1,5 +1,7 @@
 <x-admin-layout>
 
+
+
     <div class="row">
         <div class="col-md-12 col-xl-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -9,19 +11,27 @@
                 </button>
             </div>
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+           
 
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="card mb-3">
+                <div class="card-body py-3">
+                    <form method="GET" action="{{ route('admin.users.index') }}" class="row g-3 align-items-end">
+                        <div class="col-md-8 col-lg-6">
+                            <label class="form-label small mb-1">Search</label>
+                            <input type="search" name="q" class="form-control" placeholder="Search by name or email..."
+                                value="{{ request('q') }}" autocomplete="off">
+                        </div>
+                        <div class="col-auto d-flex flex-wrap gap-2">
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="ti ti-search"></i> Search
+                            </button>
+                            @if(request()->filled('q'))
+                                <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">Clear</a>
+                            @endif
+                        </div>
+                    </form>
                 </div>
-            @endif
+            </div>
 
             <div class="card tbl-card">
                 <div class="card-body">
@@ -42,7 +52,7 @@
                             <tbody>
                                 @forelse($adminUsers as $index => $user)
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $adminUsers->firstItem() + $index }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>
@@ -77,6 +87,9 @@
                                                 <form action="{{ route('admin.users.toggle-status', $user) }}" method="POST" class="d-inline"
                                                     onsubmit="return confirm('Are you sure you want to {{ $user->is_active ? 'disable' : 'enable' }} this admin user?');">
                                                     @csrf
+                                                    @if(request()->filled('q'))
+                                                        <input type="hidden" name="q" value="{{ request('q') }}">
+                                                    @endif
                                                     <button type="submit" class="btn btn-sm {{ $user->is_active ? 'btn-warning' : 'btn-success' }}"
                                                         title="{{ $user->is_active ? 'Disable' : 'Enable' }}"
                                                         {{ $user->id === auth()->id() ? 'disabled' : '' }}>
@@ -94,6 +107,24 @@
                             </tbody>
                         </table>
                     </div>
+                    @if($adminUsers->hasPages() || request()->filled('q'))
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                @if($adminUsers->total() > 0)
+                                    <div class="text-muted small">
+                                        Showing {{ $adminUsers->firstItem() }} to {{ $adminUsers->lastItem() }} of {{ $adminUsers->total() }} results
+                                    </div>
+                                @else
+                                    <div class="text-muted small">No admin users match your search.</div>
+                                @endif
+                                @if($adminUsers->hasPages())
+                                    <div>
+                                        {{ $adminUsers->links('pagination::bootstrap-5') }}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -109,6 +140,9 @@
                 </div>
                 <form action="{{ route('admin.users.store') }}" method="POST">
                     @csrf
+                    @if(request()->filled('q'))
+                        <input type="hidden" name="q" value="{{ request('q') }}">
+                    @endif
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="create_name" class="form-label">Name <span class="text-danger">*</span></label>
@@ -155,6 +189,9 @@
                 <form id="editAdminForm" method="POST">
                     @csrf
                     @method('PUT')
+                    @if(request()->filled('q'))
+                        <input type="hidden" name="q" value="{{ request('q') }}">
+                    @endif
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="edit_name" class="form-label">Name <span class="text-danger">*</span></label>

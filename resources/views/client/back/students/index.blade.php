@@ -417,7 +417,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                        <button type="submit" class="btn btn-sm btn-primary text-white">
+                        <button type="submit" class="badge bg-primary text-white border-0">
                                 Register Student
                             </button>
                         </div>
@@ -448,7 +448,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <button type="button" class="btn btn-sm btn-download-template" id="downloadStudentTemplateBtn">
+                                <button type="button" class="badge bg-dark text-white border-0" id="downloadStudentTemplateBtn">
                                     <i class="bi bi-download me-1"></i>Download CSV Template
                                 </button>
                             </div>
@@ -494,7 +494,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-sm text-white">
+                            <button type="submit" class="badge bg-primary text-white border-0">
                                 <i class="bi bi-upload me-1"></i>
                                 Upload CSV
                             </button>

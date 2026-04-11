@@ -22,12 +22,7 @@
                 </div>
             </div>
 
-            @if (session('status'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('status') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+            
 
             <div class="row">
                 <div class="col-lg-8">

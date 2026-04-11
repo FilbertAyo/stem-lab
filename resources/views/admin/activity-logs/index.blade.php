@@ -1,3 +1,6 @@
+@php
+    $isClientContext = in_array($logScope ?? '', ['client_activity', 'client_all'], true);
+@endphp
 <x-admin-layout>
     <div class="row">
         <div class="col-md-12 col-xl-12">
@@ -5,7 +8,7 @@
                 <div>
                     <h5 class="mb-0">Audit Logs</h5>
                     <p class="text-muted mb-0 small">
-                        Captures admin route activity (based on `resources/views/admin` Blade-backed pages).
+                        Use <strong>Log scope</strong> to switch between admin subdomain activity (<code>admin_*</code>) and main-app client usage (<code>client_*</code>). All entries include route, method, status, IP, and redacted payloads where applicable.
                     </p>
                 </div>
             </div>
@@ -26,6 +29,12 @@
                                     </option>
                                     <option value="admin_all" {{ ($logScope ?? 'admin_activity') === 'admin_all' ? 'selected' : '' }}>
                                         All `admin_*` logs
+                                    </option>
+                                    <option value="client_activity" {{ ($logScope ?? '') === 'client_activity' ? 'selected' : '' }}>
+                                        Only `client_activity`
+                                    </option>
+                                    <option value="client_all" {{ ($logScope ?? '') === 'client_all' ? 'selected' : '' }}>
+                                        All `client_*` logs
                                     </option>
                                     <option value="all" {{ ($logScope ?? 'admin_activity') === 'all' ? 'selected' : '' }}>
                                         All logs
@@ -88,7 +97,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Time</th>
-                                        <th>Admin</th>
+                                        <th>{{ $isClientContext ? 'User' : 'Admin' }}</th>
                                         <th>Action</th>
                                         <th>Route</th>
                                         <th>Meta</th>
@@ -113,8 +122,14 @@
 
                                             <td>
                                                 @if($activity->causer)
+                                                    @php
+                                                        $userRole = $activity->getExtraProperty('user_role');
+                                                    @endphp
                                                     <div class="small">
-                                                        <strong>{{ $activity->causer->name ?? 'Admin' }}</strong>
+                                                        <strong>{{ $activity->causer->name ?? ($isClientContext ? 'User' : 'Admin') }}</strong>
+                                                        @if($userRole)
+                                                            <span class="badge bg-info ms-1">{{ $userRole }}</span>
+                                                        @endif
                                                     </div>
                                                     <div><small class="text-muted">{{ $activity->causer->email ?? '' }}</small></div>
                                                 @else

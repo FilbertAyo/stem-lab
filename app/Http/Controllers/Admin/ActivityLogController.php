@@ -12,6 +12,13 @@ class ActivityLogController extends Controller
 {
     public function index(Request $request): View
     {
+        $logScope = $request->input('log_scope', 'admin_activity');
+
+        return $this->renderActivityLogs($request, $logScope);
+    }
+
+    private function renderActivityLogs(Request $request, string $logScope): View
+    {
         $dbConnection = config('activitylog.database_connection');
         $tableName = config('activitylog.table_name', 'activity_log');
 
@@ -19,21 +26,21 @@ class ActivityLogController extends Controller
             ? Schema::connection($dbConnection)->hasTable($tableName)
             : Schema::hasTable($tableName);
 
-        $logScope = $request->input('log_scope', 'admin_activity'); // admin_activity|admin_all|all
-
         $selectedLogName = $request->input('log_name');
         $event = $request->input('event');
         $search = $request->input('search');
 
         $availableLogNames = [];
         if ($logTableExists) {
-            $availableLogNames = Activity::query()
-                ->where('log_name', 'like', 'admin_%')
-                ->distinct()
-                ->orderBy('log_name')
-                ->pluck('log_name')
-                ->values()
-                ->all();
+            $namesQuery = Activity::query()->distinct()->orderBy('log_name');
+
+            if (in_array($logScope, ['admin_activity', 'admin_all'], true)) {
+                $namesQuery->where('log_name', 'like', 'admin_%');
+            } elseif (in_array($logScope, ['client_activity', 'client_all'], true)) {
+                $namesQuery->where('log_name', 'like', 'client_%');
+            }
+
+            $availableLogNames = $namesQuery->pluck('log_name')->values()->all();
         }
 
         $query = Activity::query()->with('causer');
@@ -43,6 +50,10 @@ class ActivityLogController extends Controller
                 $query->where('log_name', 'admin_activity');
             } elseif ($logScope === 'admin_all') {
                 $query->where('log_name', 'like', 'admin_%');
+            } elseif ($logScope === 'client_activity') {
+                $query->where('log_name', 'client_activity');
+            } elseif ($logScope === 'client_all') {
+                $query->where('log_name', 'like', 'client_%');
             }
 
             if (! empty($selectedLogName)) {
@@ -73,4 +84,3 @@ class ActivityLogController extends Controller
         ]);
     }
 }
-

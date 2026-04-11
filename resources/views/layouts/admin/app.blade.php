@@ -36,6 +36,9 @@
 
     <div class="pc-container">
         <div class="pc-content">
+            
+        @include('elements.admin-validation')
+
             {{ $slot }}
         </div>
     </div>

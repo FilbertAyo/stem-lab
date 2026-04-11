@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'block.client.on.admin' => \App\Http\Middleware\BlockClientOnAdmin::class,
             'track.landing.visitor' => \App\Http\Middleware\TrackLandingVisitor::class,
             'track.admin.activity' => \App\Http\Middleware\TrackAdminActivity::class,
+            'track.client.activity' => \App\Http\Middleware\TrackClientActivity::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
