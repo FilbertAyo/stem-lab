@@ -108,11 +108,17 @@
                                                 <p class="text-muted small mb-0">{{ \Illuminate\Support\Str::limit($weeklySession->vrExperiment->description, 100) }}</p>
                                             @endif
                                         </div>
-                                        <a href="{{ $weeklySession->vrExperiment->external_url }}"
-                                           target="_blank"
-                                           class="badge bg-success text-decoration-none">
-                                            <i class="bi bi-play-circle me-1"></i> Launch VR
-                                        </a>
+                                        @if(!empty($weeklySession->vrExperiment->is_static))
+                                            <a href="{{ route('client.vr-experiments.show.static', $weeklySession->vrExperiment->slug) }}"
+                                               class="badge bg-success text-decoration-none">
+                                                <i class="bi bi-play-circle me-1"></i> Launch VR
+                                            </a>
+                                        @else
+                                            <a href="{{ route('client.vr-experiments.show', $weeklySession->vrExperiment) }}"
+                                               class="badge bg-success text-decoration-none">
+                                                <i class="bi bi-play-circle me-1"></i> Launch VR
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
                             @endif
@@ -161,7 +167,6 @@
                                             <th>#</th>
                                             <th>Name</th>
                                             <th>Class</th>
-                                            <th>Age</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -172,7 +177,6 @@
                                                 <td>
                                                     <span class="badge bg-primary">{{ $student->schoolClass->name }}</span>
                                                 </td>
-                                                <td>{{ $student->age }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
