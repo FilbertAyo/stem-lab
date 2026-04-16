@@ -25,7 +25,7 @@
 
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('admin.weekly-sessions.update', $weeklySession) }}" method="POST">
+                    <form action="{{ route('admin.weekly-sessions.update', $weeklySession) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -65,10 +65,18 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="session_date" class="form-label">Session Date <span class="text-danger">*</span></label>
+                                <label for="session_date" class="form-label">From Date <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control @error('session_date') is-invalid @enderror"
                                        id="session_date" name="session_date" value="{{ old('session_date', $weeklySession->session_date->format('Y-m-d')) }}" required>
                                 @error('session_date')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="session_end_date" class="form-label">To Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('session_end_date') is-invalid @enderror"
+                                       id="session_end_date" name="session_end_date" value="{{ old('session_end_date', optional($weeklySession->session_end_date)->format('Y-m-d')) }}" required>
+                                @error('session_end_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -162,59 +170,46 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="model3ds" class="form-label">3D Models (Optional)</label>
-                            <input type="text" 
-                                   id="model3dSearch" 
-                                   class="form-control mb-2" 
-                                   placeholder="Search 3D models by name or subject...">
-                            <div class="border rounded p-3" style="max-height: 250px; overflow-y: auto;" id="model3dList">
-                                @forelse($model3ds as $model3d)
-                                    <div class="form-check model3d-item" data-name="{{ strtolower($model3d->name) }}" data-subject="{{ strtolower($model3d->subject->subject_name ?? '') }}">
-                                        <input class="form-check-input" type="checkbox" 
-                                               name="model3ds[]" 
-                                               value="{{ $model3d->id }}" 
-                                               id="model3d_{{ $model3d->id }}"
-                                               {{ in_array($model3d->id, old('model3ds', $weeklySession->model3ds->pluck('id')->toArray())) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="model3d_{{ $model3d->id }}">
-                                            {{ $model3d->name }}
-                                            @if($model3d->subject)
-                                                <span class="text-muted">({{ $model3d->subject->subject_name }})</span>
-                                            @endif
-                                        </label>
-                                    </div>
-                                @empty
-                                    <p class="text-muted mb-0">No 3D models available</p>
-                                @endforelse
-                            </div>
-                            <small class="text-muted">Type to search and select one or more 3D models</small>
-                            @error('model3ds.*')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
+                            <label for="project_id" class="form-label">Project For This Week (Optional)</label>
+                            <select class="form-select @error('project_id') is-invalid @enderror"
+                                    id="project_id" name="project_id">
+                                <option value="">No project linked</option>
+                                @foreach($projects as $project)
+                                    <option value="{{ $project->id }}" {{ old('project_id', $weeklySession->project_id) == $project->id ? 'selected' : '' }}>
+                                        {{ $project->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('project_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                const searchInput = document.getElementById('model3dSearch');
-                                const modelList = document.getElementById('model3dList');
-                                const modelItems = modelList.querySelectorAll('.model3d-item');
-                                
-                                if (searchInput) {
-                                    searchInput.addEventListener('input', function(e) {
-                                        const searchTerm = e.target.value.toLowerCase().trim();
-                                        
-                                        modelItems.forEach(function(item) {
-                                            const name = item.getAttribute('data-name');
-                                            const subject = item.getAttribute('data-subject');
-                                            const matches = searchTerm === '' || 
-                                                          name.includes(searchTerm) || 
-                                                          subject.includes(searchTerm);
-                                            
-                                            item.style.display = matches ? 'block' : 'none';
-                                        });
-                                    });
-                                }
-                            });
-                        </script>
+
+                        <div class="mb-3">
+                            <label for="project_pdf" class="form-label">Project PDF (Required if no project is selected)</label>
+                            <input type="file"
+                                   class="form-control @error('project_pdf') is-invalid @enderror"
+                                   id="project_pdf"
+                                   name="project_pdf"
+                                   accept="application/pdf">
+                            @error('project_pdf')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            @if($weeklySession->project_pdf)
+                                <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" value="1" id="remove_project_pdf" name="remove_project_pdf">
+                                    <label class="form-check-label" for="remove_project_pdf">
+                                        Remove existing PDF
+                                    </label>
+                                </div>
+                                <small class="d-block mt-1">
+                                    Current file:
+                                    <a href="{{ Storage::url($weeklySession->project_pdf) }}" target="_blank" rel="noopener">
+                                        View PDF
+                                    </a>
+                                </small>
+                            @endif
+                        </div>
 
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>

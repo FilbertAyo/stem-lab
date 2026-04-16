@@ -14,13 +14,16 @@
                 <p class="text-muted mb-0">{{ $weeklySession->title }}</p>
             </div>
             <div class="d-flex gap-2">
-                <a href="{{ route('client.weekly-sessions.show', $weeklySession) }}" class="btn btn-dark btn-sm">
-                    <i class="bi bi-arrow-left"></i> 
+                <a href="{{ route('client.weekly-sessions.show', $weeklySession) }}" class="badge bg-light-soft text-dark border">
+                    <i class="bi bi-arrow-left me-1"></i> Back 
                 </a>
             </div>
         </div>
 
         <div class="page-content">
+
+            @include('elements.client-validation')
+
             @if ($errors->any())
                 <div class="card border-0 shadow-none mb-4">
                     <div class="card-body alert alert-danger mb-0">
@@ -39,17 +42,6 @@
                 @if($report)
                     @method('PUT')
                 @endif
-
-                <!-- Progress Indicator -->
-                <div class="card border-0 shadow-none mb-4">
-                    <div class="card-body py-2">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <small class="text-muted">Complete the sections below. All fields are optional.</small>
-                            <small class="text-muted" id="progressText">Section 1 of 12</small>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Session Info (Read-only) -->
                 <div class="card border-0 shadow-none mb-4">
                     <div class="card-body">
@@ -65,13 +57,13 @@
                             </div>
                             <div class="col-md-6">
                                 <span class="text-muted small d-block">Club</span>
-                                <span class="badge bg-info">{{ $weeklySession->club->name }}</span>
+                                <span class="badge bg-light-soft text-dark border">{{ $weeklySession->club->name }}</span>
                             </div>
                             <div class="col-md-6">
                                 <span class="text-muted small d-block">Classes</span>
                                 <div>
                                     @foreach($weeklySession->classes as $class)
-                                        <span class="badge bg-primary me-1">{{ $class->name }}</span>
+                                        <span class="badge bg-light-soft text-dark border me-1">{{ $class->name }}</span>
                                     @endforeach
                                 </div>
                             </div>
@@ -86,10 +78,10 @@
                 <div class="card border-0 shadow-none mb-4">
                     <div class="card-body">
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary btn-sm text-white">
+                            <button type="submit" class="badge bg-primary border-0">
                                 {{ $report ? 'Update Report' : 'Submit Report' }}
                             </button>
-                            <a href="{{ route('client.weekly-sessions.show', $weeklySession) }}" class="btn btn-light btn-sm">
+                            <a href="{{ route('client.weekly-sessions.show', $weeklySession) }}" class="badge bg-light-soft text-dark border text-decoration-none">
                                 Cancel
                             </a>
                         </div>

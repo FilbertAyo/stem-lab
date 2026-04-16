@@ -16,8 +16,8 @@
                 </p>
             </div>
             <div class="d-flex gap-2">
-                <a href="{{ route('client.weekly-sessions.index') }}" class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-arrow-left me-1"></i> Back to Sessions
+                <a href="{{ route('client.weekly-sessions.index') }}" class="badge bg-light-soft text-dark border d-flex align-items-center">
+                    <i class="bi bi-arrow-left me-1"></i> Back 
                 </a>
             </div>
         </div>
@@ -44,11 +44,59 @@
 
                 <!-- Resources Section -->
                 <div class="card border-0 shadow-none mb-4">
-                    <div class="card-header bg-transparent">
-                        <h6 class="mb-0"><i class="bi bi-package me-2"></i>Session Resources</h6>
+                    <div class="card-header bg-transparent mb-0">
+                        <h6 class="mb-0"><i class="bi bi-package me-2"></i>Assigned Work</h6>
                     </div>
                     <div class="card-body">
-                        @if($weeklySession->vr_experiment_id || $weeklySession->model3ds->count() > 0)
+                        @if($weeklySession->project || $weeklySession->project_pdf || $weeklySession->vr_experiment_id)
+                            @if($weeklySession->project)
+                                <div class="mb-4">
+                                    <div class="d-flex align-items-center justify-content-between p-3 border rounded">
+                                        <div>
+                                            <h6 class="fw-semibold mb-1">
+                                                <i class="bi bi-kanban text-success me-2"></i>{{ $weeklySession->project->name }}
+                                            </h6>
+                                            <p class="text-muted small mb-0 mx-2">
+                                                This is the project assigned for this session. Open it and guide students through the steps for this week.
+                                            </p>
+                                        </div>
+                                        <a href="{{ route('client.projects.show', $weeklySession->project) }}"
+                                           class="badge bg-success text-decoration-none">
+                                            <i class="bi bi-eye me-1"></i> View Project
+                                        </a>
+                                    </div>
+                                </div>
+                            @elseif($weeklySession->project_pdf)
+                                <div class="mb-4">
+                                    <div class="border rounded p-3">
+                                        <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                                            <div>
+                                                <span class="badge bg-danger mb-2">
+                                                    <i class="bi bi-file-pdf me-1"></i> Project PDF
+                                                </span>
+                                                <h6 class="fw-semibold mb-1">Session Project Guide</h6>
+                                                <p class="text-muted small mb-0">
+                                                    Review this PDF with students and follow it as the assigned activity for this session.
+                                                </p>
+                                            </div>
+                                            <a href="{{ Storage::url($weeklySession->project_pdf) }}"
+                                               target="_blank"
+                                               rel="noopener"
+                                               class="badge bg-danger text-decoration-none fs-6">
+                                                <i class="bi bi-box-arrow-up-right me-1"></i> Open PDF
+                                            </a>
+                                        </div>
+                                        <div class="ratio ratio-16x9 border rounded overflow-hidden">
+                                            <iframe
+                                                src="{{ Storage::url($weeklySession->project_pdf) }}"
+                                                title="Session Project PDF"
+                                                class="w-100 h-100"
+                                            ></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
                             @if($weeklySession->vr_experiment_id)
                                 <div class="mb-4">
                                     <div class="d-flex align-items-center justify-content-between p-3 border rounded">
@@ -62,41 +110,14 @@
                                         </div>
                                         <a href="{{ $weeklySession->vrExperiment->external_url }}"
                                            target="_blank"
-                                           class="btn btn-success btn-sm text-white">
-                                            Launch VR
+                                           class="badge bg-success text-decoration-none">
+                                            <i class="bi bi-play-circle me-1"></i> Launch VR
                                         </a>
                                     </div>
                                 </div>
                             @endif
-
-                            @if($weeklySession->model3ds->count() > 0)
-                                <div>
-                                    <h6 class="fw-semibold mb-3">3D Models ({{ $weeklySession->model3ds->count() }})</h6>
-                                    <div class="row g-3">
-                                        @foreach($weeklySession->model3ds as $model3d)
-                                            <div class="col-md-6">
-                                                <div class="p-3 border rounded h-100">
-                                                    <h6 class="fw-semibold mb-2">
-                                                        <i class="bi bi-box text-warning me-2"></i>{{ $model3d->name }}
-                                                    </h6>
-                                                    @if($model3d->subject)
-                                                        <span class="badge bg-light text-dark mb-2">{{ $model3d->subject->subject_name }}</span>
-                                                    @endif
-                                                    <div class="mt-2">
-                                                        <a href="{{ route('client.models.3d.show', $model3d) }}"
-                                                           target="_blank"
-                                                           class="btn btn-sm btn-outline-primary text-white text-decoration-none">
-                                                            View Model
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endif
                         @else
-                            <p class="text-muted mb-0">No resources assigned to this session.</p>
+                            <p class="text-muted mb-0">No project, PDF, or VR resource has been assigned to this session yet.</p>
                         @endif
                     </div>
                 </div>
@@ -111,7 +132,7 @@
                             <div class="row g-2">
                                 @foreach($weeklySession->classes as $class)
                                     <div class="col-auto">
-                                        <span class="badge bg-primary">
+                                        <span class="badge bg-light-soft text-dark border">
                                             {{ $class->name }}
                                             @if(isset($studentCountsByClass[$class->id]))
                                                 ({{ $studentCountsByClass[$class->id] }} students)
@@ -171,26 +192,28 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <span class="text-muted small d-block">Session Date</span>
+                            <span class="text-muted small d-block">From Date</span>
                             <span class="fw-semibold">
                                 <i class="bi bi-calendar-event me-1"></i>
                                 {{ $weeklySession->session_date->format('l, F d, Y') }}
                             </span>
                         </div>
                         <div class="mb-3">
-                            <span class="text-muted small d-block">Club</span>
-                            <span class="badge bg-info">{{ $weeklySession->club->name }}</span>
+                            <span class="text-muted small d-block">To Date</span>
+                            <span class="fw-semibold">
+                                <i class="bi bi-calendar-range me-1"></i>
+                                {{ optional($weeklySession->session_end_date)->format('l, F d, Y') ?? 'Not set' }}
+                            </span>
                         </div>
+                       
                         @if($weeklySession->subject)
                             <div class="mb-3">
                                 <span class="text-muted small d-block">Subject</span>
-                                <span class="badge bg-secondary">{{ $weeklySession->subject->subject_name }}</span>
+                                <span class="badge bg-light-soft text-dark border mt-2">{{ $weeklySession->subject->subject_name }}</span>
                             </div>
                         @endif
-                        <div class="mb-0">
-                            <span class="text-muted small d-block">Status</span>
-                            <span class="badge {{ $weeklySession->status_badge }}">{{ ucfirst($weeklySession->status) }}</span>
-                        </div>
+                       
+                      
                     </div>
                 </div>
 
@@ -216,14 +239,14 @@
                             </div>
                             <div class="d-grid gap-2">
                                 @if($report->pdf_file)
-                                    <a href="{{ asset('storage/' . $report->pdf_file) }}" target="_blank" class="btn btn-outline-danger">
+                                    <a href="{{ asset('storage/' . $report->pdf_file) }}" target="_blank" class="badge bg-danger text-decoration-none">
                                         <i class="bi bi-file-pdf me-1"></i> View PDF Report
                                     </a>
-                                    <a href="{{ route('client.weekly-sessions.report.edit', $weeklySession) }}" class="btn btn-primary">
+                                    <a href="{{ route('client.weekly-sessions.report.edit', $weeklySession) }}" class="badge bg-primary text-decoration-none">
                                         <i class="bi bi-upload me-1"></i> Replace with Online Form
                                     </a>
                                 @else
-                                    <a href="{{ route('client.weekly-sessions.report.edit', $weeklySession) }}" class="btn btn-primary">
+                                    <a href="{{ route('client.weekly-sessions.report.edit', $weeklySession) }}" class="badge bg-primary text-decoration-none">
                                         <i class="bi bi-pencil me-1"></i> Edit Report
                                     </a>
                                 @endif
@@ -231,10 +254,10 @@
                         @else
                             <p class="text-muted small mb-3">Submit a report after conducting this session. Choose either option:</p>
                             <div class="d-grid gap-2">
-                                <a href="{{ route('client.weekly-sessions.report.create', $weeklySession) }}" class="btn btn-success btn-sm text-white">
+                                <a href="{{ route('client.weekly-sessions.report.create', $weeklySession) }}" class="badge bg-primary text-white">
                                     Fill Online Form
                                 </a>
-                                <button type="button" class="btn btn-danger btn-sm text-white" data-bs-toggle="modal" data-bs-target="#uploadPdfModal">
+                                <button type="button" class="badge bg-primary text-white border-0" data-bs-toggle="modal" data-bs-target="#uploadPdfModal">
                                     Upload PDF Report
                                 </button>
                             </div>
@@ -258,7 +281,7 @@
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label for="pdf_file" class="form-label">PDF File <span class="text-danger">*</span></label>
-                                            <input type="file" class="form-control @error('pdf_file') is-invalid @enderror"
+                                            <input type="file" class="form-control @error('pdf_file') is-invalid @enderror border p-2"
                                                    id="pdf_file" name="pdf_file" accept=".pdf" required>
                                             @error('pdf_file')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -267,8 +290,7 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-danger btn-sm text-white">
+                                      <button type="submit" class="badge bg-danger border-0 text-white">
                                             Upload PDF
                                         </button>
                                     </div>

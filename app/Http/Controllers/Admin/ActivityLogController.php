@@ -43,7 +43,13 @@ class ActivityLogController extends Controller
             $availableLogNames = $namesQuery->pluck('log_name')->values()->all();
         }
 
-        $query = Activity::query()->with('causer');
+        $query = Activity::query()->with([
+            'causer.teacherClubs' => function ($teacherClubQuery) {
+                $teacherClubQuery
+                    ->where('status', 'approved')
+                    ->with('school:id,name');
+            },
+        ]);
 
         if ($logTableExists) {
             if ($logScope === 'admin_activity') {

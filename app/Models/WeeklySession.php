@@ -21,11 +21,15 @@ class WeeklySession extends Model
         'title',
         'description',
         'session_date',
+        'session_end_date',
         'status',
+        'project_id',
+        'project_pdf',
     ];
 
     protected $casts = [
         'session_date' => 'date',
+        'session_end_date' => 'date',
     ];
 
     /**
@@ -42,6 +46,14 @@ class WeeklySession extends Model
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
+    }
+
+    /**
+     * Get the project linked to this session.
+     */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
     }
 
     /**

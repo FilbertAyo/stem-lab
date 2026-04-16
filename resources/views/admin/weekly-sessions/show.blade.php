@@ -10,18 +10,13 @@
                     <a href="{{ route('admin.weekly-sessions.edit', $weeklySession) }}" class="btn btn-primary">
                         <i class="ti ti-edit"></i> Edit
                     </a>
-                    <a href="{{ route('admin.weekly-sessions.index') }}" class="btn btn-outline-secondary">
-                        <i class="ti ti-arrow-left"></i> Back to List
+                    <a href="{{ route('admin.weekly-sessions.index') }}" class="btn btn-outline-secondary border-0">
+                        <i class="ti ti-arrow-left"></i> Back 
                     </a>
                 </div>
             </div>
 
-            @if (session('status'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('status') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+        
 
             <div class="row">
                 <!-- Main Content -->
@@ -40,10 +35,17 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-semibold">Session Date</label>
+                                    <label class="form-label fw-semibold">From Date</label>
                                     <div>
                                         <i class="ti ti-calendar-event me-2"></i>
                                         {{ $weeklySession->session_date->format('l, F d, Y') }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">To Date</label>
+                                    <div>
+                                        <i class="ti ti-calendar-time me-2"></i>
+                                        {{ optional($weeklySession->session_end_date)->format('l, F d, Y') ?? 'Not set' }}
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -120,26 +122,28 @@
                                 </div>
                             @endif
 
-                            <div class="mb-0">
-                                <label class="form-label fw-semibold">3D Models</label>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Linked Project</label>
                                 <div>
-                                    @if($weeklySession->model3ds->count() > 0)
-                                        <div class="d-flex flex-column gap-2">
-                                            @foreach($weeklySession->model3ds as $model3d)
-                                                <div>
-                                                    <span class="badge bg-warning">
-                                                        <i class="ti ti-cube"></i> {{ $model3d->name }}
-                                                    </span>
-                                                    @if($model3d->subject)
-                                                        <div class="small text-muted mt-1">
-                                                            Subject: {{ $model3d->subject->subject_name }}
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                            @endforeach
-                                        </div>
+                                    @if($weeklySession->project)
+                                        <span class="badge bg-primary">
+                                            <i class="ti ti-clipboard-text"></i> {{ $weeklySession->project->name }}
+                                        </span>
                                     @else
-                                        <span class="text-muted">No 3D models assigned</span>
+                                        <span class="text-muted">No project linked</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="mb-0">
+                                <label class="form-label fw-semibold">Project PDF</label>
+                                <div>
+                                    @if($weeklySession->project_pdf)
+                                        <a href="{{ Storage::url($weeklySession->project_pdf) }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">
+                                            <i class="ti ti-file-text me-1"></i> View PDF
+                                        </a>
+                                    @else
+                                        <span class="text-muted">No project PDF uploaded</span>
                                     @endif
                                 </div>
                             </div>

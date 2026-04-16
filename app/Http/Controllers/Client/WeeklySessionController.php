@@ -54,7 +54,7 @@ class WeeklySessionController extends Controller
 
         // Build query for sessions visible to teachers
         $query = WeeklySession::visibleToTeachers($clubIds)
-            ->with(['club', 'subject', 'vrExperiment', 'classes', 'model3ds'])
+            ->with(['club', 'subject', 'vrExperiment', 'classes', 'project'])
             ->orderedByDate('asc');
 
         // Filter by status
@@ -146,7 +146,7 @@ class WeeklySessionController extends Controller
         }
 
         // Load relationships
-        $weeklySession->load(['club', 'subject', 'vrExperiment', 'classes', 'model3ds']);
+        $weeklySession->load(['club', 'subject', 'vrExperiment', 'classes', 'project']);
 
         // Get students assigned to this session
         // Students whose class matches session classes AND belong to teacher's teacher_club_id

@@ -36,7 +36,10 @@
                                         </h5>
                                         <p class="text-muted small mb-2">
                                             <i class="bi bi-calendar-event me-1"></i>
-                                            {{ $session->session_date->format('l, M d, Y') }}
+                                            From {{ $session->session_date->format('l, M d, Y') }}
+                                            @if($session->session_end_date)
+                                                <span class="text-muted"> - To {{ $session->session_end_date->format('l, M d, Y') }}</span>
+                                            @endif
                                         </p>
                                     </div>
                                     <span class="badge {{ $session->status_badge }}">
@@ -44,52 +47,31 @@
                                     </span>
                                 </div>
 
-                           
-
                                 @if($session->description)
                                     <p class="card-text text-muted small mb-3" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                                         {{ $session->description }}
                                     </p>
                                 @endif
 
-                                {{-- Resources --}}
-                                <div class="mb-3">
-                                    <div class="d-flex gap-2 flex-wrap">
-                                        @if($session->vr_experiment_id)
-                                            <span class="badge bg-success">
-                                                <i class="bi bi-vr"></i> VR
-                                            </span>
-                                        @endif
-                                        @if($session->model3ds->count() > 0)
-                                        <span class="badge bg-success">
-                                                <i class="bi bi-box"></i> 3D ({{ $session->model3ds->count() }})
-                                            </span>
-                                        @endif
-                                    </div>
-                                </div>
-
+                        
                                 {{-- Report Status --}}
                                 <div class="mb-3">
                                     @if($session->teacherReport)
-                                        <span class="badge bg-success">
+                                        <span class="alert alert-success p-1 border-0">
                                             <i class="bi bi-check-circle"></i> Report Submitted
                                         </span>
                                     @else
-                                        <span class="badge bg-secondary">
-                                            <i class="bi bi-circle"></i> No Report Yet
+                                        <span class="alert alert-secondary text-white p-1 border-0">
+                                          No Report Yet
                                         </span>
                                     @endif
                                 </div>
 
-                                <div class="mt-auto d-flex gap-2">
+                                <div class="mt-auto d-flex gap-2 justify-content-end">
                                     <a href="{{ route('client.weekly-sessions.show', $session) }}" class="badge bg-primary btn-sm text-white">
                                         <i class="bi bi-eye"></i> Session
                                     </a>
-                                    @if(!$session->teacherReport)
-                                        <a href="{{ route('client.weekly-sessions.report.create', $session) }}" class="badge bg-light text-dark">
-                                            <i class="bi bi-file-text"></i> Report
-                                        </a>
-                                    @endif
+                                  
                                 </div>
                             </div>
                         </div>

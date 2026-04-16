@@ -20,16 +20,7 @@
                         <div class="col-md-3">
                             <input type="text" name="search" class="form-control" placeholder="Search by title, description, or club..." value="{{ request('search') }}">
                         </div>
-                        <div class="col-md-2">
-                            <select name="club_id" class="form-select">
-                                <option value="">All Clubs</option>
-                                @foreach($clubs as $club)
-                                    <option value="{{ $club->id }}" {{ request('club_id') == $club->id ? 'selected' : '' }}>
-                                        {{ $club->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                     
                         <div class="col-md-2">
                             <select name="status" class="form-select">
                                 <option value="">All Status</option>
@@ -73,7 +64,6 @@
                                     <th>Classes</th>
                                     <th>Date</th>
                                     <th>Status</th>
-                                    <th>Resources</th>
                                     <th class="text-center" style="width: 180px;">Actions</th>
                                 </tr>
                             </thead>
@@ -92,7 +82,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="badge bg-info">{{ $session->club->name }}</span>
+                                            {{ $session->club->name }}
                                         </td>
                                         <td>
                                             @if($session->subject)
@@ -125,23 +115,7 @@
                                                 {{ ucfirst($session->status) }}
                                             </span>
                                         </td>
-                                        <td>
-                                            <div class="d-flex gap-2">
-                                                @if($session->vr_experiment_id)
-                                                    <span class="badge bg-success" title="VR Experiment: {{ $session->vrExperiment->name }}">
-                                                        <i class="ti ti-vr"></i> VR
-                                                    </span>
-                                                @endif
-                                                @if($session->model3ds->count() > 0)
-                                                    <span class="badge bg-warning" title="{{ $session->model3ds->count() }} 3D Model(s)">
-                                                        <i class="ti ti-cube"></i> 3D ({{ $session->model3ds->count() }})
-                                                    </span>
-                                                @endif
-                                                @if(!$session->vr_experiment_id && $session->model3ds->count() == 0)
-                                                    <span class="text-muted">—</span>
-                                                @endif
-                                            </div>
-                                        </td>
+                                     
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.weekly-sessions.show', $session) }}" 

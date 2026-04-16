@@ -124,6 +124,11 @@
                                                 @if($activity->causer)
                                                     @php
                                                         $userRole = $activity->getExtraProperty('user_role');
+                                                        $teacherSchools = $activity->causer->teacherClubs
+                                                            ->pluck('school.name')
+                                                            ->filter()
+                                                            ->unique()
+                                                            ->values();
                                                     @endphp
                                                     <div class="small">
                                                         <strong>{{ $activity->causer->name ?? ($isClientContext ? 'User' : 'Admin') }}</strong>
@@ -132,6 +137,9 @@
                                                         @endif
                                                     </div>
                                                     <div><small class="text-muted">{{ $activity->causer->email ?? '' }}</small></div>
+                                                    @if($teacherSchools->isNotEmpty())
+                                                        <div><small class="text-primary">School: {{ $teacherSchools->join(', ') }}</small></div>
+                                                    @endif
                                                 @else
                                                     <span class="text-muted">System</span>
                                                 @endif

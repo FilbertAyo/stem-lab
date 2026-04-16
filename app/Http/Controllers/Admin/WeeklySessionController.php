@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Club;
-use App\Models\Model3d;
+use App\Models\Project;
 use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\VrExperiment;
@@ -13,6 +13,7 @@ use App\Models\WeeklySessionReport;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -73,9 +74,9 @@ class WeeklySessionController extends Controller
         $subjects = Subject::active()->ordered()->get();
         $classes = SchoolClass::active()->ordered()->get();
         $vrExperiments = VrExperiment::active()->ordered()->get();
-        $model3ds = Model3d::active()->with('subject')->ordered()->get();
+        $projects = Project::active()->ordered()->get();
 
-        return view('admin.weekly-sessions.create', compact('clubs', 'subjects', 'classes', 'vrExperiments', 'model3ds'));
+        return view('admin.weekly-sessions.create', compact('clubs', 'subjects', 'classes', 'vrExperiments', 'projects'));
     }
 
     /**
@@ -89,24 +90,24 @@ class WeeklySessionController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:5000'],
             'session_date' => ['required', 'date'],
+            'session_end_date' => ['required', 'date', 'after_or_equal:session_date'],
             'vr_experiment_id' => ['nullable', 'exists:vr_experiments,id'],
+            'project_id' => ['nullable', 'exists:projects,id'],
+            'project_pdf' => ['nullable', 'file', 'mimes:pdf', 'max:10240', 'required_without:project_id'],
+            'status' => ['required', 'string', Rule::in(['draft', 'scheduled', 'active', 'completed'])],
             'classes' => ['nullable', 'array'],
             'classes.*' => ['exists:school_classes,id'],
-            'model3ds' => ['nullable', 'array'],
-            'model3ds.*' => ['exists:model3ds,id'],
         ]);
 
-        $validated['created_by'] = Auth::id();
-        $validated['status'] = 'scheduled';
+        if ($request->hasFile('project_pdf')) {
+            $validated['project_pdf'] = $request->file('project_pdf')->store('weekly-sessions/project-pdfs', 'public');
+        }
 
+        $validated['created_by'] = Auth::id();
         $session = WeeklySession::create($validated);
 
         if ($request->has('classes')) {
             $session->classes()->sync($request->classes);
-        }
-
-        if ($request->has('model3ds')) {
-            $session->model3ds()->sync($request->model3ds);
         }
 
         return redirect()->route('admin.weekly-sessions.index')
@@ -118,7 +119,7 @@ class WeeklySessionController extends Controller
      */
     public function show(WeeklySession $weeklySession): View
     {
-        $weeklySession->load(['club', 'subject', 'vrExperiment', 'classes', 'model3ds', 'creator']);
+        $weeklySession->load(['club', 'subject', 'vrExperiment', 'classes', 'project', 'creator']);
 
         return view('admin.weekly-sessions.show', compact('weeklySession'));
     }
@@ -132,11 +133,11 @@ class WeeklySessionController extends Controller
         $subjects = Subject::active()->ordered()->get();
         $classes = SchoolClass::active()->ordered()->get();
         $vrExperiments = VrExperiment::active()->ordered()->get();
-        $model3ds = Model3d::active()->with('subject')->ordered()->get();
+        $projects = Project::active()->ordered()->get();
 
-        $weeklySession->load(['classes', 'model3ds']);
+        $weeklySession->load(['classes', 'project']);
 
-        return view('admin.weekly-sessions.edit', compact('weeklySession', 'clubs', 'subjects', 'classes', 'vrExperiments', 'model3ds'));
+        return view('admin.weekly-sessions.edit', compact('weeklySession', 'clubs', 'subjects', 'classes', 'vrExperiments', 'projects'));
     }
 
     /**
@@ -150,12 +151,36 @@ class WeeklySessionController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:5000'],
             'session_date' => ['required', 'date'],
+            'session_end_date' => ['required', 'date', 'after_or_equal:session_date'],
             'vr_experiment_id' => ['nullable', 'exists:vr_experiments,id'],
+            'project_id' => ['nullable', 'exists:projects,id'],
+            'project_pdf' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
+            'status' => ['required', 'string', Rule::in(['draft', 'scheduled', 'active', 'completed'])],
             'classes' => ['nullable', 'array'],
             'classes.*' => ['exists:school_classes,id'],
-            'model3ds' => ['nullable', 'array'],
-            'model3ds.*' => ['exists:model3ds,id'],
         ]);
+
+        if (empty($validated['project_id']) && !$request->hasFile('project_pdf') && empty($weeklySession->project_pdf)) {
+            return redirect()
+                ->back()
+                ->withErrors(['project_pdf' => 'Please upload a project PDF when no project is selected.'])
+                ->withInput();
+        }
+
+        if (!empty($validated['project_id']) && $request->boolean('remove_project_pdf') && $weeklySession->project_pdf) {
+            Storage::disk('public')->delete($weeklySession->project_pdf);
+            $validated['project_pdf'] = null;
+        } elseif ($request->hasFile('project_pdf')) {
+            if ($weeklySession->project_pdf) {
+                Storage::disk('public')->delete($weeklySession->project_pdf);
+            }
+            $validated['project_pdf'] = $request->file('project_pdf')->store('weekly-sessions/project-pdfs', 'public');
+        } elseif ($request->boolean('remove_project_pdf')) {
+            if ($weeklySession->project_pdf) {
+                Storage::disk('public')->delete($weeklySession->project_pdf);
+            }
+            $validated['project_pdf'] = null;
+        }
 
         $weeklySession->update($validated);
 
@@ -163,12 +188,6 @@ class WeeklySessionController extends Controller
             $weeklySession->classes()->sync($request->classes);
         } else {
             $weeklySession->classes()->sync([]);
-        }
-
-        if ($request->has('model3ds')) {
-            $weeklySession->model3ds()->sync($request->model3ds);
-        } else {
-            $weeklySession->model3ds()->sync([]);
         }
 
         return redirect()->route('admin.weekly-sessions.show', $weeklySession)
