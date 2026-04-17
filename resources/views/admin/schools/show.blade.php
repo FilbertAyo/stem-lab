@@ -11,23 +11,6 @@
                 </a>
             </div>
 
-            <!-- Flash Messages -->
-            @if(session('status'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="ti ti-check-circle me-2"></i>
-                    {{ session('status') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="ti ti-alert-circle me-2"></i>
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
             <!-- School Information Card -->
             <div class="card mb-4">
                 <div class="card-header">
@@ -125,11 +108,11 @@
                                                         @endforeach
                                                     </td>
                                                     <td>
-            <form 
-                                                                            action="{{ route('admin.schools.remove-teacher-from-club', $tc) }}" 
-                                                                            method="POST" 
+                                                                        <form
+                                                                            action="{{ route('admin.schools.remove-teacher-from-club', $tc) }}"
+                                                                            method="POST"
                                                                             class="d-inline ms-1"
-                                                                            onsubmit="return confirm('Are you sure you want to remove {{ $teacher->name }} from {{ $tc->club->name ?? 'this club' }}? This action cannot be undone.')"
+                                                                            onsubmit="return confirm('Are you sure you want to remove this teacher from this club? This action cannot be undone.')"
                                                                         >
                                                                             @csrf
                                                                             @method('DELETE')
@@ -175,6 +158,7 @@
                                                 <th>Age</th>
                                                 <th>Gender</th>
                                                 <th>Class</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -193,6 +177,24 @@
                                                         @endif
                                                     </td>
                                                     <td>{{ $student->schoolClass->name ?? '—' }}</td>
+                                                    <td>
+                                                        <form
+                                                            action="{{ route('admin.schools.remove-student', [$school, $student]) }}"
+                                                            method="POST"
+                                                            class="d-inline"
+                                                            onsubmit="return confirm('Are you sure you want to delete {{ $student->name }}? This action cannot be undone.')"
+                                                        >
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button
+                                                                type="submit"
+                                                                class="btn btn-sm btn-outline-danger p-1"
+                                                                title="Delete student"
+                                                            >
+                                                                delete
+                                                            </button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

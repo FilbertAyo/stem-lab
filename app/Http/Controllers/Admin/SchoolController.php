@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Region;
 use App\Models\School;
+use App\Models\Student;
 use App\Models\TeacherClub;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -178,5 +179,21 @@ class SchoolController extends Controller
         return redirect()
             ->route('admin.schools.show', $school)
             ->with('status', "{$teacherName} has been removed from {$clubName} successfully.");
+    }
+
+    public function removeStudent(School $school, Student $student): RedirectResponse
+    {
+        $belongsToSchool = (int) $student->teacherClub?->school_id === (int) $school->id;
+
+        if (! $belongsToSchool) {
+            abort(404);
+        }
+
+        $studentName = $student->name;
+        $student->delete();
+
+        return redirect()
+            ->route('admin.schools.show', $school)
+            ->with('status', "{$studentName} removed successfully.");
     }
 }
