@@ -141,6 +141,22 @@ class SchoolController extends Controller
         return redirect()->route('admin.schools.index')->with('status', $message);
     }
 
+    public function destroy(School $school): RedirectResponse
+    {
+        if ($school->teacherClubs()->exists()) {
+            return redirect()
+                ->route('admin.schools.index')
+                ->with('error', 'Cannot delete school with linked teacher clubs. Remove linked teacher-club records first.');
+        }
+
+        $schoolName = $school->name;
+        $school->delete();
+
+        return redirect()
+            ->route('admin.schools.index')
+            ->with('status', "School {$schoolName} deleted successfully.");
+    }
+
     public function removeTeacherFromClub(TeacherClub $teacherClub): RedirectResponse
     {
         $school = $teacherClub->school;

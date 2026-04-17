@@ -90,7 +90,7 @@
                                     <th>Region</th>
                                     <th>Status</th>
                                     <th>Last Updated</th>
-                                    <th class="text-center" style="width: 180px;">Actions</th>
+                                    <th class="text-center" style="width: 220px;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -158,6 +158,16 @@
                                                     title="{{ $school->is_active ? 'Disable' : 'Enable' }}"
                                                 >
                                                     <i class="ti {{ $school->is_active ? 'ti-ban' : 'ti-check' }}"></i>
+                                                </button>
+                                                <button
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteSchoolModal"
+                                                    data-action="{{ route('admin.schools.destroy', $school) }}"
+                                                    data-name="{{ $school->name }}"
+                                                    title="Delete School"
+                                                >
+                                                    <i class="ti ti-trash"></i>
                                                 </button>
                                             </div>
                                         </td>
@@ -398,6 +408,29 @@
         </div>
     </div>
 
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteSchoolModal" tabindex="-1" aria-labelledby="deleteSchoolModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteSchoolModalLabel">Delete School</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" id="deleteSchoolForm">
+                    @csrf
+                    @method('DELETE')
+                    <div class="modal-body">
+                        <p class="mb-0" id="deleteSchoolModalMessage"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -445,6 +478,9 @@
                 const statusForm = document.getElementById('schoolStatusForm');
                 const statusMessage = document.getElementById('schoolStatusModalMessage');
                 const statusSubmit = document.getElementById('schoolStatusModalSubmit');
+                const deleteModal = document.getElementById('deleteSchoolModal');
+                const deleteForm = document.getElementById('deleteSchoolForm');
+                const deleteMessage = document.getElementById('deleteSchoolModalMessage');
 
                 statusModal?.addEventListener('show.bs.modal', function (event) {
                     const button = event.relatedTarget;
@@ -464,6 +500,15 @@
                         statusSubmit.classList.add('btn-success');
                         statusSubmit.textContent = 'Enable';
                     }
+                });
+
+                deleteModal?.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const action = button.getAttribute('data-action');
+                    const name = button.getAttribute('data-name');
+
+                    deleteForm.setAttribute('action', action);
+                    deleteMessage.textContent = `Delete ${name}? This action cannot be undone.`;
                 });
             });
         </script>

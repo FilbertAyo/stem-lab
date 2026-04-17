@@ -144,6 +144,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/{school}', [SchoolController::class, 'show'])->name('show');
             Route::post('/', [SchoolController::class, 'store'])->name('store');
             Route::put('/{school}', [SchoolController::class, 'update'])->name('update');
+            Route::delete('/{school}', [SchoolController::class, 'destroy'])->name('destroy');
             Route::post('/{school}/toggle-status', [SchoolController::class, 'toggleStatus'])->name('toggle-status');
         });
 
