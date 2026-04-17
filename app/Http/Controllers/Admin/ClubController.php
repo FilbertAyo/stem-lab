@@ -97,41 +97,46 @@ class ClubController extends Controller
      */
     public function show(Club $club): View
     {
-        // Load club with relationships
-        $club->load([
-            'teacherClubs.user',
-            'teacherClubs.school',
-        ]);
-
-        // Get all approved members
-        $approvedMembers = $club->teacherClubs()
-            ->approved()
-            ->with(['user', 'school'])
-            ->get();
-
         // Get all leaders (one per school)
         $leaders = $club->teacherClubs()
             ->approved()
             ->leaders()
             ->with(['user', 'school'])
-            ->get();
+            ->orderByDesc('created_at')
+            ->paginate(10, ['*'], 'leaders_page')
+            ->withQueryString();
+
+        // Get approved members
+        $approvedMembers = $club->teacherClubs()
+            ->approved()
+            ->with(['user', 'school'])
+            ->orderByDesc('created_at')
+            ->paginate(10, ['*'], 'members_page')
+            ->withQueryString();
 
         // Get pending requests
         $pendingRequests = $club->pendingRequests()
             ->with(['user', 'school'])
+            ->orderByDesc('created_at')
+            ->paginate(10, ['*'], 'requests_page')
+            ->withQueryString();
+
+        // Get all approved members grouped by school for transfer leadership modal.
+        $transferMembers = $club->teacherClubs()
+            ->approved()
+            ->with(['user', 'school'])
             ->get();
 
-        // Get approved members grouped by school for transfer leadership modal (formatted for JavaScript)
-        $membersBySchoolJson = $approvedMembers->groupBy('school_id')->map(function ($members, $schoolId) {
+        $membersBySchoolJson = $transferMembers->groupBy('school_id')->map(function ($members, $schoolId) {
             return [
-                'school_id' => (string)$schoolId,
+                'school_id' => (string) $schoolId,
                 'members' => $members->map(function ($member) {
                     return [
                         'id' => $member->id,
                         'name' => $member->user->name,
                         'email' => $member->user->email,
                     ];
-                })->values()->all()
+                })->values()->all(),
             ];
         })->values()->all();
 

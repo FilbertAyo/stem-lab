@@ -12,7 +12,19 @@
                 </a>
             </div>
 
-            
+            @if(session('status'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="ti ti-check me-1"></i> {{ session('status') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="ti ti-alert-circle me-1"></i> {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
             <!-- Club Information Card -->
             <div class="card mb-4">
@@ -65,7 +77,7 @@
                                 <tbody>
                                     @foreach($leaders as $leader)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $leaders->firstItem() + $loop->index }}</td>
                                             <td class="fw-semibold">{{ $leader->user->name }}</td>
                                             <td>{{ $leader->user->email }}</td>
                                             <td>{{ $leader->school->name ?? 'N/A' }}</td>
@@ -84,6 +96,11 @@
                                 </tbody>
                             </table>
                         </div>
+                        @if($leaders->hasPages())
+                            <div class="card-footer d-flex justify-content-end">
+                                {{ $leaders->links('pagination::bootstrap-5') }}
+                            </div>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -114,7 +131,7 @@
                                 <tbody>
                                     @foreach($approvedMembers as $member)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $approvedMembers->firstItem() + $loop->index }}</td>
                                             <td class="fw-semibold">{{ $member->user->name }}</td>
                                             <td>{{ $member->user->email }}</td>
                                             <td>{{ $member->school->name ?? 'N/A' }}</td>
@@ -124,6 +141,11 @@
                                 </tbody>
                             </table>
                         </div>
+                        @if($approvedMembers->hasPages())
+                            <div class="card-footer d-flex justify-content-end">
+                                {{ $approvedMembers->links('pagination::bootstrap-5') }}
+                            </div>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -155,7 +177,7 @@
                                 <tbody>
                                     @foreach($pendingRequests as $request)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $pendingRequests->firstItem() + $loop->index }}</td>
                                             <td class="fw-semibold">{{ $request->user->name }}</td>
                                             <td>{{ $request->user->email }}</td>
                                             <td>{{ $request->school->name ?? 'N/A' }}</td>
@@ -181,6 +203,11 @@
                                 </tbody>
                             </table>
                         </div>
+                        @if($pendingRequests->hasPages())
+                            <div class="card-footer d-flex justify-content-end">
+                                {{ $pendingRequests->links('pagination::bootstrap-5') }}
+                            </div>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -188,7 +215,7 @@
     </div>
 
     <!-- Transfer Leadership Modal -->
-    <div class="modal fade" id="transferLeadershipModal" tabindex="-1" aria-labelledby="transferLeadershipModalLabel" aria-hidden="true">
+    <div class="modal fade" id="transferLeadershipModal" tabindex="-1" aria-labelledby="transferLeadershipModalLabel" aria-hidden="true" data-members-by-school='@json($membersBySchoolJson)'>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -230,7 +257,7 @@
             const schoolIdInput = document.getElementById('modal_school_id');
             const schoolNameSpan = document.getElementById('modal_school_name');
             
-            const membersBySchool = @json($membersBySchoolJson);
+            const membersBySchool = JSON.parse(transferModal?.dataset.membersBySchool ?? '[]');
 
             if (transferModal) {
                 transferModal.addEventListener('show.bs.modal', function (event) {
