@@ -61,7 +61,7 @@
     @error('school_id')
       <div class="invalid-feedback d-block">{{ $message }}</div>
     @enderror
-    <small class="text-muted @if($authInputStyle) small @endif">If your school is not in the list, use “Add new school” below.</small>
+    <small class="text-danger @if($authInputStyle) small @endif">If your school is not in the list, use “Add new school” below.</small>
   </div>
 
   <div class="mb-1">

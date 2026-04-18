@@ -61,7 +61,7 @@
     <div class="container py-3">
       <div class="sign-in card mx-auto shadow-lg competition-teacher-signup-card" style="max-width: 1080px;">
         <div class="card-body py-8 px-lg-5 px-xl-8">
-          <p class="text-center text-dark fw-medium fs-5 mb-1">Teacher sign-up</p>
+          <h3 class="text-center">Teacher sign-up</h3>
           <p class="text-center text-muted small mb-6 mb-lg-8">Link your school and join this competition’s club.</p>
 
           @include('elements.client-validation')
@@ -123,12 +123,14 @@
               'existingSchool' => null,
             ])
 
-            <button type="submit" class="btn btn-primary w-100 justify-content-center py-2 fw-medium my-5 fs-4 lh-lg">
+            <button type="submit" class="btn btn-primary w-100 justify-content-center py-2 fw-medium my-3 fs-4 lh-lg">
               Create account &amp; join club
             </button>
+
+            <h5 class="text-center text-muted mb-0">Already have an account? <a href="{{ $loginWithReturn }}" class="text-primary">Sign in</a>.</h5>
           </form>
 
-          <a href="{{ $competitionPagePath }}" class="text-center mb-2 d-block text-dark fw-medium small text-decoration-none">← Back to competition details</a>
+          <a href="{{ $competitionPagePath }}" class="text-center mt-2 d-block text-dark fw-medium small text-decoration-none">← Back to competition details</a>
          
         </div>
       </div>
