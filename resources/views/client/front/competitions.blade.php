@@ -3,6 +3,28 @@
 @section('title', 'Competitions | ' . config('app.name'))
 @section('page', 'competitions')
 
+@push('styles')
+<style>
+  .competition-card-link {
+    transition: box-shadow 0.28s ease, transform 0.28s ease, border-color 0.28s ease, opacity 0.28s ease;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .competition-card-link:hover,
+  .competition-card-link:focus-within {
+    transform: translateY(-6px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.12) !important;
+    border-color: var(--bs-primary, #0d6efd);
+  }
+  .competition-card-link .overflow-hidden img {
+    transition: transform 0.45s ease;
+  }
+  .competition-card-link:hover .overflow-hidden img,
+  .competition-card-link:focus-within .overflow-hidden img {
+    transform: scale(1.04);
+  }
+</style>
+@endpush
+
 @section('content')
 <main>
   <!--  Banner Section -->
@@ -50,7 +72,7 @@
       <div class="row">
         @foreach($activeCompetitions as $index => $competition)
           <div class="col-lg-6 mb-7">
-            <div class="card h-100 d-flex flex-column position-relative shadow-sm cursor-pointer" data-aos="fade-up" data-aos-delay="{{ ($index % 2 == 0) ? 100 : 200 }}" data-aos-duration="1000">
+            <div class="card competition-card-link h-100 d-flex flex-column position-relative shadow-sm cursor-pointer" data-aos="fade-up" data-aos-delay="{{ ($index % 2 == 0) ? 100 : 200 }}" data-aos-duration="1000">
               <div class="overflow-hidden">
                 @if($competition->cover_image)
                   <img src="{{ Storage::url($competition->cover_image) }}" alt="" class="card-img-top img-fluid w-100">
@@ -94,7 +116,7 @@
       <div class="row">
         @foreach($upcomingCompetitions as $index => $competition)
           <div class="col-lg-6 mb-7">
-            <div class="card h-100 d-flex flex-column position-relative shadow-sm cursor-pointer" data-aos="fade-up" data-aos-delay="{{ ($index % 2 == 0) ? 300 : 400 }}" data-aos-duration="1000" style="opacity: 0.9;">
+            <div class="card competition-card-link h-100 d-flex flex-column position-relative shadow-sm cursor-pointer" data-aos="fade-up" data-aos-delay="{{ ($index % 2 == 0) ? 300 : 400 }}" data-aos-duration="1000" style="opacity: 0.9;">
               <div class="overflow-hidden">
                 @if($competition->cover_image)
                   <img src="{{ Storage::url($competition->cover_image) }}" alt="" class="card-img-top img-fluid w-100" style="filter: grayscale(20%);">
@@ -137,7 +159,7 @@
       <div class="row">
         @foreach($completedCompetitions as $index => $competition)
           <div class="col-lg-6 mb-7">
-            <div class="card h-100 d-flex flex-column position-relative shadow-sm cursor-pointer" data-aos="fade-up" data-aos-delay="{{ ($index % 2 == 0) ? 500 : 600 }}" data-aos-duration="1000" style="opacity: 0.85;">
+            <div class="card competition-card-link h-100 d-flex flex-column position-relative shadow-sm cursor-pointer" data-aos="fade-up" data-aos-delay="{{ ($index % 2 == 0) ? 500 : 600 }}" data-aos-duration="1000" style="opacity: 0.85;">
               <div class="overflow-hidden">
                 @if($competition->cover_image)
                   <img src="{{ Storage::url($competition->cover_image) }}" alt="" class="card-img-top img-fluid w-100" style="filter: grayscale(40%);">
