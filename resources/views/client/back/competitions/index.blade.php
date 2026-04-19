@@ -65,7 +65,7 @@
 
                                                 <h5 class="card-title fw-semibold mt-3">{{ $competition->name }}</h5>
                                                 <p class="card-text flex-grow-1">
-                                                    {{ Str::limit($competition->description, 300) }}
+                                                    {{ Str::limit(Str::squish(strip_tags((string) ($competition->description ?? ''))), 300) }}
                                                 </p>
 
                                                 @if(! $teacherClub)

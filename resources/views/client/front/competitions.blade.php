@@ -57,7 +57,7 @@
   @if($activeCompetitions->count() > 0)
   <section class="project py-lg-11 py-xl-12 bg-light">
     <div class="container">
-      <div class="mb-3 mb-lg-10" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
+      <div class="my-3 mb-lg-10" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
 
         @php
           $registrationOpenNow = $activeCompetitions->contains(fn ($c) => $c->isPhaseOpen('registration'));
@@ -90,7 +90,7 @@
                     <span class="badge text-dark border">{{ $competition->competition_start->format('d M') }} - {{ $competition->competition_end->format('d M Y') }}</span>
                   @endif
                 </div>
-                <p class="mb-0 text-opacity-70">{{ Str::limit($competition->description, 120) }}</p>
+                <p class="mb-0 text-opacity-70">{{ Str::limit(Str::squish(strip_tags((string) ($competition->description ?? ''))), 120) }}</p>
                 <a href="{{ route('competitions.public.show', $competition) }}" class="stretched-link">
                   <span class="visually-hidden">{{ $competition->name }}</span>
                 </a>
@@ -132,7 +132,7 @@
                   <span class="badge text-dark border">Starts {{ $competition->competition_start->format('d M Y') }}</span>
                   <span class="badge text-dark border">{{ $competition->phases->count() }} phases</span>
                 </div>
-                <p class="mb-0 text-opacity-70">{{ Str::limit($competition->description, 120) }}</p>
+                <p class="mb-0 text-opacity-70">{{ Str::limit(Str::squish(strip_tags((string) ($competition->description ?? ''))), 120) }}</p>
                 <a href="{{ route('competitions.public.show', $competition) }}" class="stretched-link">
                   <span class="visually-hidden">{{ $competition->name }}</span>
                 </a>
