@@ -1,4 +1,9 @@
 <x-admin-layout>
+    <style>
+        .competition-rich-text { word-break: break-word; }
+        .competition-rich-text img { max-width: 100%; height: auto; }
+        .competition-rich-text > :last-child { margin-bottom: 0 !important; }
+    </style>
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -37,28 +42,57 @@
                         @endif
                         <div class="card-body">
                             <h6 class="text-muted mb-2">Description</h6>
-                            <p class="mb-0">{{ $competition->description ?: 'No description provided.' }}</p>
+                            @php
+                                $previewDescription = (string) ($competition->description ?? '');
+                                $previewDescriptionHas = $previewDescription !== '' && \Illuminate\Support\Str::of($previewDescription)->stripTags()->trim()->isNotEmpty();
+                                $previewDescriptionHtml = str_contains($previewDescription, '<');
+                            @endphp
+                            @if($previewDescriptionHas)
+                                @if($previewDescriptionHtml)
+                                    <div class="mb-0 competition-rich-text">{!! $previewDescription !!}</div>
+                                @else
+                                    <p class="mb-0" style="white-space: pre-line;">{{ $previewDescription }}</p>
+                                @endif
+                            @else
+                                <p class="mb-0 text-muted">No description provided.</p>
+                            @endif
                         </div>
                     </div>
 
-                    @if($competition->terms_and_conditions)
+                    @php
+                        $previewTerms = (string) ($competition->terms_and_conditions ?? '');
+                        $previewTermsHas = $previewTerms !== '' && \Illuminate\Support\Str::of($previewTerms)->stripTags()->trim()->isNotEmpty();
+                        $previewTermsHtml = str_contains($previewTerms, '<');
+                        $previewInstructions = (string) ($competition->instructions ?? '');
+                        $previewInstructionsHas = $previewInstructions !== '' && \Illuminate\Support\Str::of($previewInstructions)->stripTags()->trim()->isNotEmpty();
+                        $previewInstructionsHtml = str_contains($previewInstructions, '<');
+                    @endphp
+                    @if($previewTermsHas)
                         <div class="card mb-3">
                             <div class="card-header">
                                 <h6 class="mb-0"><i class="ti ti-file-certificate me-2"></i>Terms and Conditions</h6>
                             </div>
                             <div class="card-body">
-                                <div>{!! nl2br(e($competition->terms_and_conditions)) !!}</div>
+                                @if($previewTermsHtml)
+                                    <div class="competition-rich-text">{!! $previewTerms !!}</div>
+                                @else
+                                    <div style="white-space: pre-line;">{{ $previewTerms }}</div>
+                                @endif
                             </div>
                         </div>
                     @endif
 
-                    @if($competition->instructions)
+                    @if($previewInstructionsHas)
                         <div class="card mb-3">
                             <div class="card-header">
                                 <h6 class="mb-0"><i class="ti ti-list-check me-2"></i>How to Participate</h6>
                             </div>
                             <div class="card-body">
-                                <div>{!! nl2br(e($competition->instructions)) !!}</div>
+                                @if($previewInstructionsHtml)
+                                    <div class="competition-rich-text">{!! $previewInstructions !!}</div>
+                                @else
+                                    <div style="white-space: pre-line;">{{ $previewInstructions }}</div>
+                                @endif
                             </div>
                         </div>
                     @endif

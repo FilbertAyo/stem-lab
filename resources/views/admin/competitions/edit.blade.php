@@ -36,7 +36,8 @@
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Description</label>
-                                        <textarea class="form-control" name="description" rows="3">{{ old('description', $competition->description) }}</textarea>
+                                        <textarea class="form-control js-tinymce-competition" name="description" id="competition_description" rows="6">{!! old('description', $competition->description) !!}</textarea>
+                                        <div class="form-text">Rich text matches the public explore competition page.</div>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Cover Image</label>
@@ -49,11 +50,11 @@
                                     @endif
                                     <div class="col-12">
                                         <label class="form-label">Terms and Conditions</label>
-                                        <textarea class="form-control" name="terms_and_conditions" rows="5">{{ old('terms_and_conditions', $competition->terms_and_conditions) }}</textarea>
+                                        <textarea class="form-control js-tinymce-competition" name="terms_and_conditions" id="competition_terms_and_conditions" rows="8">{!! old('terms_and_conditions', $competition->terms_and_conditions) !!}</textarea>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Instructions</label>
-                                        <textarea class="form-control" name="instructions" rows="5">{{ old('instructions', $competition->instructions) }}</textarea>
+                                        <textarea class="form-control js-tinymce-competition" name="instructions" id="competition_instructions" rows="8">{!! old('instructions', $competition->instructions) !!}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -249,5 +250,6 @@
     </div>
 
     @include('admin.competitions.partials.competition-phase-builder')
+    @include('admin.competitions.partials.competition-form-tinymce')
 </x-admin-layout>
 

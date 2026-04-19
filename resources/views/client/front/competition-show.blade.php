@@ -186,14 +186,41 @@
             <h2 class="fs-13 mb-0">About</h2>
           </div>
           <div class="col-lg-8">
-            <p class="fs-5 mb-3">{{ $competition->description ?: 'No description provided for this competition.' }}</p>
-            @if($competition->instructions)
-              <h4>How to participate</h4>
-              <div class="fs-5 mb-3" style="white-space: pre-line;">{{ $competition->instructions }}</div>
+            @php
+              $aboutDescription = (string) ($competition->description ?? '');
+              $aboutDescriptionHasContent = $aboutDescription !== '' && \Illuminate\Support\Str::of($aboutDescription)->stripTags()->trim()->isNotEmpty();
+              $aboutDescriptionIsHtml = str_contains($aboutDescription, '<');
+              $aboutInstructions = (string) ($competition->instructions ?? '');
+              $aboutInstructionsHasContent = $aboutInstructions !== '' && \Illuminate\Support\Str::of($aboutInstructions)->stripTags()->trim()->isNotEmpty();
+              $aboutInstructionsIsHtml = str_contains($aboutInstructions, '<');
+              $aboutTerms = (string) ($competition->terms_and_conditions ?? '');
+              $aboutTermsHasContent = $aboutTerms !== '' && \Illuminate\Support\Str::of($aboutTerms)->stripTags()->trim()->isNotEmpty();
+              $aboutTermsIsHtml = str_contains($aboutTerms, '<');
+            @endphp
+            @if($aboutDescriptionHasContent)
+              @if($aboutDescriptionIsHtml)
+                <div class="fs-5 mb-3 competition-rich-text">{!! $aboutDescription !!}</div>
+              @else
+                <p class="fs-5 mb-3 competition-rich-text-plain" style="white-space: pre-line;">{{ $aboutDescription }}</p>
+              @endif
+            @else
+              <p class="fs-5 mb-3">No description provided for this competition.</p>
             @endif
-            @if($competition->terms_and_conditions)
+            @if($aboutInstructionsHasContent)
+              <h4>How to participate</h4>
+              @if($aboutInstructionsIsHtml)
+                <div class="fs-5 mb-3 competition-rich-text">{!! $aboutInstructions !!}</div>
+              @else
+                <div class="fs-5 mb-3 competition-rich-text-plain" style="white-space: pre-line;">{{ $aboutInstructions }}</div>
+              @endif
+            @endif
+            @if($aboutTermsHasContent)
               <h4>Terms and conditions</h4>
-              <div class="fs-5 mb-0" style="white-space: pre-line;">{{ $competition->terms_and_conditions }}</div>
+              @if($aboutTermsIsHtml)
+                <div class="fs-5 mb-0 competition-rich-text">{!! $aboutTerms !!}</div>
+              @else
+                <div class="fs-5 mb-0 competition-rich-text-plain" style="white-space: pre-line;">{{ $aboutTerms }}</div>
+              @endif
             @endif
           </div>
         </div>
@@ -288,6 +315,24 @@
 @endsection
 
 @push('styles')
+  <style>
+    .competition-rich-text {
+      word-break: break-word;
+    }
+    .competition-rich-text > :last-child {
+      margin-bottom: 0 !important;
+    }
+    .competition-rich-text img {
+      max-width: 100%;
+      height: auto;
+    }
+    .competition-rich-text table {
+      max-width: 100%;
+    }
+    .competition-rich-text a {
+      word-break: break-word;
+    }
+  </style>
   @if($showTeacherSignupForm)
     <link rel="stylesheet" href="{{ asset('client/assets/vendors/choices.js/choices.min.css') }}">
     <style>

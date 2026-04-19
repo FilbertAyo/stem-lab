@@ -34,7 +34,8 @@
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Description</label>
-                                        <textarea name="description" class="form-control" rows="3">{{ old('description') }}</textarea>
+                                        <textarea name="description" id="competition_description" class="form-control js-tinymce-competition" rows="6">{!! old('description') !!}</textarea>
+                                        <div class="form-text">Rich text matches the public explore competition page.</div>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Cover Image</label>
@@ -42,11 +43,11 @@
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Terms and Conditions</label>
-                                        <textarea name="terms_and_conditions" class="form-control" rows="5">{{ old('terms_and_conditions') }}</textarea>
+                                        <textarea name="terms_and_conditions" id="competition_terms_and_conditions" class="form-control js-tinymce-competition" rows="8">{!! old('terms_and_conditions') !!}</textarea>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Instructions</label>
-                                        <textarea name="instructions" class="form-control" rows="5">{{ old('instructions') }}</textarea>
+                                        <textarea name="instructions" id="competition_instructions" class="form-control js-tinymce-competition" rows="8">{!! old('instructions') !!}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -178,5 +179,6 @@
     </div>
 
     @include('admin.competitions.partials.competition-phase-builder')
+    @include('admin.competitions.partials.competition-form-tinymce')
 </x-admin-layout>
 
