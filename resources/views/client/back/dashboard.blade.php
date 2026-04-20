@@ -44,7 +44,7 @@
         {{-- Competition reminders and quick shortcuts --}}
         <section class="row mb-4">
           <div class="col-12">
-            <div class="card border-0 shadow-none">
+            <div class="card border-1 border-primary shadow-none">
               <div class="card-body">
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-3">
                   <div>
