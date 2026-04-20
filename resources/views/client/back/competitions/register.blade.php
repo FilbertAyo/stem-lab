@@ -177,7 +177,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="teacher_phone">Teacher phone</label>
-                                    <input type="text" id="teacher_phone" class="form-control border p-2" name="teacher_phone" value="{{ old('teacher_phone', $registration->teacher_phone ?? $teacherClub->school?->phone) }}">
+                                    <input type="text" id="teacher_phone" class="form-control border p-2" name="teacher_phone" value="{{ old('teacher_phone', $registration->teacher_phone ?? auth()->user()->phone) }}" required>
+                                    <small class="text-muted">Client phone number (teacher contact).</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small" for="school_phone">School phone</label>
+                                    <input type="text" id="school_phone" class="form-control border p-2" name="school_phone" value="{{ old('school_phone', $registration->school_phone ?? $teacherClub->school?->phone) }}">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_name">School name <span class="text-danger">*</span></label>

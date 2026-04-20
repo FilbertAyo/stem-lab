@@ -14,6 +14,7 @@ use App\Models\Region;
 use App\Models\SchoolClass;
 use App\Models\TeacherClub;
 use App\Services\StudentCsvBulkImportService;
+use App\Support\TanzaniaPhone;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -332,11 +333,29 @@ class CompetitionController extends Controller
         }
 
         $validated = $request->validate([
-            'teacher_phone' => ['nullable', 'string', 'max:50'],
+            'teacher_phone' => ['required', 'string', 'max:50'],
+            'school_phone' => ['nullable', 'string', 'max:50'],
             'school_name' => ['required', 'string', 'max:255'],
             'school_district' => ['nullable', 'string', 'max:255'],
             'school_ward' => ['nullable', 'string', 'max:255'],
         ]);
+
+        $normalizedTeacherPhone = TanzaniaPhone::normalize($validated['teacher_phone'] ?? null);
+        if (! $normalizedTeacherPhone) {
+            return back()
+                ->withErrors(['teacher_phone' => 'Enter a valid Tanzania phone number (e.g. +255765890921 or 0765890921).'])
+                ->withInput();
+        }
+
+        $normalizedSchoolPhone = null;
+        if (! empty($validated['school_phone'])) {
+            $normalizedSchoolPhone = TanzaniaPhone::normalize($validated['school_phone']);
+            if (! $normalizedSchoolPhone) {
+                return back()
+                    ->withErrors(['school_phone' => 'Enter a valid Tanzania phone number (e.g. +255765890921 or 0765890921).'])
+                    ->withInput();
+            }
+        }
 
         $allowedClassIds = $competition->classRequirements()->pluck('school_class_id')->all();
         $poolStudents = $teacherClub->students()
@@ -352,7 +371,11 @@ class CompetitionController extends Controller
             return back()->withErrors(['eligibility' => $poolError])->withInput();
         }
 
-        DB::transaction(function () use ($validated, $competition, $teacherClub, $user, $poolCount, $poolGirlsCount, $poolRatio, $existing): void {
+        DB::transaction(function () use ($validated, $competition, $teacherClub, $user, $poolCount, $poolGirlsCount, $poolRatio, $existing, $normalizedTeacherPhone, $normalizedSchoolPhone): void {
+            if ($teacherClub->school && $normalizedSchoolPhone) {
+                $teacherClub->school->update(['phone' => $normalizedSchoolPhone]);
+            }
+
             if ($existing) {
                 $existing->representativeStudents()->delete();
                 $existing->update([
@@ -361,7 +384,8 @@ class CompetitionController extends Controller
                     'region_id' => $teacherClub->school?->region_id,
                     'teacher_name' => $user->name,
                     'teacher_email' => $user->email,
-                    'teacher_phone' => $validated['teacher_phone'] ?? $teacherClub->school?->phone,
+                    'teacher_phone' => $normalizedTeacherPhone,
+                    'school_phone' => $normalizedSchoolPhone ?? $teacherClub->school?->phone,
                     'school_name' => $validated['school_name'],
                     'school_district' => $validated['school_district'] ?? $teacherClub->school?->district,
                     'school_ward' => $validated['school_ward'] ?? $teacherClub->school?->ward,
@@ -385,7 +409,8 @@ class CompetitionController extends Controller
                 'status' => 'pending',
                 'teacher_name' => $user->name,
                 'teacher_email' => $user->email,
-                'teacher_phone' => $validated['teacher_phone'] ?? $teacherClub->school?->phone,
+                'teacher_phone' => $normalizedTeacherPhone,
+                'school_phone' => $normalizedSchoolPhone ?? $teacherClub->school?->phone,
                 'school_name' => $validated['school_name'],
                 'school_district' => $validated['school_district'] ?? $teacherClub->school?->district,
                 'school_ward' => $validated['school_ward'] ?? $teacherClub->school?->ward,

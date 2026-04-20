@@ -65,7 +65,7 @@
                                             <dt class="col-sm-4 text-muted fw-normal">Address</dt>
                                             <dd class="col-sm-8 mb-1 text-break">{{ $registration->school->address ?: '—' }}</dd>
                                             <dt class="col-sm-4 text-muted fw-normal">Phone</dt>
-                                            <dd class="col-sm-8 mb-1">{{ $registration->school->phone ?: '—' }}</dd>
+                                            <dd class="col-sm-8 mb-1">{{ $registration->school_phone ?: $registration->school->phone ?: '—' }}</dd>
                                             <dt class="col-sm-4 text-muted fw-normal">Email</dt>
                                             <dd class="col-sm-8 mb-1">{{ $registration->school->email ?: '—' }}</dd>
                                             <dt class="col-sm-4 text-muted fw-normal">District</dt>

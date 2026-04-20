@@ -45,6 +45,8 @@
                                 <dd class="col-sm-8 mb-2">{{ $registration?->teacher_email ?? '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Teacher phone</dt>
                                 <dd class="col-sm-8 mb-2">{{ $registration?->teacher_phone ?? '—' }}</dd>
+                                <dt class="col-sm-4 text-muted fw-normal">School phone</dt>
+                                <dd class="col-sm-8 mb-2">{{ $registration?->school_phone ?? $school?->phone ?? '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Registration region</dt>
                                 <dd class="col-sm-8 mb-2">{{ $registration?->region?->name ?? '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Registration status</dt>
