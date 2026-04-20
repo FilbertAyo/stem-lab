@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SmileyTutorCredential;
 use App\Models\User;
 use App\Models\Visitor;
+use App\Support\TanzaniaPhone;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,6 +36,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'phone' => ['required', 'string'],
             'password' => [
                 'required',
                 'confirmed',
@@ -66,9 +68,19 @@ class RegisteredUserController extends Controller
                 ->withInput($request->except('password', 'password_confirmation'));
         }
 
+        $normalizedPhone = TanzaniaPhone::normalize($request->input('phone'));
+        if (! $normalizedPhone) {
+            return redirect()->back()
+                ->withErrors([
+                    'phone' => 'Enter a valid Tanzania phone number (e.g. +255765890921 or 0765890921).',
+                ])
+                ->withInput($request->except('password', 'password_confirmation'));
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $normalizedPhone,
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);

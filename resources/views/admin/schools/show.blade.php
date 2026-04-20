@@ -103,7 +103,8 @@
                                                 <th>#</th>
                                                 <th>Name</th>
                                                 <th>Email</th>
-                                                <th>Clubs</th>
+                                                <th>Phone</th>
+                                                <!-- <th>Clubs</th> -->
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -116,14 +117,15 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td class="fw-semibold">{{ $teacher->name }}</td>
                                                     <td>{{ $teacher->email }}</td>
-                                                    <td>
+                                                    <td>{{ $teacher->phone ?? '—' }}</td>
+                                                    <!-- <td>
                                                         @foreach($teacherClubs as $tc)
                                                             <div class="d-inline-flex align-items-center me-2 mb-2">
                                                                 <span class="badge bg-info">{{ $tc->club->name ?? 'N/A' }}</span>
                                                             
                                                             </div>
                                                         @endforeach
-                                                    </td>
+                                                    </td> -->
                                                     <td>
                                                                         <form
                                                                             action="{{ route('admin.schools.remove-teacher-from-club', $tc) }}"

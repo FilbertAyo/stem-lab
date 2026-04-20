@@ -26,6 +26,21 @@
             <h2 class="title mb-0">Dashboard</h2>
         </div>
 
+        @if(($showPhoneReminder ?? false) === true)
+          <section class="row mb-3">
+            <div class="col-12">
+              <div class="alert alert-warning d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-0">
+                <div class="small fw-medium">
+                  Your phone number is required to complete your account setup. Please update your profile with a valid Tanzania number.
+                </div>
+                <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-warning text-dark fw-semibold">
+                  Update phone number
+                </a>
+              </div>
+            </div>
+          </section>
+        @endif
+
         {{-- Competition reminders and quick shortcuts --}}
         <section class="row mb-4">
           <div class="col-12">

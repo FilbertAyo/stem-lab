@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use App\Support\TanzaniaPhone;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -18,6 +19,7 @@ class PublicCompetitionJoinAsTeacherRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)],
+            'phone' => ['required', 'string'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }
@@ -28,6 +30,14 @@ class PublicCompetitionJoinAsTeacherRequest extends FormRequest
             'password.min' => 'The password must be at least 8 characters.',
             'email.unique' => 'An account with this email already exists. Please log in to continue.',
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $normalizedPhone = TanzaniaPhone::normalize($this->input('phone'));
+        if ($normalizedPhone) {
+            $this->merge(['phone' => $normalizedPhone]);
+        }
     }
 
     public function withValidator($validator): void
@@ -47,6 +57,10 @@ class PublicCompetitionJoinAsTeacherRequest extends FormRequest
             }
             if (! preg_match('/[0-9]/', $password)) {
                 $validator->errors()->add('password', 'The password must contain at least one number.');
+            }
+
+            if (! TanzaniaPhone::normalize($this->input('phone'))) {
+                $validator->errors()->add('phone', 'Enter a valid Tanzania phone number (e.g. +255765890921 or 0765890921).');
             }
         });
     }

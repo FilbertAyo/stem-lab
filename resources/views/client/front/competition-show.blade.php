@@ -100,6 +100,13 @@
                 @enderror
               </div>
               <div class="col-6">
+                <label class="form-label small mb-1" for="phone">Phone number</label>
+                <input type="tel" name="phone" id="phone" class="form-control border p-2 @error('phone') is-invalid @enderror" value="{{ old('phone') }}" placeholder="+255765890921 or 0765890921" required autocomplete="tel">
+                @error('phone')
+                  <div class="invalid-feedback d-block">{{ $message }}</div>
+                @enderror
+              </div>
+              <div class="col-6">
                 <label class="form-label small mb-1" for="password">Password</label>
                 <input type="password" name="password" id="password" class="form-control border p-2 @error('password') is-invalid @enderror" placeholder="Password" required autocomplete="new-password">
                 @error('password')

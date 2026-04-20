@@ -29,7 +29,7 @@
                 <label for="update_password_password" class="form-label">New Password</label>
                 <input
                     type="password"
-                    class="form-control @error('password', 'updatePassword') is-invalid @enderror"
+                    class="form-control @error('password', 'updatePassword') is-invalid @enderror border px-2"
                     id="update_password_password"
                     name="password"
                     autocomplete="new-password"
@@ -44,7 +44,7 @@
                 <label for="update_password_password_confirmation" class="form-label">Confirm New Password</label>
                 <input
                     type="password"
-                    class="form-control @error('password_confirmation', 'updatePassword') is-invalid @enderror"
+                    class="form-control @error('password_confirmation', 'updatePassword') is-invalid @enderror border px-2"
                     id="update_password_password_confirmation"
                     name="password_confirmation"
                     autocomplete="new-password"
@@ -63,7 +63,7 @@
         </div>
 
         <div class="d-flex align-items-center gap-3">
-            <button type="submit" class="btn btn-primary text-white">
+                <button type="submit" class="badge bg-primary border-0 text-white">
                 <i class="bi bi-shield-check me-1"></i> Update Password
             </button>
 

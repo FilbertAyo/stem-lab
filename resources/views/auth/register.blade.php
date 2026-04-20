@@ -50,6 +50,22 @@
             </div>
 
             <div>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="form-control border-bottom @error('phone') is-invalid @enderror"
+                placeholder="Phone Number"
+                value="{{ old('phone') }}"
+                required
+                autocomplete="tel"
+              >
+              @error('phone')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+              @enderror
+            </div>
+
+            <div>
               <select
                 name="role"
                 id="role"

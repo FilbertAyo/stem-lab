@@ -208,12 +208,16 @@ class DashboardController extends Controller
             ],
         ];
 
+        $showPhoneReminder = in_array($user->role, ['teacher', 'student', 'parent'], true)
+            && blank($user->phone);
+
         return view('client.back.dashboard', compact(
             'stats',
             'latestModels',
             'topCompetitionReminders',
             'competitionNotificationCount',
-            'competitionShortcuts'
+            'competitionShortcuts',
+            'showPhoneReminder'
         ));
     }
 }

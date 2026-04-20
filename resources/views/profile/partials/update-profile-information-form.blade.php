@@ -16,7 +16,7 @@
                 <label for="name" class="form-label">Full Name</label>
                 <input
                     type="text"
-                    class="form-control @error('name') is-invalid @enderror"
+                    class="form-control @error('name') is-invalid @enderror border px-2"
                     id="name"
                     name="name"
                     value="{{ old('name', $user->name) }}"
@@ -30,10 +30,27 @@
             </div>
 
             <div class="col-md-6 mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input
+                    type="tel"
+                    class="form-control @error('phone') is-invalid @enderror border px-2"
+                    id="phone"
+                    name="phone"
+                    value="{{ old('phone', $user->phone) }}"
+                    placeholder="+255765890921 or 0765890921"
+                    autocomplete="tel"
+                    required
+                >
+                @error('phone')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-md-6 mb-3">
                 <label for="email" class="form-label">Email Address</label>
                 <input
                     type="email"
-                    class="form-control @error('email') is-invalid @enderror"
+                    class="form-control @error('email') is-invalid @enderror border px-2"
                     id="email"
                     name="email"
                     value="{{ old('email', $user->email) }}"
@@ -79,7 +96,7 @@
         </div>
 
         <div class="d-flex align-items-center gap-3 mt-2">
-            <button type="submit" class="btn btn-primary text-white">
+            <button type="submit" class="badge bg-primary border-0 text-white">
                 <i class="bi bi-check-lg me-1"></i> Save Changes
             </button>
 

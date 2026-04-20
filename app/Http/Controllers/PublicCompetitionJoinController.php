@@ -46,6 +46,7 @@ class PublicCompetitionJoinController extends Controller
                 $user = User::create([
                     'name' => $request->validated('name'),
                     'email' => $request->validated('email'),
+                    'phone' => $request->validated('phone'),
                     'password' => Hash::make($request->validated('password')),
                     'role' => 'teacher',
                 ]);
