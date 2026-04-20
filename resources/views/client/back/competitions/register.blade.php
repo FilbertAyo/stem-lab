@@ -177,12 +177,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="teacher_phone">Teacher phone</label>
-                                    <input type="text" id="teacher_phone" class="form-control border p-2" name="teacher_phone" value="{{ old('teacher_phone', $registration->teacher_phone ?? auth()->user()->phone) }}" required>
-                                    <small class="text-muted">Client phone number (teacher contact).</small>
+                                    <input type="text" id="teacher_phone" class="form-control border p-2 bg-light" value="{{ auth()->user()->phone ?: '—' }}" disabled>
+                                    <small class="text-muted">Uses your account phone number from profile settings.</small>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_phone">School phone</label>
-                                    <input type="text" id="school_phone" class="form-control border p-2" name="school_phone" value="{{ old('school_phone', $registration->school_phone ?? $teacherClub->school?->phone) }}">
+                                    <input type="text" id="school_phone" class="form-control border p-2 bg-light" value="{{ $teacherClub->school?->phone ?: '—' }}" disabled>
+                                    <small class="text-muted">Pulled from the school profile.</small>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_name">School name <span class="text-danger">*</span></label>

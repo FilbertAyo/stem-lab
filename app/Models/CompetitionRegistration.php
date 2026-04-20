@@ -25,7 +25,6 @@ class CompetitionRegistration extends Model
         'teacher_name',
         'teacher_email',
         'teacher_phone',
-        'school_phone',
         'school_name',
         'school_district',
         'school_ward',
