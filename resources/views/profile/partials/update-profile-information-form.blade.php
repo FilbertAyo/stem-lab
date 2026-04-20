@@ -37,7 +37,7 @@
                     id="phone"
                     name="phone"
                     value="{{ old('phone', $user->phone) }}"
-                    placeholder="+255765890921 or 0765890921"
+                    placeholder="+255XX or 07XX"
                     autocomplete="tel"
                     required
                 >

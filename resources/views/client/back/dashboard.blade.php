@@ -33,7 +33,7 @@
                 <div class="small fw-medium">
                   Your phone number is required to complete your account setup. Please update your profile with a valid Tanzania number.
                 </div>
-                <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-warning text-dark fw-semibold">
+                <a href="{{ route('profile.edit') }}" class="badge bg-warning border-0 text-dark fw-semibold">
                   Update phone number
                 </a>
               </div>
