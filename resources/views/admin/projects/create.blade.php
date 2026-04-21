@@ -11,19 +11,7 @@
                 </a>
             </div>
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    Please fix the errors below and try again.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+           
 
             <form method="POST" action="{{ route('admin.projects.store') }}" enctype="multipart/form-data">
                 @csrf
@@ -100,28 +88,7 @@
                                         </select>
                                         @error('project_category_id') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Or create new category (optional)</label>
-                                        <input type="text" name="new_category" class="form-control" value="{{ old('new_category') }}" placeholder="e.g. Environment Monitoring">
-                                        @error('new_category') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-                                    </div>
                                 </div>
-
-                                @if($categories->count() > 0)
-                                    <div class="mb-3">
-                                        <label class="form-label d-block">Delete category</label>
-                                        <div class="d-flex flex-wrap gap-2" id="deleteCategoryButtons">
-                                            @foreach($categories as $category)
-                                                <button type="button"
-                                                    class="btn btn-sm btn-outline-danger delete-category-btn"
-                                                    data-url="{{ route('admin.project-categories.destroy', $category) }}"
-                                                    data-name="{{ $category->name }}">
-                                                    <i class="ti ti-trash"></i> {{ $category->name }}
-                                                </button>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endif
 
 
                                 <div class="mb-3">
@@ -137,50 +104,9 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Step-by-step guide (optional)</label>
-                                    <textarea name="guide" rows="10" class="form-control" placeholder="Write the full guide here (Markdown or plain text).">{{ old('guide') }}</textarea>
+                                    <label class="form-label">Guide notes (optional)</label>
+                                    <textarea id="guideNotesEditor" name="guide" rows="10" class="form-control" placeholder="Write guiding notes for clients.">{{ old('guide') }}</textarea>
                                     @error('guide') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label">Embedded code (optional)</label>
-                                    <textarea name="embedded_code" rows="6" class="form-control font-monospace small" placeholder="Quick single code block if you don’t use “Code blocks” below.">{{ old('embedded_code') }}</textarea>
-                                    @error('embedded_code') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Step-by-step instructions (optional) --}}
-                        <div class="card mb-3">
-                            <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0"><i class="ti ti-list-numbers me-1"></i> Steps (optional)</h6>
-                                <button type="button" class="btn btn-sm btn-outline-primary" id="addStepRow">
-                                    <i class="ti ti-plus"></i> Add step
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <p class="text-muted small mb-3">Add numbered steps with title, description, optional image and code snippet. Leave empty if you only use the guide text above.</p>
-                                <div id="stepsContainer">
-                                    <div class="step-row border rounded p-3 mb-2 position-relative">
-                                        <span class="badge bg-secondary position-absolute top-0 end-0">1</span>
-                                        <div class="row g-2">
-                                            <div class="col-12">
-                                                <input type="text" name="step_title[]" class="form-control" placeholder="Step title (e.g. Connect the sensor)">
-                                            </div>
-                                            <div class="col-12">
-                                                <textarea name="step_description[]" class="form-control small" rows="2" placeholder="What to do in this step"></textarea>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label small mb-0">Image (optional)</label>
-                                                <input type="file" name="step_image[]" class="form-control form-control-sm" accept="image/*">
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="form-label small mb-0">Code snippet (optional)</label>
-                                                <textarea name="step_code_snippet[]" class="form-control font-monospace small" rows="2" placeholder="Short code for this step"></textarea>
-                                            </div>
-                                        </div>
-                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 removeStepRow"><i class="ti ti-trash"></i> Remove</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -215,30 +141,6 @@
                                             </div>
                                         </div>
                                         <button type="button" class="btn btn-sm btn-outline-danger mt-2 removeResourceRow"><i class="ti ti-trash"></i> Remove</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Code blocks (full programs) --}}
-                        <div class="card mb-3">
-                            <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0"><i class="ti ti-code me-1"></i> Code blocks (optional)</h6>
-                                <button type="button" class="btn btn-sm btn-outline-primary" id="addCodeRow">
-                                    <i class="ti ti-plus"></i> Add code block
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <p class="text-muted small mb-3">Full programs (Arduino, Python, etc.) with language label. Students see them with syntax-style display.</p>
-                                <div id="codesContainer">
-                                    <div class="code-row border rounded p-3 mb-2">
-                                        <div class="row g-2">
-                                            <div class="col-md-6"><input type="text" name="code_title[]" class="form-control" placeholder="e.g. LED Blink"></div>
-                                            <div class="col-md-6"><input type="text" name="code_language[]" class="form-control" placeholder="e.g. Arduino C, Python"></div>
-                                            <div class="col-12"><textarea name="code_body[]" class="form-control font-monospace small" rows="6" placeholder="Paste code here"></textarea></div>
-                                            <div class="col-12"><input type="text" name="code_description[]" class="form-control form-control-sm" placeholder="Short description (optional)"></div>
-                                        </div>
-                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 removeCodeRow"><i class="ti ti-trash"></i> Remove</button>
                                     </div>
                                 </div>
                             </div>
@@ -342,6 +244,7 @@
     </div>
 
     @push('scripts')
+        <script src="{{ asset('admin/js/plugins/tinymce/tinymce.js') }}"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const tableBody = document.querySelector('#equipmentTable tbody');
@@ -379,42 +282,6 @@
 
                 bindRemoveButtons();
 
-                // Steps
-                let stepCount = 1;
-                document.getElementById('addStepRow')?.addEventListener('click', function () {
-                    stepCount++;
-                    const div = document.createElement('div');
-                    div.className = 'step-row border rounded p-3 mb-2 position-relative';
-                    div.innerHTML = `
-                        <span class="badge bg-secondary position-absolute top-0 end-0">${stepCount}</span>
-                        <div class="row g-2">
-                            <div class="col-12"><input type="text" name="step_title[]" class="form-control" placeholder="Step title"></div>
-                            <div class="col-12"><textarea name="step_description[]" class="form-control small" rows="2" placeholder="What to do"></textarea></div>
-                            <div class="col-md-6"><label class="form-label small mb-0">Image (optional)</label><input type="file" name="step_image[]" class="form-control form-control-sm" accept="image/*"></div>
-                            <div class="col-12"><label class="form-label small mb-0">Code snippet (optional)</label><textarea name="step_code_snippet[]" class="form-control font-monospace small" rows="2"></textarea></div>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 removeStepRow"><i class="ti ti-trash"></i> Remove</button>
-                    `;
-                    document.getElementById('stepsContainer').appendChild(div);
-                    div.querySelector('.removeStepRow').onclick = function () { div.remove(); updateStepBadges(); stepCount--; };
-                    updateStepBadges();
-                });
-                document.querySelectorAll('.removeStepRow').forEach(btn => {
-                    btn.onclick = function () {
-                        const row = this.closest('.step-row');
-                        if (document.querySelectorAll('.step-row').length <= 1) return;
-                        row?.remove();
-                        updateStepBadges();
-                        stepCount--;
-                    };
-                });
-                function updateStepBadges() {
-                    document.querySelectorAll('.step-row').forEach((row, i) => {
-                        const badge = row.querySelector('.badge');
-                        if (badge) badge.textContent = i + 1;
-                    });
-                }
-
                 // Resources
                 document.getElementById('addResourceRow')?.addEventListener('click', function () {
                     const div = document.createElement('div');
@@ -438,46 +305,16 @@
                     };
                 });
 
-                // Code blocks
-                document.getElementById('addCodeRow')?.addEventListener('click', function () {
-                    const div = document.createElement('div');
-                    div.className = 'code-row border rounded p-3 mb-2';
-                    div.innerHTML = `
-                        <div class="row g-2">
-                            <div class="col-md-6"><input type="text" name="code_title[]" class="form-control" placeholder="e.g. Main sketch"></div>
-                            <div class="col-md-6"><input type="text" name="code_language[]" class="form-control" placeholder="e.g. Arduino C"></div>
-                            <div class="col-12"><textarea name="code_body[]" class="form-control font-monospace small" rows="6" placeholder="Paste code"></textarea></div>
-                            <div class="col-12"><input type="text" name="code_description[]" class="form-control form-control-sm" placeholder="Description (optional)"></div>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-danger mt-2 removeCodeRow"><i class="ti ti-trash"></i> Remove</button>
-                    `;
-                    document.getElementById('codesContainer').appendChild(div);
-                    div.querySelector('.removeCodeRow').onclick = function () { if (document.querySelectorAll('.code-row').length > 1) div.remove(); };
-                });
-                document.querySelectorAll('.removeCodeRow').forEach(btn => {
-                    btn.onclick = function () {
-                        if (document.querySelectorAll('.code-row').length <= 1) return;
-                        this.closest('.code-row')?.remove();
-                    };
-                });
-
-                // Delete-category buttons — submit their own separate forms (outside the main form)
-                document.querySelectorAll('.delete-category-btn').forEach(btn => {
-                    btn.addEventListener('click', function () {
-                        const name = this.dataset.name;
-                        if (!confirm('Delete category "' + name + '"? Projects using it will become uncategorized.')) return;
-                        const url = this.dataset.url;
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = url;
-                        form.innerHTML = `
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <input type="hidden" name="_method" value="DELETE">
-                        `;
-                        document.body.appendChild(form);
-                        form.submit();
+                if (window.tinymce && document.getElementById('guideNotesEditor')) {
+                    tinymce.init({
+                        selector: '#guideNotesEditor',
+                        height: 320,
+                        menubar: false,
+                        plugins: 'lists link table code fullscreen autoresize',
+                        toolbar: 'undo redo | styles | bold italic underline | bullist numlist | link table | code fullscreen',
                     });
-                });
+                }
+
             });
         </script>
     @endpush

@@ -32,6 +32,16 @@
                         Platforms
                     </a>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                        class="nav-link {{ request()->routeIs('admin.project-categories.*') ? 'active' : '' }}"
+                        href="{{ route('admin.project-categories.index') }}"
+                        role="tab"
+                        aria-selected="{{ request()->routeIs('admin.project-categories.*') ? 'true' : 'false' }}"
+                    >
+                        Categories
+                    </a>
+                </li>
             </ul>
 
             @if(session('success'))

@@ -95,7 +95,6 @@ class ProjectController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'difficulty' => ['required', 'in:beginner,intermediate,advanced'],
             'project_category_id' => ['nullable', 'exists:project_categories,id'],
-            'new_category' => ['nullable', 'string', 'max:255'],
             'estimated_time' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'youtube_url' => ['nullable', 'string', 'url', 'max:500'],
             'external_link' => ['nullable', 'string', 'url', 'max:500'],
@@ -143,18 +142,8 @@ class ProjectController extends Controller
         ]);
 
         return DB::transaction(function () use ($request, $validated) {
-            $categoryId = $validated['project_category_id'] ?? null;
-
-            if (!empty($validated['new_category'])) {
-                $newCategory = ProjectCategory::firstOrCreate(
-                    ['slug' => $this->uniqueSlug(ProjectCategory::class, Str::slug($validated['new_category']), 'slug')],
-                    ['name' => $validated['new_category'], 'is_active' => true, 'sort_order' => 0]
-                );
-                $categoryId = $newCategory->id;
-            }
-
             $projectData = [
-                'project_category_id' => $categoryId,
+                'project_category_id' => $validated['project_category_id'] ?? null,
                 'created_by' => Auth::id(),
                 'name' => $validated['name'],
                 'slug' => $this->uniqueSlug(Project::class, Str::slug($validated['name'])),
@@ -247,7 +236,6 @@ class ProjectController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'difficulty' => ['required', 'in:beginner,intermediate,advanced'],
             'project_category_id' => ['nullable', 'exists:project_categories,id'],
-            'new_category' => ['nullable', 'string', 'max:255'],
             'estimated_time' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'youtube_url' => ['nullable', 'string', 'url', 'max:500'],
             'external_link' => ['nullable', 'string', 'url', 'max:500'],
@@ -297,18 +285,8 @@ class ProjectController extends Controller
         ]);
 
         return DB::transaction(function () use ($request, $validated, $project, $originalData) {
-            $categoryId = $validated['project_category_id'] ?? null;
-
-            if (!empty($validated['new_category'])) {
-                $newCategory = ProjectCategory::firstOrCreate(
-                    ['slug' => $this->uniqueSlug(ProjectCategory::class, Str::slug($validated['new_category']), 'slug')],
-                    ['name' => $validated['new_category'], 'is_active' => true, 'sort_order' => 0]
-                );
-                $categoryId = $newCategory->id;
-            }
-
             $data = [
-                'project_category_id' => $categoryId,
+                'project_category_id' => $validated['project_category_id'] ?? null,
                 'name' => $validated['name'],
                 'difficulty' => $validated['difficulty'],
                 'estimated_time' => isset($validated['estimated_time']) ? (int) $validated['estimated_time'] : null,

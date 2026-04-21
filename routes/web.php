@@ -133,8 +133,12 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::delete('/{project}', [AdminProjectController::class, 'destroy'])->name('destroy');
         });
 
-        Route::delete('project-categories/{projectCategory}', [AdminProjectCategoryController::class, 'destroy'])
-            ->name('project-categories.destroy');
+        Route::prefix('project-categories')->name('project-categories.')->group(function () {
+            Route::get('/', [AdminProjectCategoryController::class, 'index'])->name('index');
+            Route::post('/', [AdminProjectCategoryController::class, 'store'])->name('store');
+            Route::put('/{projectCategory}', [AdminProjectCategoryController::class, 'update'])->name('update');
+            Route::delete('/{projectCategory}', [AdminProjectCategoryController::class, 'destroy'])->name('destroy');
+        });
 
         Route::resource('platforms', AdminPlatformController::class)->except(['show'])->names('platforms');
 
