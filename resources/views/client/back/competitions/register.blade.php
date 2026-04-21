@@ -23,7 +23,7 @@
             <h2 class="title mb-1">Upload Students</h2>
             <p class="text-muted small mb-0">
                 Add students with CSV import. They are stored on your club roster and listed here for this competition.
-                When the pool meets the rules, submit your school details for <strong>admin approval</strong>. Further steps (such as representatives) come after approval.
+                When the pool meets the rules, submit your school details for <strong>admin approval</strong>. 
             </p>
         </div>
 

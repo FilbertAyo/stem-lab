@@ -83,7 +83,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>School Name</th>
-                                    <th>Address</th>
+                                  
                                     <th>Contact</th>
                                     <th>District</th>
                                     <th>Ward</th>
@@ -98,8 +98,7 @@
                                     <tr>
                                         <td>{{ $loop->index + 1 + ($schools->currentPage() - 1) * $schools->perPage() }}</td>
                                         <td class="fw-semibold">{{ $school->name }}</td>
-                                        <td>{{ $school->address ? \Illuminate\Support\Str::limit($school->address, 50) : '—' }}</td>
-                                        <td>
+                                      <td>
                                             @if($school->phone || $school->email)
                                                 <div class="small">
                                                     @if($school->phone)
@@ -136,8 +135,7 @@
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#editSchoolModal"
                                                     data-action="{{ route('admin.schools.update', $school) }}"
-                                                    data-name="{{ $school->name }}"
-                                                    data-address="{{ $school->address }}"
+                                                    data-name="{{ $school->name }}" 
                                                     data-phone="{{ $school->phone }}"
                                                     data-email="{{ $school->email }}"
                                                     data-district="{{ $school->district }}"
@@ -159,7 +157,7 @@
                                                 >
                                                     <i class="ti {{ $school->is_active ? 'ti-ban' : 'ti-check' }}"></i>
                                                 </button>
-                                                <button
+                                                <!-- <button
                                                     class="btn btn-sm btn-outline-danger"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#deleteSchoolModal"
@@ -168,7 +166,7 @@
                                                     title="Delete School"
                                                 >
                                                     <i class="ti ti-trash"></i>
-                                                </button>
+                                                </button> -->
                                             </div>
                                         </td>
                                     </tr>
@@ -409,7 +407,7 @@
     </div>
 
     <!-- Delete Modal -->
-    <div class="modal fade" id="deleteSchoolModal" tabindex="-1" aria-labelledby="deleteSchoolModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="deleteSchoolModal" tabindex="-1" aria-labelledby="deleteSchoolModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -429,7 +427,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
 
     @push('scripts')
         <script>

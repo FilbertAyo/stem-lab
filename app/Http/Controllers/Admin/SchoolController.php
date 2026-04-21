@@ -181,6 +181,30 @@ class SchoolController extends Controller
             ->with('status', "{$teacherName} has been removed from {$clubName} successfully.");
     }
 
+    public function updateClubDay(Request $request, School $school, TeacherClub $teacherClub): RedirectResponse
+    {
+        $belongsToSchool = (int) $teacherClub->school_id === (int) $school->id;
+
+        if (! $belongsToSchool) {
+            abort(404);
+        }
+
+        $validated = $request->validate([
+            'club_day' => ['nullable', Rule::in(['monday', 'tuesday', 'wednesday', 'thursday', 'friday'])],
+        ]);
+
+        $teacherClub->update([
+            'club_day' => $validated['club_day'] ?? null,
+        ]);
+
+        $teacherName = $teacherClub->user?->name ?? 'Teacher';
+        $clubName = $teacherClub->club?->name ?? 'club';
+
+        return redirect()
+            ->route('admin.schools.show', $school)
+            ->with('status', "Dedicated club day updated for {$teacherName} ({$clubName}).");
+    }
+
     public function removeStudent(School $school, Student $student): RedirectResponse
     {
         $belongsToSchool = (int) $student->teacherClub?->school_id === (int) $school->id;

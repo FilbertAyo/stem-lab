@@ -6,27 +6,10 @@
                     <h5 class="mb-0">{{ $school->name }}</h5>
                     <p class="text-muted mb-0">School Details</p>
                 </div>
-                <a href="{{ route('admin.schools.index') }}" class="btn btn-secondary">
+                <a href="{{ route('admin.schools.index') }}" class="text-muted">
                     <i class="ti ti-arrow-left"></i> Back to Schools
                 </a>
             </div>
-
-            <!-- Flash Messages -->
-            @if(session('status'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="ti ti-check-circle me-2"></i>
-                    {{ session('status') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="ti ti-alert-circle me-2"></i>
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
 
             <!-- School Information Card -->
             <div class="card mb-4">
@@ -62,7 +45,10 @@
                                 <label class="text-muted small">Region</label>
                                 <p class="mb-0">{{ $school->regionModel?->name ?? $school->region ?? '—' }}</p>
                             </div>
-                            <div class="mb-3">
+                           
+                        </div>
+                        <div class="col-4">
+                        <div class="mb-3">
                                 <label class="text-muted small">Status</label>
                                 <p class="mb-0">
                                     <span class="badge {{ $school->is_active ? 'bg-success' : 'bg-secondary' }}">
@@ -70,8 +56,6 @@
                                     </span>
                                 </p>
                             </div>
-                        </div>
-                        <div class="col-4">
                             <div class="mb-0">
                                 <label class="text-muted small">Address</label>
                                 <p class="mb-0">{{ $school->address ?? '—' }}</p>
@@ -102,9 +86,8 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
-                                                <!-- <th>Clubs</th> -->
+                                                <th>Phone & Email</th>
+                                                <th>Clubs & Dedicated Day</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -116,33 +99,78 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td class="fw-semibold">{{ $teacher->name }}</td>
-                                                    <td>{{ $teacher->email }}</td>
-                                                    <td>{{ $teacher->phone ?? '—' }}</td>
-                                                    <!-- <td>
-                                                        @foreach($teacherClubs as $tc)
-                                                            <div class="d-inline-flex align-items-center me-2 mb-2">
-                                                                <span class="badge bg-info">{{ $tc->club->name ?? 'N/A' }}</span>
-                                                            
-                                                            </div>
-                                                        @endforeach
-                                                    </td> -->
                                                     <td>
-                                                                        <form
-                                                                            action="{{ route('admin.schools.remove-teacher-from-club', $tc) }}"
-                                                                            method="POST"
-                                                                            class="d-inline ms-1"
-                                                                            onsubmit="return confirm('Are you sure you want to remove this teacher from this club? This action cannot be undone.')"
-                                                                        >
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button 
-                                                                                type="submit" 
-                                                                                class="btn btn-sm btn-outline-danger p-1" 
-                                                                                title="Remove from club"
+                                                   {{ $teacher->phone ?? '—' }} <br>
+                                                       <span class="text-muted small">{{ $teacher->email }}</span>
+                                                   
+                                                    </td>
+                                                    <td>
+                                                        @if($teacherClubs->isEmpty())
+                                                            <span class="text-muted">—</span>
+                                                        @else
+                                                            <div class="d-flex flex-column gap-2">
+                                                                @foreach($teacherClubs as $tc)
+                                                                    <div class="border rounded p-2">
+                                                                        <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                                                                            <span class="badge bg-info">{{ $tc->club->name ?? 'N/A' }}</span>
+                                                                            <form
+                                                                                action="{{ route('admin.schools.teacher-clubs.update-club-day', [$school, $tc]) }}"
+                                                                                method="POST"
+                                                                                class="d-flex align-items-center gap-2 js-club-day-form"
+                                                                                data-initial-day="{{ $tc->club_day ?? '' }}"
                                                                             >
-                                                                                remove
-                                                                            </button>
-                                                                        </form>
+                                                                                @csrf
+                                                                                @method('PUT')
+                                                                                <select
+                                                                                    name="club_day"
+                                                                                    class="form-select form-select-sm js-club-day-select"
+                                                                                    style="min-width: 170px;"
+                                                                                    aria-label="Dedicated day"
+                                                                                >
+                                                                                    <option value="">Select day</option>
+                                                                                    @foreach(['monday' => 'Monday', 'tuesday' => 'Tuesday', 'wednesday' => 'Wednesday', 'thursday' => 'Thursday', 'friday' => 'Friday'] as $dayValue => $dayLabel)
+                                                                                        <option value="{{ $dayValue }}" @selected($tc->club_day === $dayValue)>{{ $dayLabel }}</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                                <button
+                                                                                    type="submit"
+                                                                                    class="btn btn-sm btn-outline-primary px-2 js-club-day-save-btn"
+                                                                                    @if($tc->club_day) style="display: none;" @endif
+                                                                                >
+                                                                                    Save
+                                                                                </button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if($teacherClubs->isEmpty())
+                                                            <span class="text-muted">—</span>
+                                                        @else
+                                                            <div class="d-flex flex-column gap-2">
+                                                                @foreach($teacherClubs as $tc)
+                                                                    <form
+                                                                        action="{{ route('admin.schools.remove-teacher-from-club', $tc) }}"
+                                                                        method="POST"
+                                                                        class="d-inline"
+                                                                        onsubmit="return confirm('Are you sure you want to remove this teacher from this club? This action cannot be undone.')"
+                                                                    >
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button
+                                                                            type="submit"
+                                                                            class="btn btn-sm btn-outline-danger p-1"
+                                                                            title="Remove from {{ $tc->club->name ?? 'club' }}"
+                                                                        >
+                                                                            Remove 
+                                                                        </button>
+                                                                    </form>
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -229,4 +257,27 @@
         </div>
     </div>
 </x-admin-layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.js-club-day-form').forEach(function (form) {
+            var select = form.querySelector('.js-club-day-select');
+            var saveButton = form.querySelector('.js-club-day-save-btn');
+
+            if (!select || !saveButton) {
+                return;
+            }
+
+            var initialDay = form.dataset.initialDay || '';
+
+            select.addEventListener('change', function () {
+                saveButton.style.display = select.value === initialDay ? 'none' : 'inline-block';
+            });
+
+            form.addEventListener('submit', function () {
+                saveButton.style.display = 'none';
+            });
+        });
+    });
+</script>
 

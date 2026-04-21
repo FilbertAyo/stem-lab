@@ -17,6 +17,7 @@ class TeacherClub extends Model
         'user_id',
         'club_id',
         'school_id',
+        'club_day',
         'status',
         'is_leader',
     ];

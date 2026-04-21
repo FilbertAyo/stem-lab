@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('phone', 16)->nullable()->after('email');
+        Schema::table('weekly_session_reports', function (Blueprint $table) {
+            $table->foreignId('weekly_session_id')->nullable()->change();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('phone');
+        Schema::table('weekly_session_reports', function (Blueprint $table) {
+            $table->foreignId('weekly_session_id')->nullable(false)->change();
         });
     }
 };

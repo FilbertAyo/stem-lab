@@ -141,6 +141,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
         Route::prefix('schools')->name('schools.')->group(function () {
             Route::get('/', [SchoolController::class, 'index'])->name('index');
             Route::delete('/teacher-clubs/{teacherClub}', [SchoolController::class, 'removeTeacherFromClub'])->name('remove-teacher-from-club');
+            Route::put('/{school}/teacher-clubs/{teacherClub}/club-day', [SchoolController::class, 'updateClubDay'])->name('teacher-clubs.update-club-day');
             Route::delete('/{school}/students/{student}', [SchoolController::class, 'removeStudent'])->name('remove-student');
             Route::get('/{school}', [SchoolController::class, 'show'])->name('show');
             Route::post('/', [SchoolController::class, 'store'])->name('store');
@@ -234,6 +235,8 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             // Reports routes (must come before {weeklySession} route to avoid route conflicts)
             Route::prefix('reports')->name('reports.')->group(function () {
                 Route::get('/', [WeeklySessionController::class, 'reportsIndex'])->name('index');
+                Route::post('/', [WeeklySessionController::class, 'storeReport'])->name('store');
+                Route::get('/weekly-pdf', [WeeklySessionController::class, 'downloadWeeklyPdf'])->name('weekly-pdf');
                 Route::get('/{report}', [WeeklySessionController::class, 'showReport'])->name('show');
             });
 
