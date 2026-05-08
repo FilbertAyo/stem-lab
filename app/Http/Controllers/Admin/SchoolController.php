@@ -7,6 +7,7 @@ use App\Models\Region;
 use App\Models\School;
 use App\Models\Student;
 use App\Models\TeacherClub;
+use App\Services\StudentCsvBulkImportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -85,7 +86,13 @@ class SchoolController extends Controller
             $query->where('school_id', $school->id);
         })->with('schoolClass')->get()->unique('id')->values();
 
-        return view('admin.schools.show', compact('school', 'teachers', 'students'));
+        $bulkUploadTeacherClubs = $school->teacherClubs()
+            ->approved()
+            ->with(['user:id,name', 'club:id,name'])
+            ->orderBy('club_id')
+            ->get(['id', 'user_id', 'club_id', 'school_id']);
+
+        return view('admin.schools.show', compact('school', 'teachers', 'students', 'bulkUploadTeacherClubs'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -219,5 +226,41 @@ class SchoolController extends Controller
         return redirect()
             ->route('admin.schools.show', $school)
             ->with('status', "{$studentName} removed successfully.");
+    }
+
+    public function bulkImportStudents(
+        Request $request,
+        School $school,
+        StudentCsvBulkImportService $csvImport,
+    ): RedirectResponse {
+        $validated = $request->validate([
+            'teacher_club_id' => ['required', 'integer'],
+            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
+        ]);
+
+        $teacherClub = $school->teacherClubs()
+            ->approved()
+            ->where('id', (int) $validated['teacher_club_id'])
+            ->first();
+
+        if (! $teacherClub) {
+            return redirect()
+                ->route('admin.schools.show', $school)
+                ->withErrors(['teacher_club_id' => 'Select a valid approved teacher/club for this school.'])
+                ->withInput();
+        }
+
+        $result = $csvImport->import($teacherClub, $request->file('csv_file'));
+
+        if ($result['errors'] !== []) {
+            return redirect()
+                ->route('admin.schools.show', $school)
+                ->with('error', $csvImport->formatErrorsForFlash($result['errors']))
+                ->withInput();
+        }
+
+        return redirect()
+            ->route('admin.schools.show', $school)
+            ->with('status', "Successfully imported {$result['success_count']} student(s).");
     }
 }

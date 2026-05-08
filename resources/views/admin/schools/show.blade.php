@@ -187,7 +187,17 @@
                     <div class="card h-100">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h6 class="mb-0"><i class="ti ti-school"></i> Students</h6>
-                            <span class="badge bg-primary">{{ $students->count() }}</span>
+                            <div class="d-flex align-items-center gap-2">
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#bulkUploadStudentsModal"
+                                >
+                                    <i class="ti ti-upload me-1"></i> Bulk Upload
+                                </button>
+                                <span class="badge bg-primary">{{ $students->count() }}</span>
+                            </div>
                         </div>
                         <div class="card-body p-0">
                             @if($students->isEmpty())
@@ -215,9 +225,18 @@
                                                     <td class="fw-semibold">{{ $student->name }}</td>
                                                     <td>{{ $student->age ?? '—' }}</td>
                                                     <td>
-                                                        @if($student->gender)
-                                                            <span class="badge {{ $student->gender === 'male' ? 'bg-info' : 'bg-pink' }}">
-                                                                {{ ucfirst($student->gender) }}
+                                                        @php
+                                                            $gender = strtolower((string) $student->gender);
+                                                            $genderBadgeClass = match ($gender) {
+                                                                'male' => 'bg-info',
+                                                                'female' => 'bg-danger',
+                                                                'other' => 'bg-secondary',
+                                                                default => 'bg-light text-dark border',
+                                                            };
+                                                        @endphp
+                                                        @if($gender !== '')
+                                                            <span class="badge {{ $genderBadgeClass }}">
+                                                                {{ ucfirst($gender) }}
                                                             </span>
                                                         @else
                                                             <span class="text-muted">—</span>
@@ -256,6 +275,99 @@
          
         </div>
     </div>
+
+    <div class="modal fade" id="bulkUploadStudentsModal" tabindex="-1" aria-labelledby="bulkUploadStudentsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg mt-5">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bulkUploadStudentsModalLabel">
+                        <i class="ti ti-upload me-2"></i>
+                        Bulk Upload Students
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form
+                    method="POST"
+                    action="{{ route('admin.schools.students.bulk-import', $school) }}"
+                    enctype="multipart/form-data"
+                    id="adminBulkUploadForm"
+                >
+                    @csrf
+                    <div class="modal-body">
+                        <div class="alert alert-info">
+                            <i class="ti ti-info-circle me-1"></i>
+                            CSV columns required:
+                            <code>name,date_of_birth,gender,class_name</code>
+                            (or <code>name,age,gender,class_name</code>).
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-sm btn-dark" id="downloadAdminStudentTemplateBtn">
+                                <i class="ti ti-download me-1"></i> Download CSV Template
+                            </button>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="teacher_club_id" class="form-label">
+                                Assign Imported Students To <span class="text-danger">*</span>
+                            </label>
+                            <select
+                                class="form-select border @error('teacher_club_id') is-invalid @enderror"
+                                id="teacher_club_id"
+                                name="teacher_club_id"
+                                required
+                            >
+                                <option value="">Select teacher and club...</option>
+                                @foreach($bulkUploadTeacherClubs as $teacherClub)
+                                    <option
+                                        value="{{ $teacherClub->id }}"
+                                        @selected(old('teacher_club_id') == $teacherClub->id)
+                                    >
+                                        {{ $teacherClub->user->name ?? 'Teacher' }} - {{ $teacherClub->club->name ?? 'Club' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('teacher_club_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            @if($bulkUploadTeacherClubs->isEmpty())
+                                <small class="text-danger">No approved teacher-club memberships found for this school.</small>
+                            @endif
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="csv_file" class="form-label">
+                                CSV File <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="file"
+                                class="form-control border @error('csv_file') is-invalid @enderror"
+                                id="csv_file"
+                                name="csv_file"
+                                accept=".csv,.txt"
+                                required
+                            >
+                            @error('csv_file')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="text-muted">Maximum file size: 5MB. Accepted formats: CSV, TXT.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" @disabled($bulkUploadTeacherClubs->isEmpty())>
+                            <i class="ti ti-upload me-1"></i> Upload CSV
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <input
+        type="hidden"
+        id="has_admin_bulk_upload_errors"
+        value="{{ ($errors->has('teacher_club_id') || $errors->has('csv_file')) ? '1' : '0' }}"
+    >
 </x-admin-layout>
 
 <script>
@@ -278,6 +390,36 @@
                 saveButton.style.display = 'none';
             });
         });
+
+        var templateButton = document.getElementById('downloadAdminStudentTemplateBtn');
+        if (templateButton) {
+            templateButton.addEventListener('click', function () {
+                var csvContent = [
+                    'name,date_of_birth,gender,class_name',
+                    'Jane Doe,14-07-2011,female,Form 1',
+                    'John Smith,03-10-2010,male,Form 2'
+                ].join('\n');
+
+                var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                var url = URL.createObjectURL(blob);
+                var link = document.createElement('a');
+                link.href = url;
+                link.download = 'students_bulk_upload_template.csv';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        var hasBulkErrors = document.getElementById('has_admin_bulk_upload_errors')?.value === '1';
+        if (hasBulkErrors) {
+            var bulkModalElement = document.getElementById('bulkUploadStudentsModal');
+            if (bulkModalElement) {
+                var bulkModal = new bootstrap.Modal(bulkModalElement);
+                bulkModal.show();
+            }
+        }
     });
 </script>
 
