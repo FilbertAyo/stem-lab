@@ -9,7 +9,6 @@ use App\Models\Model3d;
 use App\Models\ModelQuestionAnswer;
 use App\Models\Student;
 use App\Models\VrAssessmentAttempt;
-use App\Services\CompetitionParticipantRegistrationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -18,7 +17,7 @@ class DashboardController extends Controller
     /**
      * Display the client dashboard.
      */
-    public function index(CompetitionParticipantRegistrationService $participantRegistrationService): View
+    public function index(): View
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -67,13 +66,6 @@ class DashboardController extends Controller
                 ->with(['phases'])
                 ->orderByDesc('competition_start')
                 ->get();
-
-            foreach ($competitions as $competition) {
-                $teacherClub = $approvedTeacherClubs->get($competition->club_id);
-                if ($teacherClub) {
-                    $participantRegistrationService->ensureDraftRegistration($teacherClub, $competition);
-                }
-            }
 
             $registrations = CompetitionRegistration::query()
                 ->where('teacher_user_id', $userId)
