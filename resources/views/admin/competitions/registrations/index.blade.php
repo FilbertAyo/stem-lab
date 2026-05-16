@@ -4,7 +4,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h5 class="mb-0">Registrations — {{ $competition->name }}</h5>
-                    <p class="text-muted mb-0">Search, review details, then approve or reject school registration snapshots.</p>
+                    <p class="text-muted mb-0">Includes incomplete participants (club join only) for follow-up, plus submitted registrations ready for review.</p>
                 </div>
                 <a href="{{ route('admin.competitions.show', $competition) }}" class="btn btn-outline-secondary">Back</a>
             </div>
@@ -22,6 +22,7 @@
                             <label class="form-label small mb-1" for="status">Status</label>
                             <select name="status" id="status" class="form-select">
                                 <option value="">All</option>
+                                <option value="draft" @selected(request('status') === 'draft')>Incomplete</option>
                                 <option value="pending" @selected(request('status') === 'pending')>Pending</option>
                                 <option value="approved" @selected(request('status') === 'approved')>Approved</option>
                                 <option value="rejected" @selected(request('status') === 'rejected')>Rejected</option>
@@ -46,6 +47,7 @@
                                     <th>Teacher</th>
                                     <th>Eligibility snapshot</th>
                                     <th>Representatives</th>
+                                    <th>Club joined</th>
                                     <th>Status</th>
                                     <th class="text-end">Actions</th>
                                 </tr>
@@ -62,11 +64,23 @@
                                             <small class="text-muted">{{ $registration->teacher_email }}</small>
                                         </td>
                                         <td>
-                                            <div>{{ $registration->student_count_snapshot }} students</div>
-                                            <small class="text-muted">{{ $registration->girls_ratio_snapshot }}% girls</small>
+                                            @if($registration->status === 'draft')
+                                                <div class="text-muted">0 students</div>
+                                                <small class="text-muted">Awaiting CSV upload</small>
+                                            @else
+                                                <div>{{ $registration->student_count_snapshot }} students</div>
+                                                <small class="text-muted">{{ $registration->girls_ratio_snapshot }}% girls</small>
+                                            @endif
                                         </td>
                                         <td>
                                             <span class="badge bg-light text-dark">{{ $registration->representativeStudents->count() }}/{{ max(1, (int) ($competition->representative_count ?? 10)) }}</span>
+                                        </td>
+                                        <td>
+                                            @if($registration->teacherClub?->created_at)
+                                                <small>{{ $registration->teacherClub->created_at->timezone(config('app.timezone'))->format('j M Y') }}</small>
+                                            @else
+                                                <span class="text-muted">—</span>
+                                            @endif
                                         </td>
                                         <td>
                                             @php
@@ -74,10 +88,12 @@
                                                     'approved' => 'success',
                                                     'rejected' => 'danger',
                                                     'ineligible' => 'dark',
+                                                    'draft' => 'secondary',
                                                     default => 'warning',
                                                 };
+                                                $statusLabel = $registration->status === 'draft' ? 'Incomplete' : ucfirst($registration->status);
                                             @endphp
-                                            <span class="badge bg-{{ $badge }}">{{ ucfirst($registration->status) }}</span>
+                                            <span class="badge bg-{{ $badge }}">{{ $statusLabel }}</span>
                                         </td>
                                         <td class="text-end text-nowrap">
                                             <a href="{{ route('admin.competitions.registrations.show', [$competition, $registration]) }}" class="btn btn-sm btn-outline-primary">View</a>
@@ -92,7 +108,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center text-muted py-4">No registrations match your filters.</td>
+                                        <td colspan="7" class="text-center text-muted py-4">No registrations match your filters.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

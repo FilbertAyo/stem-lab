@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Club;
+use App\Models\Competition;
 use App\Models\School;
 use App\Models\TeacherClub;
 use App\Models\User;
@@ -10,10 +11,14 @@ use Illuminate\Http\Request;
 
 class TeacherClubJoinService
 {
+    public function __construct(
+        private readonly CompetitionParticipantRegistrationService $participantRegistrationService,
+    ) {}
+
     /**
      * @return array{ok: true, teacher_club: TeacherClub, message: string}|array{ok: false, reason: string, message: string}
      */
-    public function join(User $user, Club $club, Request $request): array
+    public function join(User $user, Club $club, Request $request, ?Competition $competition = null): array
     {
         if ($user->teacherClubs()->where('club_id', $club->id)->exists()) {
             return [
@@ -99,6 +104,9 @@ class TeacherClubJoinService
         }
 
         $teacherClub = TeacherClub::create($teacherClubData);
+        $teacherClub->load(['user', 'school']);
+
+        $this->participantRegistrationService->ensureForClubMembership($teacherClub, $competition);
 
         return [
             'ok' => true,

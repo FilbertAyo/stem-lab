@@ -795,8 +795,7 @@ class CompetitionController extends Controller
     public function registrations(Request $request, Competition $competition): View
     {
         $query = $competition->registrations()
-            ->where('status', '!=', 'draft')
-            ->with(['teacher', 'school.regionModel', 'region', 'representativeStudents.student.schoolClass']);
+            ->with(['teacher', 'school.regionModel', 'region', 'representativeStudents.student.schoolClass', 'teacherClub']);
 
         if ($request->filled('search')) {
             $search = trim((string) $request->input('search'));
@@ -815,7 +814,11 @@ class CompetitionController extends Controller
             $query->where('status', (string) $request->input('status'));
         }
 
-        $registrations = $query->latest()->paginate(20)->withQueryString();
+        $registrations = $query
+            ->orderByRaw("CASE WHEN status = 'draft' THEN 0 ELSE 1 END")
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
 
         return view('admin.competitions.registrations.index', compact('competition', 'registrations'));
     }

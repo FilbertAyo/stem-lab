@@ -18,12 +18,22 @@ return new class extends Migration
         });
 
         // Backfill region_id from legacy schools.region text where possible.
-        DB::statement('
-            UPDATE schools s
-            INNER JOIN regions r ON r.name = s.region
-            SET s.region_id = r.id
-            WHERE s.region IS NOT NULL AND s.region_id IS NULL
-        ');
+        if (DB::getDriverName() === 'sqlite') {
+            DB::statement('
+                UPDATE schools
+                SET region_id = (
+                    SELECT r.id FROM regions r WHERE r.name = schools.region LIMIT 1
+                )
+                WHERE region IS NOT NULL AND region_id IS NULL
+            ');
+        } else {
+            DB::statement('
+                UPDATE schools s
+                INNER JOIN regions r ON r.name = s.region
+                SET s.region_id = r.id
+                WHERE s.region IS NOT NULL AND s.region_id IS NULL
+            ');
+        }
     }
 
     /**

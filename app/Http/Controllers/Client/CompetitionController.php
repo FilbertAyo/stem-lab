@@ -13,6 +13,7 @@ use App\Models\CompetitionPhaseEvidenceForm;
 use App\Models\Region;
 use App\Models\SchoolClass;
 use App\Models\TeacherClub;
+use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\StudentCsvBulkImportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,13 +25,14 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CompetitionController extends Controller
 {
-    public function index(): View
+    public function index(CompetitionParticipantRegistrationService $participantRegistrationService): View
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $highlightCompetitionUlid = session()->pull('onboarding_competition_ulid');
 
-        $clubIds = $user->teacherClubs()->pluck('club_id')->unique()->filter()->values()->all();
+        $teacherClubByClubId = $user->teacherClubs()->with(['user', 'school'])->get()->keyBy('club_id');
+        $clubIds = $teacherClubByClubId->keys()->filter()->values()->all();
 
         $competitions = collect();
         if ($clubIds !== []) {
@@ -55,13 +57,18 @@ class CompetitionController extends Controller
             }
         }
 
+        foreach ($competitions as $competition) {
+            $teacherClub = $teacherClubByClubId->get($competition->club_id);
+            if ($teacherClub) {
+                $participantRegistrationService->ensureDraftRegistration($teacherClub, $competition);
+            }
+        }
+
         $registrations = CompetitionRegistration::query()
             ->where('teacher_user_id', $user->id)
             ->with(['competition', 'idea'])
             ->get()
             ->keyBy('competition_id');
-
-        $teacherClubByClubId = $user->teacherClubs()->get()->keyBy('club_id');
 
         return view('client.back.competitions.index', compact(
             'competitions',

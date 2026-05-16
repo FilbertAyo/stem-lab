@@ -53,7 +53,7 @@ class PublicCompetitionJoinController extends Controller
 
                 SmileyTutorCredential::assignToUser($user);
 
-                $result = $joinService->join($user, $competition->club, $request);
+                $result = $joinService->join($user, $competition->club, $request, $competition);
 
                 if (! $result['ok']) {
                     throw new DomainException($result['message']);
