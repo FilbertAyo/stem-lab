@@ -85,6 +85,16 @@ class UserController extends Controller
         return redirect()->route('admin.users.index', $query);
     }
 
+    protected function redirectToTeachersIndex(Request $request): RedirectResponse
+    {
+        $query = [];
+        if ($request->filled('q')) {
+            $query['q'] = $request->input('q');
+        }
+
+        return redirect()->route('admin.users.teachers', $query);
+    }
+
     /**
      * Store a newly created admin user.
      */
@@ -153,5 +163,26 @@ class UserController extends Controller
 
         return $this->redirectToAdminUsersIndex($request)
             ->with('success', "Admin user {$status} successfully.");
+    }
+
+    /**
+     * Delete a teacher user (temporary admin tooling).
+     */
+    public function destroy(Request $request, User $user): RedirectResponse
+    {
+        if ($user->role !== 'teacher') {
+            return $this->redirectToTeachersIndex($request)
+                ->with('error', 'Only teacher accounts can be deleted from this page.');
+        }
+
+        if ($user->id === auth()->id()) {
+            return $this->redirectToTeachersIndex($request)
+                ->with('error', 'You cannot delete your own account.');
+        }
+
+        $user->delete();
+
+        return $this->redirectToTeachersIndex($request)
+            ->with('success', 'Teacher deleted successfully.');
     }
 }

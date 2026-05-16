@@ -6,7 +6,18 @@
                 <h5 class="mb-0">Teachers Management</h5>
             </div>
 
-            
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
             <div class="card mb-3">
                 <div class="card-body py-3">
@@ -165,7 +176,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <form id="deleteTeacherForm" method="POST" class="mb-0">
+                        @csrf
+                        @method('DELETE')
+                        @if(request()->filled('q'))
+                            <input type="hidden" name="q" value="{{ request('q') }}">
+                        @endif
+                        <button type="submit" class="btn btn-danger">
+                            <i class="ti ti-trash"></i> Delete User
+                        </button>
+                    </form>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -174,9 +195,27 @@
 
     @push('scripts')
     <script>
+        let pendingDeleteTeacherName = '';
+
+        function confirmDeleteTeacher() {
+            const name = pendingDeleteTeacherName || 'this teacher';
+            return confirm('Are you sure you want to delete ' + name + '? This action cannot be undone.');
+        }
+
         // Handle view modal data
         document.addEventListener('DOMContentLoaded', function() {
             const viewModal = document.getElementById('viewUserModal');
+            const deleteForm = document.getElementById('deleteTeacherForm');
+            const destroyUrlBase = @json(url('/users'));
+
+            if (deleteForm) {
+                deleteForm.addEventListener('submit', function(event) {
+                    if (!confirmDeleteTeacher()) {
+                        event.preventDefault();
+                    }
+                });
+            }
+
             if (viewModal) {
                 viewModal.addEventListener('show.bs.modal', function(event) {
                     const button = event.relatedTarget;
@@ -184,6 +223,11 @@
                     // Get all data attributes
                     const userId = button.getAttribute('data-user-id');
                     const userName = button.getAttribute('data-user-name');
+                    pendingDeleteTeacherName = userName || '';
+
+                    if (deleteForm && userId) {
+                        deleteForm.action = `${destroyUrlBase}/${userId}`;
+                    }
                     const userEmail = button.getAttribute('data-user-email');
                     const userRole = button.getAttribute('data-user-role');
                     const userStatus = button.getAttribute('data-user-status');

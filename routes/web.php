@@ -210,6 +210,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::post('/', [AdminUserController::class, 'store'])->name('store');
             Route::put('/{user}', [AdminUserController::class, 'update'])->name('update');
             Route::post('/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('toggle-status');
+            Route::delete('/{user}', [AdminUserController::class, 'destroy'])->name('destroy');
         });
 
         // Database Backup routes
