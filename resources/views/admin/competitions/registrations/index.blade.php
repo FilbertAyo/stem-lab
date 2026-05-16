@@ -43,6 +43,7 @@
                         <table class="table table-bordered table-hover align-middle">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>School</th>
                                     <th>Teacher</th>
                                     <th>Eligibility snapshot</th>
@@ -55,6 +56,9 @@
                             <tbody>
                                 @forelse($registrations as $registration)
                                     <tr>
+                                        <td>
+                                            {{ $loop->iteration }}
+                                        </td>
                                         <td>
                                             <div class="fw-semibold">{{ $registration->school_name }}</div>
                                             <small class="text-muted">{{ $registration->school_district ?? 'No district' }}</small>
