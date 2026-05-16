@@ -4,14 +4,37 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h5 class="mb-0">Schools</h5>
-                    <p class="text-muted mb-0">Manage Schools</p>
+                    <p class="text-muted mb-0">Manage schools. New teacher registrations appear under Needs review until you acknowledge them.</p>
                 </div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createSchoolModal">
-                    <i class="ti ti-plus"></i> Add School
-                </button>
+                <div class="d-flex flex-wrap gap-2">
+                    @if($pendingReviewCount > 0)
+                        <form method="POST" action="{{ route('admin.schools.mark-all-reviewed') }}" class="d-inline">
+                            @csrf
+                            @foreach(request()->only(['search', 'status', 'review', 'region_id', 'district', 'per_page']) as $key => $value)
+                                @if($value !== null && $value !== '')
+                                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                                @endif
+                            @endforeach
+                            <input type="hidden" name="review" value="pending">
+                            <button type="submit" class="btn btn-warning" onclick="return confirm('Mark all schools matching the pending-review filter as reviewed?');">
+                                <i class="ti ti-checks"></i> Approve all ({{ $pendingReviewCount }})
+                            </button>
+                        </form>
+                    @endif
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createSchoolModal">
+                        <i class="ti ti-plus"></i> Add School
+                    </button>
+                </div>
             </div>
 
-           
+            @if($pendingReviewCount > 0)
+                <div class="alert alert-warning d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                    <span>
+                        <strong>{{ $pendingReviewCount }}</strong> new school(s) from teacher registration need review.
+                    </span>
+                    <a href="{{ route('admin.schools.index', ['review' => 'pending']) }}" class="btn btn-sm btn-outline-dark">View needs review</a>
+                </div>
+            @endif
 
             <!-- Search and Filters Form -->
             <div class="card mb-3">
@@ -27,6 +50,14 @@
                                 <option value="">All Status</option>
                                 <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
                                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small">Review</label>
+                            <select name="review" class="form-select">
+                                <option value="">All</option>
+                                <option value="pending" {{ request('review') === 'pending' ? 'selected' : '' }}>Needs review</option>
+                                <option value="reviewed" {{ request('review') === 'reviewed' ? 'selected' : '' }}>Reviewed</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -65,7 +96,7 @@
                             <button type="submit" class="btn btn-outline-primary me-2">
                                 <i class="ti ti-filter"></i> Filter
                             </button>
-                            @if(request('search') || request('status') || request('region_id') || request('district') || request('per_page'))
+                            @if(request('search') || request('status') || request('review') || request('region_id') || request('district') || request('per_page'))
                                 <a href="{{ route('admin.schools.index') }}" class="btn btn-outline-secondary">
                                     <i class="ti ti-x"></i> Clear
                                 </a>
@@ -90,7 +121,7 @@
                                     <th>Region</th>
                                     <th>Status</th>
                                     <th>Last Updated</th>
-                                    <th class="text-center" style="width: 220px;">Actions</th>
+                                    <th class="text-center" style="width: 260px;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,10 +150,21 @@
                                             <span class="badge {{ $school->is_active ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $school->is_active ? 'Active' : 'Disabled' }}
                                             </span>
+                                            @if($school->needs_review)
+                                                <span class="badge bg-warning text-dark ms-1">New</span>
+                                            @endif
                                         </td>
                                         <td>{{ $school->updated_at?->format('d M Y, H:i') }}</td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
+                                                @if($school->needs_review)
+                                                    <form method="POST" action="{{ route('admin.schools.mark-reviewed', $school) }}" class="d-inline">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-sm btn-warning" title="Mark reviewed">
+                                                            <i class="ti ti-check"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                                 <a
                                                     href="{{ route('admin.schools.show', $school) }}"
                                                     class="btn btn-sm btn-outline-info"

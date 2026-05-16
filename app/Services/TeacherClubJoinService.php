@@ -61,7 +61,7 @@ class TeacherClubJoinService
                     'district' => $validated['school_district'] ?? null,
                     'ward' => $validated['school_ward'] ?? null,
                     'region_id' => $validated['school_region_id'] ?? null,
-                    'is_active' => false,
+                    'is_active' => true,
                 ]);
 
                 $schoolId = $school->id;
@@ -100,7 +100,7 @@ class TeacherClubJoinService
         }
 
         if ($isNewSchool) {
-            $message .= ' Your school registration is also pending admin approval.';
+            $message .= ' Our team may contact you to verify your school details.';
         }
 
         $teacherClub = TeacherClub::create($teacherClubData);

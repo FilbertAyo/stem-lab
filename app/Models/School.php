@@ -25,10 +25,12 @@ class School extends Model
         'region_id',
         'region',
         'is_active',
+        'admin_reviewed_at',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'admin_reviewed_at' => 'datetime',
     ];
 
     protected static function booted(): void
@@ -77,11 +79,36 @@ class School extends Model
         return $query->where('is_active', true);
     }
 
+    public function scopeNeedsReview(Builder $query): Builder
+    {
+        return $query->whereNull('admin_reviewed_at');
+    }
+
+    public function scopeReviewed(Builder $query): Builder
+    {
+        return $query->whereNotNull('admin_reviewed_at');
+    }
+
+    public function getNeedsReviewAttribute(): bool
+    {
+        return $this->admin_reviewed_at === null;
+    }
+
     /**
      * Scope a query to order schools by name.
      */
     public function scopeOrdered(Builder $query): Builder
     {
         return $query->orderBy('name');
+    }
+
+    /**
+     * Pending review first, then newest registrations.
+     */
+    public function scopeReviewQueueOrder(Builder $query): Builder
+    {
+        return $query
+            ->orderByRaw('admin_reviewed_at IS NULL DESC')
+            ->orderByDesc('created_at');
     }
 }

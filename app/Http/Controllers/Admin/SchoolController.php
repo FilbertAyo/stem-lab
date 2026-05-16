@@ -8,6 +8,7 @@ use App\Models\School;
 use App\Models\Student;
 use App\Models\TeacherClub;
 use App\Services\StudentCsvBulkImportService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -17,7 +18,6 @@ class SchoolController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = School::query()->with('regionModel');
         $allowedPerPage = [10, 15, 25, 50, 100];
         $perPage = (int) $request->query('per_page', 15);
 
@@ -25,43 +25,14 @@ class SchoolController extends Controller
             $perPage = 15;
         }
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('address', 'like', '%' . $search . '%')
-                  ->orWhere('district', 'like', '%' . $search . '%')
-                  ->orWhere('email', 'like', '%' . $search . '%')
-                  ->orWhere('phone', 'like', '%' . $search . '%')
-                  ->orWhereHas('regionModel', function ($regionQuery) use ($search) {
-                      $regionQuery->where('name', 'like', '%' . $search . '%');
-                  });
-            });
-        }
+        $query = $this->schoolsIndexQuery($request);
+        $schools = $query->reviewQueueOrder()->paginate($perPage)->withQueryString();
 
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('is_active', $request->status === 'active');
-        }
-
-        // Filter by region
-        if ($request->filled('region_id')) {
-            $query->where('region_id', $request->integer('region_id'));
-        }
-
-        // Filter by district
-        if ($request->filled('district')) {
-            $query->where('district', $request->district);
-        }
-
-        $schools = $query->ordered()->paginate($perPage)->withQueryString();
-
-        // Get regions and districts for filter dropdowns
         $regions = Region::query()->orderBy('name')->get(['id', 'name']);
         $districts = School::whereNotNull('district')->distinct()->orderBy('district')->pluck('district');
+        $pendingReviewCount = School::query()->needsReview()->count();
 
-        return view('admin.schools.index', compact('schools', 'regions', 'districts'));
+        return view('admin.schools.index', compact('schools', 'regions', 'districts', 'pendingReviewCount'));
     }
 
     public function show(School $school): View
@@ -109,10 +80,44 @@ class SchoolController extends Controller
         ]);
 
         $validated['is_active'] = $request->boolean('is_active', true);
+        $validated['admin_reviewed_at'] = now();
 
         School::create($validated);
 
         return redirect()->route('admin.schools.index')->with('status', 'School created successfully.');
+    }
+
+    public function markReviewed(School $school): RedirectResponse
+    {
+        if ($school->admin_reviewed_at !== null) {
+            return redirect()
+                ->back()
+                ->with('status', "{$school->name} is already marked as reviewed.");
+        }
+
+        $school->update(['admin_reviewed_at' => now()]);
+
+        return redirect()
+            ->back()
+            ->with('status', "{$school->name} marked as reviewed.");
+    }
+
+    public function markAllReviewed(Request $request): RedirectResponse
+    {
+        $query = $this->schoolsIndexQuery($request)->needsReview();
+        $count = (clone $query)->count();
+
+        if ($count === 0) {
+            return redirect()
+                ->back()
+                ->with('status', 'No schools pending review match your filters.');
+        }
+
+        $query->update(['admin_reviewed_at' => now()]);
+
+        return redirect()
+            ->back()
+            ->with('status', "Marked {$count} school(s) as reviewed.");
     }
 
     public function update(Request $request, School $school): RedirectResponse
@@ -262,5 +267,48 @@ class SchoolController extends Controller
         return redirect()
             ->route('admin.schools.show', $school)
             ->with('status', "Successfully imported {$result['success_count']} student(s).");
+    }
+
+    private function schoolsIndexQuery(Request $request): Builder
+    {
+        $query = School::query()
+            ->with('regionModel')
+            ->withCount('teacherClubs');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search): void {
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('address', 'like', '%'.$search.'%')
+                    ->orWhere('district', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%')
+                    ->orWhere('phone', 'like', '%'.$search.'%')
+                    ->orWhereHas('regionModel', function ($regionQuery) use ($search): void {
+                        $regionQuery->where('name', 'like', '%'.$search.'%');
+                    });
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status === 'active');
+        }
+
+        if ($request->filled('review')) {
+            if ($request->review === 'pending') {
+                $query->needsReview();
+            } elseif ($request->review === 'reviewed') {
+                $query->reviewed();
+            }
+        }
+
+        if ($request->filled('region_id')) {
+            $query->where('region_id', $request->integer('region_id'));
+        }
+
+        if ($request->filled('district')) {
+            $query->where('district', $request->district);
+        }
+
+        return $query;
     }
 }
