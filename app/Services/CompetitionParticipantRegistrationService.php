@@ -12,12 +12,23 @@ class CompetitionParticipantRegistrationService
     /**
      * Ensure a draft competition registration exists for follow-up / admin participant list.
      */
-    public function ensureDraftRegistration(TeacherClub $teacherClub, Competition $competition): CompetitionRegistration
+    public function ensureDraftRegistration(TeacherClub $teacherClub, Competition $competition): ?CompetitionRegistration
     {
         $teacherClub->loadMissing(['user', 'school']);
 
         $user = $teacherClub->user;
         $school = $teacherClub->school;
+
+        $existingRegistration = CompetitionRegistration::query()
+            ->where('competition_id', $competition->id)
+            ->where('teacher_club_id', $teacherClub->id)
+            ->first();
+
+        // Legacy teacher_club records may not have school/user attached.
+        // Creating a draft in that state throws DB errors (required FKs in registrations table).
+        if (! $teacherClub->school_id || ! $teacherClub->user_id) {
+            return $existingRegistration;
+        }
 
         $attributes = [
             'teacher_user_id' => $teacherClub->user_id,

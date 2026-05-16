@@ -90,6 +90,13 @@
                     <span class="badge text-dark border">{{ $competition->competition_start->format('d M') }} - {{ $competition->competition_end->format('d M Y') }}</span>
                   @endif
                 </div>
+                @auth
+                  @if(auth()->user()->role === 'teacher')
+                    <div class="d-flex flex-wrap gap-2">
+                      <a href="{{ route('client.competitions.index', ['competition' => $competition->ulid]) }}" class="badge bg-danger text-white">Register now</a>
+                    </div>
+                  @endif
+                @endauth
                 <p class="mb-0 text-opacity-70">{{ Str::limit(Str::squish(strip_tags((string) ($competition->description ?? ''))), 120) }}</p>
                 <a href="{{ route('competitions.public.show', $competition) }}" class="stretched-link">
                   <span class="visually-hidden">{{ $competition->name }}</span>

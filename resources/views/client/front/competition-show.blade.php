@@ -275,9 +275,14 @@
                   Continue to your competition hub to join this competition’s club or finish setup.
                 @endif
               </p>
-              <a href="{{ route('client.competitions.index') }}" class="btn btn-primary mt-3">
-                Continue to competition hub
-              </a>
+              <div class="d-flex flex-wrap gap-2 mt-3">
+                <a href="{{ route('client.competitions.index', ['competition' => $competition->ulid]) }}" class="badge bg-danger text-white">
+                  Register now
+                </a>
+                <a href="{{ route('client.competitions.index', ['competition' => $competition->ulid]) }}" class="badge bg-primary text-white">
+                  Open competition hub
+                </a>
+              </div>
             </div>
           @endif
         @else
