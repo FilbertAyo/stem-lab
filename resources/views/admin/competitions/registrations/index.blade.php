@@ -142,7 +142,7 @@
                         @endif
                     @endforeach
 
-                    <div class="mt-3">{{ $registrations->links() }}</div>
+                    <div class="mt-3">{{ $registrations->links('pagination::bootstrap-5') }}</div>
                 </div>
             </div>
         </div>
