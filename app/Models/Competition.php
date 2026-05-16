@@ -219,6 +219,23 @@ class Competition extends Model
         return $this->isPhaseOpen('registration');
     }
 
+    /**
+     * Whether an existing teacher may open or submit competition registration
+     * (includes legacy catch-up when the registration phase has closed).
+     */
+    public function allowsTeacherRegistration(?CompetitionRegistration $registration = null): bool
+    {
+        if ($this->isPhaseOpen('registration')) {
+            return true;
+        }
+
+        if ($registration === null) {
+            return true;
+        }
+
+        return in_array($registration->status, ['draft', 'rejected'], true);
+    }
+
     public function getStatusBadgeAttribute(): string
     {
         return match ($this->status) {

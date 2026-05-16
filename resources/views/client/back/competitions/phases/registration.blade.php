@@ -12,8 +12,8 @@
                             <div class="alert alert-warning mb-0">You are not yet an approved teacher in this club.</div>
                         @elseif(!$registration)
                             <p class="text-muted">No registration snapshot submitted yet.</p>
-                            @if($competition->isPhaseOpen('registration'))
-                                <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-primary border-0">Complete registration (participants)</a>
+                            @if($competition->allowsTeacherRegistration(null))
+                                <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-danger text-white">Register now</a>
                             @endif
                         @else
                             @php
@@ -134,13 +134,13 @@
 
                             @if($registration->status === 'pending')
                                 <p class="text-muted small mb-0 mt-3">Your participant list and school details are with the admin for review. You will be able to continue with the next steps after approval.</p>
-                            @elseif($registration->status === 'rejected' && $competition->isPhaseOpen('registration'))
+                            @elseif($registration->status === 'rejected' && $competition->allowsTeacherRegistration($registration))
                                 <div class="d-flex flex-wrap gap-2 mt-3">
-                                    <a href="{{ route('client.competitions.register', $competition) }}" class="btn btn-sm btn-primary text-white">Update and resubmit</a>
+                                    <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-warning text-dark">Update and resubmit</a>
                                 </div>
-                            @elseif($registration->status === 'draft' && $competition->isPhaseOpen('registration'))
+                            @elseif($registration->status === 'draft' && $competition->allowsTeacherRegistration($registration))
                                 <div class="d-flex flex-wrap gap-2 mt-3">
-                                    <a href="{{ route('client.competitions.register', $competition) }}" class="btn btn-sm btn-primary text-white">Continue registration</a>
+                                    <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-danger text-white">Complete registration</a>
                                 </div>
                             @endif
                         @endif

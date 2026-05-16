@@ -83,38 +83,31 @@
                                                         Your request to join this club was not approved. Contact support or your school leader if this is a mistake.
                                                     </div>
                                                 @elseif($teacherClub->status === 'approved')
-                                                    @if(! $registration)
-                                                        @if(! $regPhaseOpen)
-                                                            <div class="alert alert-info small py-2 mb-2">
-                                                                <strong>Registration phase is closed.</strong> When it opens, upload participants, confirm school details, and submit for admin approval.
-                                                            </div>
-                                                        @else
-                                                            <div class="alert alert-danger small py-2 mb-2">
-                                                                <strong>Next step:</strong> upload participants (CSV), confirm school details, and submit for admin approval.
-                                                                <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-danger text-white">
-                                                                    Complete registration
-                                                                </a>
-                                                            </div>
-                                                          
-                                                        @endif
-                                                    @elseif($registration->status === 'draft')
+                                                    @if($registration && $registration->status === 'draft')
                                                         <div class="alert alert-info small py-2 mb-2">
                                                             <strong>In progress:</strong> finish your participant list and school details, then submit for admin approval.
+                                                            <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-danger text-white ms-1">Complete registration</a>
                                                         </div>
-                                                        <a href="{{ route('client.competitions.register', $competition) }}" class="btn btn-sm btn-primary text-white mb-2">
-                                                            Continue registration
-                                                        </a>
-                                                    @elseif($registration->status === 'pending')
+                                                    @elseif(! $registration && $competition->allowsTeacherRegistration(null))
+                                                        <div class="alert alert-danger small py-2 mb-2">
+                                                            <strong>Next step:</strong> you joined this club earlier — register your team (CSV participants, school details) for admin review.
+                                                            <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-danger text-white ms-1">Register now</a>
+                                                        </div>
+                                                    @elseif($registration && $registration->status === 'pending')
                                                         <div class="alert alert-warning small py-2 mb-2">
                                                             Registration submitted — <strong>awaiting admin approval</strong>. You will be notified when it is reviewed.
                                                         </div>
-                                                    @elseif($registration->status === 'rejected')
+                                                    @elseif($registration && $registration->status === 'rejected')
                                                         <div class="alert alert-danger small py-2 mb-2">
                                                             Your competition registration was not approved. Check messages from admin or contact support.
+                                                            @if($competition->allowsTeacherRegistration($registration))
+                                                                <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-warning text-dark ms-1">Update and resubmit</a>
+                                                            @endif
                                                         </div>
-                                                        @if($regPhaseOpen)
-                                                            <a href="{{ route('client.competitions.register', $competition) }}" class="btn btn-sm btn-primary text-white mb-2">Update and resubmit</a>
-                                                        @endif
+                                                    @elseif(! $registration && ! $regPhaseOpen)
+                                                        <div class="alert alert-info small py-2 mb-2">
+                                                            <strong>Registration phase is closed.</strong> Contact support if you still need to register your team.
+                                                        </div>
                                                     @endif
                                                 @endif
 

@@ -187,9 +187,8 @@ class CompetitionController extends Controller
             }
         }
 
-        if (! $competition->isPhaseOpen('registration')) {
-            return redirect()->route('client.competitions.show', $competition)
-                ->with('error', 'Registration phase is currently closed.');
+        if ($redirect = $this->registrationNotAllowedRedirect($competition, $registration)) {
+            return $redirect;
         }
 
         $competition->loadMissing(['classRequirements.schoolClass']);
@@ -229,9 +228,13 @@ class CompetitionController extends Controller
                 ->with('error', 'You must join this club first.');
         }
 
-        if (! $competition->isPhaseOpen('registration')) {
-            return redirect()->route('client.competitions.show', $competition)
-                ->with('error', 'Registration phase is currently closed.');
+        $existingRegistration = CompetitionRegistration::query()
+            ->where('teacher_club_id', $teacherClub->id)
+            ->where('competition_id', $competition->id)
+            ->first();
+
+        if ($redirect = $this->registrationNotAllowedRedirect($competition, $existingRegistration)) {
+            return $redirect;
         }
 
         $validated = $request->validate([
@@ -262,9 +265,13 @@ class CompetitionController extends Controller
                 ->with('error', 'You must join this club first.');
         }
 
-        if (! $competition->isPhaseOpen('registration')) {
-            return redirect()->route('client.competitions.show', $competition)
-                ->with('error', 'Registration phase is currently closed.');
+        $existingRegistration = CompetitionRegistration::query()
+            ->where('teacher_club_id', $teacherClub->id)
+            ->where('competition_id', $competition->id)
+            ->first();
+
+        if ($redirect = $this->registrationNotAllowedRedirect($competition, $existingRegistration)) {
+            return $redirect;
         }
 
         $allowedClassIds = $competition->classRequirements()->pluck('school_class_id')->all();
@@ -293,9 +300,13 @@ class CompetitionController extends Controller
                 ->with('error', 'You must join this club first.');
         }
 
-        if (! $competition->isPhaseOpen('registration')) {
-            return redirect()->route('client.competitions.show', $competition)
-                ->with('error', 'Registration phase is currently closed.');
+        $existingRegistration = CompetitionRegistration::query()
+            ->where('teacher_club_id', $teacherClub->id)
+            ->where('competition_id', $competition->id)
+            ->first();
+
+        if ($redirect = $this->registrationNotAllowedRedirect($competition, $existingRegistration)) {
+            return $redirect;
         }
 
         $filename = 'competition-participants-template.csv';
@@ -324,14 +335,13 @@ class CompetitionController extends Controller
                 ->with('error', 'You must join this club first.');
         }
 
-        if (! $competition->isPhaseOpen('registration')) {
-            return redirect()->route('client.competitions.show', $competition)
-                ->with('error', 'Registration phase is currently closed.');
-        }
-
         $existing = CompetitionRegistration::where('teacher_club_id', $teacherClub->id)
             ->where('competition_id', $competition->id)
             ->first();
+
+        if ($redirect = $this->registrationNotAllowedRedirect($competition, $existing)) {
+            return $redirect;
+        }
 
         if ($existing && ! in_array($existing->status, ['draft', 'rejected'], true)) {
             return redirect()->route('client.competitions.show', $competition)
@@ -426,9 +436,8 @@ class CompetitionController extends Controller
                 ->with('error', 'Save your participant list and school details first, or your registration is already submitted.');
         }
 
-        if (! $competition->isPhaseOpen('registration')) {
-            return redirect()->route('client.competitions.show', $competition)
-                ->with('error', 'Registration phase is currently closed.');
+        if ($redirect = $this->registrationNotAllowedRedirect($competition, $registration)) {
+            return $redirect;
         }
 
         $allowedClassIds = $competition->classRequirements()->pluck('school_class_id')->all();
@@ -457,14 +466,13 @@ class CompetitionController extends Controller
                 ->with('error', 'You must join this club first.');
         }
 
-        if (! $competition->isPhaseOpen('registration')) {
-            return redirect()->route('client.competitions.show', $competition)
-                ->with('error', 'Registration phase is currently closed.');
-        }
-
         $registration = CompetitionRegistration::where('teacher_club_id', $teacherClub->id)
             ->where('competition_id', $competition->id)
             ->first();
+
+        if ($redirect = $this->registrationNotAllowedRedirect($competition, $registration)) {
+            return $redirect;
+        }
 
         if (! $registration || $registration->status !== 'draft') {
             return redirect()->route('client.competitions.show', $competition)
@@ -1083,6 +1091,18 @@ class CompetitionController extends Controller
                 'is_representative' => true,
             ]);
         }
+    }
+
+    private function registrationNotAllowedRedirect(
+        Competition $competition,
+        ?CompetitionRegistration $registration,
+    ): ?RedirectResponse {
+        if ($competition->allowsTeacherRegistration($registration)) {
+            return null;
+        }
+
+        return redirect()->route('client.competitions.show', $competition)
+            ->with('error', 'Registration phase is currently closed.');
     }
 
     private function resolveTeacherClubForCompetition(

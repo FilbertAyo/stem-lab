@@ -9,6 +9,7 @@ use App\Models\Model3d;
 use App\Models\ModelQuestionAnswer;
 use App\Models\Student;
 use App\Models\VrAssessmentAttempt;
+use App\Services\CompetitionParticipantRegistrationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -17,7 +18,7 @@ class DashboardController extends Controller
     /**
      * Display the client dashboard.
      */
-    public function index(): View
+    public function index(CompetitionParticipantRegistrationService $participantRegistrationService): View
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -53,6 +54,12 @@ class DashboardController extends Controller
         }
 
         if ($teacherClubIds->isNotEmpty()) {
+            $approvedTeacherClubs = $user->teacherClubs()
+                ->where('status', 'approved')
+                ->with(['user', 'school'])
+                ->get()
+                ->keyBy('club_id');
+
             $competitions = Competition::query()
                 ->active()
                 ->published()
@@ -60,6 +67,13 @@ class DashboardController extends Controller
                 ->with(['phases'])
                 ->orderByDesc('competition_start')
                 ->get();
+
+            foreach ($competitions as $competition) {
+                $teacherClub = $approvedTeacherClubs->get($competition->club_id);
+                if ($teacherClub) {
+                    $participantRegistrationService->ensureDraftRegistration($teacherClub, $competition);
+                }
+            }
 
             $registrations = CompetitionRegistration::query()
                 ->where('teacher_user_id', $userId)
@@ -85,14 +99,28 @@ class DashboardController extends Controller
                 $prototypeDecisionStatus = $prototype?->prototypeShortlist?->status;
                 $prototypeModification = $registration?->prototypeModification;
 
-                if (! $registration && $competition->isPhaseOpen('registration')) {
+                if ($registrationStatus === 'draft') {
                     return [
                         'priority' => 100,
                         'kind' => 'action_required',
-                        'label' => 'Registration is open - submit your team.',
+                        'label' => 'Complete your competition registration (participants and school details).',
+                        'competition' => $competition,
+                        'route' => route('client.competitions.register', $competition),
+                        'route_label' => 'Complete registration',
+                        'badge_class' => 'bg-danger',
+                        'time' => $registration->updated_at,
+                    ];
+                }
+
+                if (! $registration && $competition->allowsTeacherRegistration(null)) {
+                    return [
+                        'priority' => 99,
+                        'kind' => 'action_required',
+                        'label' => 'You joined this club earlier — register your team for the competition.',
                         'competition' => $competition,
                         'route' => route('client.competitions.register', $competition),
                         'route_label' => 'Register now',
+                        'badge_class' => 'bg-danger',
                         'time' => $competition->registration_deadline,
                     ];
                 }
@@ -109,14 +137,15 @@ class DashboardController extends Controller
                     ];
                 }
 
-                if ($registrationStatus === 'rejected') {
+                if ($registrationStatus === 'rejected' && $competition->allowsTeacherRegistration($registration)) {
                     return [
                         'priority' => 95,
                         'kind' => 'action_required',
                         'label' => 'Registration was rejected - update and resubmit.',
                         'competition' => $competition,
                         'route' => route('client.competitions.register', $competition),
-                        'route_label' => 'Fix registration',
+                        'route_label' => 'Update registration',
+                        'badge_class' => 'bg-warning text-dark',
                         'time' => $registration->updated_at,
                     ];
                 }

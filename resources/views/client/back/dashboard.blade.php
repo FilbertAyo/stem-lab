@@ -101,7 +101,7 @@
                             @if($reminder['time'])
                               <p class="small text-muted mb-1">Updated {{ $reminder['time']->diffForHumans() }}</p>
                             @endif
-                            <a href="{{ $reminder['route'] }}" class="btn btn-sm btn-primary">
+                            <a href="{{ $reminder['route'] }}" class="badge {{ $reminder['badge_class'] ?? 'bg-primary' }} text-decoration-none">
                               {{ $reminder['route_label'] }}
                             </a>
                           </div>
