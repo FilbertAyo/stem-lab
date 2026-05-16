@@ -101,13 +101,7 @@
                                         </td>
                                         <td class="text-end text-nowrap">
                                             <a href="{{ route('admin.competitions.registrations.show', [$competition, $registration]) }}" class="btn btn-sm btn-outline-primary">View</a>
-                                            @if($registration->status === 'pending')
-                                                <form method="POST" action="{{ route('admin.competitions.registrations.approve', [$competition, $registration]) }}" class="d-inline">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm btn-success">Approve</button>
-                                                </form>
-                                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $registration->id }}">Reject</button>
-                                            @endif
+                                         
                                         </td>
                                     </tr>
                                 @empty
