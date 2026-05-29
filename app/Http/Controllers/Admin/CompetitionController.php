@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Jobs\DispatchCompetitionShortlistNotifications;
 use App\Mail\CompetitionEligibilityReminderMail;
+use App\Support\ClientUrl;
 use App\Models\Club;
 use App\Models\Competition;
 use App\Models\CompetitionClassRequirement;
@@ -950,7 +951,7 @@ class CompetitionController extends Controller
             return back()->with('error', "Maximum of {$max} reminder(s) already sent for this participant.");
         }
 
-        $registerUrl = route('client.competitions.register', $competition);
+        $registerUrl = ClientUrl::route('client.competitions.register', $competition);
 
         Mail::to($registration->teacher_email)->send(
             new CompetitionEligibilityReminderMail($competition, $registration, $registerUrl)

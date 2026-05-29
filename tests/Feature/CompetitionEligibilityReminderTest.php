@@ -35,8 +35,13 @@ test('admin can send eligibility reminder for draft registration', function () {
     expect($registration->eligibility_reminder_count)->toBe(1)
         ->and($registration->last_eligibility_reminder_sent_at)->not->toBeNull();
 
-    Mail::assertSent(CompetitionEligibilityReminderMail::class, function (CompetitionEligibilityReminderMail $mail) use ($registration) {
-        return $mail->registration->is($registration);
+    $clientBase = rtrim((string) config('app.url'), '/');
+    $adminHost = parse_url((string) config('app.admin_url'), PHP_URL_HOST);
+
+    Mail::assertSent(CompetitionEligibilityReminderMail::class, function (CompetitionEligibilityReminderMail $mail) use ($registration, $clientBase, $adminHost, $competition) {
+        return $mail->registration->is($registration)
+            && str_starts_with($mail->registerUrl, $clientBase.'/competitions/'.$competition->ulid.'/register')
+            && ! str_contains($mail->registerUrl, (string) $adminHost);
     });
 });
 

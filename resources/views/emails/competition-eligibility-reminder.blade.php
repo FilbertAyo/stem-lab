@@ -6,7 +6,7 @@
     <p style="margin: 0 0 20px 0;">Hi {{ $teacherName }},</p>
     <p style="margin: 0 0 24px 0;">
         Your school <strong>{{ $schoolName }}</strong> joined <strong>{{ $competitionName }}</strong>, but your registration is still <strong>incomplete</strong>.
-        Please upload your student pool and complete the eligibility check so your team can move forward.
+        Please upload your students and complete the eligibility tool check so your team can move forward.
     </p>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
