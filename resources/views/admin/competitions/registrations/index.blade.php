@@ -49,6 +49,7 @@
                                     <th>Eligibility snapshot</th>
                                     <th>Representatives</th>
                                     <th>Club joined</th>
+                                    <th>Reminders</th>
                                     <th>Status</th>
                                     <th class="text-end">Actions</th>
                                 </tr>
@@ -88,6 +89,22 @@
                                         </td>
                                         <td>
                                             @php
+                                                $maxReminders = \App\Models\CompetitionRegistration::maxEligibilityReminders();
+                                                $reminderCount = (int) $registration->eligibility_reminder_count;
+                                            @endphp
+                                            @if($registration->status === 'draft')
+                                                <span class="badge {{ $reminderCount >= $maxReminders ? 'bg-secondary' : ($reminderCount > 0 ? 'bg-warning text-dark' : 'bg-light text-dark') }}">
+                                                    {{ $reminderCount }}/{{ $maxReminders }}
+                                                </span>
+                                                @if($registration->last_eligibility_reminder_sent_at)
+                                                    <div class="small text-muted">Last {{ $registration->last_eligibility_reminder_sent_at->timezone(config('app.timezone'))->format('j M') }}</div>
+                                                @endif
+                                            @else
+                                                <span class="text-muted">—</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @php
                                                 $badge = match ($registration->status) {
                                                     'approved' => 'success',
                                                     'rejected' => 'danger',
@@ -106,7 +123,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center text-muted py-4">No registrations match your filters.</td>
+                                        <td colspan="9" class="text-center text-muted py-4">No registrations match your filters.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

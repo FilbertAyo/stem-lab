@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\DispatchCompetitionShortlistNotifications;
+use App\Mail\CompetitionEligibilityReminderMail;
 use App\Models\Club;
 use App\Models\Competition;
 use App\Models\CompetitionClassRequirement;
@@ -24,6 +25,7 @@ use App\Models\CompetitionPrototypeShortlistMentor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -924,6 +926,55 @@ class CompetitionController extends Controller
         );
 
         return back()->with('status', 'Registration rejected.');
+    }
+
+    public function sendEligibilityReminder(
+        Competition $competition,
+        CompetitionRegistration $registration
+    ): RedirectResponse {
+        if ($registration->competition_id !== $competition->id) {
+            abort(404);
+        }
+
+        if (! $registration->canSendEligibilityReminder()) {
+            if (! $registration->needsEligibilityCompletion()) {
+                return back()->with('error', 'Reminders are only for incomplete (draft) registrations.');
+            }
+
+            if (! filled($registration->teacher_email)) {
+                return back()->with('error', 'This registration has no teacher email on file.');
+            }
+
+            $max = CompetitionRegistration::maxEligibilityReminders();
+
+            return back()->with('error', "Maximum of {$max} reminder(s) already sent for this participant.");
+        }
+
+        $registerUrl = route('client.competitions.register', $competition);
+
+        Mail::to($registration->teacher_email)->send(
+            new CompetitionEligibilityReminderMail($competition, $registration, $registerUrl)
+        );
+
+        $registration->update([
+            'eligibility_reminder_count' => (int) $registration->eligibility_reminder_count + 1,
+            'last_eligibility_reminder_sent_at' => now(),
+        ]);
+
+        $this->logStageEvent(
+            $competition,
+            'eligibility_reminder_sent',
+            "Eligibility reminder sent to {$registration->school_name} ({$registration->teacher_email}).",
+            [
+                'registration_ulid' => $registration->ulid,
+                'reminder_count' => $registration->eligibility_reminder_count,
+            ]
+        );
+
+        return back()->with(
+            'status',
+            'Reminder email sent to '.$registration->teacher_email.'.'
+        );
     }
 
     public function ideas(Competition $competition): View

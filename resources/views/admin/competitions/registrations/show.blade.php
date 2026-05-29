@@ -6,6 +6,8 @@
         $regionDisplay = $regRegionName ?: $schoolRegionName ?: $schoolRegionLegacy;
         $repNeed = max(1, (int) ($competition->representative_count ?? 10));
         $repCount = $registration->representativeStudents->count();
+        $maxEligibilityReminders = \App\Models\CompetitionRegistration::maxEligibilityReminders();
+        $canSendEligibilityReminder = $registration->canSendEligibilityReminder();
     @endphp
 
     <div class="row">
@@ -24,6 +26,27 @@
                 </div>
                 <div class="d-flex flex-wrap gap-2">
                     <a href="{{ route('admin.competitions.registrations.index', $competition) }}" class="btn btn-outline-secondary">Back to list</a>
+                    @if($registration->needsEligibilityCompletion())
+                        @if($canSendEligibilityReminder)
+                            <form method="POST" action="{{ route('admin.competitions.registrations.eligibility-reminder', [$competition, $registration]) }}" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-warning">
+                                    Send eligibility reminder
+                                    @if($registration->eligibility_reminder_count > 0)
+                                        ({{ $registration->eligibility_reminder_count }}/{{ $maxEligibilityReminders }})
+                                    @endif
+                                </button>
+                            </form>
+                        @elseif(! $registration->teacher_email)
+                            <button type="button" class="btn btn-outline-secondary" disabled title="Add a teacher email before sending reminders">
+                                No teacher email
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-outline-secondary" disabled title="Maximum reminders ({{ $maxEligibilityReminders }}) already sent">
+                                Reminder limit reached ({{ $registration->eligibility_reminder_count }}/{{ $maxEligibilityReminders }})
+                            </button>
+                        @endif
+                    @endif
                     @if($registration->status === 'pending')
                         <form method="POST" action="{{ route('admin.competitions.registrations.approve', [$competition, $registration]) }}" class="d-inline">
                             @csrf
@@ -65,6 +88,20 @@
                                 <div class="alert alert-danger small mb-0 mt-2">
                                     <strong>Reason:</strong> {{ $registration->rejection_reason }}
                                 </div>
+                            @endif
+                            @if($registration->needsEligibilityCompletion())
+                                <hr class="my-2">
+                                <p class="small mb-1">
+                                    <strong>Eligibility reminders:</strong>
+                                    {{ $registration->eligibility_reminder_count }} / {{ $maxEligibilityReminders }} sent
+                                </p>
+                                @if($registration->last_eligibility_reminder_sent_at)
+                                    <p class="small text-muted mb-0">
+                                        Last sent {{ $registration->last_eligibility_reminder_sent_at->timezone(config('app.timezone'))->format('j M Y, H:i') }}
+                                    </p>
+                                @else
+                                    <p class="small text-muted mb-0">No reminder sent yet.</p>
+                                @endif
                             @endif
                         </div>
                     </div>

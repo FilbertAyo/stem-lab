@@ -36,6 +36,8 @@ class CompetitionRegistration extends Model
         'submitted_at',
         'approved_at',
         'approved_by',
+        'eligibility_reminder_count',
+        'last_eligibility_reminder_sent_at',
     ];
 
     protected $casts = [
@@ -45,7 +47,32 @@ class CompetitionRegistration extends Model
         'eligibility_met' => 'boolean',
         'submitted_at' => 'datetime',
         'approved_at' => 'datetime',
+        'eligibility_reminder_count' => 'integer',
+        'last_eligibility_reminder_sent_at' => 'datetime',
     ];
+
+    public static function maxEligibilityReminders(): int
+    {
+        return max(1, (int) config('competitions.max_eligibility_reminders', 3));
+    }
+
+    public function needsEligibilityCompletion(): bool
+    {
+        return $this->status === 'draft';
+    }
+
+    public function canSendEligibilityReminder(): bool
+    {
+        if (! $this->needsEligibilityCompletion()) {
+            return false;
+        }
+
+        if (! filled($this->teacher_email)) {
+            return false;
+        }
+
+        return (int) $this->eligibility_reminder_count < self::maxEligibilityReminders();
+    }
 
     public function competition(): BelongsTo
     {
