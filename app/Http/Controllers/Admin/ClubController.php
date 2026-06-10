@@ -150,9 +150,12 @@ class ClubController extends Controller
         $activeTab = match (true) {
             request()->has('requests_page') || request('tab') === 'requests' => 'requests',
             request()->has('members_page') || request('tab') === 'members' => 'members',
-            request()->has('leaders_page') || request('tab') === 'leaders' => 'leaders',
             default => 'leaders',
         };
+
+        if (! in_array($activeTab, ['leaders', 'members', 'requests'], true)) {
+            $activeTab = 'leaders';
+        }
 
         return view('admin.clubs.show', compact(
             'club',

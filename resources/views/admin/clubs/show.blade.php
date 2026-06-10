@@ -51,67 +51,33 @@
                 </div>
             </div>
 
-            <!-- Members & Requests Tabs -->
-            <div class="card mb-4">
-                <div class="card-header p-0 border-bottom-0">
-                    <ul class="nav nav-tabs card-header-tabs px-3 pt-2" id="clubManagementTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button
-                                class="nav-link {{ $activeTab === 'leaders' ? 'active' : '' }}"
-                                id="leaders-tab-btn"
-                                data-bs-toggle="tab"
-                                data-bs-target="#leaders-tab"
-                                type="button"
-                                role="tab"
-                                aria-controls="leaders-tab"
-                                aria-selected="{{ $activeTab === 'leaders' ? 'true' : 'false' }}"
-                            >
-                                School Leaders
-                                <span class="badge bg-light text-dark ms-1">{{ $leaders->total() }}</span>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button
-                                class="nav-link {{ $activeTab === 'members' ? 'active' : '' }}"
-                                id="members-tab-btn"
-                                data-bs-toggle="tab"
-                                data-bs-target="#members-tab"
-                                type="button"
-                                role="tab"
-                                aria-controls="members-tab"
-                                aria-selected="{{ $activeTab === 'members' ? 'true' : 'false' }}"
-                            >
-                                Approved Members
-                                <span class="badge bg-light text-dark ms-1">{{ $approvedMembers->total() }}</span>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button
-                                class="nav-link {{ $activeTab === 'requests' ? 'active' : '' }}"
-                                id="requests-tab-btn"
-                                data-bs-toggle="tab"
-                                data-bs-target="#requests-tab"
-                                type="button"
-                                role="tab"
-                                aria-controls="requests-tab"
-                                aria-selected="{{ $activeTab === 'requests' ? 'true' : 'false' }}"
-                            >
-                                Pending Requests
-                                <span class="badge bg-light text-dark ms-1">{{ $pendingRequests->total() }}</span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+            <ul class="nav nav-tabs mb-3" role="navigation" aria-label="Club management sections">
+                <li class="nav-item">
+                    <a class="nav-link {{ $activeTab === 'leaders' ? 'active' : '' }}"
+                       href="{{ route('admin.clubs.show', ['club' => $club, 'tab' => 'leaders']) }}">
+                        School Leaders
+                        <span class="badge bg-light text-dark ms-1">{{ $leaders->total() }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ $activeTab === 'members' ? 'active' : '' }}"
+                       href="{{ route('admin.clubs.show', ['club' => $club, 'tab' => 'members']) }}">
+                        Approved Members
+                        <span class="badge bg-light text-dark ms-1">{{ $approvedMembers->total() }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ $activeTab === 'requests' ? 'active' : '' }}"
+                       href="{{ route('admin.clubs.show', ['club' => $club, 'tab' => 'requests']) }}">
+                        Pending Requests
+                        <span class="badge bg-light text-dark ms-1">{{ $pendingRequests->total() }}</span>
+                    </a>
+                </li>
+            </ul>
 
+            <div class="card mb-4">
                 <div class="card-body p-0">
-                    <div class="tab-content" id="clubManagementTabsContent">
-                        <!-- School Leaders -->
-                        <div
-                            class="tab-pane fade {{ $activeTab === 'leaders' ? 'show active' : '' }}"
-                            id="leaders-tab"
-                            role="tabpanel"
-                            aria-labelledby="leaders-tab-btn"
-                        >
+                    @if($activeTab === 'leaders')
                             @if($leaders->isEmpty())
                                 <div class="text-center text-muted py-5">
                                     <i class="ti ti-users-off fs-1 d-block mb-2"></i>
@@ -157,15 +123,7 @@
                                     </div>
                                 @endif
                             @endif
-                        </div>
-
-                        <!-- Approved Members -->
-                        <div
-                            class="tab-pane fade {{ $activeTab === 'members' ? 'show active' : '' }}"
-                            id="members-tab"
-                            role="tabpanel"
-                            aria-labelledby="members-tab-btn"
-                        >
+                    @elseif($activeTab === 'members')
                             <div class="d-flex justify-content-end p-3 border-bottom bg-light">
                                 <a href="{{ route('admin.clubs.members.export', $club) }}" class="btn btn-primary btn-sm">
                                     <i class="ti ti-download me-1"></i>
@@ -209,15 +167,7 @@
                                     </div>
                                 @endif
                             @endif
-                        </div>
-
-                        <!-- Pending Requests -->
-                        <div
-                            class="tab-pane fade {{ $activeTab === 'requests' ? 'show active' : '' }}"
-                            id="requests-tab"
-                            role="tabpanel"
-                            aria-labelledby="requests-tab-btn"
-                        >
+                    @else
                             @if($pendingRequests->isEmpty())
                                 <div class="text-center text-muted py-5">
                                     <i class="ti ti-clock fs-1 d-block mb-2"></i>
@@ -271,8 +221,7 @@
                                     </div>
                                 @endif
                             @endif
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
