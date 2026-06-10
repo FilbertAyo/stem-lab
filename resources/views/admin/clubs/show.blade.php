@@ -51,6 +51,7 @@
                 </div>
             </div>
 
+            <div class="card mb-3">
             <ul class="nav nav-tabs mb-3" role="navigation" aria-label="Club management sections">
                 <li class="nav-item">
                     <a class="nav-link {{ $activeTab === 'leaders' ? 'active' : '' }}"
@@ -74,6 +75,7 @@
                     </a>
                 </li>
             </ul>
+            </div>
 
             <div class="card mb-4">
                 <div class="card-body p-0">
@@ -137,7 +139,7 @@
                                     No approved members yet.
                                 </div>
                             @else
-                                <div class="table-responsive">
+                                <div class="table-responsive p-3">
                                     <table class="table table-striped table-bordered table-hover mb-0 align-middle">
                                         <thead class="table-light">
                                             <tr>
@@ -174,7 +176,7 @@
                                     No pending requests.
                                 </div>
                             @else
-                                <div class="table-responsive">
+                                <div class="table-responsive p-3">
                                     <table class="table table-striped table-bordered table-hover mb-0 align-middle">
                                         <thead class="table-light">
                                             <tr>
