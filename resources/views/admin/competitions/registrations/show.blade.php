@@ -37,7 +37,7 @@
                                     @endif
                                 </button>
                             </form>
-                        @elseif(! $registration->teacher_email)
+                        @elseif(! $registration->resolvedTeacherEmail())
                             <button type="button" class="btn btn-outline-secondary" disabled title="Add a teacher email before sending reminders">
                                 No teacher email
                             </button>
@@ -113,11 +113,11 @@
                         <div class="card-body">
                             <dl class="row small mb-0">
                                 <dt class="col-sm-4 text-muted fw-normal">Name</dt>
-                                <dd class="col-sm-8 mb-1">{{ $registration->teacher_name ?: '—' }}</dd>
+                                <dd class="col-sm-8 mb-1">{{ $registration->resolvedTeacherName() ?: '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Email</dt>
-                                <dd class="col-sm-8 mb-1">{{ $registration->teacher_email ?: '—' }}</dd>
+                                <dd class="col-sm-8 mb-1">{{ $registration->resolvedTeacherEmail() ?: '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Phone</dt>
-                                <dd class="col-sm-8 mb-1">{{ $registration->teacher_phone ?: '—' }}</dd>
+                                <dd class="col-sm-8 mb-1">{{ $registration->resolvedTeacherPhone() ?: '—' }}</dd>
                             </dl>
                         </div>
                     </div>

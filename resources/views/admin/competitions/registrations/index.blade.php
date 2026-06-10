@@ -65,8 +65,8 @@
                                             <small class="text-muted">{{ $registration->school_district ?? 'No district' }}</small>
                                         </td>
                                         <td>
-                                            <div>{{ $registration->teacher_name }}</div>
-                                            <small class="text-muted">{{ $registration->teacher_email }}</small>
+                                            <div>{{ $registration->resolvedTeacherName() }}</div>
+                                            <small class="text-muted">{{ $registration->resolvedTeacherEmail() }}</small>
                                         </td>
                                         <td>
                                             @if($registration->status === 'draft')

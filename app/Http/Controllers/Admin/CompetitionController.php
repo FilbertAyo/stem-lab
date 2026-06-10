@@ -942,7 +942,7 @@ class CompetitionController extends Controller
                 return back()->with('error', 'Reminders are only for incomplete (draft) registrations.');
             }
 
-            if (! filled($registration->teacher_email)) {
+            if (! filled($registration->resolvedTeacherEmail())) {
                 return back()->with('error', 'This registration has no teacher email on file.');
             }
 
@@ -953,7 +953,9 @@ class CompetitionController extends Controller
 
         $registerUrl = ClientUrl::route('client.competitions.register', $competition);
 
-        Mail::to($registration->teacher_email)->send(
+        $teacherEmail = $registration->resolvedTeacherEmail();
+
+        Mail::to($teacherEmail)->send(
             new CompetitionEligibilityReminderMail($competition, $registration, $registerUrl)
         );
 
@@ -965,7 +967,7 @@ class CompetitionController extends Controller
         $this->logStageEvent(
             $competition,
             'eligibility_reminder_sent',
-            "Eligibility reminder sent to {$registration->school_name} ({$registration->teacher_email}).",
+            "Eligibility reminder sent to {$registration->school_name} ({$teacherEmail}).",
             [
                 'registration_ulid' => $registration->ulid,
                 'reminder_count' => $registration->eligibility_reminder_count,
@@ -974,7 +976,7 @@ class CompetitionController extends Controller
 
         return back()->with(
             'status',
-            'Reminder email sent to '.$registration->teacher_email.'.'
+            'Reminder email sent to '.$teacherEmail.'.'
         );
     }
 

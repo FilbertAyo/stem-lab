@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CompetitionRegistration;
 use App\Models\User;
 use App\Support\TanzaniaPhone;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -309,8 +310,24 @@ class UserController extends Controller
 
         $user->update($updateData);
 
+        $this->syncTeacherRegistrationSnapshots($user, [
+            'teacher_name' => $updateData['name'],
+            'teacher_email' => $updateData['email'],
+            'teacher_phone' => $updateData['phone'],
+        ]);
+
         return $this->redirectToTeachersIndex($request)
             ->with('success', 'Teacher updated successfully.');
+    }
+
+    /**
+     * Keep competition registration contact fields in sync with the teacher account.
+     */
+    protected function syncTeacherRegistrationSnapshots(User $user, array $contact): void
+    {
+        CompetitionRegistration::query()
+            ->where('teacher_user_id', $user->id)
+            ->update($contact);
     }
 
     /**

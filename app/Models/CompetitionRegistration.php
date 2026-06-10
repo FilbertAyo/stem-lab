@@ -67,11 +67,28 @@ class CompetitionRegistration extends Model
             return false;
         }
 
-        if (! filled($this->teacher_email)) {
+        if (! filled($this->resolvedTeacherEmail())) {
             return false;
         }
 
         return (int) $this->eligibility_reminder_count < self::maxEligibilityReminders();
+    }
+
+    public function resolvedTeacherName(): string
+    {
+        return (string) ($this->teacher?->name ?: $this->teacher_name ?: '');
+    }
+
+    public function resolvedTeacherEmail(): string
+    {
+        return (string) ($this->teacher?->email ?: $this->teacher_email ?: '');
+    }
+
+    public function resolvedTeacherPhone(): ?string
+    {
+        $phone = $this->teacher?->phone ?: $this->teacher_phone;
+
+        return filled($phone) ? (string) $phone : null;
     }
 
     public function competition(): BelongsTo
