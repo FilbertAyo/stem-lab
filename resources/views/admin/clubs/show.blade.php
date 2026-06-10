@@ -52,6 +52,7 @@
             </div>
 
             <div class="card mb-3">
+                <div class="card-body">
             <ul class="nav nav-tabs mb-3" role="navigation" aria-label="Club management sections">
                 <li class="nav-item">
                     <a class="nav-link {{ $activeTab === 'leaders' ? 'active' : '' }}"
@@ -72,9 +73,10 @@
                        href="{{ route('admin.clubs.show', ['club' => $club, 'tab' => 'requests']) }}">
                         Pending Requests
                         <span class="badge bg-light text-dark ms-1">{{ $pendingRequests->total() }}</span>
-                    </a>
-                </li>
-            </ul>
+                        </a>
+                    </li>
+                </ul>
+                </div>
             </div>
 
             <div class="card mb-4">
