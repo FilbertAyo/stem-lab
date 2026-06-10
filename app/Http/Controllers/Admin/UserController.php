@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\TanzaniaPhone;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -33,10 +36,7 @@ class UserController extends Controller
      */
     public function students(Request $request): View
     {
-        $users = User::query()
-            ->where('role', 'student')
-            ->tap(fn (Builder $query) => $this->applyNameEmailSearch($query, $request))
-            ->orderBy('created_at', 'desc')
+        $users = $this->usersQueryForRole($request, 'student')
             ->paginate(15)
             ->withQueryString();
 
@@ -48,14 +48,91 @@ class UserController extends Controller
      */
     public function teachers(Request $request): View
     {
-        $users = User::query()
-            ->where('role', 'teacher')
-            ->tap(fn (Builder $query) => $this->applyNameEmailSearch($query, $request))
-            ->orderBy('created_at', 'desc')
+        $users = $this->usersQueryForRole($request, 'teacher')
             ->paginate(15)
             ->withQueryString();
 
         return view('admin.users.teachers', compact('users'));
+    }
+
+    /**
+     * Download students list as PDF.
+     */
+    public function exportStudents(Request $request): Response
+    {
+        return $this->exportUsers($request, 'student', 'students', 'Students');
+    }
+
+    /**
+     * Download teachers list as PDF.
+     */
+    public function exportTeachers(Request $request): Response
+    {
+        return $this->exportUsers($request, 'teacher', 'teachers', 'Teachers');
+    }
+
+    /**
+     * Build the base query used for listing and exporting users of a given role.
+     */
+    protected function usersQueryForRole(Request $request, string $role, bool $applyDateRange = true): Builder
+    {
+        return User::query()
+            ->where('role', $role)
+            ->tap(fn (Builder $query) => $this->applyNameEmailSearch($query, $request))
+            ->when($applyDateRange, fn (Builder $query) => $this->applyCreatedAtDateRange($query, $request))
+            ->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Download a PDF export for students or teachers.
+     */
+    protected function exportUsers(Request $request, string $role, string $filenamePrefix, string $title): Response
+    {
+        $validated = $request->validate([
+            'scope' => ['required', 'in:range,all'],
+            'from_date' => ['nullable', 'date'],
+            'to_date' => ['nullable', 'date', 'after_or_equal:from_date'],
+            'q' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $applyDateRange = $validated['scope'] === 'range';
+        $users = $this->usersQueryForRole($request, $role, $applyDateRange)->get();
+
+        $scopeLabel = 'all';
+        $filterSummary = $validated['scope'] === 'all' ? 'All records' : 'Filtered list';
+
+        if ($applyDateRange) {
+            $fromDate = $request->string('from_date')->trim()->value();
+            $toDate = $request->string('to_date')->trim()->value();
+
+            if ($fromDate !== '' && $toDate !== '') {
+                $scopeLabel = $fromDate.'_to_'.$toDate;
+                $filterSummary .= ' · '.$fromDate.' to '.$toDate;
+            } elseif ($fromDate !== '') {
+                $scopeLabel = 'from_'.$fromDate;
+                $filterSummary .= ' · from '.$fromDate;
+            } elseif ($toDate !== '') {
+                $scopeLabel = 'to_'.$toDate;
+                $filterSummary .= ' · to '.$toDate;
+            }
+
+            if ($request->filled('q')) {
+                $filterSummary .= ' · search: '.$request->input('q');
+            }
+        } elseif ($request->filled('q')) {
+            $filterSummary .= ' · search: '.$request->input('q');
+        }
+
+        $filename = $filenamePrefix.'_'.$scopeLabel.'_'.now()->format('Y-m-d').'.pdf';
+
+        $pdf = Pdf::loadView('admin.users.users-list-pdf', [
+            'users' => $users,
+            'title' => $title,
+            'generatedAt' => now(),
+            'filterSummary' => $filterSummary,
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->download($filename);
     }
 
     /**
@@ -75,24 +152,53 @@ class UserController extends Controller
         });
     }
 
-    protected function redirectToAdminUsersIndex(Request $request): RedirectResponse
+    /**
+     * Filter users by created_at date range (inclusive).
+     */
+    protected function applyCreatedAtDateRange(Builder $query, Request $request): void
     {
-        $query = [];
-        if ($request->filled('q')) {
-            $query['q'] = $request->input('q');
+        $fromDate = $request->string('from_date')->trim()->value();
+        $toDate = $request->string('to_date')->trim()->value();
+
+        if ($fromDate !== '') {
+            $query->whereDate('created_at', '>=', $fromDate);
         }
 
-        return redirect()->route('admin.users.index', $query);
+        if ($toDate !== '') {
+            $query->whereDate('created_at', '<=', $toDate);
+        }
+    }
+
+    protected function redirectToAdminUsersIndex(Request $request): RedirectResponse
+    {
+        return redirect()->route('admin.users.index', $this->listFilterQuery($request));
     }
 
     protected function redirectToTeachersIndex(Request $request): RedirectResponse
     {
+        return redirect()->route('admin.users.teachers', $this->listFilterQuery($request));
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function listFilterQuery(Request $request): array
+    {
         $query = [];
+
         if ($request->filled('q')) {
             $query['q'] = $request->input('q');
         }
 
-        return redirect()->route('admin.users.teachers', $query);
+        if ($request->filled('from_date')) {
+            $query['from_date'] = $request->input('from_date');
+        }
+
+        if ($request->filled('to_date')) {
+            $query['to_date'] = $request->input('to_date');
+        }
+
+        return $query;
     }
 
     /**
@@ -119,10 +225,19 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified admin user.
+     * Update the specified admin or teacher user.
      */
     public function update(Request $request, User $user): RedirectResponse
     {
+        if ($user->role === 'teacher') {
+            return $this->updateTeacher($request, $user);
+        }
+
+        if ($user->role !== 'admin') {
+            return $this->redirectToTeachersIndex($request)
+                ->with('error', 'This account cannot be updated from here.');
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,'.$user->id],
@@ -142,6 +257,60 @@ class UserController extends Controller
 
         return $this->redirectToAdminUsersIndex($request)
             ->with('success', 'Admin user updated successfully.');
+    }
+
+    /**
+     * Update a teacher's profile details.
+     */
+    protected function updateTeacher(Request $request, User $user): RedirectResponse
+    {
+        if ($user->role !== 'teacher') {
+            return $this->redirectToTeachersIndex($request)
+                ->with('error', 'Only teacher accounts can be updated from this page.');
+        }
+
+        $phone = $request->input('phone');
+        if (filled($phone)) {
+            $normalizedPhone = TanzaniaPhone::normalize((string) $phone);
+            if ($normalizedPhone) {
+                $request->merge(['phone' => $normalizedPhone]);
+            }
+        }
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,'.$user->id],
+            'phone' => [
+                'nullable',
+                'string',
+                'max:16',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if ($value === null || $value === '') {
+                        return;
+                    }
+
+                    if (! TanzaniaPhone::normalize((string) $value)) {
+                        $fail('Enter a valid Tanzania phone number (e.g. +255765890921 or 0765890921).');
+                    }
+                },
+            ],
+            'password' => ['nullable', Rules\Password::defaults()],
+        ]);
+
+        $updateData = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+        ];
+
+        if (! empty($validated['password'])) {
+            $updateData['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($updateData);
+
+        return $this->redirectToTeachersIndex($request)
+            ->with('success', 'Teacher updated successfully.');
     }
 
     /**

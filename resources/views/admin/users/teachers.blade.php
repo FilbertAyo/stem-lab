@@ -6,38 +6,11 @@
                 <h5 class="mb-0">Teachers Management</h5>
             </div>
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            <div class="card mb-3">
-                <div class="card-body py-3">
-                    <form method="GET" action="{{ route('admin.users.teachers') }}" class="row g-3 align-items-end">
-                        <div class="col-md-8 col-lg-6">
-                            <label class="form-label small mb-1">Search</label>
-                            <input type="search" name="q" class="form-control" placeholder="Search by name or email..."
-                                value="{{ request('q') }}" autocomplete="off">
-                        </div>
-                        <div class="col-auto d-flex flex-wrap gap-2">
-                            <button type="submit" class="btn btn-outline-primary">
-                                <i class="ti ti-search"></i> Search
-                            </button>
-                            @if(request()->filled('q'))
-                                <a href="{{ route('admin.users.teachers') }}" class="btn btn-outline-secondary">Clear</a>
-                            @endif
-                        </div>
-                    </form>
-                </div>
-            </div>
+            @include('admin.users.partials.download-list', [
+                'listRoute' => 'admin.users.teachers',
+                'exportRoute' => 'admin.users.teachers.export',
+                'entityLabel' => 'Teachers',
+            ])
 
             <div class="card tbl-card">
                 <div class="card-body">
@@ -80,21 +53,35 @@
                                         </td>
                                         <td>{{ $user->created_at->format('M d, Y') }}</td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-info"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#viewUserModal"
-                                                data-user-id="{{ $user->id }}"
-                                                data-user-name="{{ $user->name }}"
-                                                data-user-email="{{ $user->email }}"
-                                                data-user-role="{{ $user->role }}"
-                                                data-user-status="{{ $user->is_active ?? true ? 'Active' : 'Disabled' }}"
-                                                data-user-email-verified="{{ $user->email_verified_at ? 'Yes' : 'No' }}"
-                                                data-user-email-verified-at="{{ $user->email_verified_at ? $user->email_verified_at->format('M d, Y h:i A') : 'Not Verified' }}"
-                                                data-user-created-at="{{ $user->created_at->format('M d, Y h:i A') }}"
-                                                data-user-updated-at="{{ $user->updated_at->format('M d, Y h:i A') }}"
-                                                title="View Details">
-                                                <i class="ti ti-eye"></i>
-                                            </button>
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-sm btn-primary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editTeacherModal"
+                                                    data-user-ulid="{{ $user->ulid }}"
+                                                    data-user-name="{{ $user->name }}"
+                                                    data-user-email="{{ $user->email }}"
+                                                    data-user-phone="{{ $user->phone ?? '' }}"
+                                                    title="Edit">
+                                                    <i class="ti ti-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-info"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#viewUserModal"
+                                                    data-user-id="{{ $user->id }}"
+                                                    data-user-ulid="{{ $user->ulid }}"
+                                                    data-user-name="{{ $user->name }}"
+                                                    data-user-email="{{ $user->email }}"
+                                                    data-user-phone="{{ $user->phone ?? '—' }}"
+                                                    data-user-role="{{ $user->role }}"
+                                                    data-user-status="{{ $user->is_active ?? true ? 'Active' : 'Disabled' }}"
+                                                    data-user-email-verified="{{ $user->email_verified_at ? 'Yes' : 'No' }}"
+                                                    data-user-email-verified-at="{{ $user->email_verified_at ? $user->email_verified_at->format('M d, Y h:i A') : 'Not Verified' }}"
+                                                    data-user-created-at="{{ $user->created_at->format('M d, Y h:i A') }}"
+                                                    data-user-updated-at="{{ $user->updated_at->format('M d, Y h:i A') }}"
+                                                    title="View Details">
+                                                    <i class="ti ti-eye"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty
@@ -105,7 +92,7 @@
                             </tbody>
                         </table>
                     </div>
-                    @if($users->hasPages() || request()->filled('q'))
+                    @if($users->hasPages() || request()->filled('q') || request()->filled('from_date') || request()->filled('to_date'))
                         <div class="card-footer">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                                 @if($users->total() > 0)
@@ -124,6 +111,74 @@
                         </div>
                     @endif
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Teacher Modal -->
+    <div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTeacherModalLabel">Edit Teacher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editTeacherForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="_form" value="edit_teacher">
+                    <input type="hidden" name="edit_user_id" id="edit_teacher_user_id" value="{{ old('edit_user_id') }}">
+                    @if(request()->filled('q'))
+                        <input type="hidden" name="q" value="{{ request('q') }}">
+                    @endif
+                    @if(request()->filled('from_date'))
+                        <input type="hidden" name="from_date" value="{{ request('from_date') }}">
+                    @endif
+                    @if(request()->filled('to_date'))
+                        <input type="hidden" name="to_date" value="{{ request('to_date') }}">
+                    @endif
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="edit_teacher_name" class="form-label">Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                id="edit_teacher_name" name="name" value="{{ old('name') }}" required>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_teacher_email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                id="edit_teacher_email" name="email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_teacher_phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control @error('phone') is-invalid @enderror"
+                                id="edit_teacher_phone" name="phone" value="{{ old('phone') }}"
+                                placeholder="+255XX or 07XX">
+                            @error('phone')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_teacher_password" class="form-label">
+                                Password <small class="text-muted">(Leave blank to keep current password)</small>
+                            </label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                id="edit_teacher_password" name="password">
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update Teacher</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -149,6 +204,10 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Email</label>
                             <p class="mb-0" id="view_user_email">-</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Phone</label>
+                            <p class="mb-0" id="view_user_phone">-</p>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Role</label>
@@ -183,6 +242,12 @@
                         @if(request()->filled('q'))
                             <input type="hidden" name="q" value="{{ request('q') }}">
                         @endif
+                        @if(request()->filled('from_date'))
+                            <input type="hidden" name="from_date" value="{{ request('from_date') }}">
+                        @endif
+                        @if(request()->filled('to_date'))
+                            <input type="hidden" name="to_date" value="{{ request('to_date') }}">
+                        @endif
                         <button type="submit" class="btn btn-danger">
                             <i class="ti ti-trash"></i> Delete User
                         </button>
@@ -202,11 +267,26 @@
             return confirm('Are you sure you want to delete ' + name + '? This action cannot be undone.');
         }
 
+        function setEditTeacherForm(userUlid, userName, userEmail, userPhone) {
+            const form = document.getElementById('editTeacherForm');
+            if (!form || !userUlid) {
+                return;
+            }
+
+            form.action = @json(route('admin.users.update', ['user' => '__ULID__'])).replace('__ULID__', userUlid);
+            document.getElementById('edit_teacher_user_id').value = userUlid;
+            document.getElementById('edit_teacher_name').value = userName || '';
+            document.getElementById('edit_teacher_email').value = userEmail || '';
+            document.getElementById('edit_teacher_phone').value = userPhone || '';
+            document.getElementById('edit_teacher_password').value = '';
+        }
+
         // Handle view modal data
         document.addEventListener('DOMContentLoaded', function() {
             const viewModal = document.getElementById('viewUserModal');
+            const editModal = document.getElementById('editTeacherModal');
             const deleteForm = document.getElementById('deleteTeacherForm');
-            const destroyUrlBase = @json(url('/users'));
+            const destroyUrlTemplate = @json(route('admin.users.destroy', ['user' => '__ID__']));
 
             if (deleteForm) {
                 deleteForm.addEventListener('submit', function(event) {
@@ -216,19 +296,45 @@
                 });
             }
 
+            if (editModal) {
+                editModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    setEditTeacherForm(
+                        button.getAttribute('data-user-ulid'),
+                        button.getAttribute('data-user-name'),
+                        button.getAttribute('data-user-email'),
+                        button.getAttribute('data-user-phone')
+                    );
+                });
+            }
+
+            @if($errors->any() && old('_form') === 'edit_teacher' && old('edit_user_id'))
+                setEditTeacherForm(
+                    @json(old('edit_user_id')),
+                    @json(old('name')),
+                    @json(old('email')),
+                    @json(old('phone'))
+                );
+                if (editModal) {
+                    bootstrap.Modal.getOrCreateInstance(editModal).show();
+                }
+            @endif
+
             if (viewModal) {
                 viewModal.addEventListener('show.bs.modal', function(event) {
                     const button = event.relatedTarget;
 
                     // Get all data attributes
                     const userId = button.getAttribute('data-user-id');
+                    const userUlid = button.getAttribute('data-user-ulid');
                     const userName = button.getAttribute('data-user-name');
                     pendingDeleteTeacherName = userName || '';
 
-                    if (deleteForm && userId) {
-                        deleteForm.action = `${destroyUrlBase}/${userId}`;
+                    if (deleteForm && userUlid) {
+                        deleteForm.action = destroyUrlTemplate.replace('__ID__', userUlid);
                     }
                     const userEmail = button.getAttribute('data-user-email');
+                    const userPhone = button.getAttribute('data-user-phone');
                     const userRole = button.getAttribute('data-user-role');
                     const userStatus = button.getAttribute('data-user-status');
                     const userEmailVerified = button.getAttribute('data-user-email-verified');
@@ -264,6 +370,7 @@
                     document.getElementById('view_user_id').textContent = userId;
                     document.getElementById('view_user_name').textContent = userName;
                     document.getElementById('view_user_email').textContent = userEmail;
+                    document.getElementById('view_user_phone').textContent = userPhone || '—';
                     document.getElementById('view_user_role').innerHTML = roleBadge;
                     document.getElementById('view_user_status').innerHTML = statusBadge;
                     document.getElementById('view_user_email_verified').innerHTML = emailVerifiedBadge;

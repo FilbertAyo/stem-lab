@@ -6,27 +6,11 @@
                 <h5 class="mb-0">Students Management</h5>
             </div>
 
-            
-
-            <div class="card mb-3">
-                <div class="card-body py-3">
-                    <form method="GET" action="{{ route('admin.users.students') }}" class="row g-3 align-items-end">
-                        <div class="col-md-8 col-lg-6">
-                            <label class="form-label small mb-1">Search</label>
-                            <input type="search" name="q" class="form-control" placeholder="Search by name or email..."
-                                value="{{ request('q') }}" autocomplete="off">
-                        </div>
-                        <div class="col-auto d-flex flex-wrap gap-2">
-                            <button type="submit" class="btn btn-outline-primary">
-                                <i class="ti ti-search"></i> Search
-                            </button>
-                            @if(request()->filled('q'))
-                                <a href="{{ route('admin.users.students') }}" class="btn btn-outline-secondary">Clear</a>
-                            @endif
-                        </div>
-                    </form>
-                </div>
-            </div>
+            @include('admin.users.partials.download-list', [
+                'listRoute' => 'admin.users.students',
+                'exportRoute' => 'admin.users.students.export',
+                'entityLabel' => 'Students',
+            ])
 
             <div class="card tbl-card">
                 <div class="card-body">
@@ -94,7 +78,7 @@
                             </tbody>
                         </table>
                     </div>
-                    @if($users->hasPages() || request()->filled('q'))
+                    @if($users->hasPages() || request()->filled('q') || request()->filled('from_date') || request()->filled('to_date'))
                         <div class="card-footer">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                                 @if($users->total() > 0)

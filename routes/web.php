@@ -207,7 +207,9 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', [AdminUserController::class, 'index'])->name('index');
             Route::get('/students', [AdminUserController::class, 'students'])->name('students');
+            Route::get('/students/export', [AdminUserController::class, 'exportStudents'])->name('students.export');
             Route::get('/teachers', [AdminUserController::class, 'teachers'])->name('teachers');
+            Route::get('/teachers/export', [AdminUserController::class, 'exportTeachers'])->name('teachers.export');
             Route::post('/', [AdminUserController::class, 'store'])->name('store');
             Route::put('/{user}', [AdminUserController::class, 'update'])->name('update');
             Route::post('/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('toggle-status');
