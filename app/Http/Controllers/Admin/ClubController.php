@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Club;
 use App\Models\TeacherClub;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -119,7 +122,11 @@ class ClubController extends Controller
             ->with(['user', 'school'])
             ->orderByDesc('created_at')
             ->paginate(10, ['*'], 'requests_page')
-            ->withQueryString();
+            ->withQueryString()
+            ->appends(['tab' => 'requests']);
+
+        $leaders->appends(['tab' => 'leaders']);
+        $approvedMembers->appends(['tab' => 'members']);
 
         // Get all approved members grouped by school for transfer leadership modal.
         $transferMembers = $club->teacherClubs()
@@ -140,7 +147,43 @@ class ClubController extends Controller
             ];
         })->values()->all();
 
-        return view('admin.clubs.show', compact('club', 'approvedMembers', 'pendingRequests', 'leaders', 'membersBySchoolJson'));
+        $activeTab = match (true) {
+            request()->has('requests_page') || request('tab') === 'requests' => 'requests',
+            request()->has('members_page') || request('tab') === 'members' => 'members',
+            request()->has('leaders_page') || request('tab') === 'leaders' => 'leaders',
+            default => 'leaders',
+        };
+
+        return view('admin.clubs.show', compact(
+            'club',
+            'approvedMembers',
+            'pendingRequests',
+            'leaders',
+            'membersBySchoolJson',
+            'activeTab',
+        ));
+    }
+
+    /**
+     * Download approved club members as PDF.
+     */
+    public function exportApprovedMembers(Club $club): Response
+    {
+        $members = $club->teacherClubs()
+            ->approved()
+            ->with(['user', 'school'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        $filename = Str::slug($club->name).'_approved_members_'.now()->format('Y-m-d').'.pdf';
+
+        $pdf = Pdf::loadView('admin.clubs.members-list-pdf', [
+            'members' => $members,
+            'title' => $club->name.' - Approved Members',
+            'generatedAt' => now(),
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->download($filename);
     }
 
     /**
@@ -182,7 +225,7 @@ class ClubController extends Controller
         // Set new leader
         $newLeaderTeacherClub->update(['is_leader' => true]);
 
-        return redirect()->route('admin.clubs.show', $club)
+        return redirect()->route('admin.clubs.show', ['club' => $club, 'tab' => 'leaders'])
             ->with('status', "Leadership for the school has been transferred to {$newLeaderTeacherClub->user->name}.");
     }
 
@@ -199,7 +242,7 @@ class ClubController extends Controller
 
         $teacherClub->approve();
 
-        return redirect()->route('admin.clubs.show', $teacherClub->club)
+        return redirect()->route('admin.clubs.show', ['club' => $teacherClub->club, 'tab' => 'requests'])
             ->with('status', "Successfully approved {$teacherClub->user->name}'s request to join {$teacherClub->club->name}.");
     }
 
@@ -216,7 +259,7 @@ class ClubController extends Controller
 
         $teacherClub->reject();
 
-        return redirect()->route('admin.clubs.show', $teacherClub->club)
+        return redirect()->route('admin.clubs.show', ['club' => $teacherClub->club, 'tab' => 'requests'])
             ->with('status', "Successfully rejected {$teacherClub->user->name}'s request to join {$teacherClub->club->name}.");
     }
 }

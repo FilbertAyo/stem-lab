@@ -115,6 +115,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/', [ClubController::class, 'index'])->name('index');
             Route::post('/', [ClubController::class, 'store'])->name('store');
             Route::get('/{club}', [ClubController::class, 'show'])->name('show');
+            Route::get('/{club}/members/export', [ClubController::class, 'exportApprovedMembers'])->name('members.export');
             Route::put('/{club}', [ClubController::class, 'update'])->name('update');
             Route::post('/{club}/toggle-status', [ClubController::class, 'toggleStatus'])->name('toggle-status');
             Route::post('/{club}/transfer-leadership', [ClubController::class, 'transferLeadership'])->name('transfer-leadership');

@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Name:</strong> {{ $club->name }}</p>
-                            <p><strong>Status:</strong> 
+                            <p><strong>Status:</strong>
                                 @if($club->is_active)
                                     <span class="badge bg-success">Active</span>
                                 @else
@@ -51,164 +51,228 @@
                 </div>
             </div>
 
-            <!-- School Leaders Card -->
+            <!-- Members & Requests Tabs -->
             <div class="card mb-4">
-                <div class="card-header">
-                    <h6 class="mb-0">School Leaders ({{ $leaders->count() }})</h6>
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs card-header-tabs px-3 pt-2" id="clubManagementTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link {{ $activeTab === 'leaders' ? 'active' : '' }}"
+                                id="leaders-tab-btn"
+                                data-bs-toggle="tab"
+                                data-bs-target="#leaders-tab"
+                                type="button"
+                                role="tab"
+                                aria-controls="leaders-tab"
+                                aria-selected="{{ $activeTab === 'leaders' ? 'true' : 'false' }}"
+                            >
+                                School Leaders
+                                <span class="badge bg-light text-dark ms-1">{{ $leaders->total() }}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link {{ $activeTab === 'members' ? 'active' : '' }}"
+                                id="members-tab-btn"
+                                data-bs-toggle="tab"
+                                data-bs-target="#members-tab"
+                                type="button"
+                                role="tab"
+                                aria-controls="members-tab"
+                                aria-selected="{{ $activeTab === 'members' ? 'true' : 'false' }}"
+                            >
+                                Approved Members
+                                <span class="badge bg-light text-dark ms-1">{{ $approvedMembers->total() }}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link {{ $activeTab === 'requests' ? 'active' : '' }}"
+                                id="requests-tab-btn"
+                                data-bs-toggle="tab"
+                                data-bs-target="#requests-tab"
+                                type="button"
+                                role="tab"
+                                aria-controls="requests-tab"
+                                aria-selected="{{ $activeTab === 'requests' ? 'true' : 'false' }}"
+                            >
+                                Pending Requests
+                                <span class="badge bg-light text-dark ms-1">{{ $pendingRequests->total() }}</span>
+                            </button>
+                        </li>
+                    </ul>
                 </div>
-                <div class="card-body p-0">
-                    @if($leaders->isEmpty())
-                        <div class="text-center text-muted py-4">
-                            <i class="ti ti-users-off fs-1 d-block mb-2"></i>
-                            No leaders assigned yet.
-                        </div>
-                    @else
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>School</th>
-                                        <th class="text-end">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($leaders as $leader)
-                                        <tr>
-                                            <td>{{ $leaders->firstItem() + $loop->index }}</td>
-                                            <td class="fw-semibold">{{ $leader->user->name }}</td>
-                                            <td>{{ $leader->user->email }}</td>
-                                            <td>{{ $leader->school->name ?? 'N/A' }}</td>
-                                            <td class="text-end">
-                                                <button class="btn btn-sm btn-outline-primary" 
-                                                        data-bs-toggle="modal" 
-                                                        data-bs-target="#transferLeadershipModal"
-                                                        data-school-id="{{ $leader->school_id }}"
-                                                        data-school-name="{{ $leader->school->name ?? 'N/A' }}">
-                                                    <i class="ti ti-arrow-right me-1"></i>
-                                                    Transfer
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        @if($leaders->hasPages())
-                            <div class="card-footer d-flex justify-content-end">
-                                {{ $leaders->links('pagination::bootstrap-5') }}
-                            </div>
-                        @endif
-                    @endif
-                </div>
-            </div>
 
-            <!-- Approved Members Card -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h6 class="mb-0">Approved Members ({{ $approvedMembers->count() }})</h6>
-                </div>
                 <div class="card-body p-0">
-                    @if($approvedMembers->isEmpty())
-                        <div class="text-center text-muted py-4">
-                            <i class="ti ti-users-off fs-1 d-block mb-2"></i>
-                            No approved members yet (excluding leader).
+                    <div class="tab-content" id="clubManagementTabsContent">
+                        <!-- School Leaders -->
+                        <div
+                            class="tab-pane fade {{ $activeTab === 'leaders' ? 'show active' : '' }}"
+                            id="leaders-tab"
+                            role="tabpanel"
+                            aria-labelledby="leaders-tab-btn"
+                        >
+                            @if($leaders->isEmpty())
+                                <div class="text-center text-muted py-5">
+                                    <i class="ti ti-users-off fs-1 d-block mb-2"></i>
+                                    No leaders assigned yet.
+                                </div>
+                            @else
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover mb-0 align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width: 60px;">#</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>School</th>
+                                                <th class="text-end" style="width: 140px;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($leaders as $leader)
+                                                <tr>
+                                                    <td>{{ $leaders->firstItem() + $loop->index }}</td>
+                                                    <td class="fw-semibold">{{ $leader->user->name }}</td>
+                                                    <td>{{ $leader->user->email }}</td>
+                                                    <td>{{ $leader->school->name ?? 'N/A' }}</td>
+                                                    <td class="text-end">
+                                                        <button class="btn btn-sm btn-outline-primary"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#transferLeadershipModal"
+                                                                data-school-id="{{ $leader->school_id }}"
+                                                                data-school-name="{{ $leader->school->name ?? 'N/A' }}">
+                                                            <i class="ti ti-arrow-right me-1"></i>
+                                                            Transfer
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @if($leaders->hasPages())
+                                    <div class="card-footer d-flex justify-content-end">
+                                        {{ $leaders->links('pagination::bootstrap-5') }}
+                                    </div>
+                                @endif
+                            @endif
                         </div>
-                    @else
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>School</th>
-                                        <th>Joined Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($approvedMembers as $member)
-                                        <tr>
-                                            <td>{{ $approvedMembers->firstItem() + $loop->index }}</td>
-                                            <td class="fw-semibold">{{ $member->user->name }}</td>
-                                            <td>{{ $member->user->email }}</td>
-                                            <td>{{ $member->school->name ?? 'N/A' }}</td>
-                                            <td>{{ $member->created_at->format('M d, Y') }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        @if($approvedMembers->hasPages())
-                            <div class="card-footer d-flex justify-content-end">
-                                {{ $approvedMembers->links('pagination::bootstrap-5') }}
-                            </div>
-                        @endif
-                    @endif
-                </div>
-            </div>
 
-            <!-- Pending Requests Card -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h6 class="mb-0">Pending Join Requests ({{ $pendingRequests->count() }})</h6>
-                </div>
-                <div class="card-body p-0">
-                    @if($pendingRequests->isEmpty())
-                        <div class="text-center text-muted py-4">
-                            <i class="ti ti-clock fs-1 d-block mb-2"></i>
-                            No pending requests.
-                        </div>
-                    @else
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>School</th>
-                                        <th>Request Date</th>
-                                        <th class="text-end">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($pendingRequests as $request)
-                                        <tr>
-                                            <td>{{ $pendingRequests->firstItem() + $loop->index }}</td>
-                                            <td class="fw-semibold">{{ $request->user->name }}</td>
-                                            <td>{{ $request->user->email }}</td>
-                                            <td>{{ $request->school->name ?? 'N/A' }}</td>
-                                            <td>{{ $request->created_at->format('M d, Y') }}</td>
-                                            <td class="text-end">
-                                                <form method="POST" action="{{ route('admin.clubs.approve-request', $request) }}" class="d-inline me-2">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Approve this request?')">
-                                                        <i class="ti ti-check me-1"></i>
-                                                        Approve
-                                                    </button>
-                                                </form>
-                                                <form method="POST" action="{{ route('admin.clubs.reject-request', $request) }}" class="d-inline">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Reject this request?')">
-                                                        <i class="ti ti-x me-1"></i>
-                                                        Reject
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        @if($pendingRequests->hasPages())
-                            <div class="card-footer d-flex justify-content-end">
-                                {{ $pendingRequests->links('pagination::bootstrap-5') }}
+                        <!-- Approved Members -->
+                        <div
+                            class="tab-pane fade {{ $activeTab === 'members' ? 'show active' : '' }}"
+                            id="members-tab"
+                            role="tabpanel"
+                            aria-labelledby="members-tab-btn"
+                        >
+                            <div class="d-flex justify-content-end p-3 border-bottom bg-light">
+                                <a href="{{ route('admin.clubs.members.export', $club) }}" class="btn btn-primary btn-sm">
+                                    <i class="ti ti-download me-1"></i>
+                                    Download List
+                                </a>
                             </div>
-                        @endif
-                    @endif
+
+                            @if($approvedMembers->isEmpty())
+                                <div class="text-center text-muted py-5">
+                                    <i class="ti ti-users-off fs-1 d-block mb-2"></i>
+                                    No approved members yet.
+                                </div>
+                            @else
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover mb-0 align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width: 60px;">#</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>School</th>
+                                                <th style="width: 140px;">Joined Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($approvedMembers as $member)
+                                                <tr>
+                                                    <td>{{ $approvedMembers->firstItem() + $loop->index }}</td>
+                                                    <td class="fw-semibold">{{ $member->user->name }}</td>
+                                                    <td>{{ $member->user->email }}</td>
+                                                    <td>{{ $member->school->name ?? 'N/A' }}</td>
+                                                    <td>{{ $member->created_at->format('M d, Y') }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @if($approvedMembers->hasPages())
+                                    <div class="card-footer d-flex justify-content-end">
+                                        {{ $approvedMembers->links('pagination::bootstrap-5') }}
+                                    </div>
+                                @endif
+                            @endif
+                        </div>
+
+                        <!-- Pending Requests -->
+                        <div
+                            class="tab-pane fade {{ $activeTab === 'requests' ? 'show active' : '' }}"
+                            id="requests-tab"
+                            role="tabpanel"
+                            aria-labelledby="requests-tab-btn"
+                        >
+                            @if($pendingRequests->isEmpty())
+                                <div class="text-center text-muted py-5">
+                                    <i class="ti ti-clock fs-1 d-block mb-2"></i>
+                                    No pending requests.
+                                </div>
+                            @else
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover mb-0 align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width: 60px;">#</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>School</th>
+                                                <th style="width: 140px;">Request Date</th>
+                                                <th class="text-end" style="width: 180px;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($pendingRequests as $request)
+                                                <tr>
+                                                    <td>{{ $pendingRequests->firstItem() + $loop->index }}</td>
+                                                    <td class="fw-semibold">{{ $request->user->name }}</td>
+                                                    <td>{{ $request->user->email }}</td>
+                                                    <td>{{ $request->school->name ?? 'N/A' }}</td>
+                                                    <td>{{ $request->created_at->format('M d, Y') }}</td>
+                                                    <td class="text-end">
+                                                        <form method="POST" action="{{ route('admin.clubs.approve-request', $request) }}" class="d-inline me-1">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Approve this request?')">
+                                                                <i class="ti ti-check me-1"></i>
+                                                                Approve
+                                                            </button>
+                                                        </form>
+                                                        <form method="POST" action="{{ route('admin.clubs.reject-request', $request) }}" class="d-inline">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Reject this request?')">
+                                                                <i class="ti ti-x me-1"></i>
+                                                                Reject
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @if($pendingRequests->hasPages())
+                                    <div class="card-footer d-flex justify-content-end">
+                                        {{ $pendingRequests->links('pagination::bootstrap-5') }}
+                                    </div>
+                                @endif
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -256,7 +320,7 @@
             const teacherSelect = document.getElementById('teacher_club_id');
             const schoolIdInput = document.getElementById('modal_school_id');
             const schoolNameSpan = document.getElementById('modal_school_name');
-            
+
             const membersBySchool = JSON.parse(transferModal?.dataset.membersBySchool ?? '[]');
 
             if (transferModal) {
@@ -264,17 +328,16 @@
                     const button = event.relatedTarget;
                     const schoolId = button.getAttribute('data-school-id');
                     const schoolName = button.getAttribute('data-school-name');
-                    
+
                     schoolIdInput.value = schoolId;
                     schoolNameSpan.textContent = schoolName;
-                    
-                    // Clear and populate teacher select
+
                     teacherSelect.innerHTML = '<option value="">Choose a teacher...</option>';
-                    
+
                     const schoolData = membersBySchool.find(function(s) {
                         return s.school_id == schoolId;
                     });
-                    
+
                     if (schoolData && schoolData.members) {
                         schoolData.members.forEach(function(member) {
                             const option = document.createElement('option');
