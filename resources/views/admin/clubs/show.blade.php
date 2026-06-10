@@ -84,7 +84,7 @@
                                     No leaders assigned yet.
                                 </div>
                             @else
-                                <div class="table-responsive">
+                                <div class="table-responsive p-3">
                                     <table class="table table-striped table-bordered table-hover mb-0 align-middle">
                                         <thead class="table-light">
                                             <tr>
