@@ -75,7 +75,6 @@
     <script src="{{ asset('admin/js/fonts/custom-font.js') }}"></script>
     <script src="{{ asset('admin/js/pcoded.js') }}"></script>
     <script src="{{ asset('admin/js/plugins/feather.min.js') }}"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeo5GpG9fDgfz5xWsyhZPJfX2kwQ2vI5DkRtZB1z9+nJoZ+n" crossorigin="anonymous">
     </script>
@@ -89,17 +88,13 @@
         change_box_container('false');
     </script>
 
-
-
     <script>
         layout_rtl_change('false');
     </script>
 
-
     <script>
         preset_change("preset-1");
     </script>
-
 
     <script>
         font_change("Public-Sans");

@@ -3,15 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Club;
 use App\Models\Region;
 use App\Models\School;
+use App\Models\SmileyTutorCredential;
 use App\Models\Student;
 use App\Models\TeacherClub;
+use App\Models\User;
+use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\StudentCsvBulkImportService;
+use App\Support\TanzaniaPhone;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
 class SchoolController extends Controller
@@ -63,7 +70,9 @@ class SchoolController extends Controller
             ->orderBy('club_id')
             ->get(['id', 'user_id', 'club_id', 'school_id']);
 
-        return view('admin.schools.show', compact('school', 'teachers', 'students', 'bulkUploadTeacherClubs'));
+        $clubs = Club::query()->active()->ordered()->get(['id', 'name']);
+
+        return view('admin.schools.show', compact('school', 'teachers', 'students', 'bulkUploadTeacherClubs', 'clubs'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -231,6 +240,84 @@ class SchoolController extends Controller
         return redirect()
             ->route('admin.schools.show', $school)
             ->with('status', "{$studentName} removed successfully.");
+    }
+
+    public function storeTeacher(
+        Request $request,
+        School $school,
+        CompetitionParticipantRegistrationService $participantRegistrationService,
+    ): RedirectResponse {
+        $phone = $request->input('phone');
+        if (filled($phone)) {
+            $normalizedPhone = TanzaniaPhone::normalize((string) $phone);
+            if ($normalizedPhone) {
+                $request->merge(['phone' => $normalizedPhone]);
+            }
+        }
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+            'phone' => [
+                'nullable',
+                'string',
+                'max:16',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if ($value === null || $value === '') {
+                        return;
+                    }
+
+                    if (! TanzaniaPhone::normalize((string) $value)) {
+                        $fail('Enter a valid Tanzania phone number (e.g. +255765890921 or 0765890921).');
+                    }
+                },
+            ],
+            'password' => ['required', Password::defaults()],
+            'club_id' => ['required', 'exists:clubs,id'],
+            'club_day' => ['nullable', Rule::in(['monday', 'tuesday', 'wednesday', 'thursday', 'friday'])],
+        ]);
+
+        $club = Club::query()->findOrFail((int) $validated['club_id']);
+
+        if ($school->teacherClubs()->where('club_id', $club->id)->whereHas('user', function ($query) use ($validated): void {
+            $query->where('email', $validated['email']);
+        })->exists()) {
+            return redirect()
+                ->route('admin.schools.show', $school)
+                ->withErrors(['email' => 'A teacher with this email is already assigned to the selected club at this school.'])
+                ->withInput();
+        }
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'password' => Hash::make($validated['password']),
+            'role' => 'teacher',
+            'is_active' => true,
+        ]);
+
+        SmileyTutorCredential::assignToUser($user);
+
+        $hasApprovedTeacherFromSchool = $school->teacherClubs()
+            ->where('club_id', $club->id)
+            ->approved()
+            ->exists();
+
+        $teacherClub = TeacherClub::create([
+            'user_id' => $user->id,
+            'club_id' => $club->id,
+            'school_id' => $school->id,
+            'club_day' => $validated['club_day'] ?? null,
+            'status' => 'approved',
+            'is_leader' => ! $hasApprovedTeacherFromSchool,
+        ]);
+
+        $participantRegistrationService->ensureForClubMembership($teacherClub);
+
+        return redirect()
+            ->route('admin.schools.show', $school)
+            ->with('success', "{$user->name} has been added to {$club->name} at {$school->name}.");
     }
 
     public function bulkImportStudents(
