@@ -1,0 +1,3 @@
+there are some changes of the display of the contents between students ,teacher and parent role and i will start with competition part 
+
+1 students and parent share the same view and they are not supposed to see competition on their dashboard and competition tab itself hence remove on the student and parent dashboard hence only teacher can see competition update and details and naviagation to their dashboard so lets start ther

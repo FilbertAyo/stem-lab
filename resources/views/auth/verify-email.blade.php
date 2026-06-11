@@ -4,14 +4,14 @@
 @section('page', 'verify-email')
 
 @section('content')
+@include('partials.auth-top-bar')
+
 <div class="page-wrapper overflow-hidden">
   <section class="bg-light-gray d-flex align-items-center justify-content-center min-vh-100">
     <div class="container py-3">
       <div class="sign-in card mx-auto shadow-lg">
         <div class="card-body py-8 px-lg-5">
-          <a href="{{ url('/') }}" class="mb-8 hstack justify-content-center">
-            <img src="{{ asset('images/logo/logo-dark.png') }}" style="height:45px; width:auto;" alt="logo-dark" class="img-fluid">
-          </a>
+          <h4 class="text-center fw-semibold mb-3">Verify Email</h4>
 
           <p class="text-center mb-3">
             Thanks for signing up! Before getting started, please verify your email address by clicking the link we just sent you.
@@ -27,7 +27,7 @@
           <div class="d-flex flex-column gap-3 mt-3">
             <form method="POST" action="{{ route('verification.send') }}">
               @csrf
-              <button type="submit" class="btn btn-dark w-100 justify-content-center py-2 fw-medium fs-5 lh-lg">
+              <button type="submit" class="btn btn-primary w-100 justify-content-center py-2 fw-medium fs-5 lh-lg">
                 Resend Verification Email
               </button>
             </form>

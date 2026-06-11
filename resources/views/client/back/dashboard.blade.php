@@ -41,6 +41,7 @@
           </section>
         @endif
 
+        @if(Auth::user()->role === 'teacher')
         {{-- Competition reminders and quick shortcuts --}}
         <section class="row mb-4">
           <div class="col-12">
@@ -114,6 +115,7 @@
             </div>
           </div>
         </section>
+        @endif
 
         {{-- Platform subscription packages --}}
         <div class="col-12 mb-3">
@@ -324,7 +326,7 @@
                 </div>
             </div>
 
-            @if($stats['total_competitions'] > 0 || $stats['total_students'] > 0)
+            @if(Auth::user()->role === 'teacher' && $stats['total_competitions'] > 0)
                 <div class="col-6 col-lg-3 col-md-6 mb-3">
                     <div class="card border-0 shadow-none h-100">
                         <div class="card-body">
@@ -342,7 +344,7 @@
                 </div>
             @endif
 
-            @if($stats['total_students'] > 0)
+            @if(Auth::user()->role === 'teacher' && $stats['total_students'] > 0)
                 <div class="col-6 col-lg-3 col-md-6 mb-3">
                     <div class="card border-0 shadow-none h-100">
                         <div class="card-body">

@@ -33,52 +33,53 @@ class DashboardController extends Controller
         $completedVrAttempts = VrAssessmentAttempt::where('user_id', $userId)->whereNotNull('completed_at')->count();
         $passedVrAttempts = VrAssessmentAttempt::where('user_id', $userId)->where('passed', true)->count();
 
-        // Get user's competition participations (disabled for phase-1 admin competition setup)
-        $teacherClubs = $user->teacherClubs()->pluck('id');
-        $teacherClubIds = $user->teacherClubs()
-            ->where('status', 'approved')
-            ->pluck('club_id')
-            ->unique()
-            ->filter()
-            ->values();
         $competitions = collect();
         $competitionReminders = collect();
         $totalCompetitions = 0;
         $totalSubmissions = 0;
         $totalStudents = 0;
 
-        if ($teacherClubs->isNotEmpty()) {
-            // Students for any approved teacher at the same club + school as this user
-            $totalStudents = Student::whereIn('teacher_club_id', $user->approvedCoMemberTeacherClubIds())->count();
-        }
-
-        if ($teacherClubIds->isNotEmpty()) {
-            $approvedTeacherClubs = $user->teacherClubs()
+        if ($user->role === 'teacher') {
+            $teacherClubs = $user->teacherClubs()->pluck('id');
+            $teacherClubIds = $user->teacherClubs()
                 ->where('status', 'approved')
-                ->with(['user', 'school'])
-                ->get()
-                ->keyBy('club_id');
+                ->pluck('club_id')
+                ->unique()
+                ->filter()
+                ->values();
 
-            $competitions = Competition::query()
+            if ($teacherClubs->isNotEmpty()) {
+                // Students for any approved teacher at the same club + school as this user
+                $totalStudents = Student::whereIn('teacher_club_id', $user->approvedCoMemberTeacherClubIds())->count();
+            }
+
+            if ($teacherClubIds->isNotEmpty()) {
+                $approvedTeacherClubs = $user->teacherClubs()
+                    ->where('status', 'approved')
+                    ->with(['user', 'school'])
+                    ->get()
+                    ->keyBy('club_id');
+
+                $competitions = Competition::query()
                 ->active()
                 ->published()
                 ->whereIn('club_id', $teacherClubIds)
                 ->with(['phases'])
-                ->orderByDesc('competition_start')
-                ->get();
+                    ->orderByDesc('competition_start')
+                    ->get();
 
-            $registrations = CompetitionRegistration::query()
-                ->where('teacher_user_id', $userId)
-                ->whereIn('competition_id', $competitions->pluck('id'))
-                ->with([
-                    'idea.shortlist',
-                    'prototypeSubmission.prototypeShortlist',
-                    'prototypeModification',
-                ])
-                ->get()
-                ->keyBy('competition_id');
+                $registrations = CompetitionRegistration::query()
+                    ->where('teacher_user_id', $userId)
+                    ->whereIn('competition_id', $competitions->pluck('id'))
+                    ->with([
+                        'idea.shortlist',
+                        'prototypeSubmission.prototypeShortlist',
+                        'prototypeModification',
+                    ])
+                    ->get()
+                    ->keyBy('competition_id');
 
-            $competitionReminders = $competitions->map(function (Competition $competition) use ($registrations) {
+                $competitionReminders = $competitions->map(function (Competition $competition) use ($registrations) {
                 $registration = $registrations->get($competition->id);
                 $registrationStatus = $registration?->status;
                 $idea = $registration?->idea;
@@ -178,13 +179,14 @@ class DashboardController extends Controller
                     ];
                 }
 
-                return null;
-            })->filter()->values();
+                    return null;
+                })->filter()->values();
 
-            $totalCompetitions = $competitions->count();
-            $totalSubmissions = $registrations->filter(function (CompetitionRegistration $registration) {
-                return in_array($registration->status, ['pending', 'approved'], true);
-            })->count();
+                $totalCompetitions = $competitions->count();
+                $totalSubmissions = $registrations->filter(function (CompetitionRegistration $registration) {
+                    return in_array($registration->status, ['pending', 'approved'], true);
+                })->count();
+            }
         }
 
         // Get latest active models
@@ -206,28 +208,34 @@ class DashboardController extends Controller
             'total_students' => $totalStudents,
         ];
 
-        $competitionNotificationCount = $competitionReminders->count();
-        $topCompetitionReminders = $competitionReminders
-            ->sortByDesc('priority')
-            ->take(4)
-            ->values();
-        $competitionShortcuts = [
-            [
-                'label' => 'All competitions',
-                'value' => $totalCompetitions,
-                'route' => route('client.competitions.index'),
-            ],
-            [
-                'label' => 'Action needed',
-                'value' => $competitionReminders->where('kind', 'action_required')->count(),
-                'route' => route('client.competitions.index'),
-            ],
-            [
-                'label' => 'Pending approvals',
-                'value' => $competitionReminders->where('kind', 'pending')->count(),
-                'route' => route('client.competitions.index'),
-            ],
-        ];
+        $competitionNotificationCount = 0;
+        $topCompetitionReminders = collect();
+        $competitionShortcuts = [];
+
+        if ($user->role === 'teacher') {
+            $competitionNotificationCount = $competitionReminders->count();
+            $topCompetitionReminders = $competitionReminders
+                ->sortByDesc('priority')
+                ->take(4)
+                ->values();
+            $competitionShortcuts = [
+                [
+                    'label' => 'All competitions',
+                    'value' => $totalCompetitions,
+                    'route' => route('client.competitions.index'),
+                ],
+                [
+                    'label' => 'Action needed',
+                    'value' => $competitionReminders->where('kind', 'action_required')->count(),
+                    'route' => route('client.competitions.index'),
+                ],
+                [
+                    'label' => 'Pending approvals',
+                    'value' => $competitionReminders->where('kind', 'pending')->count(),
+                    'route' => route('client.competitions.index'),
+                ],
+            ];
+        }
 
         $showPhoneReminder = in_array($user->role, ['teacher', 'student', 'parent'], true)
             && blank($user->phone);

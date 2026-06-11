@@ -25,7 +25,7 @@
 <body>
 
   <!--  Page Wrapper -->
-  <div class="page-wrapper overflow-hidden">
+  <div class="page-wrapper overflow-hidden bg-light">
 
   @yield('content')
 
