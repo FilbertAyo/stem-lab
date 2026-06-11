@@ -110,7 +110,7 @@ test('mark reviewed keeps school active and removes from pending queue', functio
     expect(School::query()->needsReview()->where('id', $school->id)->exists())->toBeFalse();
 });
 
-test('admin can add teacher to school from school show page', function () {
+test('admin can assign unassigned teacher to school from school show page', function () {
     $school = School::query()->create([
         'name' => 'Add Teacher School '.Str::random(6),
         'is_active' => true,
@@ -122,15 +122,13 @@ test('admin can add teacher to school from school show page', function () {
         'is_active' => true,
     ]);
 
+    $teacher = User::factory()->create(['role' => 'teacher']);
     $admin = User::factory()->create(['role' => 'admin']);
 
     $response = $this->actingAs($admin)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
         ->post(adminSchoolsUrl('/'.$school->ulid.'/teachers'), [
-            'name' => 'Jane Teacher',
-            'email' => 'jane.teacher.'.strtolower(Str::random(8)).'@example.com',
-            'phone' => '0765890921',
-            'password' => 'Password1',
+            'user_id' => $teacher->id,
             'club_id' => $club->id,
             'club_day' => 'monday',
         ]);
@@ -138,13 +136,7 @@ test('admin can add teacher to school from school show page', function () {
     $response->assertRedirect(adminSchoolsUrl('/'.$school->ulid));
     $response->assertSessionHas('success');
 
-    $teacher = User::query()->where('email', 'like', 'jane.teacher.%@example.com')->first();
-
-    expect($teacher)->not->toBeNull()
-        ->and($teacher->role)->toBe('teacher')
-        ->and($teacher->phone)->toBe('+255765890921');
-
-    $teacherClub = $teacher->teacherClubs()->first();
+    $teacherClub = $teacher->fresh()->teacherClubs()->first();
 
     expect($teacherClub)->not->toBeNull()
         ->and($teacherClub->school_id)->toBe($school->id)
@@ -152,6 +144,46 @@ test('admin can add teacher to school from school show page', function () {
         ->and($teacherClub->status)->toBe('approved')
         ->and($teacherClub->is_leader)->toBeTrue()
         ->and($teacherClub->club_day)->toBe('monday');
+});
+
+test('admin cannot assign teacher who already belongs to a school', function () {
+    $existingSchool = School::query()->create([
+        'name' => 'Existing School '.Str::random(6),
+        'is_active' => true,
+    ]);
+
+    $targetSchool = School::query()->create([
+        'name' => 'Target School '.Str::random(6),
+        'is_active' => true,
+    ]);
+
+    $club = Club::query()->create([
+        'name' => 'Club '.Str::random(6),
+        'is_active' => true,
+    ]);
+
+    $teacher = User::factory()->create(['role' => 'teacher']);
+
+    $teacher->teacherClubs()->create([
+        'club_id' => $club->id,
+        'school_id' => $existingSchool->id,
+        'status' => 'approved',
+        'is_leader' => true,
+    ]);
+
+    $admin = User::factory()->create(['role' => 'admin']);
+
+    $response = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+        ->post(adminSchoolsUrl('/'.$targetSchool->ulid.'/teachers'), [
+            'user_id' => $teacher->id,
+            'club_id' => $club->id,
+        ]);
+
+    $response->assertRedirect(adminSchoolsUrl('/'.$targetSchool->ulid));
+    $response->assertSessionHasErrors('user_id');
+
+    expect($teacher->fresh()->teacherClubs()->count())->toBe(1);
 });
 
 test('mark all reviewed bulk approves pending schools matching filters', function () {

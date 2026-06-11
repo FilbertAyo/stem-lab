@@ -77,7 +77,7 @@
                                     class="btn btn-sm btn-outline-primary"
                                     data-bs-toggle="modal"
                                     data-bs-target="#addTeacherModal"
-                                    @disabled($clubs->isEmpty())
+                                    @disabled($clubs->isEmpty() || $unassignedTeachers->isEmpty())
                                 >
                                     <i class="ti ti-plus me-1"></i> Add Teacher
                                 </button>
@@ -306,87 +306,38 @@
                     <div class="modal-body">
                         <div class="alert alert-info">
                             <i class="ti ti-info-circle me-1"></i>
-                            Creates a teacher account and assigns them to a club at this school.
+                            Select a registered teacher who is not yet assigned to any school, then choose a club at {{ $school->name }}.
                         </div>
 
                         @if($clubs->isEmpty())
                             <div class="alert alert-warning mb-0">
                                 No active clubs are available. Create a club before adding teachers.
                             </div>
-                        @else
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="teacher_name" class="form-label">
-                                            Full Name <span class="text-danger">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            class="form-control border @error('name') is-invalid @enderror"
-                                            id="teacher_name"
-                                            name="name"
-                                            value="{{ old('name') }}"
-                                            required
-                                        >
-                                        @error('name')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="teacher_email" class="form-label">
-                                            Email <span class="text-danger">*</span>
-                                        </label>
-                                        <input
-                                            type="email"
-                                            class="form-control border @error('email') is-invalid @enderror"
-                                            id="teacher_email"
-                                            name="email"
-                                            value="{{ old('email') }}"
-                                            required
-                                        >
-                                        @error('email')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+                        @elseif($unassignedTeachers->isEmpty())
+                            <div class="alert alert-warning mb-0">
+                                No unassigned teachers are available. Teachers must register first and not belong to any school yet.
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="teacher_phone" class="form-label">Phone</label>
-                                        <input
-                                            type="text"
-                                            class="form-control border @error('phone') is-invalid @enderror"
-                                            id="teacher_phone"
-                                            name="phone"
-                                            value="{{ old('phone') }}"
-                                            placeholder="+255765890921 or 0765890921"
-                                        >
-                                        @error('phone')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="teacher_password" class="form-label">
-                                            Password <span class="text-danger">*</span>
-                                        </label>
-                                        <input
-                                            type="password"
-                                            class="form-control border @error('password') is-invalid @enderror"
-                                            id="teacher_password"
-                                            name="password"
-                                            required
-                                        >
-                                        @error('password')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+                        @else
+                            <div class="mb-3">
+                                <label for="teacher_user_id" class="form-label">
+                                    Teacher <span class="text-danger">*</span>
+                                </label>
+                                <select
+                                    class="form-select border @error('user_id') is-invalid @enderror"
+                                    id="teacher_user_id"
+                                    name="user_id"
+                                    required
+                                >
+                                    <option value="">Select teacher...</option>
+                                    @foreach($unassignedTeachers as $unassignedTeacher)
+                                        <option value="{{ $unassignedTeacher->id }}" @selected(old('user_id') == $unassignedTeacher->id)>
+                                            {{ $unassignedTeacher->name }} ({{ $unassignedTeacher->email }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('user_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="row">
@@ -436,7 +387,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" @disabled($clubs->isEmpty())>
+                        <button type="submit" class="btn btn-primary" @disabled($clubs->isEmpty() || $unassignedTeachers->isEmpty())>
                             <i class="ti ti-user-plus me-1"></i> Add Teacher
                         </button>
                     </div>
@@ -540,7 +491,7 @@
     <input
         type="hidden"
         id="has_add_teacher_errors"
-        value="{{ ($errors->has('name') || $errors->has('email') || $errors->has('phone') || $errors->has('password') || $errors->has('club_id') || $errors->has('club_day')) ? '1' : '0' }}"
+        value="{{ ($errors->has('user_id') || $errors->has('club_id') || $errors->has('club_day')) ? '1' : '0' }}"
     >
 </x-admin-layout>
 

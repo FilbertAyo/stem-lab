@@ -6,19 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Club;
 use App\Models\Region;
 use App\Models\School;
-use App\Models\SmileyTutorCredential;
 use App\Models\Student;
 use App\Models\TeacherClub;
 use App\Models\User;
 use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\StudentCsvBulkImportService;
-use App\Support\TanzaniaPhone;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
 class SchoolController extends Controller
@@ -72,7 +68,20 @@ class SchoolController extends Controller
 
         $clubs = Club::query()->active()->ordered()->get(['id', 'name']);
 
-        return view('admin.schools.show', compact('school', 'teachers', 'students', 'bulkUploadTeacherClubs', 'clubs'));
+        $unassignedTeachers = User::query()
+            ->where('role', 'teacher')
+            ->whereDoesntHave('teacherClubs')
+            ->orderBy('name')
+            ->get(['id', 'name', 'email', 'phone']);
+
+        return view('admin.schools.show', compact(
+            'school',
+            'teachers',
+            'students',
+            'bulkUploadTeacherClubs',
+            'clubs',
+            'unassignedTeachers',
+        ));
     }
 
     public function store(Request $request): RedirectResponse
@@ -247,57 +256,36 @@ class SchoolController extends Controller
         School $school,
         CompetitionParticipantRegistrationService $participantRegistrationService,
     ): RedirectResponse {
-        $phone = $request->input('phone');
-        if (filled($phone)) {
-            $normalizedPhone = TanzaniaPhone::normalize((string) $phone);
-            if ($normalizedPhone) {
-                $request->merge(['phone' => $normalizedPhone]);
-            }
-        }
-
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
-            'phone' => [
-                'nullable',
-                'string',
-                'max:16',
-                function (string $attribute, mixed $value, \Closure $fail): void {
-                    if ($value === null || $value === '') {
-                        return;
-                    }
-
-                    if (! TanzaniaPhone::normalize((string) $value)) {
-                        $fail('Enter a valid Tanzania phone number (e.g. +255765890921 or 0765890921).');
-                    }
-                },
-            ],
-            'password' => ['required', Password::defaults()],
+            'user_id' => ['required', 'integer', 'exists:users,id'],
             'club_id' => ['required', 'exists:clubs,id'],
             'club_day' => ['nullable', Rule::in(['monday', 'tuesday', 'wednesday', 'thursday', 'friday'])],
         ]);
 
-        $club = Club::query()->findOrFail((int) $validated['club_id']);
+        $user = User::query()->findOrFail((int) $validated['user_id']);
 
-        if ($school->teacherClubs()->where('club_id', $club->id)->whereHas('user', function ($query) use ($validated): void {
-            $query->where('email', $validated['email']);
-        })->exists()) {
+        if ($user->role !== 'teacher') {
             return redirect()
                 ->route('admin.schools.show', $school)
-                ->withErrors(['email' => 'A teacher with this email is already assigned to the selected club at this school.'])
+                ->withErrors(['user_id' => 'Only teacher accounts can be assigned to a school.'])
                 ->withInput();
         }
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'phone' => $validated['phone'] ?? null,
-            'password' => Hash::make($validated['password']),
-            'role' => 'teacher',
-            'is_active' => true,
-        ]);
+        if ($user->teacherClubs()->exists()) {
+            return redirect()
+                ->route('admin.schools.show', $school)
+                ->withErrors(['user_id' => 'This teacher is already assigned to a school.'])
+                ->withInput();
+        }
 
-        SmileyTutorCredential::assignToUser($user);
+        $club = Club::query()->findOrFail((int) $validated['club_id']);
+
+        if ($school->teacherClubs()->where('club_id', $club->id)->where('user_id', $user->id)->exists()) {
+            return redirect()
+                ->route('admin.schools.show', $school)
+                ->withErrors(['user_id' => 'This teacher is already assigned to the selected club at this school.'])
+                ->withInput();
+        }
 
         $hasApprovedTeacherFromSchool = $school->teacherClubs()
             ->where('club_id', $club->id)
