@@ -180,6 +180,11 @@ class UserController extends Controller
         return redirect()->route('admin.users.teachers', $this->listFilterQuery($request));
     }
 
+    protected function redirectToStudentsIndex(Request $request): RedirectResponse
+    {
+        return redirect()->route('admin.users.students', $this->listFilterQuery($request));
+    }
+
     /**
      * @return array<string, string>
      */
@@ -352,23 +357,36 @@ class UserController extends Controller
     }
 
     /**
-     * Delete a teacher user (temporary admin tooling).
+     * Delete a teacher or student user.
      */
     public function destroy(Request $request, User $user): RedirectResponse
     {
-        if ($user->role !== 'teacher') {
-            return $this->redirectToTeachersIndex($request)
-                ->with('error', 'Only teacher accounts can be deleted from this page.');
+        if (! in_array($user->role, ['teacher', 'student'], true)) {
+            return $this->redirectForDeletedUserRole($request, $user->role)
+                ->with('error', 'This account cannot be deleted from here.');
         }
 
         if ($user->id === auth()->id()) {
-            return $this->redirectToTeachersIndex($request)
+            return $this->redirectForDeletedUserRole($request, $user->role)
                 ->with('error', 'You cannot delete your own account.');
         }
 
         $user->delete();
 
-        return $this->redirectToTeachersIndex($request)
-            ->with('success', 'Teacher deleted successfully.');
+        $message = $user->role === 'student'
+            ? 'Student deleted successfully.'
+            : 'Teacher deleted successfully.';
+
+        return $this->redirectForDeletedUserRole($request, $user->role)
+            ->with('success', $message);
+    }
+
+    protected function redirectForDeletedUserRole(Request $request, string $role): RedirectResponse
+    {
+        return match ($role) {
+            'student' => $this->redirectToStudentsIndex($request),
+            'teacher' => $this->redirectToTeachersIndex($request),
+            default => $this->redirectToTeachersIndex($request),
+        };
     }
 }

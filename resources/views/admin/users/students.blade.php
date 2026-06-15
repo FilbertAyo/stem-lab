@@ -57,6 +57,7 @@
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#viewUserModal"
                                                 data-user-id="{{ $user->id }}"
+                                                data-user-ulid="{{ $user->ulid }}"
                                                 data-user-name="{{ $user->name }}"
                                                 data-user-email="{{ $user->email }}"
                                                 data-user-role="{{ $user->role }}"
@@ -149,7 +150,23 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <form id="deleteStudentForm" method="POST" class="mb-0">
+                        @csrf
+                        @method('DELETE')
+                        @if(request()->filled('q'))
+                            <input type="hidden" name="q" value="{{ request('q') }}">
+                        @endif
+                        @if(request()->filled('from_date'))
+                            <input type="hidden" name="from_date" value="{{ request('from_date') }}">
+                        @endif
+                        @if(request()->filled('to_date'))
+                            <input type="hidden" name="to_date" value="{{ request('to_date') }}">
+                        @endif
+                        <button type="submit" class="btn btn-danger">
+                            <i class="ti ti-trash"></i> Delete Student
+                        </button>
+                    </form>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -158,16 +175,40 @@
 
     @push('scripts')
     <script>
+        let pendingDeleteStudentName = '';
+
+        function confirmDeleteStudent() {
+            const name = pendingDeleteStudentName || 'this student';
+            return confirm('Are you sure you want to delete ' + name + '? This action cannot be undone.');
+        }
+
         // Handle view modal data
         document.addEventListener('DOMContentLoaded', function() {
             const viewModal = document.getElementById('viewUserModal');
+            const deleteForm = document.getElementById('deleteStudentForm');
+            const destroyUrlTemplate = @json(route('admin.users.destroy', ['user' => '__ID__']));
+
+            if (deleteForm) {
+                deleteForm.addEventListener('submit', function(event) {
+                    if (!confirmDeleteStudent()) {
+                        event.preventDefault();
+                    }
+                });
+            }
+
             if (viewModal) {
                 viewModal.addEventListener('show.bs.modal', function(event) {
                     const button = event.relatedTarget;
 
                     // Get all data attributes
                     const userId = button.getAttribute('data-user-id');
+                    const userUlid = button.getAttribute('data-user-ulid');
                     const userName = button.getAttribute('data-user-name');
+                    pendingDeleteStudentName = userName || '';
+
+                    if (deleteForm && userUlid) {
+                        deleteForm.action = destroyUrlTemplate.replace('__ID__', userUlid);
+                    }
                     const userEmail = button.getAttribute('data-user-email');
                     const userRole = button.getAttribute('data-user-role');
                     const userStatus = button.getAttribute('data-user-status');
