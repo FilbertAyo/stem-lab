@@ -240,13 +240,31 @@ class DashboardController extends Controller
         $showPhoneReminder = in_array($user->role, ['teacher', 'student', 'parent'], true)
             && blank($user->phone);
 
+        $showStudentProfileReminder = false;
+        $studentProfile = null;
+
+        if ($user->role === 'student') {
+            $user->loadMissing('schoolClass');
+            $showStudentProfileReminder = $user->isMissingStudentProfile();
+
+            if (! $showStudentProfileReminder) {
+                $studentProfile = [
+                    'age' => $user->date_of_birth?->age,
+                    'gender' => $user->gender,
+                    'class_name' => $user->schoolClass?->name,
+                ];
+            }
+        }
+
         return view('client.back.dashboard', compact(
             'stats',
             'latestModels',
             'topCompetitionReminders',
             'competitionNotificationCount',
             'competitionShortcuts',
-            'showPhoneReminder'
+            'showPhoneReminder',
+            'showStudentProfileReminder',
+            'studentProfile'
         ));
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\SchoolClass;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,8 +24,17 @@ class ProfileController extends Controller
             $user->load(['teacherClubs.club', 'teacherClubs.school', 'teacherClubs.students']);
         }
 
+        if ($user->role === 'student') {
+            $user->loadMissing('schoolClass');
+        }
+
+        $schoolClasses = $user->role === 'student'
+            ? SchoolClass::active()->ordered()->get()
+            : collect();
+
         return view('profile.edit', [
             'user' => $user,
+            'schoolClasses' => $schoolClasses,
         ]);
     }
 
@@ -33,13 +43,20 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
+
+        if ($user->role === 'student') {
+            $validated['school_class_id'] = $validated['school_class_id'] ?? null;
+        }
+
+        $user->fill($validated);
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

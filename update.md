@@ -1,3 +1,4 @@
-there are some changes of the display of the contents between students ,teacher and parent role and i will start with competition part 
+there are some changes/updates 
 
-1 students and parent share the same view and they are not supposed to see competition on their dashboard and competition tab itself hence remove on the student and parent dashboard hence only teacher can see competition update and details and naviagation to their dashboard so lets start ther
+1. there is update i need to make on the students dashboard as of now it does catch the age of student and his/her class , and gender so  i need to add those on the registration of the students and on place of class is option students can either select or not so i need to add that on the registration wizard when students register 
+

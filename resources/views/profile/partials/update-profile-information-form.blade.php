@@ -80,6 +80,60 @@
                     </div>
                 @endif
             </div>
+
+            @if($user->role === 'student')
+                <div class="col-md-6 mb-3">
+                    <label for="date_of_birth" class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                    <input
+                        type="date"
+                        class="form-control @error('date_of_birth') is-invalid @enderror border px-2"
+                        id="date_of_birth"
+                        name="date_of_birth"
+                        value="{{ old('date_of_birth', $user->date_of_birth?->format('Y-m-d')) }}"
+                        max="{{ now()->toDateString() }}"
+                        required
+                    >
+                    @error('date_of_birth')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="gender" class="form-label">Gender <span class="text-danger">*</span></label>
+                    <select
+                        class="form-select @error('gender') is-invalid @enderror border px-2"
+                        id="gender"
+                        name="gender"
+                        required
+                    >
+                        <option value="">Select gender...</option>
+                        <option value="male" {{ old('gender', $user->gender) === 'male' ? 'selected' : '' }}>Male</option>
+                        <option value="female" {{ old('gender', $user->gender) === 'female' ? 'selected' : '' }}>Female</option>
+                    </select>
+                    @error('gender')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="school_class_id" class="form-label">Class <span class="text-muted">(optional)</span></label>
+                    <select
+                        class="form-select @error('school_class_id') is-invalid @enderror border px-2"
+                        id="school_class_id"
+                        name="school_class_id"
+                    >
+                        <option value="">Select class (optional)...</option>
+                        @foreach($schoolClasses ?? [] as $class)
+                            <option value="{{ $class->id }}" {{ (string) old('school_class_id', $user->school_class_id) === (string) $class->id ? 'selected' : '' }}>
+                                {{ $class->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('school_class_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            @endif
         </div>
 
         <div class="row">

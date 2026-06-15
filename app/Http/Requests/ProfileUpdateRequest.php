@@ -4,8 +4,10 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use App\Support\TanzaniaPhone;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class ProfileUpdateRequest extends FormRequest
 {
@@ -17,8 +19,9 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         $isClientRole = in_array($this->user()?->role, ['teacher', 'student', 'parent'], true);
+        $isStudent = $this->user()?->role === 'student';
 
-        return [
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
@@ -43,6 +46,28 @@ class ProfileUpdateRequest extends FormRequest
                 },
             ],
         ];
+
+        if ($isStudent) {
+            $rules['date_of_birth'] = ['required', 'date_format:Y-m-d', 'before_or_equal:today'];
+            $rules['gender'] = ['required', 'string', 'in:male,female'];
+            $rules['school_class_id'] = ['nullable', 'exists:school_classes,id'];
+        }
+
+        return $rules;
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            if ($this->user()?->role !== 'student' || ! $this->filled('date_of_birth')) {
+                return;
+            }
+
+            $age = Carbon::parse($this->input('date_of_birth'))->age;
+            if ($age < 1 || $age > 150) {
+                $validator->errors()->add('date_of_birth', 'Date of birth must result in age between 1 and 150.');
+            }
+        });
     }
 
     protected function prepareForValidation(): void

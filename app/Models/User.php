@@ -25,6 +25,9 @@ class User extends Authenticatable
         'name',
         'email',
         'phone',
+        'date_of_birth',
+        'gender',
+        'school_class_id',
         'role',
         'password',
         'is_active',
@@ -49,9 +52,30 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'date_of_birth' => 'date',
             'password' => 'hashed',
             'is_active' => 'boolean',
         ];
+    }
+
+    /**
+     * Get the school class associated with this user (student accounts).
+     */
+    public function schoolClass()
+    {
+        return $this->belongsTo(SchoolClass::class);
+    }
+
+    /**
+     * Whether a student account is missing required profile demographics.
+     */
+    public function isMissingStudentProfile(): bool
+    {
+        if ($this->role !== 'student') {
+            return false;
+        }
+
+        return blank($this->date_of_birth) || blank($this->gender);
     }
 
     /**
