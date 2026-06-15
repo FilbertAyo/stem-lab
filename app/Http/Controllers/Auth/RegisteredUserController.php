@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\SchoolClass;
 use App\Models\SmileyTutorCredential;
 use App\Models\User;
 use App\Models\Visitor;
 use App\Support\TanzaniaPhone;
-use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,9 +23,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        $schoolClasses = SchoolClass::active()->ordered()->get();
-
-        return view('auth.register', compact('schoolClasses'));
+        return view('auth.register');
     }
 
     /**
@@ -48,13 +44,8 @@ class RegisteredUserController extends Controller
                 'min:8',
             ],
             'role' => ['required', 'string', 'in:teacher,student,parent'],
-            'date_of_birth' => ['required_if:role,student', 'nullable', 'date_format:Y-m-d', 'before_or_equal:today'],
-            'gender' => ['required_if:role,student', 'nullable', 'string', 'in:male,female'],
-            'school_class_id' => ['nullable', 'exists:school_classes,id'],
         ], [
             'password.min' => 'The password must be at least 8 characters.',
-            'date_of_birth.required_if' => 'Date of birth is required for student accounts.',
-            'gender.required_if' => 'Gender is required for student accounts.',
         ]);
 
         // Additional password strength validation with specific error messages
@@ -77,15 +68,6 @@ class RegisteredUserController extends Controller
                 ->withInput($request->except('password', 'password_confirmation'));
         }
 
-        if ($request->role === 'student' && $request->filled('date_of_birth')) {
-            $age = Carbon::parse($request->date_of_birth)->age;
-            if ($age < 1 || $age > 150) {
-                return redirect()->back()
-                    ->withErrors(['date_of_birth' => 'Date of birth must result in age between 1 and 150.'])
-                    ->withInput($request->except('password', 'password_confirmation'));
-            }
-        }
-
         $normalizedPhone = TanzaniaPhone::normalize($request->input('phone'));
         if (! $normalizedPhone) {
             return redirect()->back()
@@ -95,21 +77,13 @@ class RegisteredUserController extends Controller
                 ->withInput($request->except('password', 'password_confirmation'));
         }
 
-        $userData = [
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $normalizedPhone,
             'password' => Hash::make($request->password),
             'role' => $request->role,
-        ];
-
-        if ($request->role === 'student') {
-            $userData['date_of_birth'] = $request->date_of_birth;
-            $userData['gender'] = $request->gender;
-            $userData['school_class_id'] = $request->school_class_id ?: null;
-        }
-
-        $user = User::create($userData);
+        ]);
 
         // Assign a SmileyTutor credential so the learner can practice math (username/password for tutor-web.net).
         SmileyTutorCredential::assignToUser($user);
@@ -124,6 +98,10 @@ class RegisteredUserController extends Controller
             Visitor::where('visitor_token', $visitorToken)->update(['converted_at' => now()]);
         }
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(
+            $user->role === 'student'
+                ? route('student.onboarding.show', absolute: false)
+                : route('dashboard', absolute: false)
+        );
     }
 }

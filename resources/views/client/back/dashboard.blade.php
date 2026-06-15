@@ -41,57 +41,6 @@
           </section>
         @endif
 
-        @if(($showStudentProfileReminder ?? false) === true)
-          <section class="row mb-3">
-            <div class="col-12">
-              <div class="alert alert-warning d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-0">
-                <div class="small fw-medium">
-                  Please complete your profile with your date of birth and gender so we can personalize your learning experience.
-                </div>
-                <a href="{{ route('profile.edit') }}" class="badge bg-warning border-0 text-dark fw-semibold">
-                  Complete profile
-                </a>
-              </div>
-            </div>
-          </section>
-        @endif
-
-        @if(Auth::user()->role === 'student' && !empty($studentProfile))
-          <section class="row mb-4">
-            <div class="col-12">
-              <div class="card border-0 shadow-none">
-                <div class="card-body">
-                  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
-                    <div>
-                      <h5 class="mb-1 fw-semibold">
-                        <i class="bi bi-person-badge me-2"></i>Your profile
-                      </h5>
-                      <p class="mb-0 text-muted small">Your account details at a glance.</p>
-                    </div>
-                    <a href="{{ route('profile.edit') }}" class="badge bg-primary border-0 text-white">
-                      Edit profile
-                    </a>
-                  </div>
-                  <div class="row g-3">
-                    <div class="col-md-4">
-                      <span class="text-muted small d-block">Age</span>
-                      <span class="fw-semibold">{{ $studentProfile['age'] ?? '—' }}</span>
-                    </div>
-                    <div class="col-md-4">
-                      <span class="text-muted small d-block">Gender</span>
-                      <span class="fw-semibold text-capitalize">{{ $studentProfile['gender'] ?? '—' }}</span>
-                    </div>
-                    <div class="col-md-4">
-                      <span class="text-muted small d-block">Class</span>
-                      <span class="fw-semibold">{{ $studentProfile['class_name'] ?? 'Not set' }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        @endif
-
         @if(Auth::user()->role === 'teacher')
         {{-- Competition reminders and quick shortcuts --}}
         <section class="row mb-4">

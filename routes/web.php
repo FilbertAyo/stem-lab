@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VrExperimentController;
 use App\Http\Controllers\Admin\WeeklySessionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\StudentOnboardingController;
 use App\Http\Controllers\Client\ClubController as ClientClubController;
 use App\Http\Controllers\Client\CompetitionController as ClientCompetitionController;
 use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
@@ -345,9 +346,18 @@ Route::get('/dashboard', function () {
     }
 
     return app(ClientDashboardController::class)->index();
-})->middleware(['auth', 'verified', 'track.client.activity'])->name('dashboard');
+})->middleware(['auth', 'verified', 'track.client.activity', 'student.onboarded'])->name('dashboard');
 
 Route::middleware(['auth', 'track.client.activity'])->group(function () {
+    Route::prefix('student/onboarding')->name('student.onboarding.')->group(function () {
+        Route::get('/', [StudentOnboardingController::class, 'show'])->name('show');
+        Route::post('/gender', [StudentOnboardingController::class, 'storeGender'])->name('gender');
+        Route::post('/date-of-birth', [StudentOnboardingController::class, 'storeDateOfBirth'])->name('date-of-birth');
+        Route::post('/class', [StudentOnboardingController::class, 'storeClass'])->name('class');
+        Route::post('/skip-class', [StudentOnboardingController::class, 'skipClass'])->name('skip-class');
+    });
+
+    Route::middleware('student.onboarded')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -438,6 +448,7 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
             Route::delete('/{competition}/attachment', [ClientCompetitionController::class, 'deleteAttachment'])->name('attachment.delete');
             Route::get('/{competition}', [ClientCompetitionController::class, 'show'])->name('show');
         });
+    });
     });
 });
 

@@ -28,6 +28,7 @@ class User extends Authenticatable
         'date_of_birth',
         'gender',
         'school_class_id',
+        'student_onboarding_completed_at',
         'role',
         'password',
         'is_active',
@@ -53,6 +54,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'date_of_birth' => 'date',
+            'student_onboarding_completed_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
         ];
@@ -67,15 +69,42 @@ class User extends Authenticatable
     }
 
     /**
-     * Whether a student account is missing required profile demographics.
+     * Whether a student must complete gender and date of birth before using the app.
      */
-    public function isMissingStudentProfile(): bool
+    public function needsStudentOnboarding(): bool
+    {
+        return $this->role === 'student'
+            && (blank($this->gender) || blank($this->date_of_birth));
+    }
+
+    /**
+     * Current onboarding step (1 = gender, 2 = date of birth, 3 = class).
+     */
+    public function studentOnboardingStep(): int
     {
         if ($this->role !== 'student') {
-            return false;
+            return 0;
         }
 
-        return blank($this->date_of_birth) || blank($this->gender);
+        if (blank($this->gender)) {
+            return 1;
+        }
+
+        if (blank($this->date_of_birth)) {
+            return 2;
+        }
+
+        return 3;
+    }
+
+    /**
+     * Mark optional class step as complete.
+     */
+    public function completeStudentOnboarding(): void
+    {
+        $this->forceFill([
+            'student_onboarding_completed_at' => now(),
+        ])->save();
     }
 
     /**

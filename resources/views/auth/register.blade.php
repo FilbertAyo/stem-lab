@@ -139,58 +139,6 @@
                 @enderror
               </div>
 
-              <div id="register-student-fields" class="d-none d-flex flex-column gap-3">
-                <div>
-                  <label for="date_of_birth" class="form-label small fw-medium mb-1">Date of Birth <span class="text-danger">*</span></label>
-                  <input
-                    type="date"
-                    id="date_of_birth"
-                    name="date_of_birth"
-                    class="form-control border px-2 @error('date_of_birth') is-invalid @enderror"
-                    value="{{ old('date_of_birth') }}"
-                    max="{{ now()->toDateString() }}"
-                  >
-                  @error('date_of_birth')
-                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                  @enderror
-                </div>
-
-                <div>
-                  <label for="gender" class="form-label small fw-medium mb-1">Gender <span class="text-danger">*</span></label>
-                  <select
-                    id="gender"
-                    name="gender"
-                    class="form-select border px-2 @error('gender') is-invalid @enderror"
-                  >
-                    <option value="">Select gender...</option>
-                    <option value="male" {{ old('gender') === 'male' ? 'selected' : '' }}>Male</option>
-                    <option value="female" {{ old('gender') === 'female' ? 'selected' : '' }}>Female</option>
-                  </select>
-                  @error('gender')
-                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                  @enderror
-                </div>
-
-                <div>
-                  <label for="school_class_id" class="form-label small fw-medium mb-1">Class <span class="text-muted">(optional)</span></label>
-                  <select
-                    id="school_class_id"
-                    name="school_class_id"
-                    class="form-select border px-2 @error('school_class_id') is-invalid @enderror"
-                  >
-                    <option value="">Select class (optional)...</option>
-                    @foreach($schoolClasses ?? [] as $class)
-                      <option value="{{ $class->id }}" {{ (string) old('school_class_id') === (string) $class->id ? 'selected' : '' }}>
-                        {{ $class->name }}
-                      </option>
-                    @endforeach
-                  </select>
-                  @error('school_class_id')
-                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                  @enderror
-                </div>
-              </div>
-
               <div>
                 <input
                   type="password"
@@ -369,31 +317,12 @@
     const form = document.getElementById('register-form');
     const loading = document.getElementById('register-loading-indicator');
     const roleCards = document.querySelectorAll('.role-card');
-    const studentFields = document.getElementById('register-student-fields');
-    const dateOfBirthField = document.getElementById('date_of_birth');
-    const genderField = document.getElementById('gender');
 
     const roleLabels = {
       student: 'Student',
       parent: 'Parent',
       teacher: 'Teacher',
     };
-
-    function toggleStudentFields(role) {
-      if (!studentFields) {
-        return;
-      }
-
-      const isStudent = role === 'student';
-      studentFields.classList.toggle('d-none', !isStudent);
-
-      if (dateOfBirthField) {
-        dateOfBirthField.required = isStudent;
-      }
-      if (genderField) {
-        genderField.required = isStudent;
-      }
-    }
 
     function showStep(step) {
       if (step === 'details') {
@@ -414,7 +343,6 @@
       const label = roleLabels[role] || role;
       roleLabel.textContent = label;
       roleBadge.textContent = label;
-      toggleStudentFields(role);
       showStep('details');
     }
 
@@ -436,10 +364,6 @@
       form.addEventListener('submit', function() {
         loading.style.display = 'flex';
       });
-    }
-
-    if (roleInput && roleInput.value) {
-      toggleStudentFields(roleInput.value);
     }
   });
 </script>

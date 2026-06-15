@@ -69,6 +69,10 @@ class AuthenticatedSessionController extends Controller
             return config('app.admin_url').'/dashboard';
         }
 
+        if ($user && $user->role === 'student' && $user->needsStudentOnboarding()) {
+            return route('student.onboarding.show', absolute: false);
+        }
+
         return route('dashboard', absolute: false);
     }
 

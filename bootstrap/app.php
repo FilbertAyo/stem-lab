@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'track.landing.visitor' => \App\Http\Middleware\TrackLandingVisitor::class,
             'track.admin.activity' => \App\Http\Middleware\TrackAdminActivity::class,
             'track.client.activity' => \App\Http\Middleware\TrackClientActivity::class,
+            'student.onboarded' => \App\Http\Middleware\EnsureStudentOnboardingComplete::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
