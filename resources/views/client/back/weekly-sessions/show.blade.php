@@ -9,7 +9,7 @@
                         <li class="breadcrumb-item active">{{ $weeklySession->title }}</li>
                     </ol>
                 </nav>
-                <h2 class="title mb-1">{{ $weeklySession->title }}</h2>
+                    <h4 class="mb-1">{{ $weeklySession->title }}</h4>
                 <p class="text-muted mb-0">
                     <span class="badge {{ $weeklySession->status_badge }}">{{ ucfirst($weeklySession->status) }}</span>
                     <span class="ms-2">{{ $weeklySession->club->name }}</span>
@@ -33,7 +33,7 @@
             <!-- Main Content -->
             <div class="col-lg-8">
                 <!-- Session Information -->
-                <div class="card border-0 shadow-none mb-4">
+                <div class="card border shadow-none mb-4">
                     <div class="card-body">
                         <h5 class="fw-semibold mb-3">Session Objectives</h5>
                         <p class="text-muted mb-0">
@@ -43,15 +43,15 @@
                 </div>
 
                 <!-- Resources Section -->
-                <div class="card border-0 shadow-none mb-4">
-                    <div class="card-header bg-transparent mb-0">
+                <div class="card border shadow-none mb-4">
+                    <div class="card-header bg-light-soft mb-0">
                         <h6 class="mb-0"><i class="bi bi-package me-2"></i>Assigned Work</h6>
                     </div>
                     <div class="card-body">
                         @if($weeklySession->project || $weeklySession->project_pdf || $weeklySession->vr_experiment_id)
                             @if($weeklySession->project)
                                 <div class="mb-4">
-                                    <div class="d-flex align-items-center justify-content-between p-3 border rounded">
+                                    <div class="d-flex align-items-center justify-content-between p-3 border rounded bg-light-soft">
                                         <div>
                                             <h6 class="fw-semibold mb-1">
                                                 <i class="bi bi-kanban text-success me-2"></i>{{ $weeklySession->project->name }}
@@ -129,8 +129,8 @@
                 </div>
 
                 <!-- Assigned Classes -->
-                <div class="card border-0 shadow-none mb-4">
-                    <div class="card-header bg-transparent">
+                <div class="card border shadow-none mb-4">
+                    <div class="card-header bg-light-soft">
                         <h6 class="mb-0"><i class="bi bi-book me-2"></i>Assigned Classes</h6>
                     </div>
                     <div class="card-body">
@@ -155,8 +155,8 @@
 
                 <!-- Assigned Students -->
                 @if($students->count() > 0)
-                    <div class="card border-0 shadow-none mb-4">
-                        <div class="card-header bg-transparent">
+                    <div class="card border shadow-none mb-4">
+                        <div class="card-header bg-light-soft">
                             <h6 class="mb-0"><i class="bi bi-people me-2"></i>Assigned Students ({{ $students->count() }})</h6>
                         </div>
                         <div class="card-body">
@@ -190,8 +190,8 @@
             <!-- Sidebar -->
             <div class="col-lg-4">
                 <!-- Session Details -->
-                <div class="card border-0 shadow-none mb-4 sticky-top" style="top: 20px;">
-                    <div class="card-header bg-transparent">
+                <div class="card border shadow-none mb-4 sticky-top" style="top: 20px;">
+                    <div class="card-header bg-light-soft">
                         <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Session Details</h6>
                     </div>
                     <div class="card-body">
@@ -222,8 +222,8 @@
                 </div>
 
                 <!-- Report Actions -->
-                <div class="card border-0 shadow-none">
-                    <div class="card-header bg-transparent">
+                <div class="card border shadow-none">
+                        <div class="card-header bg-light-soft">
                         <h6 class="mb-0"><i class="bi bi-file-text me-2"></i>Session Report</h6>
                     </div>
                     <div class="card-body">

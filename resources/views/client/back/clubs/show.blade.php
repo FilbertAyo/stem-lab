@@ -87,16 +87,16 @@
                                 <h5 class="mb-0">Registered Students</h5>
                             </div>
                             <div class="mt-3 gap-2 d-flex flex-wrap align-items-center" role="group">
-                                <button type="button" class="badge bg-success text-white border-0" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
+                                <button type="button" class="btn btn-success text-white border-0" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
                                     <i class="bi bi-upload me-1"></i>Bulk Upload
                                 </button>
-                                <button type="button" class="badge bg-primary text-white border-0" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
+                                <button type="button" class="btn btn-primary text-white border-0" data-bs-toggle="modal" data-bs-target="#registerStudentModal">
                                     <i class="bi bi-plus-circle me-1"></i>Register Student
                                 </button>
                                 @if($students->isNotEmpty())
                                     <button type="submit"
                                             form="bulkDeleteStudentsForm"
-                                            class="badge bg-danger text-white border-0 d-none"
+                                                class="btn btn-danger d-none"
                                             id="deleteSelectedStudentsBtn">
                                         <i class="bi bi-trash me-1"></i>Delete selected
                                     </button>
@@ -165,7 +165,7 @@
                                 @if($isLeader && $transferCandidates->isNotEmpty())
                                     <div class="mb-3">
                                         <button type="button"
-                                                class="badge bg-primary text-white border-0"
+                                                class="btn btn-primary"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#transferLeaderModal">
                                             <i class="bi bi-arrow-left-right me-1"></i>Transfer leadership
@@ -238,7 +238,7 @@
                                                     <td class="text-end">
                                                         <form method="POST" action="{{ route('client.clubs.approve-request', $request) }}" class="d-inline me-2">
                                                             @csrf
-                                                            <button type="submit" class="badge bg-success text-white border-0" onclick="return confirm('Approve this request?')">
+                                                            <button type="submit" class="btn btn-success" onclick="return confirm('Approve this request?')">
                                                                 <i class="bi bi-check-circle me-1"></i>Approve
                                                             </button>
                                                         </form>
@@ -310,7 +310,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="badge bg-primary text-white border-0">Register Student</button>
+                            <button type="submit" class="btn btn-primary">Register Student</button>
                         </div>
                     </form>
                 </div>
@@ -336,7 +336,7 @@
                                 CSV columns: <code>name,date_of_birth,gender,class_name</code>
                             </div>
                             <div class="mb-3">
-                                <button type="button" class="badge bg-dark text-white border-0" id="downloadStudentTemplateBtn">
+                                <button type="button" class="btn btn-dark" id="downloadStudentTemplateBtn">
                                     <i class="bi bi-download me-1"></i>Download CSV Template
                                 </button>
                             </div>
@@ -347,7 +347,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="badge bg-primary text-white border-0">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-upload me-1"></i>Upload CSV
                             </button>
                         </div>
@@ -383,7 +383,7 @@
                             </select>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="badge bg-primary text-white border-0">Confirm transfer</button>
+                            <button type="submit" class="btn btn-primary">Confirm transfer</button>
                         </div>
                     </form>
                 </div>

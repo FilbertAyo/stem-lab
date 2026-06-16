@@ -1,12 +1,12 @@
 {{-- Platform subscription packages --}}
 <div class="col-12 mb-3">
   <h5 class="text-muted mb-0 fw-semibold">
-    <i class="bi bi-box-seam me-2"></i>Platform subscription
+   Platform subscription
   </h5>
 </div>
 <div class="row">
   <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
-    <div class="card w-100" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
+    <div class="card border shadow-none w-100" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
       <div class="card-body p-7 p-xxl-5 d-flex flex-column gap-8">
         <div class="d-flex flex-column gap-6">
           <h5 class="mb-0 fw-medium">Free trial</h5>
@@ -37,15 +37,15 @@
             </li>
           </ul>
         </div>
-        <a href="#" class="btn w-100 justify-content-center js-package-action" data-package="free-trial">
-          <span class="btn-text">Start free trial</span>
-          <iconify-icon icon="lucide:arrow-up-right" class="btn-icon bg-white text-dark round-52 rounded-circle hstack justify-content-center fs-7 shadow-sm"></iconify-icon>
+        <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="free-trial">
+          <span class="fw-semibold">Start free trial</span>
+          <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
         </a>
       </div>
     </div>
   </div>
   <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
-    <div class="card w-100" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
+    <div class="card border shadow-none w-100" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
       <div class="card-body p-7 p-xxl-5 d-flex flex-column gap-8">
         <div class="d-flex flex-column gap-6">
           <div class="hstack gap-3">
@@ -80,15 +80,15 @@
             </li>
           </ul>
         </div>
-        <a href="#" class="btn w-100 justify-content-center js-package-action" data-package="individual">
-          <span class="btn-text">Subscribe now</span>
-          <iconify-icon icon="lucide:arrow-up-right" class="btn-icon bg-white text-dark round-52 rounded-circle hstack justify-content-center fs-7 shadow-sm"></iconify-icon>
+        <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="individual">
+          <span class="fw-semibold">Subscribe now</span>
+          <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
         </a>
       </div>
     </div>
   </div>
   <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
-    <div class="card w-100" data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000">
+    <div class="card border shadow-none w-100" data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000">
       <div class="card-body p-7 p-xxl-5 d-flex flex-column gap-8">
         <div class="d-flex flex-column gap-6">
           <h5 class="mb-0 fw-medium">Public secondary school</h5>
@@ -119,9 +119,9 @@
             </li>
           </ul>
         </div>
-        <a href="#" class="btn w-100 justify-content-center js-package-action" data-package="public-school">
-          <span class="btn-text">Learn more</span>
-          <iconify-icon icon="lucide:arrow-up-right" class="btn-icon bg-white text-dark round-52 rounded-circle hstack justify-content-center fs-7 shadow-sm"></iconify-icon>
+        <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="public-school">
+          <span class="fw-semibold">Learn more</span>
+          <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
         </a>
       </div>
     </div>
@@ -149,9 +149,9 @@
         <div class="border-top pt-4">
           <p class="small fw-medium mb-2">Want your school to get free access?</p>
           <p class="small text-muted mb-3">Join <strong>Chomoza STEM Labs</strong> as a teacher or school representative. Once your request is approved, your school won’t need to subscribe—you’ll have full platform access at 0 TZS/month.</p>
-          <a href="{{ route('client.clubs.join.form', ['club' => 1]) }}" class="btn w-100 justify-content-center">
-            <span class="btn-text">Join Chomoza STEM Labs</span>
-            <iconify-icon icon="lucide:arrow-up-right" class="btn-icon bg-white text-dark round-52 rounded-circle hstack justify-content-center fs-7 shadow-sm"></iconify-icon>
+          <a href="{{ route('client.clubs.join.form', ['club' => 1]) }}" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center">
+            <span class="fw-semibold">Join Chomoza STEM Labs</span>
+            <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
           </a>
         </div>
       </div>

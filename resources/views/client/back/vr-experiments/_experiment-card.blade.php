@@ -1,5 +1,5 @@
-<div class="card h-100 border-0 shadow-none hover-shadow-lg transition-all">
-    <div class="position-relative" style="overflow: hidden; height: 220px;">
+<div class="card h-100 border shadow-none hover-shadow-lg transition-all">
+    <div class="position-relative" style="overflow: hidden; height: 190px;">
         @if($experiment->thumbnail ?? null)
             <img src="{{ asset('storage/' . $experiment->thumbnail) }}"
                  alt="{{ $experiment->name }} thumbnail"
@@ -52,11 +52,11 @@
                 </span>
             @endif
             @if(!empty($experiment->is_static))
-                <a href="{{ route('client.vr-experiments.show.static', $experiment->slug) }}" class="badge bg-primary">
+                <a href="{{ route('client.vr-experiments.show.static', $experiment->slug) }}" class="btn btn-primary">
                     View VR
                 </a>
             @else
-                <a href="{{ route('client.vr-experiments.show', $experiment) }}" class="badge bg-primary">
+                <a href="{{ route('client.vr-experiments.show', $experiment) }}" class="btn btn-primary">
                     View VR
                 </a>
             @endif

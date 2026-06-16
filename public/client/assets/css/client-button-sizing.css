@@ -1,0 +1,54 @@
+:root {
+  --client-btn-padding-y: 0.375rem;
+  --client-btn-padding-x: 0.75rem;
+  --client-btn-font-size: 0.875rem;
+  --client-btn-font-weight: 500;
+  --client-btn-border-radius: 0.375rem;
+}
+
+.btn:not(:has(.btn-text)) {
+  --bs-btn-padding-y: var(--client-btn-padding-y);
+  --bs-btn-padding-x: var(--client-btn-padding-x);
+  --bs-btn-font-size: var(--client-btn-font-size);
+  --bs-btn-font-weight: var(--client-btn-font-weight);
+  --bs-btn-border-radius: var(--client-btn-border-radius);
+
+  position: static;
+  display: inline-block;
+  width: auto;
+  gap: 0;
+  padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+  font-size: var(--bs-btn-font-size);
+  font-weight: var(--bs-btn-font-weight);
+  border-radius: var(--bs-btn-border-radius);
+  overflow: visible;
+  background-color: var(--bs-btn-bg);
+  border-color: var(--bs-btn-border-color);
+  color: var(--bs-btn-color);
+}
+
+.btn:not(:has(.btn-text)):hover {
+  background-color: var(--bs-btn-hover-bg);
+  border-color: var(--bs-btn-hover-border-color);
+  color: var(--bs-btn-hover-color);
+}
+
+.btn-sm:not(:has(.btn-text)) {
+  --bs-btn-padding-y: 0.25rem;
+  --bs-btn-padding-x: 0.5rem;
+  --bs-btn-font-size: 0.8125rem;
+}
+
+.btn-lg:not(:has(.btn-text)) {
+  --bs-btn-padding-y: 0.5rem;
+  --bs-btn-padding-x: 1rem;
+  --bs-btn-font-size: 1.125rem;
+}
+
+.badge {
+  --bs-badge-padding-x: 0.65em;
+  --bs-badge-padding-y: 0.35em;
+  --bs-badge-font-size: 0.75em;
+  --bs-badge-font-weight: 500;
+  --bs-badge-border-radius: 0.25rem;
+}

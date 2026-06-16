@@ -4,7 +4,7 @@
     $challengeTypes = old('challenge_types', $reportData?->challenge_types ?? []);
 @endphp
 
-<div class="card border-0 shadow-none mb-4 report-section">
+<div class="card border shadow-none mb-4 report-section">
     <div class="card-body">
         <h6 class="fw-semibold mb-3">Quick Report</h6>
        
@@ -75,7 +75,7 @@
     </div>
 </div>
 
-<div class="card border-0 shadow-none mb-4 report-section">
+<div class="card border shadow-none mb-4 report-section">
     <div class="card-body">
         <h6 class="fw-semibold mb-3">Photo Evidence (Optional)</h6>
 

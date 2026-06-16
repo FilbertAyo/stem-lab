@@ -319,16 +319,17 @@
   }
 
   .onboarding-date-input {
-    border: none;
+    border: 1px solid var(--bs-border-color);
     background: #fff;
-    border-radius: 12px;
+    border-radius: 0.375rem;
     padding: 0.875rem 1rem;
     font-size: 1.0625rem;
     font-weight: 500;
   }
 
   .onboarding-date-input:focus {
-    box-shadow: 0 0 0 3px rgba(33, 37, 41, 0.1);
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   }
 
   .onboarding-class-grid {

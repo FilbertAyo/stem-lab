@@ -2,7 +2,7 @@
     <div class="col-lg-9">
 
         <div class="dashboard-content-header">
-            <h3 class="mb-1">School Clubs</h3>
+            <h4 class="mb-1">School Clubs</h4>
         </div>
 
         <section class="row">
@@ -29,7 +29,7 @@
                             @php
                                 $membershipForClub = $teacherClubs->firstWhere('club_id', $club->id);
                             @endphp
-                            <div class="col-12 col-md-6 col-xl-4">
+                            <div class="col-12 col-md-6 col-xl-6">
                                 <div class="card h-100 border shadow-none">
                                     @if($club->image_path)
                                         <div style="overflow: hidden; height: 300px;">
@@ -50,7 +50,7 @@
                                     <div class="card-body d-flex flex-column">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             @if(in_array($club->id, $joinedClubIds ?? []))
-                                                <span class="badge bg-info">
+                                                <span class="badge bg-success">
                                                     <i class="bi bi-check-circle-fill me-1"></i>Joined
                                                 </span>
                                             @elseif(in_array($club->id, $pendingRequestClubIds ?? []))
@@ -72,7 +72,7 @@
                                         <div class="mt-auto">
                                             @if($membershipForClub)
                                                 <a href="{{ route('client.clubs.show', $membershipForClub) }}" class="btn btn-primary w-100 text-white">
-                                                    <i class="bi bi-eye me-1"></i>View club
+                                                   View club
                                                 </a>
                                             @elseif(in_array($club->id, $pendingRequestClubIds ?? []))
                                                 <button class="btn btn-outline-warning w-100" disabled>

@@ -2,13 +2,13 @@
     <div class="col-lg-9">
 
         <div class="dashboard-content-header">
-            <h2 class="title mb-1">Weekly Sessions</h2>
+            <h4 class="mb-1">Weekly Sessions</h4>
         </div>
 
      @include('elements.client-validation')
 
         @if($sessions->isEmpty())
-            <div class="card border-0 shadow-none">
+            <div class="card border shadow-none">
                 <div class="card-body text-center py-5">
                     <i class="bi bi-calendar-x display-4 text-muted mb-3"></i>
                     <h5 class="fw-semibold mb-2">No sessions found</h5>
@@ -25,7 +25,7 @@
             <div class="row g-4">
                 @foreach($sessions as $session)
                     <div class="col-12 col-md-6 col-xl-4">
-                        <div class="card h-100 border-0 shadow-none">
+                        <div class="card h-100 border shadow-none">
                             <div class="card-body d-flex flex-column">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <div class="flex-grow-1">
@@ -57,18 +57,18 @@
                                 {{-- Report Status --}}
                                 <div class="mb-3">
                                     @if($session->teacherReport)
-                                        <span class="alert alert-success p-1 border-0">
+                                        <span class="badge bg-success text-white p-1 border">
                                             <i class="bi bi-check-circle"></i> Report Submitted
                                         </span>
                                     @else
-                                        <span class="alert alert-secondary text-white p-1 border-0">
+                                        <span class="badge bg-secondary text-white p-1 border">
                                           No Report Yet
                                         </span>
                                     @endif
                                 </div>
 
                                 <div class="mt-auto d-flex gap-2 justify-content-end">
-                                    <a href="{{ route('client.weekly-sessions.show', $session) }}" class="badge bg-primary btn-sm text-white">
+                                    <a href="{{ route('client.weekly-sessions.show', $session) }}" class="btn btn-primary text-white">
                                         <i class="bi bi-eye"></i> Session
                                     </a>
                                   

@@ -1,5 +1,5 @@
-<div class="card h-100 border-0 shadow-none hover-shadow-lg transition-all">
-    <div class="position-relative" style="overflow: hidden; height: 280px;">
+<div class="card h-100 border shadow-none hover-shadow-lg transition-all">
+    <div class="position-relative" style="overflow: hidden; height: 190px;">
         @if($model->thumbnail)
             <img src="{{ asset('storage/' . $model->thumbnail) }}"
                  alt="{{ $model->name }} thumbnail"
@@ -41,7 +41,7 @@
             <a href="#" target="_blank" class="text-muted small">
                 <i class="bi bi-box-arrow-up-right me-1"></i>
             </a>
-            <a href="{{ route('client.models.3d.show', $model) }}" class="badge bg-primary">
+            <a href="{{ route('client.models.3d.show', $model) }}" class="btn btn-primary">
                 View model
             </a>
         </div>

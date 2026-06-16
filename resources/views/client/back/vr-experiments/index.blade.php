@@ -40,11 +40,11 @@
             <div class="col-lg-9">
 
         <div class="dashboard-content-header">
-            <h3 class="mb-0">VR Experiments Library</h3>
+            <h4 class="mb-0">VR Experiments Library</h4>
         </div>
 
         {{-- Search & Filter Bar --}}
-        <div class="card border-0 shadow-none mb-4">
+        <div class="card border shadow-none mb-4">
             <div class="card-body py-3">
                 <form method="GET" action="{{ route('client.vr-experiments.index') }}" id="filterForm">
                     @if($selectedSubject)
@@ -57,7 +57,7 @@
                             <input type="text"
                                    id="search"
                                    name="search"
-                                   class="form-control"
+                                   class="form-control border"
                                    placeholder="Search by name or description..."
                                    value="{{ $search }}">
                         </div>
@@ -121,7 +121,7 @@
                 @if($showGroupedView)
                     {{-- Grouped by Subject View --}}
                     @if($subjectsWithExperiments->isEmpty())
-                        <div class="card border-0 shadow-none">
+                        <div class="card border shadow-none">
                             <div class="card-body text-center py-5">
                                 <i class="bi bi-vr display-4 text-muted mb-3"></i>
                                 <h5 class="fw-semibold mb-2">No VR experiments published yet</h5>
@@ -162,7 +162,7 @@
                                             @if($subjectExperiments->count() > 8)
                                                 <div class="flex-shrink-0 d-flex align-items-stretch" style="width: 200px;">
                                                     <a href="{{ route('client.vr-experiments.index', ['subject' => $subject->id, 'sort' => 'newest']) }}"
-                                                       class="card border-0 shadow-none h-100 w-100 text-decoration-none hover-shadow-lg transition-all">
+                                                       class="card border shadow-none h-100 w-100 text-decoration-none hover-shadow-lg transition-all">
                                                         <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
                                                             <div class="bg-primary bg-opacity-10 rounded-circle p-3 mb-3">
                                                                 <i class="bi bi-plus-lg fs-3 text-primary"></i>
@@ -195,7 +195,7 @@
                     @endif
 
                     @if($vrExperiments->isEmpty())
-                        <div class="card border-0 shadow-none">
+                            <div class="card border shadow-none">
                             <div class="card-body text-center py-5">
                                 <i class="bi bi-vr display-4 text-muted mb-3"></i>
                                 <h5 class="fw-semibold mb-2">

@@ -155,9 +155,9 @@
 
         <div class="mb-3">
           @if($allowPublicTeacherSignup)
-            <span class="badge rounded-pill bg-success text-white">Registration open</span>
+            <span class="badge bg-success text-white">Registration open</span>
           @else
-            <span class="badge rounded-pill bg-danger text-white">Registration closed</span>
+            <span class="badge bg-danger text-white">Registration closed</span>
         @endif
         </div>
 
@@ -264,7 +264,7 @@
 
         @auth
           @if(auth()->user()->role === 'teacher')
-            <div class="border rounded-3 p-4 bg-light">
+            <div class="border rounded-2 p-5 bg-light">
               <h3 class="fs-5 mb-3">Teacher access</h3>
               <p class="text-opacity-70 mb-3 mb-0">
                 @if($teacherClubForCompetition && $competitionRegistration)
@@ -276,10 +276,10 @@
                 @endif
               </p>
               <div class="d-flex flex-wrap gap-2 mt-3">
-                <a href="{{ route('client.competitions.index', ['competition' => $competition->ulid]) }}" class="badge bg-danger text-white">
+                <a href="{{ route('client.competitions.index', ['competition' => $competition->ulid]) }}" class="btn btn-secondary text-white">
                   Register now
                 </a>
-                <a href="{{ route('client.competitions.index', ['competition' => $competition->ulid]) }}" class="badge bg-primary text-white">
+                <a href="{{ route('client.competitions.index', ['competition' => $competition->ulid]) }}" class="btn btn-primary text-white">
                   Open competition hub
                 </a>
               </div>

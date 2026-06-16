@@ -63,9 +63,9 @@
           $registrationOpenNow = $activeCompetitions->contains(fn ($c) => $c->isPhaseOpen('registration'));
         @endphp
         @if($registrationOpenNow)
-          <span class="badge mb-3 rounded-pill bg-success text-white">Registration open</span>
+          <span class="badge mb-3 bg-success text-white">Registration open</span>
         @else
-          <span class="badge mb-3 rounded-pill bg-danger text-white">Registration closed</span>
+          <span class="badge mb-3 bg-danger text-white">Registration closed</span>
         @endif
         <h2 class="mb-0">Active Competitions</h2>
       </div>

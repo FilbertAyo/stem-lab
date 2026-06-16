@@ -1,0 +1,8 @@
+:root {
+  --client-modal-border-radius: 0.375rem;
+}
+
+.modal {
+  --bs-modal-border-radius: var(--client-modal-border-radius);
+  --bs-modal-inner-border-radius: calc(var(--client-modal-border-radius) - var(--bs-border-width, 1px));
+}

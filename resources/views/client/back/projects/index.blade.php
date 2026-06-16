@@ -37,16 +37,16 @@
 
             <!-- Projects grid -->
             <div class="col-lg-9">
-                <h2 class="h4 mb-4">
+                <h4 class="mb-4">
                     {{ $activeCategory ? $activeCategory->name : 'All Projects' }}
-                </h2>
+                </h4>
 
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                     @forelse($projects as $project)
                         <div class="col">
                             <a href="{{ route('client.projects.show', $project) }}"
                                class="card h-100 text-decoration-none text-dark border">
-                                <div class="ratio ratio-16x10 overflow-hidden" style="height: 200px;">
+                                <div class="ratio ratio-16x10 overflow-hidden" style="height: 190px;">
                                     @if($project->cover_image)
                                         <img src="{{ Storage::url($project->cover_image) }}"
                                              alt="{{ $project->name }}"

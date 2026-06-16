@@ -24,7 +24,7 @@
 
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
             <div class="flex-grow-1">
-                <h1 class="h3 fw-bold text-dark mb-2">{{ $project->name }}</h1>
+                <h4 class="fw-bold text-dark mb-2">{{ $project->name }}</h4>
                 <div class="d-flex flex-wrap align-items-center gap-2">
                     @if($project->category)
                         <span class="badge bg-primary bg-opacity-10 text-primary">{{ $project->category->name }}</span>
@@ -49,7 +49,7 @@
                 @if($project->cover_image || $project->description)
                     <section class="card border shadow-none mb-4">
                         @if($project->cover_image)
-                            <div class="ratio ratio-16x9 overflow-hidden bg-light">
+                            <div class="ratio ratio-16x10 overflow-hidden bg-light">
                                 <img src="{{ Storage::url($project->cover_image) }}"
                                      alt="{{ $project->name }}"
                                      class="object-fit-cover w-100 h-100"
@@ -58,7 +58,7 @@
                         @endif
                         @if($project->description)
                             <div class="card-body">
-                                <h2 class="h5 fw-semibold mb-2">Overview</h2>
+                                <h5 class="fw-semibold mb-2">Overview</h5>
                                 <p class="text-muted mb-0">{{ $project->description }}</p>
                             </div>
                         @endif
@@ -68,7 +68,7 @@
                 @if($hasCircuit)
                     <section class="card border shadow-none mb-4" id="section-circuit">
                         <div class="card-header border-0 py-3">
-                            <h2 class="h5 fw-semibold mb-0">Circuit diagram</h2>
+                            <h5 class="fw-semibold mb-0">Circuit diagram</h5>
                         </div>
                         <div class="card-body text-center">
                             <img src="{{ Storage::url($project->circuit_image) }}"
@@ -81,7 +81,7 @@
                 @if($hasGuide)
                     <section class="card border shadow-none mb-4" id="section-guide">
                         <div class="card-body">
-                            <h2 class="h5 fw-semibold mb-3">Guide notes</h2>
+                            <h5 class="fw-semibold mb-3">Guide notes</h5>
                             <div class="text-muted">{!! $project->guide !!}</div>
                         </div>
                     </section>
@@ -114,7 +114,7 @@
                 @if($hasResources)
                     <div class="card border shadow-none mb-3">
                         <div class="card-header border-0 py-2">
-                            <h3 class="h6 fw-semibold mb-0">Resources</h3>
+                            <h5 class="fw-semibold mb-0">Resources</h5>
                         </div>
                         <div class="card-body p-0">
                             <ul class="list-group list-group-flush">
@@ -136,7 +136,7 @@
                 @if($hasEquipment)
                     <div class="card border shadow-none mb-3">
                         <div class="card-header border-0 py-2">
-                            <h3 class="h6 fw-semibold mb-0">Equipment</h3>
+                            <h5 class="fw-semibold mb-0">Equipment</h5>
                         </div>
                         <div class="card-body p-0">
                             <table class="table table-sm table-hover align-middle mb-0">
@@ -156,7 +156,7 @@
                 @if($hasTags)
                     <div class="card border shadow-none mb-3">
                         <div class="card-header border-0 py-2">
-                            <h3 class="h6 fw-semibold mb-0">Tags</h3>
+                            <h5 class="fw-semibold mb-0">Tags</h5>
                         </div>
                         <div class="card-body py-2">
                             <div class="d-flex flex-wrap gap-1">
@@ -171,7 +171,7 @@
                 @if($hasCategories)
                     <div class="card border shadow-none">
                         <div class="card-header border-0 py-2">
-                            <h3 class="h6 fw-semibold mb-0">Categories</h3>
+                                <h5 class="fw-semibold mb-0">Categories</h5>
                         </div>
                         <div class="card-body py-2">
                             <ul class="list-unstyled mb-0 small">

@@ -14,11 +14,11 @@
     <div class="col-lg-12">
 
         <div class="dashboard-content-header">
-            <h3 class="mb-1">3D Models Library</h3>
+            <h4 class="mb-1">3D Models Library</h4>
         </div>
 
         {{-- Search & Filter Bar --}}
-        <div class="card border-0 shadow-none mb-4">
+        <div class="card border shadow-none mb-4">
             <div class="card-body py-3">
                 <form method="GET" action="{{ route('client.models.3d.index') }}" id="filterForm">
                     <div class="row g-3 align-items-end">
@@ -28,7 +28,7 @@
                             <input type="text"
                                    id="search"
                                    name="search"
-                                   class="form-control"
+                                   class="form-control border border-gray-300"
                                    placeholder="Search by name or description..."
                                    value="{{ $search }}">
                         </div>
@@ -38,7 +38,7 @@
                           
                             <select id="subject-filter"
                                     name="subject"
-                                    class="form-select">
+                                    class="form-select border border-gray-300">
                                 <option value="">All subjects</option>
                                 @foreach($subjects as $subject)
                                     <option value="{{ $subject->id }}" @selected((string) $subject->id === (string) $selectedSubject)>
@@ -51,7 +51,7 @@
                         {{-- Sort Options --}}
                         <div class="col-6 col-md-3">
                            
-                            <select id="sort" name="sort" class="form-select">
+                            <select id="sort" name="sort" class="form-select border border-gray-300">
                                 <option value="by_subject" @selected($sort === 'by_subject')>By Subject</option>
                                 <option value="newest" @selected($sort === 'newest')>Newest first</option>
                                 <option value="oldest" @selected($sort === 'oldest')>Oldest first</option>
@@ -107,7 +107,7 @@
                 @if($showGroupedView)
                     {{-- Grouped by Subject View --}}
                     @if($subjectsWithModels->isEmpty())
-                        <div class="card border-0 shadow-none">
+                        <div class="card border shadow-none">
                             <div class="card-body text-center py-5">
                                 <i class="bi bi-box display-4 text-muted mb-3"></i>
                                 <h5 class="fw-semibold mb-2">No 3D models published yet</h5>
@@ -149,7 +149,7 @@
                                             @if($subjectModels->count() > 8)
                                                 <div class="flex-shrink-0 d-flex align-items-stretch" style="width: 200px;">
                                                     <a href="{{ route('client.models.3d.index', ['subject' => $subject->id, 'sort' => 'newest']) }}"
-                                                       class="card border-0 shadow-none h-100 w-100 text-decoration-none hover-shadow-lg transition-all">
+                                                       class="card border shadow-none h-100 w-100 text-decoration-none hover-shadow-lg transition-all">
                                                         <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
                                                             <div class="bg-primary bg-opacity-10 rounded-circle p-3 mb-3">
                                                                 <i class="bi bi-plus-lg fs-3 text-primary"></i>
@@ -182,7 +182,7 @@
                     @endif
 
                     @if($model3ds->isEmpty())
-                        <div class="card border-0 shadow-none">
+                        <div class="card border shadow-none">
                             <div class="card-body text-center py-5">
                                 <i class="bi bi-box display-4 text-muted mb-3"></i>
                                 <h5 class="fw-semibold mb-2">

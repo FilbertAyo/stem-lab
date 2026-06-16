@@ -75,13 +75,13 @@
                 @include('client.back.weekly-sessions.report-form-fields', ['weeklySession' => $weeklySession, 'report' => $report ?? null, 'totalStudentsRegistered' => $totalStudentsRegistered ?? 0])
 
                 <!-- Submit Buttons -->
-                <div class="card border-0 shadow-none mb-4">
+                <div class="card border shadow-none mb-4">
                     <div class="card-body">
                         <div class="d-flex gap-2">
-                            <button type="submit" class="badge bg-primary border-0">
+                            <button type="submit" class="btn btn-primary">
                                 {{ $report ? 'Update Report' : 'Submit Report' }}
                             </button>
-                            <a href="{{ route('client.weekly-sessions.show', $weeklySession) }}" class="badge bg-light-soft text-dark border text-decoration-none">
+                                <a href="{{ route('client.weekly-sessions.show', $weeklySession) }}" class="btn btn-light-soft text-dark border text-decoration-none">
                                 Cancel
                             </a>
                         </div>

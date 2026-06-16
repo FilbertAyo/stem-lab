@@ -2,15 +2,8 @@
     <div class="col-lg-9">
 
         <div class="dashboard-content-header">
-            <h2 class="title mb-1">VR Quizzes</h2>
+            <h4 class="mb-0">VR Quizzes</h4>
         </div>
-
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
 
         @if($questionBanks->count() > 0)
             <div class="row">
@@ -21,7 +14,7 @@
                         $hasCompleted = $attempts->count() > 0;
                     @endphp
                     <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100 border-0 shadow-none">
+                        <div class="card h-100 border shadow-none">
                             {{-- Experiment Thumbnail --}}
                             <div class="position-relative" style="height: 160px;">
                                 @if($bank->vrExperiment->thumbnail)
@@ -103,7 +96,7 @@
                 @endforeach
             </div>
         @else
-            <div class="card border-0 shadow-none">
+            <div class="card border shadow-none">
                 <div class="card-body text-center py-5">
                     <i class="bi bi-question-circle text-muted" style="font-size: 4rem;"></i>
                     <h4 class="mt-3">No Quizzes Available</h4>

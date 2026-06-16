@@ -18,6 +18,9 @@
   <link rel="stylesheet" href="{{ asset('client/assets/css/styles.css') }}" />
   <link rel="stylesheet" href="{{ asset('client/assets/css/dashboard.css') }}" />
   <link rel="stylesheet" href="{{ asset('client/assets/css/client-layout-width.css') }}" />
+  <link rel="stylesheet" href="{{ asset('client/assets/css/client-button-sizing.css') }}" />
+  <link rel="stylesheet" href="{{ asset('client/assets/css/client-form-controls.css') }}" />
+  <link rel="stylesheet" href="{{ asset('client/assets/css/client-modal-sizing.css') }}" />
 
   @stack('head')
   @stack('styles')

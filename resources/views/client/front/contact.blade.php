@@ -68,17 +68,17 @@
               <form action="{{ route('support.submit') }}" method="POST" class="d-flex flex-column gap-7" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
                 @csrf
                 <div>
-                  <input type="text" name="name" class="form-control border-bottom border-dark @error('name') is-invalid @enderror" id="formGroupExampleInput"
+                  <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="formGroupExampleInput"
                     placeholder="Name" value="{{ old('name') }}" required>
                   @error('name')<span class="invalid-feedback">{{ $message }}</span>@enderror
                 </div>
                 <div>
-                  <input type="email" name="email" class="form-control border-bottom border-dark @error('email') is-invalid @enderror" id="exampleInputEmail1"
+                  <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1"
                     placeholder="Email" value="{{ old('email') }}" required>
                   @error('email')<span class="invalid-feedback">{{ $message }}</span>@enderror
                 </div>
                 <div>
-                  <textarea name="message" class="form-control border-bottom border-dark @error('message') is-invalid @enderror" id="exampleFormControlTextarea1"
+                  <textarea name="message" class="form-control @error('message') is-invalid @enderror" id="exampleFormControlTextarea1"
                     placeholder="Tell us about your project or how we can help" rows="3" required>{{ old('message') }}</textarea>
                   @error('message')<span class="invalid-feedback">{{ $message }}</span>@enderror
                 </div>

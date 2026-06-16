@@ -52,7 +52,7 @@
                     <h4 class="mb-0 fw-bold">{{ $competitionNotificationCount }}</h4>
                   </div>
                 </div>
-                <a href="{{ route('client.competitions.index') }}" class="badge bg-primary text-white text-decoration-none mt-2">
+                <a href="{{ route('client.competitions.index') }}" class="btn btn-primary text-white text-decoration-none mt-2">
                   Open competitions
                 </a>
               </div>
@@ -68,7 +68,7 @@
                       <h4 class="mb-0 fw-bold">{{ $shortcut['value'] }}</h4>
                     </div>
                   </div>
-                  <a href="{{ $shortcut['route'] }}" class="badge bg-primary text-white text-decoration-none mt-2">
+                  <a href="{{ $shortcut['route'] }}" class="btn btn-primary text-white text-decoration-none mt-2">
                     View
                   </a>
                 </div>
@@ -162,7 +162,7 @@
                                                 <p class="text-muted small mb-2">
                                                     {{ Str::limit($model->description ?? 'No description provided.', 60) }}
                                                 </p>
-                                                <a href="{{ route('client.models.3d.show', $model) }}" class="badge bg-primary text-white btn-sm">
+                                                  <a href="{{ route('client.models.3d.show', $model) }}" class="btn btn-primary text-white btn-sm">
                                                     View Model
                                                 </a>
                                             </div>
