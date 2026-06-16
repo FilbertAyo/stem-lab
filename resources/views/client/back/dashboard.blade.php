@@ -105,15 +105,6 @@
                     </div>
                 </div>
             </div>
-        </section>
-       
-
-
-
-        <section class="row mb-4 mt-4">
-          
-
-          
 
             @if(Auth::user()->role === 'teacher' && $stats['total_competitions'] > 0)
                 <div class="col-6 col-lg-3 col-md-6 mb-3">
@@ -148,6 +139,10 @@
                 </div>
             @endif
         </section>
+       
+
+
+
 
         @if($latestModels->count() > 0)
             <section class="row">
