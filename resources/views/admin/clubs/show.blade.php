@@ -96,6 +96,7 @@
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>School</th>
+                                                <th>Club code</th>
                                                 <th class="text-end" style="width: 140px;">Actions</th>
                                             </tr>
                                         </thead>
@@ -106,6 +107,7 @@
                                                     <td class="fw-semibold">{{ $leader->user->name }}</td>
                                                     <td>{{ $leader->user->email }}</td>
                                                     <td>{{ $leader->school->name ?? 'N/A' }}</td>
+                                                    <td>@if($leader->club_code)<code>{{ $leader->club_code }}</code>@else<span class="text-muted">—</span>@endif</td>
                                                     <td class="text-end">
                                                         <button class="btn btn-sm btn-outline-primary"
                                                                 data-bs-toggle="modal"
@@ -149,6 +151,7 @@
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>School</th>
+                                                <th>Club code</th>
                                                 <th style="width: 140px;">Joined Date</th>
                                             </tr>
                                         </thead>
@@ -159,6 +162,7 @@
                                                     <td class="fw-semibold">{{ $member->user->name }}</td>
                                                     <td>{{ $member->user->email }}</td>
                                                     <td>{{ $member->school->name ?? 'N/A' }}</td>
+                                                    <td>@if($member->club_code)<code>{{ $member->club_code }}</code>@else<span class="text-muted">—</span>@endif</td>
                                                     <td>{{ $member->created_at->format('M d, Y') }}</td>
                                                 </tr>
                                             @endforeach
@@ -186,6 +190,7 @@
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>School</th>
+                                                <th>Club code</th>
                                                 <th style="width: 140px;">Request Date</th>
                                                 <th class="text-end" style="width: 180px;">Actions</th>
                                             </tr>
@@ -197,6 +202,7 @@
                                                     <td class="fw-semibold">{{ $request->user->name }}</td>
                                                     <td>{{ $request->user->email }}</td>
                                                     <td>{{ $request->school->name ?? 'N/A' }}</td>
+                                                    <td>@if($request->club_code)<code>{{ $request->club_code }}</code>@else<span class="text-muted">—</span>@endif</td>
                                                     <td>{{ $request->created_at->format('M d, Y') }}</td>
                                                     <td class="text-end">
                                                         <form method="POST" action="{{ route('admin.clubs.approve-request', $request) }}" class="d-inline me-1">

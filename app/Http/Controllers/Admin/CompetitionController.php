@@ -1007,6 +1007,7 @@ class CompetitionController extends Controller
             'registration.school.regionModel',
             'registration.region',
             'registration.teacher',
+            'registration.teacherClub',
             'registration.representativeStudents.student.schoolClass',
             'communityRegion',
             'scores.judge',

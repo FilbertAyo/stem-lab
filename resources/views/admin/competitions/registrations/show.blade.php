@@ -118,6 +118,10 @@
                                 <dd class="col-sm-8 mb-1">{{ $registration->resolvedTeacherEmail() ?: '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Phone</dt>
                                 <dd class="col-sm-8 mb-1">{{ $registration->resolvedTeacherPhone() ?: '—' }}</dd>
+                                @if($registration->teacherClub?->club_code)
+                                    <dt class="col-sm-4 text-muted fw-normal">Club code</dt>
+                                    <dd class="col-sm-8 mb-1"><code>{{ $registration->teacherClub->club_code }}</code></dd>
+                                @endif
                             </dl>
                         </div>
                     </div>
@@ -200,6 +204,7 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="width: 3rem;">#</th>
+                                                <th>Admission No.</th>
                                                 <th>Name</th>
                                                 <th>Gender</th>
                                                 <th>Class</th>
@@ -210,6 +215,7 @@
                                             @foreach($poolStudents as $index => $student)
                                                 <tr>
                                                     <td class="text-muted small">{{ $index + 1 }}</td>
+                                                    <td><code>{{ $student->admission_number ?? '—' }}</code></td>
                                                     <td>{{ $student->name ?? '—' }}</td>
                                                     <td>{{ ucfirst((string) $student->gender) }}</td>
                                                     <td>{{ $student->schoolClass->name ?? '—' }}</td>
@@ -241,6 +247,7 @@
                                     <table class="table table-bordered table-sm align-middle mb-0">
                                         <thead class="table-light">
                                             <tr>
+                                                <th>Admission No.</th>
                                                 <th>Name</th>
                                                 <th>Class</th>
                                                 <th>Role</th>
@@ -249,6 +256,7 @@
                                         <tbody>
                                             @foreach($registration->representativeStudents->sortBy(fn ($rs) => $rs->student?->name) as $rs)
                                                 <tr>
+                                                    <td><code>{{ $rs->student->admission_number ?? '—' }}</code></td>
                                                     <td>{{ $rs->student->name ?? '—' }}</td>
                                                     <td>{{ $rs->student->schoolClass->name ?? '—' }}</td>
                                                     <td>{{ $rs->role ?: '—' }}</td>

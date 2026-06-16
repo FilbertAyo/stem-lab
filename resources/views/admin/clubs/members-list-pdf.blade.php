@@ -25,6 +25,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>School</th>
+                <th>Club code</th>
             </tr>
         </thead>
         <tbody>
@@ -34,10 +35,11 @@
                     <td>{{ $member->user->name }}</td>
                     <td>{{ $member->user->email }}</td>
                     <td>{{ $member->school->name ?? 'N/A' }}</td>
+                    <td>{{ $member->club_code ?? '—' }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" class="empty">No approved members found.</td>
+                    <td colspan="5" class="empty">No approved members found.</td>
                 </tr>
             @endforelse
         </tbody>

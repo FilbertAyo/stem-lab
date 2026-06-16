@@ -45,6 +45,10 @@
                                 <dd class="col-sm-8 mb-2">{{ $registration?->teacher_email ?? '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Teacher phone</dt>
                                 <dd class="col-sm-8 mb-2">{{ $registration?->teacher_phone ?? '—' }}</dd>
+                                @if($registration?->teacherClub?->club_code)
+                                    <dt class="col-sm-4 text-muted fw-normal">Club code</dt>
+                                    <dd class="col-sm-8 mb-2"><code>{{ $registration->teacherClub->club_code }}</code></dd>
+                                @endif
                                 <dt class="col-sm-4 text-muted fw-normal">Registration region</dt>
                                 <dd class="col-sm-8 mb-2">{{ $registration?->region?->name ?? '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Registration status</dt>
@@ -146,6 +150,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>No</th>
+                                        <th>Admission No.</th>
                                         <th>Name</th>
                                         <th>Gender</th>
                                         <th>Class</th>
@@ -156,6 +161,7 @@
                                     @foreach($registration->representativeStudents as $rs)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
+                                            <td><code>{{ $rs->student?->admission_number ?? '—' }}</code></td>
                                             <td>{{ $rs->student?->name ?? '—' }}</td>
                                             <td>{{ $rs->student?->gender ? ucfirst((string) $rs->student->gender) : '—' }}</td>
                                             <td>{{ $rs->student?->schoolClass?->name ?? '—' }}</td>

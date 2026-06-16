@@ -46,6 +46,7 @@
                                     <th>#</th>
                                     <th>School</th>
                                     <th>Teacher</th>
+                                    <th>Club code</th>
                                     <th>Eligibility snapshot</th>
                                     <th>Representatives</th>
                                     <th>Club joined</th>
@@ -67,6 +68,13 @@
                                         <td>
                                             <div>{{ $registration->resolvedTeacherName() }}</div>
                                             <small class="text-muted">{{ $registration->resolvedTeacherEmail() }}</small>
+                                        </td>
+                                        <td>
+                                            @if($registration->teacherClub?->club_code)
+                                                <code>{{ $registration->teacherClub->club_code }}</code>
+                                            @else
+                                                <span class="text-muted">—</span>
+                                            @endif
                                         </td>
                                         <td>
                                             @if($registration->status === 'draft')
@@ -123,7 +131,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="text-center text-muted py-4">No registrations match your filters.</td>
+                                        <td colspan="10" class="text-center text-muted py-4">No registrations match your filters.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

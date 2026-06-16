@@ -123,7 +123,12 @@
                                                                 @foreach($teacherClubs as $tc)
                                                                     <div class="border rounded p-2">
                                                                         <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
-                                                                            <span class="badge bg-info">{{ $tc->club->name ?? 'N/A' }}</span>
+                                                                            <div>
+                                                                                <span class="badge bg-info">{{ $tc->club->name ?? 'N/A' }}</span>
+                                                                                @if($tc->club_code)
+                                                                                    <small class="text-muted d-block mt-1">Code: <code>{{ $tc->club_code }}</code></small>
+                                                                                @endif
+                                                                            </div>
                                                                             <form
                                                                                 action="{{ route('admin.schools.teacher-clubs.update-club-day', [$school, $tc]) }}"
                                                                                 method="POST"
@@ -445,7 +450,7 @@
                                         value="{{ $teacherClub->id }}"
                                         @selected(old('teacher_club_id') == $teacherClub->id)
                                     >
-                                        {{ $teacherClub->user->name ?? 'Teacher' }} - {{ $teacherClub->club->name ?? 'Club' }}
+                                        {{ $teacherClub->user->name ?? 'Teacher' }} - {{ $teacherClub->club->name ?? 'Club' }}@if($teacherClub->club_code) ({{ $teacherClub->club_code }})@endif
                                     </option>
                                 @endforeach
                             </select>
