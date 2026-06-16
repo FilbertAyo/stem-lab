@@ -11,7 +11,7 @@
                 @include('elements.client-validation')
 
                 @if($clubs->isEmpty())
-                    <div class="card border-0 shadow-none">
+                    <div class="card border shadow-none">
                         <div class="card-body text-center py-5">
                             <i class="bi bi-school display-4 text-muted mb-3"></i>
                             <h5 class="fw-semibold mb-2">No clubs available yet</h5>
@@ -30,7 +30,7 @@
                                 $membershipForClub = $teacherClubs->firstWhere('club_id', $club->id);
                             @endphp
                             <div class="col-12 col-md-6 col-xl-4">
-                                <div class="card h-100 border-0 shadow-none">
+                                <div class="card h-100 border shadow-none">
                                     @if($club->image_path)
                                         <div style="overflow: hidden; height: 300px;">
                                             <img src="{{ asset('storage/' . $club->image_path) }}"

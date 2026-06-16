@@ -7,14 +7,12 @@
                     <a href="{{ route('client.clubs.index') }}" class="text-muted small text-decoration-none">
                         <i class="bi bi-arrow-left me-1"></i>Back to clubs
                     </a>
-                    <h2 class="title mb-1 mt-1">{{ $club->name }}</h2>
+                    <h4 class="mb-1 mt-1">{{ $club->name }}</h4>
                     @if($school)
                         <p class="text-muted mb-0 small">{{ $school->name }}</p>
                     @endif
                 </div>
-                @if($teacherClub->is_leader)
-                    <span class="badge bg-primary">Club Leader</span>
-                @endif
+             
             </div>
         </div>
 
@@ -23,7 +21,7 @@
 
                 @include('elements.client-validation')
 
-                <div class="card border-0 shadow-none mb-4">
+                <div class="card border shadow-none mb-4">
                     <div class="card-body">
                         <div class="row g-3">
                             @if($club->image_path)
@@ -79,7 +77,7 @@
                 </ul>
 
                 @if(request('tab') !== 'teachers')
-                    <div class="card border-0 shadow-none">
+                    <div class="card border shadow-none">
                         <div class="card-header bg-light-soft">
                             <div>
                                 <h5 class="mb-0">Registered Students</h5>
@@ -154,7 +152,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="card border-0 shadow-none">
+                    <div class="card border shadow-none">
                         <div class="card-header">
                             <h5 class="mb-0">Teachers at this school club</h5>
                         </div>
