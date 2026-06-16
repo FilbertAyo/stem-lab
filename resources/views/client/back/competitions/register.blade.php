@@ -9,7 +9,10 @@
         @php($poolOk = $poolCount >= $poolMin && $poolRatio >= 70 && ($poolMax === null || $poolCount <= $poolMax))
         @php($registerReturnPath = route('client.competitions.register', $competition, absolute: false))
 
+        
         <div class="dashboard-content-header mb-3">
+            <h4 class="mb-1">Upload students</h4>
+     
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item"><a href="{{ route('client.competitions.index') }}">Competitions</a></li>
@@ -17,12 +20,8 @@
                     <li class="breadcrumb-item active" aria-current="page">Participants</li>
                 </ol>
             </nav>
-            <h4 class="mb-1">Upload students</h4>
-            <p class="text-muted small mb-0">
-                Add students with CSV import. They are stored on your club roster and listed here for this competition.
-                When the pool meets the rules, submit your school details for <strong>admin approval</strong>.
-            </p>
-        </div>
+           
+        </div> 
 
         <div class="row">
             <div class="col-lg-8">

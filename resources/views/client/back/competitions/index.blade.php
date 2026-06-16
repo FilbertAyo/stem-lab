@@ -2,8 +2,7 @@
     <div class="col-12">
         <div class="dashboard-content-header mb-3">
             <h4 class="mb-1">Competitions</h4>
-            <p class="text-muted small mb-0">Competitions open to your school clubs. Register your team and follow each phase from your competition hub.</p>
-        </div>
+       </div>
 
         @include('elements.client-validation')
 

@@ -1,15 +1,16 @@
 <x-app-layout>
     <div class="col-12">
         <div class="dashboard-content-header mb-3">
+            <h4 class="mb-1">{{ $competition->name }}</h4>
+       
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item"><a href="{{ route('client.competitions.index') }}">Competitions</a></li>
                     <li class="breadcrumb-item active">{{ $competition->name }}</li>
                 </ol>
             </nav>
-            <h4 class="mb-1">{{ $competition->name }}</h4>
-            <p class="text-muted small mb-0">Track phases, complete open tasks, and follow admin decisions from this hub.</p>
-        </div>
+      
+       </div>
 
         @include('elements.client-validation')
 
