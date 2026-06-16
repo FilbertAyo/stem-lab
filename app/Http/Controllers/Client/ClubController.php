@@ -70,7 +70,7 @@ class ClubController extends Controller
             403,
         );
 
-        $teacherClub->load(['club', 'school']);
+        $teacherClub->load(['club', 'school.regionModel']);
 
         $clubId = $teacherClub->club_id;
         $schoolId = $teacherClub->school_id;

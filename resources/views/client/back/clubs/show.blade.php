@@ -41,9 +41,13 @@
                                     <dl class="row mb-0 small">
                                         <dt class="col-sm-3 text-muted">School</dt>
                                         <dd class="col-sm-9 mb-2">{{ $school->name }}</dd>
-                                        @if($school->district)
+                                        @php
+                                            $regionName = $school->regionModel?->name ?? $school->region;
+                                            $districtRegion = collect([$school->district, $regionName])->filter()->implode(', ');
+                                        @endphp
+                                        @if($districtRegion !== '')
                                             <dt class="col-sm-3 text-muted">District</dt>
-                                            <dd class="col-sm-9 mb-2">{{ $school->district }}</dd>
+                                            <dd class="col-sm-9 mb-2">{{ $districtRegion }}</dd>
                                         @endif
                                         @if($school->address)
                                             <dt class="col-sm-3 text-muted">Address</dt>
