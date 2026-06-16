@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Http\Controllers\Client\Concerns\ResolvesStudentClassContext;
 use App\Http\Controllers\Controller;
 use App\Services\CacheService;
 use App\Models\VrAssessmentAttempt;
@@ -16,14 +17,23 @@ use Illuminate\Support\Facades\Auth;
 
 class VrAssessmentController extends Controller
 {
+    use ResolvesStudentClassContext;
+
     /**
      * Display a listing of available quizzes.
      */
     public function index(): View
     {
         $user = Auth::user();
+        $schoolClassId = $this->studentSchoolClassId($user);
         // Get cached active question banks
         $questionBanks = CacheService::getActiveQuestionBanks();
+
+        if ($schoolClassId !== null) {
+            $questionBanks = $questionBanks->filter(
+                fn ($bank) => $bank->vrExperiment->isAccessibleToStudentClass($schoolClassId)
+            )->values();
+        }
 
         // Get user's attempts for progress tracking
         $userAttempts = VrAssessmentAttempt::where('user_id', $user->id)
@@ -31,7 +41,10 @@ class VrAssessmentController extends Controller
             ->get()
             ->groupBy('question_bank_id');
 
-        return view('client.back.vr-assessments.index', compact('questionBanks', 'userAttempts'));
+        return view('client.back.vr-assessments.index', array_merge(
+            compact('questionBanks', 'userAttempts'),
+            $this->classFilterViewData($user)
+        ));
     }
 
     /**
@@ -45,7 +58,8 @@ class VrAssessmentController extends Controller
         if (!$questionBank->is_active 
             || !$questionBank->vrExperiment->is_active 
             || !$questionBank->vrExperiment->subject 
-            || !$questionBank->vrExperiment->subject->is_active) {
+            || !$questionBank->vrExperiment->subject->is_active
+            || ! $questionBank->vrExperiment->isAccessibleToStudentClass($this->studentSchoolClassId())) {
             abort(404);
         }
 
@@ -83,7 +97,8 @@ class VrAssessmentController extends Controller
         if (!$questionBank->is_active 
             || !$questionBank->vrExperiment->is_active 
             || !$questionBank->vrExperiment->subject 
-            || !$questionBank->vrExperiment->subject->is_active) {
+            || !$questionBank->vrExperiment->subject->is_active
+            || ! $questionBank->vrExperiment->isAccessibleToStudentClass($this->studentSchoolClassId())) {
             abort(404);
         }
 

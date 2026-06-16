@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Http\Controllers\Client\Concerns\ResolvesStudentClassContext;
 use App\Http\Controllers\Controller;
 use App\Models\Model3d;
 use App\Services\CacheService;
@@ -11,6 +12,8 @@ use Illuminate\View\View;
 
 class Model3dController extends Controller
 {
+    use ResolvesStudentClassContext;
+
     /**
      * Display a listing of the 3D models available to students.
      */
@@ -20,6 +23,7 @@ class Model3dController extends Controller
         $search = $request->input('search');
         $sort = $request->input('sort', 'by_subject');
         $userId = Auth::id();
+        $schoolClassId = $this->studentSchoolClassId();
 
         // Always use flat paginated list (no categories); user filters via search/subject/sort
         $showGroupedView = false;
@@ -28,7 +32,9 @@ class Model3dController extends Controller
         $subjects = CacheService::getActiveSubjects();
 
         // Get total count for stats (only active models)
-        $totalModels = Model3d::where('is_active', true)->count();
+        $totalModels = Model3d::where('is_active', true)
+            ->visibleToStudentClass($schoolClassId)
+            ->count();
 
         // Get cached user progress
         $studentAnswers = CacheService::getUserProgress($userId);
@@ -37,6 +43,7 @@ class Model3dController extends Controller
         $query = Model3d::active()
             ->withSubject()
             ->withCount('questions')
+            ->visibleToStudentClass($schoolClassId)
             ->when($subjectId, fn ($q) => $q->forSubject($subjectId))
             ->when($search, fn ($q) => $q->search($search));
 
@@ -70,7 +77,7 @@ class Model3dController extends Controller
             ];
         }
 
-        return view('client.back.models.3d.index', [
+        return view('client.back.models.3d.index', array_merge([
             'model3ds' => $model3ds,
             'modelsBySubject' => collect(),
             'subjectsWithModels' => collect(),
@@ -81,7 +88,7 @@ class Model3dController extends Controller
             'search' => $search,
             'sort' => $sort,
             'totalModels' => $totalModels,
-        ]);
+        ], $this->classFilterViewData()));
     }
 
     /**
@@ -94,7 +101,8 @@ class Model3dController extends Controller
         // Ensure the model and subject are active
         if (!$model3d->is_active 
             || !$model3d->subject 
-            || !$model3d->subject->is_active) {
+            || !$model3d->subject->is_active
+            || ! $model3d->isAccessibleToStudentClass($this->studentSchoolClassId())) {
             abort(404);
         }
         
@@ -123,7 +131,10 @@ class Model3dController extends Controller
             'has_attempted' => $answeredQuestions > 0,
         ];
 
-        return view('client.back.models.3d.show', compact('model3d', 'progress'));
+        return view('client.back.models.3d.show', array_merge(
+            compact('model3d', 'progress'),
+            $this->classFilterViewData()
+        ));
     }
 }
 

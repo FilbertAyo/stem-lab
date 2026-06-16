@@ -7,6 +7,7 @@ use App\Models\Equipment;
 use App\Models\Platform;
 use App\Models\Project;
 use App\Models\ProjectCategory;
+use App\Models\SchoolClass;
 use App\Models\ProjectCode;
 use App\Models\ProjectResource;
 use App\Models\ProjectStep;
@@ -85,8 +86,9 @@ class ProjectController extends Controller
         $tags = ProjectTag::orderBy('name')->get();
         $equipment = Equipment::orderBy('name')->get();
         $platforms = Platform::active()->ordered()->get();
+        $classes = SchoolClass::active()->ordered()->get();
 
-        return view('admin.projects.create', compact('categories', 'tags', 'equipment', 'platforms'));
+        return view('admin.projects.create', compact('categories', 'tags', 'equipment', 'platforms', 'classes'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -95,6 +97,7 @@ class ProjectController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'difficulty' => ['required', 'in:beginner,intermediate,advanced'],
             'project_category_id' => ['nullable', 'exists:project_categories,id'],
+            'school_class_id' => ['required', 'exists:school_classes,id'],
             'estimated_time' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'youtube_url' => ['nullable', 'string', 'url', 'max:500'],
             'external_link' => ['nullable', 'string', 'url', 'max:500'],
@@ -144,6 +147,7 @@ class ProjectController extends Controller
         return DB::transaction(function () use ($request, $validated) {
             $projectData = [
                 'project_category_id' => $validated['project_category_id'] ?? null,
+                'school_class_id' => $validated['school_class_id'],
                 'created_by' => Auth::id(),
                 'name' => $validated['name'],
                 'slug' => $this->uniqueSlug(Project::class, Str::slug($validated['name'])),
@@ -209,10 +213,11 @@ class ProjectController extends Controller
         $tags = ProjectTag::orderBy('name')->get();
         $equipment = Equipment::orderBy('name')->get();
         $platforms = Platform::active()->ordered()->get();
+        $classes = SchoolClass::active()->ordered()->get();
         $tagsString = $project->tags->pluck('name')->implode(', ');
         $platformIds = $project->platforms->pluck('id')->toArray();
 
-        return view('admin.projects.edit', compact('project', 'categories', 'tags', 'equipment', 'platforms', 'tagsString', 'platformIds'));
+        return view('admin.projects.edit', compact('project', 'categories', 'tags', 'equipment', 'platforms', 'classes', 'tagsString', 'platformIds'));
     }
 
     public function update(Request $request, Project $project): RedirectResponse
@@ -236,6 +241,7 @@ class ProjectController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'difficulty' => ['required', 'in:beginner,intermediate,advanced'],
             'project_category_id' => ['nullable', 'exists:project_categories,id'],
+            'school_class_id' => ['required', 'exists:school_classes,id'],
             'estimated_time' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'youtube_url' => ['nullable', 'string', 'url', 'max:500'],
             'external_link' => ['nullable', 'string', 'url', 'max:500'],
@@ -287,6 +293,7 @@ class ProjectController extends Controller
         return DB::transaction(function () use ($request, $validated, $project, $originalData) {
             $data = [
                 'project_category_id' => $validated['project_category_id'] ?? null,
+                'school_class_id' => $validated['school_class_id'],
                 'name' => $validated['name'],
                 'difficulty' => $validated['difficulty'],
                 'estimated_time' => isset($validated['estimated_time']) ? (int) $validated['estimated_time'] : null,

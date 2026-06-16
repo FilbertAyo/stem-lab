@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPublicUlid;
+use App\Models\Concerns\ScopedToSchoolClass;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Request;
 
 class Model3d extends Model
 {
-    use HasFactory, HasPublicUlid;
+    use HasFactory, HasPublicUlid, ScopedToSchoolClass;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +22,7 @@ class Model3d extends Model
      */
     protected $fillable = [
         'subject_id',
+        'school_class_id',
         'name',
         'file',
         'thumbnail',

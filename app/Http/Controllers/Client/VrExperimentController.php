@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Http\Controllers\Client\Concerns\ResolvesStudentClassContext;
 use App\Http\Controllers\Controller;
 use App\Services\CacheService;
 use App\Models\Subject;
@@ -12,6 +13,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class VrExperimentController extends Controller
 {
+    use ResolvesStudentClassContext;
+
     /**
      * Get static VR experiments from config (not from DB).
      *
@@ -30,6 +33,7 @@ class VrExperimentController extends Controller
         $subjectId = $request->input('subject');
         $search = $request->input('search');
         $sort = $request->input('sort', 'by_subject');
+        $schoolClassId = $this->studentSchoolClassId();
 
         // Always use flat paginated list: "All Experiments" = all; sidebar subject = filter by that subject (no categories, no "View all")
         $showGroupedView = false;
@@ -39,12 +43,15 @@ class VrExperimentController extends Controller
 
         $staticExperiments = $this->getStaticExperiments();
         $staticCount = $staticExperiments->count();
-        $dbTotal = VrExperiment::where('is_active', true)->count();
+        $dbTotal = VrExperiment::where('is_active', true)
+            ->visibleToStudentClass($schoolClassId)
+            ->count();
         $totalExperiments = $staticCount + $dbTotal;
 
         // Paginated view with optional subject/search filter and sorting
         $query = VrExperiment::active()
             ->withSubject()
+            ->visibleToStudentClass($schoolClassId)
             ->when($subjectId, fn ($q) => $q->forSubject($subjectId))
             ->when($search, fn ($q) => $q->search($search));
 
@@ -85,7 +92,7 @@ class VrExperimentController extends Controller
             $vrExperiments = $query->paginate($perPage)->withQueryString();
         }
 
-        return view('client.back.vr-experiments.index', [
+        return view('client.back.vr-experiments.index', array_merge([
             'vrExperiments' => $vrExperiments,
             'experimentsBySubject' => collect(),
             'subjectsWithExperiments' => collect(),
@@ -95,7 +102,7 @@ class VrExperimentController extends Controller
             'search' => $search,
             'sort' => $sort,
             'totalExperiments' => $totalExperiments,
-        ]);
+        ], $this->classFilterViewData()));
     }
 
     /**
@@ -134,11 +141,18 @@ class VrExperimentController extends Controller
         $vrExperiment->load('subject');
         $subjects = CacheService::getActiveSubjects();
 
-        return view('client.back.vr-experiments.show', [
+        if (! $vrExperiment->is_active
+            || ! $vrExperiment->subject
+            || ! $vrExperiment->subject->is_active
+            || ! $vrExperiment->isAccessibleToStudentClass($this->studentSchoolClassId())) {
+            abort(404);
+        }
+
+        return view('client.back.vr-experiments.show', array_merge([
             'vrExperiment' => $vrExperiment,
             'subjects' => $subjects,
             'isStatic' => false,
-        ]);
+        ], $this->classFilterViewData()));
     }
 
     /**

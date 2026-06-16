@@ -30,9 +30,7 @@
 
           @if($step === 1)
             <div class="onboarding-step">
-              <h5 class="fw-semibold text-center mb-1">How do you identify?</h5>
-              <p class="text-muted small text-center mb-4">Select one option to continue.</p>
-
+            
               <form method="POST" action="{{ route('student.onboarding.gender') }}" id="onboarding-gender-form">
                 @csrf
                 <input type="hidden" name="gender" id="gender-input" value="{{ old('gender', $user->gender) }}">

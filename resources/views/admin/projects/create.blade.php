@@ -88,6 +88,18 @@
                                         </select>
                                         @error('project_category_id') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Class <span class="text-danger">*</span></label>
+                                        <select name="school_class_id" class="form-select" required>
+                                            <option value="">Select class...</option>
+                                            @foreach($classes as $class)
+                                                <option value="{{ $class->id }}" {{ (string) old('school_class_id') === (string) $class->id ? 'selected' : '' }}>
+                                                    {{ $class->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('school_class_id') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                    </div>
                                 </div>
 
 

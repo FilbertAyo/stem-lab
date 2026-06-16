@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Http\Controllers\Client\Concerns\ResolvesStudentClassContext;
 use App\Http\Controllers\Controller;
 use App\Models\Model3d;
 use App\Models\ModelQuestion;
@@ -14,11 +15,17 @@ use Illuminate\Support\Facades\Cache;
 
 class ModelQuestionController extends Controller
 {
+    use ResolvesStudentClassContext;
+
     /**
      * Submit answers for questions related to a 3D model.
      */
     public function submitAnswers(Request $request, Model3d $model3d): JsonResponse
     {
+        if (! $model3d->isAccessibleToStudentClass($this->studentSchoolClassId())) {
+            abort(404);
+        }
+
         $request->validate([
             'answers' => ['required', 'array'],
             'answers.*.question_id' => ['required', 'exists:model_questions,id'],
@@ -92,6 +99,10 @@ class ModelQuestionController extends Controller
      */
     public function getQuestions(Model3d $model3d): JsonResponse
     {
+        if (! $model3d->isAccessibleToStudentClass($this->studentSchoolClassId())) {
+            abort(404);
+        }
+
         $cacheKey = "model_questions_{$model3d->id}";
         
         $questions = Cache::remember($cacheKey, CacheService::TTL_LONG, function () use ($model3d) {

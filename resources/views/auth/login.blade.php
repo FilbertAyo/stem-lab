@@ -57,10 +57,10 @@
                 value="1"
                 {{ old('remember') ? 'checked' : '' }}
               >
-              <label class="form-check-label fw-medium" for="remember">Remember me</label>
+              <label class="form-check-label" for="remember">Remember me</label>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 justify-content-center py-2 fw-medium my-3 fs-4 lh-lg">
+            <button type="submit" class="btn btn-primary w-100 justify-content-center fw-medium my-3">
               Sign In
             </button>
           </form>

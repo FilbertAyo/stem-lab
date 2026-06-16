@@ -22,6 +22,7 @@ use App\Http\Controllers\Client\CompetitionController as ClientCompetitionContro
 use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
 use App\Http\Controllers\Client\Model3dController as ClientModel3dController;
 use App\Http\Controllers\Client\ProjectController as ClientProjectController;
+use App\Http\Controllers\Client\StudentClubController as ClientStudentClubController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
 use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentController;
 use App\Http\Controllers\ProfileController;
@@ -397,6 +398,18 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
         Route::post('/attempt/{attempt}/save-answer', [\App\Http\Controllers\Client\VrAssessmentController::class, 'saveAnswer'])->name('save-answer');
         Route::post('/attempt/{attempt}/submit', [\App\Http\Controllers\Client\VrAssessmentController::class, 'submit'])->name('submit');
         Route::get('/attempt/{attempt}/results', [\App\Http\Controllers\Client\VrAssessmentController::class, 'results'])->name('results');
+    });
+
+    // Student club linkup (student-only)
+    Route::middleware('student')->prefix('activities/my-club')->name('client.student-club.')->group(function () {
+        Route::get('/', [ClientStudentClubController::class, 'index'])->name('index');
+        Route::post('/lookup', [ClientStudentClubController::class, 'lookup'])
+            ->middleware('throttle:10,1')
+            ->name('lookup');
+        Route::get('/confirm', [ClientStudentClubController::class, 'confirm'])->name('confirm');
+        Route::post('/link', [ClientStudentClubController::class, 'link'])
+            ->middleware('throttle:10,1')
+            ->name('link');
     });
 
     // Teacher-only routes

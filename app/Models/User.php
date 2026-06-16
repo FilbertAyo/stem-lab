@@ -30,6 +30,8 @@ class User extends Authenticatable
         'school_class_id',
         'student_onboarding_completed_at',
         'role',
+        'subscription_tier',
+        'club_linked_at',
         'password',
         'is_active',
     ];
@@ -55,9 +57,26 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'date_of_birth' => 'date',
             'student_onboarding_completed_at' => 'datetime',
+            'club_linked_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function linkedRosterStudent()
+    {
+        return $this->hasOne(Student::class);
+    }
+
+    public function isClubLinked(): bool
+    {
+        return $this->club_linked_at !== null
+            && $this->linkedRosterStudent()->exists();
+    }
+
+    public function hasPublicSchoolAccess(): bool
+    {
+        return $this->subscription_tier === 'public_school' && $this->isClubLinked();
     }
 
     /**
@@ -66,6 +85,31 @@ class User extends Authenticatable
     public function schoolClass()
     {
         return $this->belongsTo(SchoolClass::class);
+    }
+
+    /**
+     * The class used to personalize STEM resources for this student.
+     */
+    public function resolvedSchoolClassId(): ?int
+    {
+        if ($this->role !== 'student') {
+            return null;
+        }
+
+        if ($this->school_class_id !== null) {
+            return (int) $this->school_class_id;
+        }
+
+        $linkedClassId = $this->relationLoaded('linkedRosterStudent')
+            ? $this->linkedRosterStudent?->school_class_id
+            : $this->linkedRosterStudent()->value('school_class_id');
+
+        return $linkedClassId !== null ? (int) $linkedClassId : null;
+    }
+
+    public function shouldFilterContentByClass(): bool
+    {
+        return $this->role === 'student' && $this->resolvedSchoolClassId() !== null;
     }
 
     /**

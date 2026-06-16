@@ -10,6 +10,8 @@ class Student extends Model
 {
     protected $fillable = [
         'teacher_club_id',
+        'user_id',
+        'linked_at',
         'name',
         'date_of_birth',
         'age',
@@ -32,7 +34,18 @@ class Student extends Model
     {
         return [
             'date_of_birth' => 'date',
+            'linked_at' => 'datetime',
         ];
+    }
+
+    public function isLinked(): bool
+    {
+        return $this->user_id !== null;
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**

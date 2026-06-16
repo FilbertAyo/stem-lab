@@ -19,10 +19,26 @@
         <div class="card-body py-8 px-lg-5">
           {{-- Step 1: Role selection --}}
           <div id="register-step-role" class="{{ $startOnDetails ? 'd-none' : '' }}">
-            <h4 class="text-center fw-semibold mb-1">Who are you?</h4>
-            <p class="text-center text-muted small mb-4">Choose your account type to get started</p>
-
+            <h4 class="text-center fw-semibold mb-3">Who are you?</h4>
+          
             <div class="d-flex flex-column gap-3" role="radiogroup" aria-label="Who are you?">
+
+            <button
+                type="button"
+                class="role-card"
+                data-role="teacher"
+                aria-pressed="false"
+              >
+                <span class="role-card__icon" aria-hidden="true">
+                  <iconify-icon icon="lucide:book-open"></iconify-icon>
+                </span>
+                <span class="role-card__content">
+                  <span class="role-card__title">Teacher</span>
+                  <span class="role-card__desc">Manage clubs and guide students</span>
+                </span>
+                <iconify-icon icon="lucide:chevron-right" class="role-card__arrow" aria-hidden="true"></iconify-icon>
+              </button>
+
               <button
                 type="button"
                 class="role-card"
@@ -55,21 +71,7 @@
                 <iconify-icon icon="lucide:chevron-right" class="role-card__arrow" aria-hidden="true"></iconify-icon>
               </button>
 
-              <button
-                type="button"
-                class="role-card"
-                data-role="teacher"
-                aria-pressed="false"
-              >
-                <span class="role-card__icon" aria-hidden="true">
-                  <iconify-icon icon="lucide:book-open"></iconify-icon>
-                </span>
-                <span class="role-card__content">
-                  <span class="role-card__title">Teacher</span>
-                  <span class="role-card__desc">Manage clubs and guide students</span>
-                </span>
-                <iconify-icon icon="lucide:chevron-right" class="role-card__arrow" aria-hidden="true"></iconify-icon>
-              </button>
+
             </div>
 
             @error('role')
@@ -169,7 +171,7 @@
                 @enderror
               </div>
 
-              <button type="submit" class="btn btn-primary w-100 justify-content-center py-2 fw-medium my-3 fs-4 lh-lg">
+              <button type="submit" class="btn btn-primary w-100 justify-content-center fw-medium my-3">
                 Sign Up
               </button>
 

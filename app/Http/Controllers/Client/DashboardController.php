@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Http\Controllers\Client\Concerns\ResolvesStudentClassContext;
 use App\Http\Controllers\Controller;
 use App\Models\Competition;
 use App\Models\CompetitionRegistration;
@@ -14,6 +15,8 @@ use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
+    use ResolvesStudentClassContext;
+
     /**
      * Display the client dashboard.
      */
@@ -190,7 +193,12 @@ class DashboardController extends Controller
         }
 
         // Get latest active models
-        $latestModels = Model3d::active()->with('subject')->latest()->take(3)->get();
+        $latestModels = Model3d::active()
+            ->with('subject')
+            ->visibleToStudentClass($this->studentSchoolClassId($user))
+            ->latest()
+            ->take(3)
+            ->get();
 
         // Calculate accuracy
         $accuracy = $totalAnswers > 0 ? round(($correctAnswers / $totalAnswers) * 100, 1) : 0;

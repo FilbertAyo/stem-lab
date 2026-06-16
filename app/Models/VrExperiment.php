@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPublicUlid;
+use App\Models\Concerns\ScopedToSchoolClass;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class VrExperiment extends Model
 {
-    use HasFactory, HasPublicUlid;
+    use HasFactory, HasPublicUlid, ScopedToSchoolClass;
 
     /**
      * The attributes that are mass assignable.
@@ -36,14 +37,6 @@ class VrExperiment extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
-
-    /**
-     * Get the school class that owns the VR experiment.
-     */
-    public function schoolClass(): BelongsTo
-    {
-        return $this->belongsTo(SchoolClass::class);
-    }
 
     /**
      * Get the subject that owns the VR experiment.

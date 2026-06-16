@@ -17,6 +17,8 @@
             <h4 class="mb-1">3D Models Library</h4>
         </div>
 
+        @include('client.back.partials.class-filter-notice')
+
         {{-- Search & Filter Bar --}}
         <div class="card border shadow-none mb-4">
             <div class="card-body py-3">

@@ -40,6 +40,24 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
+                                <label for="school_class_id" class="form-label">Class <span class="text-danger">*</span></label>
+                                <select class="form-select @error('school_class_id') is-invalid @enderror"
+                                        id="school_class_id" name="school_class_id" required>
+                                    <option value="">Select a class</option>
+                                    @foreach($classes as $class)
+                                        <option value="{{ $class->id }}" {{ old('school_class_id', $model3d->school_class_id) == $class->id ? 'selected' : '' }}>
+                                            {{ $class->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('school_class_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
                                 <label for="file" class="form-label">GLB File</label>
                                 @if($model3d->file)
                                     <div class="mb-2">

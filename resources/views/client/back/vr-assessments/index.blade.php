@@ -5,6 +5,8 @@
             <h4 class="mb-0">VR Quizzes</h4>
         </div>
 
+        @include('client.back.partials.class-filter-notice')
+
         @if($questionBanks->count() > 0)
             <div class="row">
                 @foreach($questionBanks as $bank)

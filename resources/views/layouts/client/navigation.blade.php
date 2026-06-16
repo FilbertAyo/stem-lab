@@ -14,6 +14,7 @@
           <a href="{{ $isTeacher ? route('client.weekly-sessions.index') : route('client.vr-assessments.index') }}"
              class="{{ request()->routeIs('client.weekly-sessions.*')
                         || request()->routeIs('client.clubs.*')
+                        || request()->routeIs('client.student-club.*')
                         || request()->routeIs('client.vr-assessments.*')
                       ? 'active' : '' }}">
             Activities

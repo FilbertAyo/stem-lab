@@ -14,6 +14,14 @@
                 </a>
             </li>
         @endif
+        @if(Auth::user()->role === 'student')
+            <li>
+                <a href="{{ route('client.student-club.index') }}"
+                   class="{{ request()->routeIs('client.student-club.*') ? 'active' : '' }}">
+                    My Club <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+                </a>
+            </li>
+        @endif
         <li>
             <a href="{{ route('client.vr-assessments.index') }}"
                class="{{ request()->routeIs('client.vr-assessments.*') ? 'active' : '' }}">

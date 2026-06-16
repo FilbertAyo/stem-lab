@@ -1,9 +1,48 @@
 {{-- Platform subscription packages --}}
-<div class="col-12 mb-3">
+@php
+  $packageUser = Auth::user();
+  $isStudent = $packageUser?->role === 'student';
+  $isLinkedStudent = $isStudent && $packageUser->hasPublicSchoolAccess();
+  $isUnlinkedStudent = $isStudent && ! $packageUser->isClubLinked();
+@endphp
+
+<div class="col-12 mb-3" id="platform-subscription">
   <h5 class="text-muted mb-0 fw-semibold">
    Platform subscription
   </h5>
 </div>
+
+@if($isLinkedStudent)
+  <div class="row">
+    <div class="col-lg-8 col-xl-6">
+      <div class="card border shadow-none w-100 border-success-subtle">
+        <div class="card-body p-7 p-xxl-5 d-flex flex-column gap-6">
+          <div>
+            <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle mb-3">Active plan</span>
+            <h5 class="mb-2 fw-medium">Public secondary school — free access</h5>
+            <p class="text-muted mb-0">
+              Your account is linked to your school STEM club. You have subsidised access at 0 TZS/month.
+            </p>
+          </div>
+          <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
+            <li class="hstack gap-3">
+              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
+              <h6 class="mb-0 fw-normal">All STEM resources and activities</h6>
+            </li>
+            <li class="hstack gap-3">
+              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
+              <h6 class="mb-0 fw-normal">3D models, VR experiments & quizzes</h6>
+            </li>
+          </ul>
+          <a href="{{ route('client.student-club.index') }}" class="btn btn-outline-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center">
+            <span class="fw-semibold">View my club</span>
+            <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+@else
 <div class="row">
   <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
     <div class="card border shadow-none w-100" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
@@ -57,7 +96,7 @@
             <h3 class="mb-0">1,000</h3>
             <p class="mb-0">TZS /month</p>
           </div>
-          <p class="mb-0">Perfect for teachers, students, and parents who want ongoing access to all STEM content, 3D models, VR experiments, and competitions.</p>
+          <p class="mb-0">Perfect for teachers, students, and parents who want ongoing access to all STEM contents</p>
         </div>
         <div class="pt-8 border-top d-flex flex-column gap-6">
           <h6 class="mb-0 fw-normal">What’s included:</h6>
@@ -119,38 +158,84 @@
             </li>
           </ul>
         </div>
-        <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="public-school">
-          <span class="fw-semibold">Learn more</span>
-          <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
-        </a>
+        @if($isUnlinkedStudent)
+          <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="public-school-student">
+            <span class="fw-semibold">Learn more</span>
+            <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
+          </a>
+       
+        @else
+          <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="public-school-teacher">
+            <span class="fw-semibold">Learn more</span>
+            <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
+          </a>
+        @endif
+      </div>
+    </div>
+  </div>
+</div>
+@endif
+
+{{-- Modal: Public secondary school – teachers --}}
+<div class="modal fade" id="public-school-modal-teacher" tabindex="-1" aria-labelledby="public-school-modal-teacher-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-semibold" id="public-school-modal-teacher-label">Public secondary school – free access for schools</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-2">
+        <p class="text-muted small mb-4 lh-lg">
+          Adilisha STEM Labs promotes gender equity and inclusive learning by creating a safe, accessible, and engaging digital STEM environment for all learners. Our platform prioritizes underserved public schools with free subscription access, ensuring students in rural and marginalized communities can participate in practical experiments and project-based learning.
+        </p>
+        <p class="text-muted small mb-4 lh-lg">
+          STEM Clubs within schools require at least 70% girl membership, directly encouraging female participation and building confidence through collaborative, hands-on activities. Virtual content features female scientists and mentors to challenge stereotypes and inspire girls in STEM.
+        </p>
+        <div class="border-top pt-4">
+          <p class="small fw-medium mb-2">Register your school for free access</p>
+          <p class="small text-muted mb-3">
+            Join <strong>Chomoza STEM Labs</strong> as a teacher or school representative. Once your request is approved, your school won’t need to subscribe—you’ll have full platform access at 0 TZS/month, including student roster management and weekly sessions.
+          </p>
+          <a href="{{ route('client.clubs.join.form', ['club' => 1]) }}" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center">
+            <span class="fw-semibold">Join Chomoza STEM Labs</span>
+            <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
+          </a>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-{{-- Modal: Public secondary school – learn more & join --}}
-<div class="modal fade" id="public-school-modal" tabindex="-1" aria-labelledby="public-school-modal-label" aria-hidden="true">
+{{-- Modal: Public secondary school – students --}}
+<div class="modal fade" id="public-school-modal-student" tabindex="-1" aria-labelledby="public-school-modal-student-label" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content border-0 shadow">
       <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title fw-semibold" id="public-school-modal-label">Public secondary school – free access</h5>
+        <h5 class="modal-title fw-semibold" id="public-school-modal-student-label">Public secondary school – free access for students</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body pt-2">
         <p class="text-muted small mb-4 lh-lg">
-          Adilisha STEM Labs promotes gender equity and inclusive learning by creating a safe space, accessible, and engaging digital STEM for all learners. Our platform prioritizes underserved public schools, allowing them free subscription access, ensuring students in rural and marginalized communities can participate in practical experiments and project-based learning.
+          If you attend a registered public secondary school and belong to a STEM club on this platform, you can use Adilisha STEM Labs at no cost. The same STEM resources, 3D models, VR experiments, and quizzes are available to you at 0 TZS/month when your club membership is verified.
         </p>
         <p class="text-muted small mb-4 lh-lg">
-          STEM Clubs within schools require at least 70% girl membership, directly encouraging female participation and building confidence through collaborative, hands-on activities. Virtual content features female scientists and mentors to challenge stereotypes and inspire girls in STEM. The system minimizes personal data collection and does not require sharing photos or sensitive information, reducing risks of harassment or discrimination.
+          Your STEM club teacher uploads the club student list and shares two codes with you: your personal <strong>admission number</strong> and your school’s <strong>club code</strong>. You’ll use both to link your account to your club.
         </p>
-        <p class="text-muted small mb-4 lh-lg">
-          Simple language, visual guides, and interactive design ensure learners with low literacy or limited English proficiency can fully engage. Our majority women leadership team further demonstrates a commitment to inclusive decision making and reinforces a gender balanced approach across the organization.
-        </p>
+        <div class="bg-light rounded p-3 mb-4">
+          <p class="small fw-medium mb-2">How to get free access</p>
+          <ol class="small text-muted mb-0 ps-3">
+            <li class="mb-2">Ask your STEM club teacher for your admission number and club code.</li>
+            <li class="mb-2">Go to <strong>Activities → My Club</strong> on this platform.</li>
+            <li>Enter both codes, confirm your roster details, and link your account.</li>
+          </ol>
+        </div>
         <div class="border-top pt-4">
-          <p class="small fw-medium mb-2">Want your school to get free access?</p>
-          <p class="small text-muted mb-3">Join <strong>Chomoza STEM Labs</strong> as a teacher or school representative. Once your request is approved, your school won’t need to subscribe—you’ll have full platform access at 0 TZS/month.</p>
-          <a href="{{ route('client.clubs.join.form', ['club' => 1]) }}" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center">
-            <span class="fw-semibold">Join Chomoza STEM Labs</span>
+          <p class="small fw-medium mb-2">Ready to link your club?</p>
+          <p class="small text-muted mb-3">
+            You’ll need the admission number and club code from your teacher. Linking confirms you are on your school’s STEM club roster.
+          </p>
+          <a href="{{ route('client.student-club.index') }}" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center">
+            <span class="fw-semibold">Link with your club</span>
             <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
           </a>
         </div>
@@ -184,8 +269,14 @@
     btn.addEventListener('click', function(e) {
       e.preventDefault();
       var packageType = btn.getAttribute('data-package');
-      if (packageType === 'public-school') {
-        var modalEl = document.getElementById('public-school-modal');
+      var modalId = null;
+      if (packageType === 'public-school-teacher') {
+        modalId = 'public-school-modal-teacher';
+      } else if (packageType === 'public-school-student') {
+        modalId = 'public-school-modal-student';
+      }
+      if (modalId) {
+        var modalEl = document.getElementById(modalId);
         if (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
           var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
           modal.show();

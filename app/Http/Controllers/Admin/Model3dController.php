@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Model3d;
+use App\Models\SchoolClass;
 use App\Services\CacheService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -53,7 +54,9 @@ class Model3dController extends Controller
     public function create(): View
     {
         $subjects = CacheService::getActiveSubjects();
-        return view('admin.models.3d.create', compact('subjects'));
+        $classes = SchoolClass::active()->ordered()->get();
+
+        return view('admin.models.3d.create', compact('subjects', 'classes'));
     }
 
     /**
@@ -63,6 +66,7 @@ class Model3dController extends Controller
     {
         $validated = $request->validate([
             'subject_id' => ['required', 'exists:subjects,id'],
+            'school_class_id' => ['required', 'exists:school_classes,id'],
             'name' => ['required', 'string', 'max:255'],
             'file' => [
                 'nullable',
@@ -149,7 +153,9 @@ class Model3dController extends Controller
     public function edit(Model3d $model3d): View
     {
         $subjects = CacheService::getActiveSubjects();
-        return view('admin.models.3d.edit', compact('model3d', 'subjects'));
+        $classes = SchoolClass::active()->ordered()->get();
+
+        return view('admin.models.3d.edit', compact('model3d', 'subjects', 'classes'));
     }
 
     /**
@@ -159,6 +165,7 @@ class Model3dController extends Controller
     {
         $validated = $request->validate([
             'subject_id' => ['required', 'exists:subjects,id'],
+            'school_class_id' => ['required', 'exists:school_classes,id'],
             'name' => ['required', 'string', 'max:255'],
             'file' => [
                 'nullable',
