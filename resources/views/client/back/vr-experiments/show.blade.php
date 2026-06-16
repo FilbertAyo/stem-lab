@@ -136,7 +136,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <div class="text-center py-4">
+                        <div class="text-center py-2">
                             <i class="bi bi-arrow-up-right-circle-fill fs-12 text-primary"></i>
                             <h5 class="fw-semibold mb-2">Ready to explore?</h5>
                             <p class="text-muted small mb-4">
@@ -169,7 +169,7 @@
                     </div>
 
                     {{-- Requirements/Tips Section --}}
-                    <div class="card border shadow-none mt-4">
+                    <div class="card  shadow-none mt-4">
                     <div class="card-footer">
                         <h6 class="fw-semibold mb-2">
                             <i class="bi bi-info-circle me-1"></i>Tips for best experience
