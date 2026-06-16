@@ -34,7 +34,7 @@
         @php($isStatic = $isStatic ?? false)
         <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
             <div>
-                <h2 class="title mb-1">{{ $vrExperiment->name }}</h2>
+                <h4 class="mb-1">{{ $vrExperiment->name }}</h4>
                 <p class="text-muted mb-0">
                     {{ $vrExperiment->subject->subject_name ?? 'General STEM Experiment' }}
                 </p>
@@ -102,7 +102,7 @@
                     </div>
                 @endif
 
-                <div class="card border-0 shadow-none">
+                <div class="card border shadow-none">
                     <div class="card-body">
                         <h5 class="fw-semibold mb-3">About this experiment</h5>
                         <div class="text-muted mb-4">
@@ -129,8 +129,8 @@
 
             <!-- Launch Panel Column -->
             <div class="col-lg-4 col-12 mb-4">
-                <div class="card border-0 shadow-none">
-                    <div class="card-header bg-gradient text-white">
+                    <div class="card border shadow-none">
+                    <div class="card-header bg-white border-bottom">
                         <h5 class="fw-semibold mb-0">
                             {{ $isStatic ? 'Open experience' : 'View full page' }}
                         </h5>
@@ -169,7 +169,8 @@
                     </div>
 
                     {{-- Requirements/Tips Section --}}
-                    <div class="card-footer bg-light-soft">
+                    <div class="card border shadow-none">
+                    <div class="card-footer bg-white border-top">
                         <h6 class="fw-semibold mb-2">
                             <i class="bi bi-info-circle me-1"></i>Tips for best experience
                         </h6>
@@ -180,6 +181,8 @@
                             <li>Use headphones for audio guidance</li>
                             <li>Full screen mode recommended for immersion</li>
                         </ul>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>

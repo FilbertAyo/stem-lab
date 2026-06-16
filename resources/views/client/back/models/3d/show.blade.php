@@ -3,7 +3,7 @@
 
         <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
             <div>
-                <h2 class="title mb-1">{{ $model3d->name }}</h2>
+                <h4 class="mb-1">{{ $model3d->name }}</h4>
                 <p class="text-muted mb-0">
                     {{ $model3d->subject->subject_name ?? 'General STEM model' }}
                 </p>
@@ -109,10 +109,12 @@
                         </div>
                     @endif
 
-                    <div class="card-header bg-light-soft">
+                    <div class="card border shadow-none">
+                    <div class="card-header bg-white border-bottom">
                         <h5 class="fw-semibold mb-0">
                             <i class="bi bi-question-circle me-2"></i>Questions
                         </h5>
+                    </div>
                     </div>
                     <div class="card-body">
                         <div id="questions-container">
