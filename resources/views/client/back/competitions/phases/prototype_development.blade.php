@@ -20,9 +20,9 @@
 
 <div id="prototype-development" class="row">
     <div class="col-12">
-        <div class="card border-0 shadow-none mb-4">
-            <div class="card-header bg-transparent">
-                <h4 class="mb-0 text-uppercase">Prototype development</h4>
+        <div class="card border shadow-none mb-4 competition-phase-card">
+            <div class="card-header bg-light-soft">
+                <h5 class="mb-0 fw-semibold">Prototype development</h5>
                 <p class="text-muted small mb-0 mt-1">
                     Your idea’s problem details were already submitted in the previous phase. Here, focus on what you built and how it works.
                 </p>
@@ -64,7 +64,7 @@
 
                     <div class="row g-4">
                         <div class="col-lg-7">
-                            <h6 class="text-uppercase text-muted small mb-3">Prototype evidence form</h6>
+                            <h6 class="text-muted small fw-semibold mb-3">Prototype evidence form</h6>
 
                             @if(! $canEdit)
                                 <div class="alert alert-info mb-4">
@@ -124,7 +124,7 @@
                                         <label class="form-label">Prototype title <span class="text-danger">*</span></label>
                                         <input type="text"
                                                name="prototype_title"
-                                               class="form-control @error('prototype_title') is-invalid @enderror border p-2"
+                                               class="form-control @error('prototype_title') is-invalid @enderror"
                                                value="{{ old('prototype_title', $prototype?->prototype_title) }}"
                                                @if($canEdit) required @else disabled @endif
                                                maxlength="255">
@@ -134,7 +134,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">What you built (prototype overview) <span class="text-danger">*</span></label>
                                         <textarea name="prototype_concept"
-                                                  class="form-control @error('prototype_concept') is-invalid @enderror border p-2"
+                                                  class="form-control @error('prototype_concept') is-invalid @enderror"
                                                   rows="3"
                                                   @if(! $canEdit) disabled @endif
                                                   required>{{ old('prototype_concept', $prototype?->prototype_concept) }}</textarea>
@@ -144,7 +144,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Why it matters (goals of the prototype) <span class="text-danger">*</span></label>
                                         <textarea name="prototype_objectives"
-                                                  class="form-control @error('prototype_objectives') is-invalid @enderror border p-2"
+                                                  class="form-control @error('prototype_objectives') is-invalid @enderror"
                                                   rows="3"
                                                   @if(! $canEdit) disabled @endif
                                                   required>{{ old('prototype_objectives', $prototype?->prototype_objectives) }}</textarea>
@@ -154,7 +154,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">How it works (mechanism/steps) <span class="text-danger">*</span></label>
                                         <textarea name="prototype_design_description"
-                                                  class="form-control @error('prototype_design_description') is-invalid @enderror border p-2"
+                                                  class="form-control @error('prototype_design_description') is-invalid @enderror"
                                                   rows="4"
                                                   @if(! $canEdit) disabled @endif
                                                   required>{{ old('prototype_design_description', $prototype?->prototype_design_description) }}</textarea>
@@ -164,7 +164,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Materials / parts you used <span class="text-danger">*</span></label>
                                         <textarea name="prototype_materials"
-                                                  class="form-control @error('prototype_materials') is-invalid @enderror border p-2"
+                                                  class="form-control @error('prototype_materials') is-invalid @enderror"
                                                   rows="3"
                                                   @if(! $canEdit) disabled @endif
                                                   required>{{ old('prototype_materials', $prototype?->prototype_materials) }}</textarea>
@@ -174,7 +174,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Build process (steps & assembly) <span class="text-danger">*</span></label>
                                         <textarea name="prototype_build_process"
-                                                  class="form-control @error('prototype_build_process') is-invalid @enderror border p-2"
+                                                  class="form-control @error('prototype_build_process') is-invalid @enderror"
                                                   rows="4"
                                                   @if(! $canEdit) disabled @endif
                                                   required>{{ old('prototype_build_process', $prototype?->prototype_build_process) }}</textarea>
@@ -184,7 +184,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Challenges / limitations (what didn’t work fully)</label>
                                         <textarea name="prototype_challenges"
-                                                  class="form-control @error('prototype_challenges') is-invalid @enderror border p-2"
+                                                  class="form-control @error('prototype_challenges') is-invalid @enderror"
                                                   rows="3"
                                                   @if(! $canEdit) disabled @endif>{{ old('prototype_challenges', $prototype?->prototype_challenges) }}</textarea>
                                         @error('prototype_challenges')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -193,7 +193,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Test results (optional)</label>
                                         <textarea name="prototype_test_results"
-                                                  class="form-control @error('prototype_test_results') is-invalid @enderror border p-2"
+                                                  class="form-control @error('prototype_test_results') is-invalid @enderror"
                                                   rows="3"
                                                   @if(! $canEdit) disabled @endif>{{ old('prototype_test_results', $prototype?->prototype_test_results) }}</textarea>
                                         @error('prototype_test_results')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -202,7 +202,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Next steps / improvements (optional)</label>
                                         <textarea name="prototype_next_steps"
-                                                  class="form-control @error('prototype_next_steps') is-invalid @enderror border p-2"
+                                                  class="form-control @error('prototype_next_steps') is-invalid @enderror"
                                                   rows="3"
                                                   @if(! $canEdit) disabled @endif>{{ old('prototype_next_steps', $prototype?->prototype_next_steps) }}</textarea>
                                         @error('prototype_next_steps')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -275,7 +275,7 @@
                         </div>
 
                         <div class="col-lg-5">
-                            <h6 class="text-uppercase text-muted small mb-3">Student representatives</h6>
+                            <h6 class="text-muted small fw-semibold mb-3">Student representatives</h6>
                             <p class="small text-muted mb-3">
                                 These are the representatives selected for your idea. Prototype development is expected to be led by this team.
                             </p>

@@ -1,8 +1,8 @@
 <div class="row">
             <div class="col-lg-12">
-                <div class="card border-0 shadow-none mb-4">
-                    <div class="card-header bg-transparent d-flex flex-wrap align-items-center justify-content-between gap-2">
-                        <h4 class="mb-0 text-uppercase">Your registration submission</h4>
+                <div class="card border shadow-none mb-4 competition-phase-card">
+                    <div class="card-header bg-light-soft d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <h5 class="mb-0 fw-semibold">Your registration</h5>
                         @if($registration && $registration->submitted_at)
                             <span class="text-muted small">Submitted {{ $registration->submitted_at->timezone(config('app.timezone'))->format('j M Y, H:i') }}</span>
                         @endif
@@ -11,9 +11,9 @@
                         @if(!$teacherClub)
                             <div class="alert alert-warning mb-0">You are not yet an approved teacher in this club.</div>
                         @elseif(!$registration)
-                            <p class="text-muted">No registration snapshot submitted yet.</p>
+                            <p class="text-muted mb-3">No registration snapshot submitted yet.</p>
                             @if($competition->allowsTeacherRegistration(null))
-                                <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-danger text-white">Register now</a>
+                                <a href="{{ route('client.competitions.register', $competition) }}" class="btn btn-sm btn-primary text-white">Register now</a>
                             @endif
                         @else
                             @php
@@ -39,7 +39,7 @@
 
                             <div class="row g-4">
                                 <div class="col-md-6">
-                                    <h6 class="text-uppercase text-muted small mb-2">Teacher contact (as submitted)</h6>
+                                    <h6 class="text-muted small fw-semibold mb-2">Teacher contact (as submitted)</h6>
                                     <dl class="row small mb-0">
                                         <dt class="col-sm-4 text-muted fw-normal">Name</dt>
                                         <dd class="col-sm-8 mb-1">{{ $registration->teacher_name ?: '—' }}</dd>
@@ -56,9 +56,9 @@
                                         $schoolRegionLegacy = $registration->school?->region;
                                         $regionDisplay = $regRegionName ?: $schoolRegionName ?: $schoolRegionLegacy;
                                     @endphp
-                                  
+
                                     @if($registration->school)
-                                        <h6 class="text-uppercase text-muted small mb-2 mt-3">School profile (as Submitted)</h6>
+                                        <h6 class="text-muted small fw-semibold mb-2 mt-md-0 mt-3">School profile (as submitted)</h6>
                                         <dl class="row small mb-0">
                                             <dt class="col-sm-4 text-muted fw-normal">Name</dt>
                                             <dd class="col-sm-8 mb-1">{{ $registration->school->name ?: '—' }}</dd>
@@ -81,7 +81,7 @@
 
                             <hr class="my-3 opacity-25">
 
-                            <h5 class="text-uppercase mb-2">Eligibility snapshot</h5>
+                            <h5 class="fw-semibold mb-2">Eligibility snapshot</h5>
                             <p class="mb-2">
                                 <strong>{{ $registration->student_count_snapshot ?? '—' }}</strong> students in pool
                                 @if($registration->girls_count_snapshot !== null)
@@ -91,7 +91,7 @@
                                     — <strong>{{ $registration->girls_ratio_snapshot }}%</strong> girls
                                 @endif
                             </p>
-                            <p class="mb-2 mb-0">
+                            <p class="mb-3">
                                 Pool met rules at submission:
                                 @if($registration->eligibility_met === true)
                                     <span class="text-success">Yes</span>
@@ -102,7 +102,7 @@
                                 @endif
                             </p>
 
-                            <h6 class="text-uppercase mb-2">Students in your pool</h6>
+                            <h6 class="fw-semibold mb-2">Students in your pool</h6>
                             @if($poolStudents->isNotEmpty())
                                 <div class="table-responsive border rounded">
                                     <table class="table table-sm table-bordered table-light-soft align-middle mb-0 small">
@@ -136,11 +136,11 @@
                                 <p class="text-muted small mb-0 mt-3">Your participant list and school details are with the admin for review. You will be able to continue with the next steps after approval.</p>
                             @elseif($registration->status === 'rejected' && $competition->allowsTeacherRegistration($registration))
                                 <div class="d-flex flex-wrap gap-2 mt-3">
-                                    <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-warning text-dark">Update and resubmit</a>
+                                    <a href="{{ route('client.competitions.register', $competition) }}" class="btn btn-sm btn-warning text-dark">Update and resubmit</a>
                                 </div>
                             @elseif($registration->status === 'draft' && $competition->allowsTeacherRegistration($registration))
                                 <div class="d-flex flex-wrap gap-2 mt-3">
-                                    <a href="{{ route('client.competitions.register', $competition) }}" class="badge bg-danger text-white">Complete registration</a>
+                                    <a href="{{ route('client.competitions.register', $competition) }}" class="btn btn-sm btn-primary text-white">Complete registration</a>
                                 </div>
                             @endif
                         @endif

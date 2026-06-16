@@ -14,9 +14,9 @@
 
 <div id="mentor-onboarding" class="row">
     <div class="col-12">
-        <div class="card border-0 shadow-none mb-4">
-            <div class="card-header bg-transparent">
-                <h4 class="mb-0 text-uppercase">Mentor onboarding</h4>
+        <div class="card border shadow-none mb-4 competition-phase-card">
+            <div class="card-header bg-light-soft">
+                <h5 class="mb-0 fw-semibold">Mentor onboarding</h5>
                 <p class="text-muted small mb-0 mt-1">
                     Judges selected prototypes in the previous stage. Here are your onboarded mentors.
                 </p>
@@ -42,7 +42,7 @@
 
                     <div class="row g-4">
                         <div class="col-lg-7">
-                            <h6 class="text-uppercase text-muted small mb-3">Your prototype (from development phase)</h6>
+                            <h6 class="text-muted small fw-semibold mb-3">Your prototype (from development phase)</h6>
 
                             <dl class="row small mb-0">
                                 <dt class="col-sm-4 text-muted fw-normal">Prototype title</dt>
@@ -75,7 +75,7 @@
                         </div>
 
                         <div class="col-lg-5">
-                            <h6 class="text-uppercase text-muted small mb-3">Assigned mentors</h6>
+                            <h6 class="text-muted small fw-semibold mb-3">Assigned mentors</h6>
 
                             @if($mentors->isEmpty())
                                 <div class="alert alert-light border mb-0">

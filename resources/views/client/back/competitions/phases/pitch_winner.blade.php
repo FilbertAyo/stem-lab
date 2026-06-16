@@ -6,9 +6,9 @@
 
 <div id="pitch-winner" class="row">
     <div class="col-12">
-        <div class="card border-0 shadow-none mb-4">
-            <div class="card-header bg-transparent">
-                <h4 class="mb-0 text-uppercase">Pitch & winner</h4>
+        <div class="card border shadow-none mb-4 competition-phase-card">
+            <div class="card-header bg-light-soft">
+                <h5 class="mb-0 fw-semibold">Pitch & winner</h5>
                 <p class="text-muted small mb-0 mt-1">Final stage: teams called for pitch present their prototypes.</p>
             </div>
             <div class="card-body">

@@ -6,3 +6,8 @@
   --bs-modal-border-radius: var(--client-modal-border-radius);
   --bs-modal-inner-border-radius: calc(var(--client-modal-border-radius) - var(--bs-border-width, 1px));
 }
+
+.dropdown-menu {
+  --bs-dropdown-border-radius: var(--client-modal-border-radius);
+  border: 1px solid rgba(var(--bs-dark-rgb), 0.12);
+}

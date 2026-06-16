@@ -14,28 +14,20 @@
                     <li class="breadcrumb-item active">Representatives</li>
                 </ol>
             </nav>
-            <h2 class="title mb-0">Step 2: Select {{ $repCount }} representatives</h2>
+            <h4 class="mb-1">Step 2: Select {{ $repCount }} representatives</h4>
             <p class="text-muted small mb-0">Choose exactly {{ $repCount }} students from the pool. At least 70% must be girls. Submit when ready for admin review.</p>
         </div>
 
+        @include('elements.client-validation')
+
         <div class="row">
             <div class="col-lg-8">
-                <div class="card border-0 shadow-none">
+                <div class="card border shadow-none">
                     <div class="card-header bg-light-soft">
                         <h5 class="mb-0">{{ $competition->name }}</h5>
                         <small class="text-muted">{{ $competition->club->name }}</small>
                     </div>
                     <div class="card-body">
-                        @if($errors->any())
-                            <div class="alert alert-danger">
-                                <ul class="mb-0">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
                         <form id="representative-picker" action="{{ route('client.competitions.register.representatives.store', $competition) }}" method="POST" data-max-reps="{{ $repCount }}">
                             @csrf
 
@@ -63,7 +55,7 @@
                                                 <td>{{ ucfirst($student->gender) }}</td>
                                                 <td>{{ $student->schoolClass->name ?? '—' }}</td>
                                                 <td>
-                                                    <input type="text" class="form-control form-control-sm border p-2" name="student_roles[{{ $student->id }}]" value="{{ old("student_roles.{$student->id}") }}">
+                                                    <input type="text" class="form-control form-control-sm" name="student_roles[{{ $student->id }}]" value="{{ old("student_roles.{$student->id}") }}">
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -72,9 +64,9 @@
                             </div>
 
                             <div class="d-flex flex-wrap gap-2 mt-3">
-                                <button type="submit" class="btn btn-primary">Submit registration for approval</button>
-                                <a href="{{ route('client.competitions.register', $competition) }}" class="btn btn-outline-secondary">Back to participants</a>
-                                <a href="{{ route('client.competitions.show', $competition) }}" class="btn btn-secondary text-white">Cancel</a>
+                                <button type="submit" class="btn btn-sm btn-primary text-white">Submit registration for approval</button>
+                                <a href="{{ route('client.competitions.register', $competition) }}" class="btn btn-sm btn-outline-secondary">Back to participants</a>
+                                <a href="{{ route('client.competitions.show', $competition) }}" class="btn btn-sm btn-secondary text-white">Cancel</a>
                             </div>
                         </form>
                     </div>
@@ -82,7 +74,7 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="card border-0 shadow-none mb-3">
+                <div class="card border shadow-none mb-3">
                     <div class="card-header bg-light-soft"><h6 class="mb-0">Eligibility &amp; selection</h6></div>
                     <div class="card-body">
                         <p class="mb-1"><strong>Pool:</strong> {{ $poolCount }} students, {{ $poolRatio }}% girls</p>

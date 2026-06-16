@@ -37,7 +37,7 @@
             </small>
         </div>
 
-        <h5 class="fw-semibold">{{ $experiment->name }}</h5>
+        <h6 class="fw-semibold">{{ $experiment->name }}</h6>
         <!-- <p class="text-muted small">
             {{ Str::limit($experiment->description ?? 'No description provided yet.', 60) }}
         </p> -->

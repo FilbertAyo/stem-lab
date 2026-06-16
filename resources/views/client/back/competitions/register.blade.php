@@ -17,13 +17,10 @@
                     <li class="breadcrumb-item active" aria-current="page">Participants</li>
                 </ol>
             </nav>
-          
-        </div>
-        <div class="mb-3">
-            <h2 class="title mb-1">Upload Students</h2>
+            <h4 class="mb-1">Upload students</h4>
             <p class="text-muted small mb-0">
                 Add students with CSV import. They are stored on your club roster and listed here for this competition.
-                When the pool meets the rules, submit your school details for <strong>admin approval</strong>. 
+                When the pool meets the rules, submit your school details for <strong>admin approval</strong>.
             </p>
         </div>
 
@@ -41,10 +38,10 @@
                     </div>
                 @endif
 
-                <div class="card border-0 shadow-none mb-4">
+                <div class="card border shadow-none mb-4">
                     <div class="card-header bg-light-soft d-flex flex-wrap align-items-center justify-content-between gap-2">
                         <h5 class="mb-0"> Students CSV import</h5>
-                        <a href="{{ route('client.competitions.register.csv-template', $competition) }}" class="badge bg-dark text-white">
+                        <a href="{{ route('client.competitions.register.csv-template', $competition) }}" class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-download me-1"></i>Download template
                         </a>
                     </div>
@@ -62,10 +59,10 @@
                             @csrf
                             <div class="col-md-8">
                                 <label class="form-label small mb-1" for="csv_file">CSV file</label>
-                                <input type="file" name="csv_file" id="csv_file" accept=".csv,.txt" class="form-control border p-2" required>
+                                <input type="file" name="csv_file" id="csv_file" accept=".csv,.txt" class="form-control" required>
                             </div>
                             <div class="col-md-4">
-                                <button type="submit" class="badge bg-primary border-0">
+                                <button type="submit" class="btn btn-sm btn-primary text-white">
                                     <i class="bi bi-upload me-1"></i>Import students
                                 </button>
                             </div>
@@ -73,14 +70,14 @@
                     </div>
                 </div>
 
-                <div class="card border-0 shadow-none mb-4">
+                <div class="card border shadow-none mb-4">
                     <div class="card-header bg-light-soft d-flex flex-wrap align-items-center justify-content-between gap-2">
                         <h5 class="mb-0">Students in your pool</h5>
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge bg-white text-muted">{{ $poolCount }} {{ Str::plural('student', $poolCount) }}</span>
                             @if($students->isNotEmpty())
                                 <button type="button"
-                                        class="badge bg-danger border-0"
+                                        class="btn btn-sm btn-outline-danger"
                                         data-bs-toggle="modal"
                                         data-bs-target="#clearPoolStudentsModal">
                                     Delete all students
@@ -147,60 +144,50 @@
                     </div>
                 </div>
 
-                <div class="card border-0 shadow-none">
+                <div class="card border shadow-none">
                     <div class="card-header bg-light-soft">
                         <h5 class="mb-0">School &amp; teacher contact</h5>
                         <small class="text-muted">Included when you submit for admin approval (after the pool qualifies).</small>
                     </div>
                     <div class="card-body">
-                        @if($errors->any())
-                            <div class="alert alert-danger">
-                                <ul class="mb-0">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
                         <form action="{{ route('client.competitions.register.store', $competition) }}" method="POST">
                             @csrf
 
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label small">Teacher name</label>
-                                    <input type="text" class="form-control border p-2 bg-light" value="{{ auth()->user()->name }}" disabled>
+                                    <input type="text" class="form-control bg-light" value="{{ auth()->user()->name }}" disabled>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small">Teacher email</label>
-                                    <input type="text" class="form-control border p-2 bg-light" value="{{ auth()->user()->email }}" disabled>
+                                    <input type="text" class="form-control bg-light" value="{{ auth()->user()->email }}" disabled>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="teacher_phone">Teacher phone</label>
-                                    <input type="text" id="teacher_phone" class="form-control border p-2 bg-light" value="{{ auth()->user()->phone ?: '—' }}" disabled>
+                                    <input type="text" id="teacher_phone" class="form-control bg-light" value="{{ auth()->user()->phone ?: '—' }}" disabled>
                                     <small class="text-muted">Uses your account phone number from profile settings.</small>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_phone">School phone</label>
-                                    <input type="text" id="school_phone" class="form-control border p-2 bg-light" value="{{ $teacherClub->school?->phone ?: '—' }}" disabled>
+                                    <input type="text" id="school_phone" class="form-control bg-light" value="{{ $teacherClub->school?->phone ?: '—' }}" disabled>
                                     <small class="text-muted">Pulled from the school profile.</small>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_name">School name <span class="text-danger">*</span></label>
-                                    <input type="text" id="school_name" class="form-control border p-2" name="school_name" value="{{ old('school_name', $registration->school_name ?? $teacherClub->school?->name) }}" required>
+                                    <input type="text" id="school_name" class="form-control" name="school_name" value="{{ old('school_name', $registration->school_name ?? $teacherClub->school?->name) }}" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_district">District</label>
-                                    <input type="text" id="school_district" class="form-control border p-2" name="school_district" value="{{ old('school_district', $registration->school_district ?? $teacherClub->school?->district) }}">
+                                    <input type="text" id="school_district" class="form-control" name="school_district" value="{{ old('school_district', $registration->school_district ?? $teacherClub->school?->district) }}">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_ward">Ward</label>
-                                    <input type="text" id="school_ward" class="form-control border p-2" name="school_ward" value="{{ old('school_ward', $registration->school_ward ?? $teacherClub->school?->ward) }}">
+                                    <input type="text" id="school_ward" class="form-control" name="school_ward" value="{{ old('school_ward', $registration->school_ward ?? $teacherClub->school?->ward) }}">
                                 </div>
                             </div>
 
                             <div class="d-flex flex-wrap gap-2 mt-4">
-                                <button type="submit" class="badge bg-primary border-0" @if(! $poolOk) disabled title="Meet eligibility in the sidebar first" @endif>
+                                <button type="submit" class="btn btn-sm btn-primary text-white" @if(! $poolOk) disabled title="Meet eligibility in the sidebar first" @endif>
                                     Submit registration for approval
                                 </button>
                           </div>
@@ -219,15 +206,15 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="card border-0 shadow-none mb-3">
+                <div class="card border shadow-none mb-3">
                     <div class="card-header bg-light-soft"><h6 class="mb-0">Eligibility (competition pool)</h6></div>
                     <div class="card-body">
                         <p class="mb-1"><strong>Students in pool:</strong> {{ $poolCount }} (min {{ $poolMin }}@if($poolMax !== null), max {{ $poolMax }}@endif)</p>
                         <p class="mb-1"><strong>Girls in pool:</strong> {{ $poolRatio }}% / 70% min</p>
                     </div>
                 </div>
-                <div class="card border-0 shadow-none mb-3">
-                    <div class="card-header"><h6 class="mb-0">Class range</h6></div>
+                <div class="card border shadow-none mb-3">
+                    <div class="card-header bg-light-soft"><h6 class="mb-0">Class range</h6></div>
                     <div class="card-body">
                         @if(empty($allowedClassIds))
                             <span class="text-muted small">All classes count toward this competition&rsquo;s pool.</span>
@@ -235,13 +222,13 @@
                             <p class="text-muted small mb-2">Only students in these classes are counted for eligibility:</p>
                             <ul class="small mb-0 ps-3">
                                 @foreach($competition->classRequirements as $req)
-                                    <li class='badge bg-light text-muted mb-2'>{{ $req->schoolClass->name ?? 'Class #'.$req->school_class_id }}</li>
+                                    <li class="mb-1">{{ $req->schoolClass->name ?? 'Class #'.$req->school_class_id }}</li>
                                 @endforeach
                             </ul>
                         @endif
                     </div>
                 </div>
-                <div class="card border-0 shadow-none">
+                <div class="card border shadow-none">
                     <div class="card-header bg-light-soft"><h6 class="mb-0">After registration closes</h6></div>
                     <div class="card-body">
                         <p class="text-muted small mb-0">
@@ -266,11 +253,11 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label small" for="editStudentName">Name</label>
-                                <input type="text" name="name" id="editStudentName" class="form-control border p-2" required maxlength="255">
+                                <input type="text" name="name" id="editStudentName" class="form-control" required maxlength="255">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label small" for="editStudentGender">Gender</label>
-                                <select name="gender" id="editStudentGender" class="form-select border p-2" required>
+                                <select name="gender" id="editStudentGender" class="form-select" required>
                                 <option value="female">Female</option>    
                                 <option value="male">Male</option>
                                
@@ -278,7 +265,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label small" for="editStudentClassId">Class</label>
-                                <select name="school_class_id" id="editStudentClassId" class="form-select border p-2" required>
+                                <select name="school_class_id" id="editStudentClassId" class="form-select" required>
                                     @foreach($classes as $class)
                                         <option value="{{ $class->id }}">{{ $class->name }}</option>
                                     @endforeach
@@ -286,12 +273,12 @@
                             </div>
                             <div class="mb-0">
                                 <label class="form-label small" for="editStudentDob">Date of birth</label>
-                                <input type="date" name="date_of_birth" id="editStudentDob" class="form-control border p-2" required max="{{ now()->format('Y-m-d') }}">
+                                <input type="date" name="date_of_birth" id="editStudentDob" class="form-control" required max="{{ now()->format('Y-m-d') }}">
                                 <p class="text-muted small mt-1 mb-0">Age is calculated from this date and stays correct each year.</p>
                             </div>
                         </div>
                         <div class="modal-footer">
-                         <button type="submit" class="badge bg-primary border-0">Save changes</button>
+                         <button type="submit" class="btn btn-sm btn-primary text-white">Save changes</button>
                         </div>
                     </form>
                 </div>
@@ -313,7 +300,7 @@
                             <p class="mb-0">Remove <strong id="deleteStudentNameDisplay"></strong> from your club roster? They will disappear from this pool. If they were linked to a draft registration, those links are removed too.</p>
                         </div>
                         <div class="modal-footer">
-                         <button type="submit" class="badge bg-danger border-0">Delete</button>
+                         <button type="submit" class="btn btn-sm btn-danger text-white">Delete</button>
                         </div>
                     </form>
                 </div>
@@ -339,7 +326,7 @@
                             </p>
                         </div>
                         <div class="modal-footer">
-                         <button type="submit" class="badge bg-danger border-0">Delete all</button>
+                         <button type="submit" class="btn btn-sm btn-danger text-white">Delete all</button>
                         </div>
                     </form>
                 </div>

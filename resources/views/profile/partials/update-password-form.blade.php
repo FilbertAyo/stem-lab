@@ -1,8 +1,5 @@
 <section>
-    <p class="text-muted mb-4">
-        Ensure your account is using a long, random password to stay secure.
-    </p>
-
+ 
     <form method="post" action="{{ route('password.update') }}">
         @csrf
         @method('put')
@@ -63,7 +60,7 @@
         </div>
 
         <div class="d-flex align-items-center gap-3">
-                <button type="submit" class="badge bg-primary border-0 text-white">
+                <button type="submit" class="btn btn-primary">
                 <i class="bi bi-shield-check me-1"></i> Update Password
             </button>
 

@@ -23,39 +23,50 @@
           @endif
         </nav>
         <div class="d-flex align-items-center gap-3">
-     
-          <!-- User Dropdown -->
+
+          @php($navUser = Auth::user())
+          @php($navName = $navUser->name ?? 'User')
+          @php($navInitials = collect(preg_split('/\s+/', trim($navName)))->filter()->take(2)->map(fn ($part) => strtoupper(substr($part, 0, 1)))->implode('') ?: 'U')
+          @php($navRoleLabel = ($navUser->role ?? '') === 'teacher' ? 'Teacher' : 'Student')
+
           <div class="dropdown">
-            <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" id="userDropdown"
-            data-bs-toggle="dropdown" aria-expanded="false">
-              <div class="me-2 text-end">
-                  <span class="fw-semibold">{{ Auth::user()->name ?? 'User' }}</span>
-              </div>
-           
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end mt-3 p-3 shadow" aria-labelledby="userDropdown" style="min-width: 250px;">
-              <li class="mb-2">
-                  <div class="d-flex align-items-center">
-                     
-                      <div>
-                          <span class="fw-semibold d-block">{{ Auth::user()->name ?? 'User' }}</span>
-                          <small class="text-muted">{{ Auth::user()->email ?? 'user@example.com' }}</small>
-                      </div>
+            <button
+              type="button"
+              class="user-nav-toggle dropdown-toggle d-flex align-items-center gap-2"
+              id="userDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span class="user-nav-avatar" aria-hidden="true">{{ $navInitials }}</span>
+              <span class="user-nav-name d-none d-md-inline text-truncate">{{ $navUser->name ?? 'User' }}</span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end user-nav-dropdown shadow-sm" aria-labelledby="userDropdown">
+              <li class="user-nav-dropdown-header">
+                <div class="d-flex align-items-center gap-3">
+                  <span class="user-nav-avatar user-nav-avatar-lg" aria-hidden="true">{{ $navInitials }}</span>
+                  <div class="min-w-0">
+                    <span class="fw-semibold d-block text-truncate">{{ $navUser->name ?? 'User' }}</span>
+                    <small class="text-muted d-block text-truncate">{{ $navUser->email ?? 'user@example.com' }}</small>
+                    <span class="badge bg-light text-dark border mt-2">{{ $navRoleLabel }}</span>
                   </div>
+                </div>
               </li>
-              <li><hr class="dropdown-divider"></li>
+              <li><hr class="dropdown-divider my-0"></li>
               <li>
-                  <a href="{{ route('profile.edit') }}" class='dropdown-item d-flex align-items-center'>
-                      <i class='bi bi-person-circle me-2'></i>Profile
-                  </a>
+                <a href="{{ route('profile.edit') }}" class="dropdown-item d-flex align-items-center gap-2">
+                  <i class="bi bi-person-circle"></i>
+                  <span>Profile</span>
+                </a>
               </li>
               <li>
-                  <form method="POST" action="{{ route('logout') }}">
-                      @csrf
-                      <button type="submit" class="dropdown-item d-flex align-items-center">
-                          <i class="bi bi-box-arrow-right me-2"></i> Logout
-                      </button>
-                  </form>
+                <form method="POST" action="{{ route('logout') }}">
+                  @csrf
+                  <button type="submit" class="dropdown-item d-flex align-items-center gap-2">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                  </button>
+                </form>
               </li>
             </ul>
           </div>

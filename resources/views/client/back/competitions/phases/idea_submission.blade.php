@@ -18,10 +18,10 @@
 
 <div id="idea-submission" class="row">
     <div class="col-12">
-        <div class="card border-0 shadow-none mb-4">
-            <div class="card-header bg-transparent d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div class="card border shadow-none mb-4 competition-phase-card">
+            <div class="card-header bg-light-soft d-flex flex-wrap align-items-center justify-content-between gap-2">
                 <div>
-                    <h4 class="mb-0 text-uppercase">Idea submission</h4>
+                    <h5 class="mb-0 fw-semibold">Idea submission</h5>
                     <p class="text-muted small mb-0 mt-1">
                         {{ $competition->description ?: 'Share your school’s problem and proposed STEM solution for this competition phase.' }}
                     </p>
@@ -54,28 +54,28 @@
                         @csrf
                         <input type="hidden" name="sync_representatives" value="1">
 
-                        <h6 class="text-uppercase text-muted small mb-3">Idea details</h6>
+                        <h6 class="text-muted small fw-semibold mb-3">Idea details</h6>
 
                         <div class="mb-3">
                             <label class="form-label">Problem title <span class="text-danger">*</span></label>
-                            <input type="text" name="problem_title" class="form-control @error('problem_title') is-invalid @enderror border p-2" value="{{ old('problem_title', $idea?->problem_title) }}" required maxlength="255">
+                            <input type="text" name="problem_title" class="form-control @error('problem_title') is-invalid @enderror" value="{{ old('problem_title', $idea?->problem_title) }}" required maxlength="255">
                             @error('problem_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Problem statement <span class="text-danger">*</span></label>
-                            <textarea name="problem_statement" class="form-control @error('problem_statement') is-invalid @enderror border p-2" rows="4" required>{{ old('problem_statement', $idea?->problem_statement) }}</textarea>
+                            <textarea name="problem_statement" class="form-control @error('problem_statement') is-invalid @enderror" rows="4" required>{{ old('problem_statement', $idea?->problem_statement) }}</textarea>
                             @error('problem_statement')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Proposed solution <span class="text-danger">*</span></label>
-                            <textarea name="proposed_solution" class="form-control @error('proposed_solution') is-invalid @enderror border p-2" rows="4" required>{{ old('proposed_solution', $idea?->proposed_solution) }}</textarea>
+                            <textarea name="proposed_solution" class="form-control @error('proposed_solution') is-invalid @enderror" rows="4" required>{{ old('proposed_solution', $idea?->proposed_solution) }}</textarea>
                             @error('proposed_solution')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="row g-2">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">STEM discipline <span class="text-danger">*</span></label>
-                                <select name="stem_category" class="form-select @error('stem_category') is-invalid @enderror border p-2" required>
+                                <select name="stem_category" class="form-select @error('stem_category') is-invalid @enderror" required>
                                     <option value="">Select discipline</option>
                                     @foreach($stemCategoryOptions as $option)
                                         <option value="{{ $option }}" @selected($selectedStemCategory === $option)>{{ $option }}</option>
@@ -90,7 +90,7 @@
                                     type="text"
                                     id="stemCategoryOtherInput"
                                     name="stem_category_other"
-                                    class="form-control @error('stem_category_other') is-invalid @enderror border p-2"
+                                    class="form-control @error('stem_category_other') is-invalid @enderror"
                                     value="{{ $selectedStemCategoryOther }}"
                                     maxlength="120"
                                     @if($selectedStemCategory === 'Other' || $isCustomStemCategory) required @endif
@@ -99,7 +99,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Community region</label>
-                                <select name="community_region_id" class="form-select @error('community_region_id') is-invalid @enderror border p-2">
+                                <select name="community_region_id" class="form-select @error('community_region_id') is-invalid @enderror">
                                     <option value="">Select region</option>
                                     @foreach($regions as $region)
                                         <option value="{{ $region->id }}" @selected((string) old('community_region_id', $idea?->community_region_id) === (string) $region->id)>{{ $region->name }}</option>
@@ -109,20 +109,20 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Community / location</label>
-                                <input type="text" name="community_location" class="form-control @error('community_location') is-invalid @enderror border p-2" value="{{ old('community_location', $idea?->community_location) }}" maxlength="255">
+                                <input type="text" name="community_location" class="form-control @error('community_location') is-invalid @enderror" value="{{ old('community_location', $idea?->community_location) }}" maxlength="255">
                                 @error('community_location')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
                       
                         <div class="mb-4">
                             <label class="form-label">Supporting notes</label>
-                            <textarea name="supporting_notes" class="form-control @error('supporting_notes') is-invalid @enderror border p-2" rows="3">{{ old('supporting_notes', $idea?->supporting_notes) }}</textarea>
+                            <textarea name="supporting_notes" class="form-control @error('supporting_notes') is-invalid @enderror" rows="3">{{ old('supporting_notes', $idea?->supporting_notes) }}</textarea>
                             @error('supporting_notes')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
                         <hr class="my-4 opacity-25">
 
-                        <h6 class="text-uppercase text-muted small mb-2">Student representatives</h6>
+                        <h6 class="text-muted small fw-semibold mb-2">Student representatives</h6>
                         <p class="small text-muted mb-3">
                             Choose <strong>{{ $repCount }}</strong> students who will represent your school for this idea. At least <strong>70%</strong> must be girls.
                             Optional role labels help judges (e.g. &ldquo;Team lead&rdquo;).
@@ -154,7 +154,10 @@
                                                     <td>{{ ucfirst((string) $student->gender) }}</td>
                                                     <td>{{ $student->schoolClass->name ?? '—' }}</td>
                                                     <td>
-                                                        <input type="text" class="border p-2" name="student_roles[{{ $student->id }}]" value="{{ old("student_roles.{$student->id}", $registration->representativeStudents->firstWhere('student_id', $student->id)?->role) }}">
+                                                        <input type="text"
+                                                               class="form-control form-control-sm"
+                                                               name="student_roles[{{ $student->id }}]"
+                                                               value="{{ old("student_roles.{$student->id}", $registration->representativeStudents->firstWhere('student_id', $student->id)?->role) }}">
                                                     </td>
                                                 </tr>
                                             @endforeach

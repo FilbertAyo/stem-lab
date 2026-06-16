@@ -33,7 +33,7 @@
             </small>
         </div>
 
-        <h5 class="fw-semibold">{{ $model->name }}</h5>
+            <h6 class="fw-semibold">{{ $model->name }}</h6>
         <!-- <p class="text-muted small">
             {{ Str::limit($model->description ?? 'No description provided yet.', 60) }}
         </p> -->

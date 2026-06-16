@@ -12,9 +12,9 @@
 
 <div id="prototype-shortlisting" class="row">
     <div class="col-12">
-        <div class="card border-0 shadow-none mb-4">
-            <div class="card-header bg-transparent">
-                <h4 class="mb-0 text-uppercase">Prototype shortlisting</h4>
+        <div class="card border shadow-none mb-4 competition-phase-card">
+            <div class="card-header bg-light-soft">
+                <h5 class="mb-0 fw-semibold">Prototype shortlisting</h5>
                 <p class="text-muted small mb-0 mt-1">Judges are reviewing your prototype. No action is required from you right now.</p>
             </div>
 
@@ -37,7 +37,7 @@
 
                     <div class="row g-4">
                         <div class="col-lg-7">
-                            <h6 class="text-uppercase text-muted small mb-3">Your prototype (read only)</h6>
+                            <h6 class="text-muted small fw-semibold mb-3">Your prototype (read only)</h6>
 
                             <dl class="row small mb-0">
                                 <dt class="col-sm-4 text-muted fw-normal">Prototype title</dt>
@@ -77,7 +77,7 @@
                         </div>
 
                         <div class="col-lg-5">
-                            <h6 class="text-uppercase text-muted small mb-3">Submission details</h6>
+                            <h6 class="text-muted small fw-semibold mb-3">Submission details</h6>
 
                             <ul class="list-unstyled mb-0 small">
                                 <li class="d-flex justify-content-between py-2 border-bottom">

@@ -3,7 +3,7 @@
 
         <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
             <div>
-                <h2 class="title mb-1">My Profile</h2>
+                <h4 class="mb-1">My Profile</h4>
                 <p class="text-muted mb-0">Manage your account settings and preferences</p>
             </div>
         </div>
@@ -11,21 +11,21 @@
         <section class="row">
             <!-- Profile Overview Column -->
             <div class="col-lg-4 col-12 mb-4">
-                <div class="card border-0 shadow-none">
+                <div class="card border shadow-none">
                     <div class="card-body text-center py-4">
                         <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
                             <span class="text-primary fw-bold" style="font-size: 2.5rem;">
                                 {{ strtoupper(substr($user->name, 0, 1)) }}
                             </span>
                         </div>
-                        <h4 class="fw-semibold mb-1">{{ $user->name }}</h4>
+                        <h5 class="fw-semibold mb-1">{{ $user->name }}</h5>
                         <p class="text-muted mb-2">{{ $user->email }}</p>
                         <span class="badge {{ $user->role === 'teacher' ? 'bg-success' : (in_array($user->role, ['student', 'parent']) ? 'bg-info' : 'bg-secondary') }} px-3 py-2">
                             <i class="bi {{ $user->role === 'teacher' ? 'bi-mortarboard' : 'bi-person' }} me-1"></i>
                             {{ ucfirst($user->role) }}
                         </span>
                     </div>
-                    <div class="card-footer bg-light-soft">
+                    <div class="card-footer bg-white border-top">
                         <div class="row text-center">
                             <div class="col-6 border-end">
                                 <span class="text-muted small d-block">Status</span>
@@ -42,8 +42,8 @@
                 </div>
 
                 @if($user->role === 'teacher' && $user->teacherClubs->count() > 0)
-                    <div class="card border-0 shadow-none mt-4">
-                        <div class="card-header bg-light-soft">
+                    <div class="card border shadow-none mt-4">
+                        <div class="card-header bg-white border-bottom">
                             <h6 class="mb-0"><i class="bi bi-house me-2"></i>My Clubs</h6>
                         </div>
                         <div class="card-body p-0">
@@ -56,7 +56,7 @@
                                                 <small class="text-muted d-block">{{ $teacherClub->school->name }}</small>
                                             @endif
                                         </div>
-                                        <span class="badge bg-primary rounded-pill">
+                                        <span class="badge bg-dark">
                                             {{ $teacherClub->students->count() }} students
                                         </span>
                                     </li>
@@ -70,8 +70,8 @@
             <!-- Settings Column -->
             <div class="col-lg-8 col-12">
                 <!-- Profile Information Card -->
-                <div class="card border-0 shadow-none mb-4">
-                    <div class="card-header bg-light-soft d-flex align-items-center">
+                <div class="card border shadow-none mb-4">
+                    <div class="card-header bg-white border-bottom d-flex align-items-center">
                         <i class="bi bi-person-circle fs-5 me-2 text-primary"></i>
                         <h5 class="mb-0">Profile Information</h5>
                     </div>
@@ -81,8 +81,8 @@
                 </div>
 
                 <!-- Update Password Card -->
-                <div class="card border-0 shadow-none mb-4">
-                    <div class="card-header bg-light-soft d-flex align-items-center">
+                    <div class="card border shadow-none mb-4">
+                        <div class="card-header bg-white border-bottom d-flex align-items-center">
                         <i class="bi bi-shield-lock fs-5 me-2 text-primary"></i>
                         <h5 class="mb-0">Update Password</h5>
                     </div>

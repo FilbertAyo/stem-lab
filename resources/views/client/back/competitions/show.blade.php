@@ -7,12 +7,11 @@
                     <li class="breadcrumb-item active">{{ $competition->name }}</li>
                 </ol>
             </nav>
+            <h4 class="mb-1">{{ $competition->name }}</h4>
+            <p class="text-muted small mb-0">Track phases, complete open tasks, and follow admin decisions from this hub.</p>
         </div>
 
-        <div class="dashboard-content-header mb-3">
-           
-            <h2 class="title mb-0">{{ $competition->name }}</h2>
-        </div>
+        @include('elements.client-validation')
 
         @php
             $phaseLiveNow = $competition->phases->first(fn ($p) => $p->isOpenNow());
@@ -39,7 +38,7 @@
             $modificationSubmitted = $idea?->prototypeModification && $idea->prototypeModification->status === 'submitted';
         @endphp
 
-        <div class="card border-0 shadow-lg mb-4 phase-wizard-card">
+        <div class="card border shadow-none mb-4 phase-wizard-card">
             <div class="card-body py-3 px-3 px-md-4">
                 <div class="d-flex flex-column flex-md-row flex-md-wrap align-items-md-center justify-content-md-between gap-3 mb-3">
                     <div>
@@ -90,12 +89,11 @@
                                 <div class="phase-wizard-step flex-grow-1 text-center px-1" style="min-width: 4.5rem; max-width: 9rem;">
                                     <div class="position-relative mx-auto mb-2" style="width: 2.5rem; height: 2.5rem;">
                                  
-                                        <div class="rounded-circle w-100 h-100 d-flex align-items-center justify-content-center fw-bold border border-2 mx-auto
+                                        <div class="phase-wizard-marker d-flex align-items-center justify-content-center fw-bold border border-2 mx-auto
                                             @if($isLive) bg-success text-white border-success
                                             @elseif($isClosed) bg-light text-muted border-secondary
                                             @elseif($isFocus) bg-primary text-white border-primary
-                                            @else bg-white text-muted border-secondary @endif"
-                                            style="font-size: 0.9rem;">
+                                            @else bg-white text-muted border-secondary @endif">
                                             @if($isClosed)
                                                 <i class="bi bi-check-lg"></i>
                                             @else
@@ -129,31 +127,6 @@
                 @endif
             </div>
         </div>
-
-        @if (session('status'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; border-color: #c3e6cb;">
-                {{ session('status') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #f8d7da; border-color: #f5c6cb;" >
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if ($errors->any())
-            <div class="alert alert-danger" role="alert">
-                <strong>Please fix the following:</strong>
-                <ul class="mb-0 mt-2">
-                    @foreach ($errors->all() as $err)
-                        <li>{{ $err }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
 
 @if($competition->isPhaseOpen('registration'))
        @include('client.back.competitions.phases.registration')

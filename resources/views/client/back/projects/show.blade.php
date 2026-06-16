@@ -24,7 +24,7 @@
 
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
             <div class="flex-grow-1">
-                <h4 class="fw-bold text-dark mb-2">{{ $project->name }}</h4>
+                <h5 class="fw-bold text-dark mb-2">{{ $project->name }}</h5>
                 <div class="d-flex flex-wrap align-items-center gap-2">
                     @if($project->category)
                         <span class="badge bg-primary bg-opacity-10 text-primary">{{ $project->category->name }}</span>
