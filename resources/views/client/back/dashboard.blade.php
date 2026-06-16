@@ -22,7 +22,7 @@
  <div class="col-lg-12">
 
         <div class="dashboard-content-header">
-            <h2 class="title mb-0">Dashboard</h2>
+            <h4 class="mb-0">Dashboard</h4>
         </div>
 
         @if(($showPhoneReminder ?? false) === true)
@@ -44,7 +44,7 @@
         <section class="row mb-4">
         @if(Auth::user()->role === 'teacher' && $stats['total_competitions'] > 0)
           <div class="col-6 col-lg-3 col-md-6 mb-3">
-            <div class="card border-0 shadow-none h-100">
+            <div class="card border shadow-none h-100">
               <div class="card-body">
                 <div class="d-flex align-items-center">
                   <div class="flex-grow-1 ms-3">
@@ -60,7 +60,7 @@
           </div>
           @foreach(collect($competitionShortcuts)->slice(1, 2) as $shortcut)
             <div class="col-6 col-lg-3 col-md-6 mb-3">
-              <div class="card border-0 shadow-none h-100">
+              <div class="card border shadow-none h-100">
                 <div class="card-body">
                   <div class="d-flex align-items-center">
                     <div class="flex-grow-1 ms-3">
@@ -78,7 +78,7 @@
         @endif
 
           <div class="col-6 col-lg-3 col-md-6 mb-3">
-                <div class="card border-0 shadow-none h-100">
+                <div class="card border shadow-none h-100">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div class="flex-grow-1 ms-3">
@@ -91,7 +91,7 @@
             </div>
 
             <div class="col-6 col-lg-3 col-md-6 mb-3">
-                <div class="card border-0 shadow-none h-100">
+                <div class="card border shadow-none h-100">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div class="flex-grow-1 ms-3">
@@ -108,7 +108,7 @@
 
             @if(Auth::user()->role === 'teacher' && $stats['total_competitions'] > 0)
                 <div class="col-6 col-lg-3 col-md-6 mb-3">
-                    <div class="card border-0 shadow-none h-100">
+                    <div class="card border shadow-none h-100">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 ms-3">
@@ -126,7 +126,7 @@
 
             @if(Auth::user()->role === 'teacher' && $stats['total_students'] > 0)
                 <div class="col-6 col-lg-3 col-md-6 mb-3">
-                    <div class="card border-0 shadow-none h-100">
+                    <div class="card border shadow-none h-100">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 ms-3">
@@ -156,7 +156,7 @@
                             <div class="row">
                                 @foreach($latestModels as $model)
                                     <div class="col-md-6 col-lg-4 mb-3">
-                                        <div class="card border-0 shadow-none h-100">
+                                          <div class="card border shadow-none h-100">
                                             <div class="card-body">
                                                 <h6 class="fw-semibold mb-2">{{ $model->name }}</h6>
                                                 <p class="text-muted small mb-2">

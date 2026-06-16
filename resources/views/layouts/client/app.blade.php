@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="{{ asset('client/assets/libs/aos-master/dist/aos.css') }}">
   <link rel="stylesheet" href="{{ asset('client/assets/css/styles.css') }}" />
   <link rel="stylesheet" href="{{ asset('client/assets/css/dashboard.css') }}" />
+  <link rel="stylesheet" href="{{ asset('client/assets/css/client-layout-width.css') }}" />
 
   @stack('head')
   @stack('styles')
