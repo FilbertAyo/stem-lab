@@ -162,7 +162,7 @@
                                                 <p class="text-muted small mb-2">
                                                     {{ Str::limit($model->description ?? 'No description provided.', 60) }}
                                                 </p>
-                                                  <a href="{{ route('client.models.3d.show', $model) }}" class="btn btn-primary text-white btn-sm">
+                                                  <a href="{{ route('client.models.3d.show', $model) }}" class="btn btn-primary">
                                                     View Model
                                                 </a>
                                             </div>
