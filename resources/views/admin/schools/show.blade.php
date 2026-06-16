@@ -222,6 +222,7 @@
                                         <thead class="sticky-top bg-white">
                                             <tr>
                                                 <th>#</th>
+                                                <th>Admission No.</th>
                                                 <th>Name</th>
                                                 <th>Age</th>
                                                 <th>Gender</th>
@@ -233,6 +234,7 @@
                                             @foreach($students as $student)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
+                                                    <td><code>{{ $student->admission_number }}</code></td>
                                                     <td class="fw-semibold">{{ $student->name }}</td>
                                                     <td>{{ $student->age ?? '—' }}</td>
                                                     <td>

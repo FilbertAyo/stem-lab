@@ -13,12 +13,6 @@
                     Clubs <iconify-icon icon="lucide:chevron-right"></iconify-icon>
                 </a>
             </li>
-            <li>
-                <a href="{{ route('client.students.index') }}"
-                   class="{{ request()->routeIs('client.students.*') ? 'active' : '' }}">
-                    Members <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-                </a>
-            </li>
         @endif
         <li>
             <a href="{{ route('client.vr-assessments.index') }}"

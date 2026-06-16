@@ -404,15 +404,16 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
         Route::prefix('clubs')->name('client.clubs.')->group(function () {
             Route::get('/', [ClientClubController::class, 'index'])->name('index');
             Route::post('/transfer-leadership', [ClientClubController::class, 'transferLeadership'])->name('transfer-leadership');
-            Route::get('/{club}/join', [ClientClubController::class, 'showJoinForm'])->name('join.form');
-            Route::post('/{club}/join', [ClientClubController::class, 'join'])->name('join');
             Route::get('/pending-requests', [ClientClubController::class, 'pendingRequests'])->name('pending-requests');
+            Route::get('/join/{club}', [ClientClubController::class, 'showJoinForm'])->name('join.form');
+            Route::post('/join/{club}', [ClientClubController::class, 'join'])->name('join');
             Route::post('/{teacherClub}/approve', [ClientClubController::class, 'approveRequest'])->name('approve-request');
             Route::post('/{teacherClub}/reject', [ClientClubController::class, 'rejectRequest'])->name('reject-request');
+            Route::get('/{teacherClub}', [ClientClubController::class, 'show'])->name('show');
         });
 
-        // Student registration routes
-        Route::get('/students', [ClientStudentController::class, 'index'])->name('client.students.index');
+        // Student registration routes (mutations only; listing lives on club show page)
+        Route::redirect('/students', '/clubs', 302)->name('client.students.index');
         Route::post('/students', [ClientStudentController::class, 'store'])->name('client.students.store');
         Route::put('/students/{student}', [ClientStudentController::class, 'update'])->name('client.students.update');
         Route::delete('/students/{student}', [ClientStudentController::class, 'destroy'])->name('client.students.destroy');

@@ -72,6 +72,8 @@ return new class extends Migration
             $table->timestamp('submitted_at')->nullable();
             $table->timestamp('approved_at')->nullable();
             $table->foreignId('approved_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->unsignedSmallInteger('eligibility_reminder_count')->default(0);
+            $table->timestamp('last_eligibility_reminder_sent_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

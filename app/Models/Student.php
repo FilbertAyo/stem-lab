@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ShortCodeGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -14,7 +15,18 @@ class Student extends Model
         'age',
         'gender',
         'school_class_id',
+        'admission_number',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Student $student): void {
+            if (blank($student->admission_number)) {
+                $student->admission_number = app(ShortCodeGenerator::class)
+                    ->generate('students', 'admission_number');
+            }
+        });
+    }
 
     protected function casts(): array
     {
@@ -44,3 +56,4 @@ class Student extends Model
         return $this->hasMany(CompetitionRegistrationStudent::class);
     }
 }
+

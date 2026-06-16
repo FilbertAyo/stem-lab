@@ -7,8 +7,8 @@
 
         <section class="row">
             <div class="col-12">
-           
-            @include('elements.client-validation')
+
+                @include('elements.client-validation')
 
                 @if($clubs->isEmpty())
                     <div class="card border-0 shadow-none">
@@ -26,6 +26,9 @@
                 @else
                     <div class="row g-4">
                         @foreach($clubs as $club)
+                            @php
+                                $membershipForClub = $teacherClubs->firstWhere('club_id', $club->id);
+                            @endphp
                             <div class="col-12 col-md-6 col-xl-4">
                                 <div class="card h-100 border-0 shadow-none">
                                     @if($club->image_path)
@@ -48,18 +51,15 @@
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             @if(in_array($club->id, $joinedClubIds ?? []))
                                                 <span class="badge bg-info">
-                                                    <i class="bi bi-check-circle-fill me-1"></i>
-                                                    Joined
+                                                    <i class="bi bi-check-circle-fill me-1"></i>Joined
                                                 </span>
                                             @elseif(in_array($club->id, $pendingRequestClubIds ?? []))
                                                 <span class="badge bg-warning">
-                                                    <i class="bi bi-clock-history me-1"></i>
-                                                    Pending
+                                                    <i class="bi bi-clock-history me-1"></i>Pending
                                                 </span>
                                             @else
                                                 <span class="badge bg-success">
-                                                    <i class="bi bi-check-circle me-1"></i>
-                                                    Active
+                                                    <i class="bi bi-check-circle me-1"></i>Active
                                                 </span>
                                             @endif
                                         </div>
@@ -70,20 +70,17 @@
                                         </p>
 
                                         <div class="mt-auto">
-                                            @if(in_array($club->id, $joinedClubIds ?? []))
-                                                <button class="btn btn-outline-secondary w-100" disabled>
-                                                    <i class="bi bi-check-circle me-1"></i>
-                                                    Already Joined
-                                                </button>
+                                            @if($membershipForClub)
+                                                <a href="{{ route('client.clubs.show', $membershipForClub) }}" class="btn btn-primary w-100 text-white">
+                                                    <i class="bi bi-eye me-1"></i>View club
+                                                </a>
                                             @elseif(in_array($club->id, $pendingRequestClubIds ?? []))
                                                 <button class="btn btn-outline-warning w-100" disabled>
-                                                    <i class="bi bi-clock-history me-1"></i>
-                                                    Request Pending
+                                                    <i class="bi bi-clock-history me-1"></i>Request Pending
                                                 </button>
                                             @else
                                                 <a href="{{ route('client.clubs.join.form', $club) }}" class="btn btn-primary w-100 text-white">
-                                                    <i class="bi bi-person-plus me-1"></i>
-                                                    Join Club
+                                                    <i class="bi bi-person-plus me-1"></i>Join Club
                                                 </a>
                                             @endif
                                         </div>
@@ -97,5 +94,3 @@
         </section>
     </div>
 </x-app-layout>
-
-

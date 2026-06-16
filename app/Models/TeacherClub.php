@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPublicUlid;
+use App\Services\TeacherClubCodeService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,11 +21,22 @@ class TeacherClub extends Model
         'club_day',
         'status',
         'is_leader',
+        'club_code',
     ];
 
     protected $casts = [
         'is_leader' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (TeacherClub $teacherClub): void {
+            if (blank($teacherClub->club_code)) {
+                $teacherClub->club_code = app(TeacherClubCodeService::class)
+                    ->resolveForMembership($teacherClub);
+            }
+        });
+    }
 
     /**
      * Get the teacher (user) that belongs to this record.

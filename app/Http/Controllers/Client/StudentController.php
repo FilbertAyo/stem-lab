@@ -11,92 +11,9 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
 
 class StudentController extends Controller
 {
-    /**
-     * Display members panel (students and teachers).
-     */
-    public function index(): View
-    {
-        $user = Auth::user();
-
-        // Get teacher's approved club memberships
-        $teacherClubs = TeacherClub::where('user_id', $user->id)
-            ->approved()
-            ->with(['club', 'school'])
-            ->get();
-
-        // Students registered by any approved teacher at the same club + school
-        $coMemberTeacherClubIds = $user->approvedCoMemberTeacherClubIds();
-        $students = Student::query()
-            ->whereIn('teacher_club_id', $coMemberTeacherClubIds)
-            ->with(['schoolClass', 'teacherClub.club', 'teacherClub.school'])
-            ->orderBy('name')
-            ->get();
-
-        // Get all active classes for dropdown
-        $classes = SchoolClass::where('is_active', true)
-            ->orderBy('name')
-            ->get();
-
-        // Get all clubs the user is a member of (for Teachers tab)
-        // Group by club and school to show all members
-        $clubsWithTeachers = collect();
-
-        foreach ($teacherClubs as $teacherClub) {
-            $clubId = $teacherClub->club_id;
-            $schoolId = $teacherClub->school_id;
-
-            // Check if we already added this club-school combination
-            $exists = $clubsWithTeachers->first(function ($item) use ($clubId, $schoolId) {
-                return $item['club']->id === $clubId && $item['school']->id === $schoolId;
-            });
-
-            if (! $exists) {
-                // Get all approved teachers from this school in this club
-                $approvedTeachers = TeacherClub::where('club_id', $clubId)
-                    ->where('school_id', $schoolId)
-                    ->approved()
-                    ->with(['user', 'school'])
-                    ->get();
-
-                // Get pending requests from this school in this club (only if user is leader)
-                $isLeader = $user->teacherClubs()
-                    ->where('club_id', $clubId)
-                    ->where('school_id', $schoolId)
-                    ->where('is_leader', true)
-                    ->approved()
-                    ->exists();
-
-                $pendingRequests = collect();
-                if ($isLeader) {
-                    $pendingRequests = TeacherClub::where('club_id', $clubId)
-                        ->where('school_id', $schoolId)
-                        ->pending()
-                        ->with(['user', 'school'])
-                        ->get();
-                }
-
-                $clubsWithTeachers->push([
-                    'club' => $teacherClub->club,
-                    'school' => $teacherClub->school,
-                    'approvedTeachers' => $approvedTeachers,
-                    'pendingRequests' => $pendingRequests,
-                    'isLeader' => $isLeader,
-                ]);
-            }
-        }
-
-        return view('client.back.students.index', [
-            'teacherClubs' => $teacherClubs,
-            'students' => $students,
-            'classes' => $classes,
-            'clubsWithTeachers' => $clubsWithTeachers,
-        ]);
-    }
-
     /**
      * Store a newly registered student.
      */
@@ -110,9 +27,9 @@ class StudentController extends Controller
             'date_of_birth' => ['required', 'date_format:Y-m-d', 'before_or_equal:today'],
             'gender' => ['required', 'string', 'in:male,female,other'],
             'school_class_id' => ['required', 'exists:school_classes,id'],
+            'redirect_to' => ['nullable', 'string', 'max:2048'],
         ]);
 
-        // Verify the teacher_club belongs to the current teacher and is approved
         $teacherClub = TeacherClub::where('id', $validated['teacher_club_id'])
             ->where('user_id', $user->id)
             ->approved()
@@ -120,7 +37,7 @@ class StudentController extends Controller
 
         $age = Carbon::parse($validated['date_of_birth'])->age;
         if ($age < 1 || $age > 150) {
-            return redirect()->route('client.students.index')
+            return $this->redirectAfterStudentMutation($request, $teacherClub)
                 ->withErrors(['date_of_birth' => 'Date of birth must result in age between 1 and 150.'])
                 ->withInput();
         }
@@ -134,8 +51,7 @@ class StudentController extends Controller
             'school_class_id' => $validated['school_class_id'],
         ]);
 
-        return redirect()->route('client.students.index')
-            ->with('status', 'Student registered successfully!');
+        return $this->redirectAfterStudentMutation($request, $teacherClub, 'Student registered successfully!');
     }
 
     /**
@@ -147,7 +63,8 @@ class StudentController extends Controller
 
         $validated = $request->validate([
             'teacher_club_id' => ['required', 'exists:teacher_clubs,id'],
-            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'], // Max 5MB
+            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
+            'redirect_to' => ['nullable', 'string', 'max:2048'],
         ]);
 
         $teacherClub = TeacherClub::where('id', $validated['teacher_club_id'])
@@ -158,13 +75,16 @@ class StudentController extends Controller
         $result = $csvImport->import($teacherClub, $request->file('csv_file'));
 
         if ($result['errors'] !== []) {
-            return redirect()->route('client.students.index')
+            return $this->redirectAfterStudentMutation($request, $teacherClub)
                 ->with('error', $csvImport->formatErrorsForFlash($result['errors']))
                 ->withInput();
         }
 
-        return redirect()->route('client.students.index')
-            ->with('status', "Successfully imported {$result['success_count']} student(s).");
+        return $this->redirectAfterStudentMutation(
+            $request,
+            $teacherClub,
+            "Successfully imported {$result['success_count']} student(s).",
+        );
     }
 
     /**
@@ -197,6 +117,7 @@ class StudentController extends Controller
 
         return $this->redirectAfterStudentMutation(
             $request,
+            $student->teacherClub,
             'Student updated.',
         );
     }
@@ -208,10 +129,12 @@ class StudentController extends Controller
     {
         $this->authorizeStudentForTeacher($student);
 
+        $teacherClub = $student->teacherClub;
         $student->delete();
 
         return $this->redirectAfterStudentMutation(
             $request,
+            $teacherClub,
             'Student removed from your club roster.',
         );
     }
@@ -226,29 +149,48 @@ class StudentController extends Controller
         $validated = $request->validate([
             'student_ids' => ['required', 'array', 'min:1'],
             'student_ids.*' => ['integer', 'exists:students,id'],
+            'redirect_to' => ['nullable', 'string', 'max:2048'],
+            'teacher_club_id' => ['nullable', 'exists:teacher_clubs,id'],
         ]);
 
         $manageableTeacherClubIds = $user->approvedCoMemberTeacherClubIds();
 
-        $query = Student::query()
+        $students = Student::query()
             ->whereIn('id', $validated['student_ids'])
-            ->whereIn('teacher_club_id', $manageableTeacherClubIds);
+            ->whereIn('teacher_club_id', $manageableTeacherClubIds)
+            ->get();
 
-        $deleted = $query->delete();
+        $deleted = $students->count();
+        Student::query()->whereIn('id', $students->pluck('id'))->delete();
+
         $requested = count(array_unique($validated['student_ids']));
 
+        $teacherClub = null;
+        if (! empty($validated['teacher_club_id'])) {
+            $teacherClub = TeacherClub::query()->find($validated['teacher_club_id']);
+        }
+        if ($teacherClub === null && $students->isNotEmpty()) {
+            $teacherClub = $students->first()->teacherClub;
+        }
+
         if ($deleted === 0) {
-            return redirect()->route('client.students.index')
+            return $this->redirectAfterStudentMutation($request, $teacherClub)
                 ->with('error', 'No students could be removed. Refresh the page and try again.');
         }
 
         if ($deleted < $requested) {
-            return redirect()->route('client.students.index')
-                ->with('status', "Removed {$deleted} student(s). Some rows were skipped because they are no longer in your club roster.");
+            return $this->redirectAfterStudentMutation(
+                $request,
+                $teacherClub,
+                "Removed {$deleted} student(s). Some rows were skipped because they are no longer in your club roster.",
+            );
         }
 
-        return redirect()->route('client.students.index')
-            ->with('status', "Removed {$deleted} student(s).");
+        return $this->redirectAfterStudentMutation(
+            $request,
+            $teacherClub,
+            "Removed {$deleted} student(s).",
+        );
     }
 
     private function authorizeStudentForTeacher(Student $student): void
@@ -259,13 +201,35 @@ class StudentController extends Controller
         abort_unless($canManage, 403);
     }
 
-    private function redirectAfterStudentMutation(Request $request, string $message): RedirectResponse
-    {
+    private function redirectAfterStudentMutation(
+        Request $request,
+        ?TeacherClub $teacherClub = null,
+        ?string $message = null,
+    ): RedirectResponse {
         $target = $request->input('redirect_to');
         if (is_string($target) && $target !== '' && str_starts_with($target, '/') && ! str_starts_with($target, '//')) {
-            return redirect($target)->with('status', $message);
+            $redirect = redirect($target);
+            if ($message !== null) {
+                $redirect->with('status', $message);
+            }
+
+            return $redirect;
         }
 
-        return redirect()->route('client.students.index')->with('status', $message);
+        if ($teacherClub !== null) {
+            $redirect = redirect()->route('client.clubs.show', $teacherClub);
+            if ($message !== null) {
+                $redirect->with('status', $message);
+            }
+
+            return $redirect;
+        }
+
+        $redirect = redirect()->route('client.clubs.index');
+        if ($message !== null) {
+            $redirect->with('status', $message);
+        }
+
+        return $redirect;
     }
 }
