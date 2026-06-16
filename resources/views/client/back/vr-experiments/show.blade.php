@@ -169,8 +169,8 @@
                     </div>
 
                     {{-- Requirements/Tips Section --}}
-                    <div class="card border shadow-none">
-                    <div class="card-footer bg-white border-top">
+                    <div class="card border shadow-none mt-4">
+                    <div class="card-footer">
                         <h6 class="fw-semibold mb-2">
                             <i class="bi bi-info-circle me-1"></i>Tips for best experience
                         </h6>
