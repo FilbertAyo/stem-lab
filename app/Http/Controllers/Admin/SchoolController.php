@@ -11,9 +11,11 @@ use App\Models\TeacherClub;
 use App\Models\User;
 use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\StudentCsvBulkImportService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -36,6 +38,42 @@ class SchoolController extends Controller
         $pendingReviewCount = School::query()->needsReview()->count();
 
         return view('admin.schools.index', compact('schools', 'regions', 'districts', 'pendingReviewCount'));
+    }
+
+    /**
+     * Download schools list as PDF.
+     */
+    public function export(Request $request): Response
+    {
+        $validated = $request->validate([
+            'scope' => ['required', 'in:range,all'],
+            'search' => ['nullable', 'string', 'max:255'],
+            'status' => ['nullable', 'in:active,inactive'],
+            'review' => ['nullable', 'in:pending,reviewed'],
+            'region_id' => ['nullable', 'exists:regions,id'],
+            'district' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $schools = ($validated['scope'] === 'all'
+            ? School::query()
+            : $this->schoolsIndexQuery($request))
+            ->with('regionModel')
+            ->withCount('teacherClubs')
+            ->reviewQueueOrder()
+            ->get();
+
+        $scopeLabel = $validated['scope'] === 'all' ? 'all' : 'filtered';
+        $filterSummary = $this->buildSchoolExportFilterSummary($request, $validated['scope']);
+        $filename = 'schools_'.$scopeLabel.'_'.now()->format('Y-m-d').'.pdf';
+
+        $pdf = Pdf::loadView('admin.schools.schools-list-pdf', [
+            'schools' => $schools,
+            'title' => 'Schools',
+            'generatedAt' => now(),
+            'filterSummary' => $filterSummary,
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download($filename);
     }
 
     public function show(School $school): View
@@ -385,5 +423,37 @@ class SchoolController extends Controller
         }
 
         return $query;
+    }
+
+    protected function buildSchoolExportFilterSummary(Request $request, string $scope): string
+    {
+        if ($scope === 'all') {
+            return 'All records';
+        }
+
+        $parts = ['Filtered list'];
+
+        if ($request->filled('search')) {
+            $parts[] = 'search: '.$request->input('search');
+        }
+
+        if ($request->filled('status')) {
+            $parts[] = 'status: '.$request->input('status');
+        }
+
+        if ($request->filled('review')) {
+            $parts[] = 'review: '.$request->input('review');
+        }
+
+        if ($request->filled('region_id')) {
+            $region = Region::query()->find($request->integer('region_id'));
+            $parts[] = 'region: '.($region?->name ?? $request->input('region_id'));
+        }
+
+        if ($request->filled('district')) {
+            $parts[] = 'district: '.$request->input('district');
+        }
+
+        return implode(' · ', $parts);
     }
 }

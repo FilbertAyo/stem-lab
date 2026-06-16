@@ -103,6 +103,10 @@
                             @endif
                         </div>
                     </form>
+
+                    <hr class="my-3">
+
+                    @include('admin.schools.partials.export-list')
                 </div>
             </div>
 
