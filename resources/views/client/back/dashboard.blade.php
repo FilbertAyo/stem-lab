@@ -11,7 +11,6 @@
         'total_submissions' => 0,
         'total_students' => 0,
     ];
-    $latestModels = $latestModels ?? collect();
     $competitionNotificationCount = $competitionNotificationCount ?? 0;
     $competitionShortcuts = $competitionShortcuts ?? [];
 @endphp
@@ -139,42 +138,6 @@
                 </div>
             @endif
         </section>
-       
-
-
-
-
-        @if($latestModels->count() > 0)
-            <section class="row">
-                <div class="col-12">
-                        <div class="card-header bg-transparent border-0 pb-3">
-                            <h5 class="card-title mb-0">
-                                <i class="bi bi-clock-history me-2"></i>Latest 3D Models
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                @foreach($latestModels as $model)
-                                    <div class="col-md-6 col-lg-4 mb-3">
-                                          <div class="card border shadow-none h-100">
-                                            <div class="card-body">
-                                                <h6 class="fw-semibold mb-2">{{ $model->name }}</h6>
-                                                <p class="text-muted small mb-2">
-                                                    {{ Str::limit($model->description ?? 'No description provided.', 60) }}
-                                                </p>
-                                                  <a href="{{ route('client.models.3d.show', $model) }}" class="btn btn-primary">
-                                                    View Model
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    
-                </div>
-            </section>
-        @endif
 
         @include('client.back.partials.package')
 
