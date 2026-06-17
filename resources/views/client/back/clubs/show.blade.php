@@ -114,7 +114,7 @@
                                 <form method="POST" action="{{ route('client.students.bulk-destroy') }}" id="bulkDeleteStudentsForm" class="mb-0">
                                     @csrf
                                     <input type="hidden" name="teacher_club_id" value="{{ $teacherClub->id }}">
-                                    <input type="hidden" name="redirect_to" value="{{ request()->getRequestUri() }}">
+                                    <input type="hidden" name="redirect_to" value="{{ route('client.clubs.show', $teacherClub, absolute: false) }}">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-hover table-light-soft align-middle">
                                             <thead class="table-dark">
@@ -275,7 +275,7 @@
                     <form method="POST" action="{{ route('client.students.store') }}" id="registerStudentForm">
                         @csrf
                         <input type="hidden" name="teacher_club_id" value="{{ $teacherClub->id }}">
-                        <input type="hidden" name="redirect_to" value="{{ request()->getRequestUri() }}">
+                        <input type="hidden" name="redirect_to" value="{{ route('client.clubs.show', $teacherClub, absolute: false) }}">
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Student Name <span class="text-danger">*</span></label>
@@ -329,7 +329,7 @@
                     <form method="POST" action="{{ route('client.students.bulk-store') }}" enctype="multipart/form-data" id="bulkUploadForm">
                         @csrf
                         <input type="hidden" name="teacher_club_id" value="{{ $teacherClub->id }}">
-                        <input type="hidden" name="redirect_to" value="{{ request()->getRequestUri() }}">
+                        <input type="hidden" name="redirect_to" value="{{ route('client.clubs.show', $teacherClub, absolute: false) }}">
                         <div class="modal-body">
                             <div class="alert alert-info">
                                 <i class="bi bi-info-circle me-2"></i>
