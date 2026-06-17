@@ -6,6 +6,8 @@
   $isUnlinkedStudent = $isStudent && ! $packageUser->isClubLinked();
   $publicSchoolPackage = $subscriptionPackages->firstWhere('slug', 'public-school');
   $activePackageSlug = $packageUser?->activeSubscriptionPackageSlug();
+  $hasLockedPlan = $packageUser?->hasLockedSubscriptionPlan() ?? false;
+  $paymentsEnabled = (bool) config('subscriptions.payments_enabled', false);
 @endphp
 
 <div class="col-12 mb-3" id="platform-subscription">
@@ -48,6 +50,10 @@
     @php
       $isActivePackage = $activePackageSlug === $package->slug;
       $ctaAction = $package->resolvedCtaAction($isUnlinkedStudent);
+      $isPaidPackage = in_array($package->slug, ['free-trial', 'individual'], true);
+      $packageActionDisabled = $isActivePackage
+        || ($hasLockedPlan && ! $isActivePackage)
+        || ($isPaidPackage && ! $paymentsEnabled);
     @endphp
     <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
       <div class="card border shadow-none w-100 {{ $isActivePackage ? 'border-success-subtle' : '' }}" data-aos="fade-up" data-aos-delay="{{ $package->sort_order * 100 }}" data-aos-duration="1000">
@@ -94,6 +100,18 @@
             <button type="button" class="btn btn-outline-success d-inline-flex align-items-center gap-2 w-100 justify-content-center" disabled>
               <span class="fw-semibold">Current plan</span>
               <iconify-icon icon="lucide:check" class="fs-5"></iconify-icon>
+            </button>
+          @elseif ($packageActionDisabled)
+            <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center gap-2 w-100 justify-content-center" disabled>
+              <span class="fw-semibold">
+                @if ($hasLockedPlan)
+                  Included in your plan
+                @elseif ($isPaidPackage)
+                  Coming soon
+                @else
+                  Unavailable
+                @endif
+              </span>
             </button>
           @else
             <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="{{ $ctaAction }}" data-slug="{{ $package->slug }}">
@@ -183,7 +201,7 @@
   </div>
 </div>
 
-<form id="package-select-form" method="POST" action="{{ route('client.subscription-packages.select') }}" class="d-none">
+<form id="package-select-form" method="POST" action="{{ route('client.subscription-packages.select') }}" class="d-none" @if(! $paymentsEnabled) data-disabled="1" @endif>
   @csrf
   <input type="hidden" name="package" id="package-select-input" value="">
 </form>
@@ -234,9 +252,13 @@
         return;
       }
 
-      if (selectForm && selectInput && (packageSlug === 'free-trial' || packageSlug === 'individual')) {
+      if (selectForm && selectInput && selectForm.getAttribute('data-disabled') !== '1' && (packageSlug === 'free-trial' || packageSlug === 'individual')) {
         selectInput.value = packageSlug;
         selectForm.submit();
+        return;
+      }
+
+      if (packageSlug === 'free-trial' || packageSlug === 'individual') {
         return;
       }
 

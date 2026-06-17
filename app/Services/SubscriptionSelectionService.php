@@ -7,8 +7,30 @@ use App\Models\User;
 
 class SubscriptionSelectionService
 {
+    public function paymentsEnabled(): bool
+    {
+        return (bool) config('subscriptions.payments_enabled', false);
+    }
+
+    public function canUserSelectPackage(User $user, string $slug): bool
+    {
+        if (! $this->paymentsEnabled()) {
+            return false;
+        }
+
+        if ($user->hasLockedSubscriptionPlan()) {
+            return false;
+        }
+
+        return in_array($slug, ['free-trial', 'individual'], true);
+    }
+
     public function selectBySlug(User $user, string $slug): SubscriptionPackage
     {
+        if (! $this->canUserSelectPackage($user, $slug)) {
+            abort(403, 'Subscription selection is not available.');
+        }
+
         $package = SubscriptionPackage::query()
             ->active()
             ->where('slug', $slug)

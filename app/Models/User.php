@@ -102,12 +102,12 @@ class User extends Authenticatable
 
     public function platformPlanLabel(): string
     {
-        if (in_array($this->subscription_tier, ['individual', 'pro'], true)) {
-            return 'Pro';
-        }
-
         if ($this->hasSubsidizedSchoolAccess()) {
             return 'Free';
+        }
+
+        if (in_array($this->subscription_tier, ['individual', 'pro'], true)) {
+            return 'Pro';
         }
 
         return 'Trial';
@@ -115,15 +115,23 @@ class User extends Authenticatable
 
     public function platformPlanBadgeClass(): string
     {
-        if (in_array($this->subscription_tier, ['individual', 'pro'], true)) {
-            return 'bg-dark text-white';
-        }
-
         if ($this->hasSubsidizedSchoolAccess()) {
             return 'bg-success-subtle text-success-emphasis border border-success-subtle';
         }
 
+        if (in_array($this->subscription_tier, ['individual', 'pro'], true)) {
+            return 'bg-dark text-white';
+        }
+
         return 'bg-light text-dark border';
+    }
+
+    /**
+     * Whether the user already has subsidised access and should not change packages.
+     */
+    public function hasLockedSubscriptionPlan(): bool
+    {
+        return $this->hasSubsidizedSchoolAccess();
     }
 
     public function activeSubscriptionPackageSlug(): ?string

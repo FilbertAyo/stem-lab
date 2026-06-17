@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Club;
-use App\Models\SubscriptionPackage;
 use App\Models\TeacherClub;
 use App\Models\User;
 use Database\Seeders\SubscriptionPackageSeeder;
@@ -31,7 +29,7 @@ test('teacher with approved club membership is redirected from join form instead
     $response->assertRedirect(route('client.clubs.show', $membership));
 });
 
-test('teacher can select free trial package', function () {
+test('paid package selection is blocked while payments are disabled', function () {
     $this->seed(SubscriptionPackageSeeder::class);
 
     $teacher = User::factory()->create(['role' => 'teacher']);
@@ -42,30 +40,40 @@ test('teacher can select free trial package', function () {
             'package' => 'free-trial',
         ]);
 
-    $response->assertRedirect(route('dashboard').'#platform-subscription');
+    $response->assertRedirect(route('dashboard').'#platform-subscription')
+        ->assertSessionHas('error');
 
-    expect($teacher->fresh()->subscription_tier)->toBe('trial');
+    expect($teacher->fresh()->subscription_tier)->toBeNull();
 });
 
-test('student can select individual package', function () {
+test('club member teacher cannot select paid package even when payments enabled', function () {
+    config(['subscriptions.payments_enabled' => true]);
     $this->seed(SubscriptionPackageSeeder::class);
+    ['club' => $club, 'school' => $school] = createCompetitionFixture();
 
-    $student = User::factory()->create([
-        'role' => 'student',
-        'gender' => 'female',
-        'date_of_birth' => '2010-01-01',
-        'student_onboarding_completed_at' => now(),
+    $teacher = User::factory()->create([
+        'role' => 'teacher',
+        'subscription_tier' => 'public_school',
     ]);
 
-    $response = $this->actingAs($student)
+    TeacherClub::query()->create([
+        'user_id' => $teacher->id,
+        'club_id' => $club->id,
+        'school_id' => $school->id,
+        'status' => 'approved',
+        'is_leader' => true,
+    ]);
+
+    $response = $this->actingAs($teacher)
         ->from(route('dashboard'))
         ->post(route('client.subscription-packages.select'), [
             'package' => 'individual',
         ]);
 
-    $response->assertRedirect(route('dashboard').'#platform-subscription');
+    $response->assertRedirect(route('dashboard').'#platform-subscription')
+        ->assertSessionHas('error');
 
-    expect($student->fresh()->subscription_tier)->toBe('individual');
+    expect($teacher->fresh()->subscription_tier)->toBe('public_school');
 });
 
 test('teacher club join sets public school subscription tier when approved', function () {
@@ -80,26 +88,25 @@ test('teacher club join sets public school subscription tier when approved', fun
     expect($teacher->fresh()->subscription_tier)->toBe('public_school');
 });
 
-test('dashboard marks active package for user on trial', function () {
+test('dashboard shows coming soon on paid packages when payments disabled', function () {
     $this->seed(SubscriptionPackageSeeder::class);
 
-    $teacher = User::factory()->create([
-        'role' => 'teacher',
-        'subscription_tier' => 'trial',
-    ]);
+    $teacher = User::factory()->create(['role' => 'teacher']);
 
     $response = $this->actingAs($teacher)->get(route('dashboard'));
 
     $response->assertOk()
-        ->assertSee('Your plan')
-        ->assertSee('Current plan');
+        ->assertSee('Coming soon');
 });
 
-test('dashboard marks public school package for approved teacher', function () {
+test('dashboard marks public school package for approved teacher and disables other packages', function () {
     $this->seed(SubscriptionPackageSeeder::class);
     ['club' => $club, 'school' => $school] = createCompetitionFixture();
 
-    $teacher = User::factory()->create(['role' => 'teacher']);
+    $teacher = User::factory()->create([
+        'role' => 'teacher',
+        'subscription_tier' => 'individual',
+    ]);
 
     TeacherClub::query()->create([
         'user_id' => $teacher->id,
@@ -113,5 +120,29 @@ test('dashboard marks public school package for approved teacher', function () {
 
     $response->assertOk()
         ->assertSee('Your plan')
-        ->assertSee('Current plan');
+        ->assertSee('Current plan')
+        ->assertSee('Included in your plan')
+        ->assertSee('Free');
+});
+
+test('nav shows free plan for club teacher even if individual tier was set earlier', function () {
+    ['club' => $club, 'school' => $school] = createCompetitionFixture();
+
+    $teacher = User::factory()->create([
+        'role' => 'teacher',
+        'subscription_tier' => 'individual',
+    ]);
+
+    TeacherClub::query()->create([
+        'user_id' => $teacher->id,
+        'club_id' => $club->id,
+        'school_id' => $school->id,
+        'status' => 'approved',
+        'is_leader' => true,
+    ]);
+
+    $response = $this->actingAs($teacher)->get(route('dashboard'));
+
+    $response->assertOk()
+        ->assertSee('Free', false);
 });
