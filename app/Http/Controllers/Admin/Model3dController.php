@@ -18,7 +18,7 @@ class Model3dController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Model3d::withSubject()->withCount('questions');
+        $query = Model3d::withSubject()->with('schoolClasses')->withCount('questions');
 
         // Search functionality
         if ($request->filled('search')) {
@@ -66,7 +66,8 @@ class Model3dController extends Controller
     {
         $validated = $request->validate([
             'subject_id' => ['required', 'exists:subjects,id'],
-            'school_class_id' => ['required', 'exists:school_classes,id'],
+            'class_ids' => ['required', 'array', 'min:1'],
+            'class_ids.*' => ['integer', 'exists:school_classes,id'],
             'name' => ['required', 'string', 'max:255'],
             'file' => [
                 'nullable',
@@ -129,7 +130,11 @@ class Model3dController extends Controller
         // Set is_active default
         $validated['is_active'] = $request->has('is_active');
 
-        Model3d::create($validated);
+        $classIds = $validated['class_ids'];
+        unset($validated['class_ids']);
+
+        $model3d = Model3d::create($validated);
+        $model3d->schoolClasses()->sync($classIds);
 
         // Clear model-related caches
         CacheService::clearModelCaches();
@@ -143,7 +148,7 @@ class Model3dController extends Controller
      */
     public function show(Model3d $model3d): View
     {
-        $model3d->load('subject');
+        $model3d->load(['subject', 'schoolClasses']);
         return view('admin.models.3d.show', compact('model3d'));
     }
 
@@ -155,6 +160,8 @@ class Model3dController extends Controller
         $subjects = CacheService::getActiveSubjects();
         $classes = SchoolClass::active()->ordered()->get();
 
+        $model3d->load('schoolClasses');
+
         return view('admin.models.3d.edit', compact('model3d', 'subjects', 'classes'));
     }
 
@@ -165,7 +172,8 @@ class Model3dController extends Controller
     {
         $validated = $request->validate([
             'subject_id' => ['required', 'exists:subjects,id'],
-            'school_class_id' => ['required', 'exists:school_classes,id'],
+            'class_ids' => ['required', 'array', 'min:1'],
+            'class_ids.*' => ['integer', 'exists:school_classes,id'],
             'name' => ['required', 'string', 'max:255'],
             'file' => [
                 'nullable',
@@ -242,7 +250,11 @@ class Model3dController extends Controller
         // Set is_active
         $validated['is_active'] = $request->has('is_active');
 
+        $classIds = $validated['class_ids'];
+        unset($validated['class_ids']);
+
         $model3d->update($validated);
+        $model3d->schoolClasses()->sync($classIds);
 
         // Clear model-related caches
         CacheService::clearModelCaches();

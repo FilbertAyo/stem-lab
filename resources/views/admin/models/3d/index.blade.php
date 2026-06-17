@@ -54,6 +54,7 @@
                                     <th>#</th>
                                     <th>Name</th>
                                     <th>Subject</th>
+                                    <th>Classes</th>
                                     <th>Description</th>
                                     <th>Tags</th>
                                     <th>Questions</th>
@@ -67,6 +68,13 @@
                                         <td>{{ $index + 1 + ($model3ds->currentPage() - 1) * $model3ds->perPage() }}</td>
                                         <td>{{ $model->name }}</td>
                                         <td>{{ $model->subject->subject_name ?? 'N/A' }}</td>
+                                        <td>
+                                            @forelse($model->schoolClasses as $class)
+                                                <span class="badge bg-light text-dark border">{{ $class->name }}</span>
+                                            @empty
+                                                <span class="text-muted small">All classes</span>
+                                            @endforelse
+                                        </td>
                                         <td>{{ Str::limit($model->description ?? 'N/A', 50) }}</td>
                                         <td>{{ Str::limit($model->tags ?? 'N/A', 30) }}</td>
                                         <td>
@@ -113,7 +121,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No 3D models found. <a href="{{ route('admin.models.3d.create') }}">Create one now</a>.</td>
+                                        <td colspan="9" class="text-center">No 3D models found. <a href="{{ route('admin.models.3d.create') }}">Create one now</a>.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

@@ -51,17 +51,17 @@ test('student with a class only sees matching stem resources', function () {
 
     $matchingModel = Model3d::query()->create([
         'subject_id' => $subject->id,
-        'school_class_id' => $formTwo->id,
         'name' => 'Heart Model',
         'is_active' => true,
     ]);
+    $matchingModel->schoolClasses()->attach($formTwo->id);
 
-    Model3d::query()->create([
+    $otherModel = Model3d::query()->create([
         'subject_id' => $subject->id,
-        'school_class_id' => $formThree->id,
         'name' => 'Brain Model',
         'is_active' => true,
     ]);
+    $otherModel->schoolClasses()->attach($formThree->id);
 
     $matchingExperiment = VrExperiment::query()->create([
         'name' => 'Cell VR',
@@ -159,19 +159,19 @@ test('student without a class sees all published stem resources', function () {
 
     $subject = createSubject();
 
-    Model3d::query()->create([
+    $heartModel = Model3d::query()->create([
         'subject_id' => $subject->id,
-        'school_class_id' => $formTwo->id,
         'name' => 'Heart Model',
         'is_active' => true,
     ]);
+    $heartModel->schoolClasses()->attach($formTwo->id);
 
-    Model3d::query()->create([
+    $brainModel = Model3d::query()->create([
         'subject_id' => $subject->id,
-        'school_class_id' => $formThree->id,
         'name' => 'Brain Model',
         'is_active' => true,
     ]);
+    $brainModel->schoolClasses()->attach($formThree->id);
 
     $this->actingAs($student)
         ->get(route('client.models.3d.index'))
@@ -192,12 +192,35 @@ test('student cannot open a model assigned to another class', function () {
 
     $foreignModel = Model3d::query()->create([
         'subject_id' => $subject->id,
-        'school_class_id' => $otherClass->id,
         'name' => 'Foreign Model',
         'is_active' => true,
     ]);
+    $foreignModel->schoolClasses()->attach($otherClass->id);
 
     $this->actingAs($student)
         ->get(route('client.models.3d.show', $foreignModel))
         ->assertNotFound();
+});
+
+test('student sees a model assigned to multiple classes when their class is included', function () {
+    ['student' => $student, 'schoolClass' => $formTwo] = createStudentWithClass();
+
+    $formThree = SchoolClass::query()->create([
+        'name' => 'Form 3 '.Str::random(4),
+        'is_active' => true,
+    ]);
+
+    $subject = createSubject();
+
+    $sharedModel = Model3d::query()->create([
+        'subject_id' => $subject->id,
+        'name' => 'Shared Skeleton Model',
+        'is_active' => true,
+    ]);
+    $sharedModel->schoolClasses()->attach([$formTwo->id, $formThree->id]);
+
+    $this->actingAs($student)
+        ->get(route('client.models.3d.index'))
+        ->assertOk()
+        ->assertSee('Shared Skeleton Model');
 });
