@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('vr_experiments', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('external_url'); // Link to external simulation site

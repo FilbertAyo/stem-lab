@@ -13,14 +13,20 @@ return new class extends Migration
     {
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->string('name')->unique();
             $table->text('address')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->string('district')->nullable();
             $table->string('region')->nullable();
+            $table->foreignId('region_id')->nullable()->constrained('regions')->nullOnDelete();
+            $table->string('ward')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->timestamp('admin_reviewed_at')->nullable();
             $table->timestamps();
+
+            $table->index('admin_reviewed_at', 'schools_admin_reviewed_at_idx');
         });
     }
 

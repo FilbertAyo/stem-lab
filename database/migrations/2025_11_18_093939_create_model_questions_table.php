@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('model_questions', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->foreignId('model_id')->constrained('model3ds')->onDelete('cascade');
             $table->enum('question_type', ['mcq', 'true_false', 'short_answer'])->default('mcq');
             $table->text('question_text');

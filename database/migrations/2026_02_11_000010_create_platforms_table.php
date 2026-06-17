@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('platforms', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->string('icon')->nullable(); // e.g. SVG filename or icon class

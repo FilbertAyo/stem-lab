@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('project_tags', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->timestamps();

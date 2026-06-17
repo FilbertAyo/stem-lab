@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->string('key')->unique();
-            $table->text('value')->nullable();
+            $table->longText('value')->nullable();
             $table->string('type')->default('text'); // text, url, email, number, boolean, json
             $table->string('group')->default('general'); // general, social, versioning, etc.
             $table->text('description')->nullable();

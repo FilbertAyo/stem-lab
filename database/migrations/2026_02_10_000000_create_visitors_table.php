@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('visitors', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->string('visitor_token', 64)->unique();
             $table->timestamp('first_seen_at')->useCurrent();
             $table->timestamp('last_seen_at')->useCurrent();

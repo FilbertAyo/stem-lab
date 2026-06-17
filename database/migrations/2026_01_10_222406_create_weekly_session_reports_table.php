@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('weekly_session_reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('weekly_session_id')->constrained('weekly_sessions')->onDelete('cascade');
+            $table->char('ulid', 26)->nullable()->unique();
+            $table->foreignId('weekly_session_id')->nullable()->constrained('weekly_sessions')->onDelete('cascade');
             $table->foreignId('teacher_club_id')->constrained('teacher_clubs')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->integer('attendance_count')->nullable();

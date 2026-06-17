@@ -20,7 +20,7 @@ There are some fix or changes i will be going to introduce to the system so i wi
 
    * Teachers can see which students from their uploaded list have successfully created platform accounts.
 
-6. **Track learning activities only for registered students**
+6. **Track learning activities only for registered students** 
 
    * Progress tracking is available only for students who have registered and are actively using the platform.
 

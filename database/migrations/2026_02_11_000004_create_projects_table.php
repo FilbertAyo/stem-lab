@@ -10,10 +10,16 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
 
             $table->foreignId('project_category_id')
                 ->nullable()
                 ->constrained('project_categories')
+                ->nullOnDelete();
+
+            $table->foreignId('school_class_id')
+                ->nullable()
+                ->constrained('school_classes')
                 ->nullOnDelete();
 
             $table->foreignId('created_by')
@@ -48,6 +54,7 @@ return new class extends Migration
             $table->index(['project_category_id', 'is_published', 'is_active'], 'projects_category_publish_active_idx');
             $table->index(['difficulty', 'is_published', 'is_active'], 'projects_difficulty_publish_active_idx');
             $table->index('name', 'projects_name_idx');
+            $table->index('school_class_id', 'projects_school_class_id_index');
         });
     }
 
@@ -56,4 +63,3 @@ return new class extends Migration
         Schema::dropIfExists('projects');
     }
 };
-

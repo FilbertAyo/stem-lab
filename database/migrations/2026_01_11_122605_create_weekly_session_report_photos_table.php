@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('weekly_session_report_photos', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->foreignId('weekly_session_report_id')->constrained('weekly_session_reports')->onDelete('cascade');
             $table->string('file_path');
             $table->string('original_filename')->nullable();

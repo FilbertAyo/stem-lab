@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('visitor_weekly_stats', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->foreignId('visitor_id')->constrained('visitors')->onDelete('cascade');
             $table->date('week_start');
             $table->unsignedInteger('views')->default(0);

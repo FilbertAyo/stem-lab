@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('model_question_answers', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('model_id')->constrained('model3ds')->onDelete('cascade');
             $table->foreignId('question_id')->constrained('model_questions')->onDelete('cascade');

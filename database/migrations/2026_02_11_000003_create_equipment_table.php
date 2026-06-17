@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('equipment', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->string('name')->unique();
             $table->text('description')->nullable();
             $table->string('affiliate_url')->nullable();

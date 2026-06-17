@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('weekly_session_model3ds', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->foreignId('weekly_session_id')->constrained('weekly_sessions')->onDelete('cascade');
             $table->foreignId('model3d_id')->constrained('model3ds')->onDelete('cascade');
             $table->timestamps();

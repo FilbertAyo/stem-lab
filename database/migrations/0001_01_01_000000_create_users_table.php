@@ -13,10 +13,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone', 16)->nullable();
             $table->string('role')->default('user');
+            $table->string('subscription_tier', 32)->nullable();
+            $table->timestamp('club_linked_at')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->enum('gender', ['male', 'female', 'other'])->nullable();
+            $table->foreignId('school_class_id')->nullable();
+            $table->timestamp('student_onboarding_completed_at')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

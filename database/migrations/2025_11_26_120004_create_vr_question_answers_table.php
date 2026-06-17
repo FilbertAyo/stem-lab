@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('vr_question_answers', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->foreignId('attempt_id')->constrained('vr_assessment_attempts')->onDelete('cascade');
             $table->foreignId('question_id')->constrained('vr_questions')->onDelete('cascade');
             $table->text('student_answer')->nullable();

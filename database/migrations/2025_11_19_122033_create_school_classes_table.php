@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('school_classes', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->string('name')->unique();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);

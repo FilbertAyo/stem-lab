@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('project_codes', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
 
             $table->foreignId('project_id')
                 ->constrained('projects')

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('smiley_tutor_credentials', function (Blueprint $table) {
             $table->id();
+            $table->char('ulid', 26)->nullable()->unique();
             $table->string('username');
             $table->string('password');
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
