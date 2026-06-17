@@ -4,6 +4,7 @@
   $isStudent = $packageUser?->role === 'student';
   $isLinkedStudent = $isStudent && $packageUser->hasPublicSchoolAccess();
   $isUnlinkedStudent = $isStudent && ! $packageUser->isClubLinked();
+  $publicSchoolPackage = $subscriptionPackages->firstWhere('slug', 'public-school');
 @endphp
 
 <div class="col-12 mb-3" id="platform-subscription">
@@ -12,27 +13,25 @@
   </h5>
 </div>
 
-@if($isLinkedStudent)
+@if($isLinkedStudent && $publicSchoolPackage)
   <div class="row">
     <div class="col-lg-8 col-xl-6">
       <div class="card border shadow-none w-100 border-success-subtle">
         <div class="card-body p-7 p-xxl-5 d-flex flex-column gap-6">
           <div>
             <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle mb-3">Active plan</span>
-            <h5 class="mb-2 fw-medium">Public secondary school — free access</h5>
+            <h5 class="mb-2 fw-medium">{{ $publicSchoolPackage->linked_title ?: $publicSchoolPackage->name }}</h5>
             <p class="text-muted mb-0">
-              Your account is linked to your school STEM club. You have subsidised access at 0 TZS/month.
+              {{ $publicSchoolPackage->linked_description ?: $publicSchoolPackage->description }}
             </p>
           </div>
           <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">All STEM resources and activities</h6>
-            </li>
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">3D models, VR experiments & quizzes</h6>
-            </li>
+            @foreach ($publicSchoolPackage->linkedFeatureList() as $feature)
+              <li class="hstack gap-3">
+                <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
+                <h6 class="mb-0 fw-normal">{{ $feature }}</h6>
+              </li>
+            @endforeach
           </ul>
           <a href="{{ route('client.student-club.index') }}" class="btn btn-outline-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center">
             <span class="fw-semibold">View my club</span>
@@ -44,135 +43,53 @@
   </div>
 @else
 <div class="row">
-  <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
-    <div class="card border shadow-none w-100" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
-      <div class="card-body p-7 p-xxl-5 d-flex flex-column gap-8">
-        <div class="d-flex flex-column gap-6">
-          <h5 class="mb-0 fw-medium">Free trial</h5>
-          <div class="hstack gap-2">
-            <h3 class="mb-0">7 days</h3>
-            <p class="mb-0">free</p>
+  @foreach ($subscriptionPackages as $package)
+    <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
+      <div class="card border shadow-none w-100" data-aos="fade-up" data-aos-delay="{{ $package->sort_order * 100 }}" data-aos-duration="1000">
+        <div class="card-body p-7 p-xxl-5 d-flex flex-column gap-8">
+          <div class="d-flex flex-column gap-6">
+            <div class="@if($package->badge_label) hstack gap-3 @endif">
+              <h5 class="mb-0 fw-medium">{{ $package->name }}</h5>
+              @if ($package->badge_label)
+                <span class="badge text-bg-dark hstack gap-2"><iconify-icon icon="lucide:flame" class="fs-5"></iconify-icon>{{ $package->badge_label }}</span>
+              @endif
+            </div>
+            <div class="hstack gap-2 @if($package->price_compare) flex-wrap @endif">
+              @if ($package->price_compare)
+                <h3 class="mb-0 text-opacity-50 text-dark"><del>{{ $package->price_compare }}</del></h3>
+              @endif
+              @if ($package->price_heading)
+                <h3 class="mb-0">{{ $package->price_heading }}</h3>
+              @endif
+              @if ($package->price_subheading)
+                <p class="mb-0">{{ $package->price_subheading }}</p>
+              @endif
+            </div>
+            @if ($package->description)
+              <p class="mb-0">{{ $package->description }}</p>
+            @endif
           </div>
-          <p class="mb-0">Ideal for anyone who wants to explore the platform before subscribing. Full access to STEM resources for one week.</p>
-        </div>
-        <div class="pt-8 border-top d-flex flex-column gap-6">
-          <h6 class="mb-0 fw-normal">What’s included:</h6>
-          <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">Full platform access for 7 days</h6>
-            </li>
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">3D models and VR experiments</h6>
-            </li>
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">VR quizzes and assessments</h6>
-            </li>
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">Projects and learning resources</h6>
-            </li>
-          </ul>
-        </div>
-        <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="free-trial">
-          <span class="fw-semibold">Start free trial</span>
-          <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
-        </a>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
-    <div class="card border shadow-none w-100" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
-      <div class="card-body p-7 p-xxl-5 d-flex flex-column gap-8">
-        <div class="d-flex flex-column gap-6">
-          <div class="hstack gap-3">
-            <h5 class="mb-0 fw-medium">Individual</h5>
-            <span class="badge text-bg-dark hstack gap-2"><iconify-icon icon="lucide:flame" class="fs-5"></iconify-icon>Most popular</span>
-          </div>
-          <div class="hstack gap-2 flex-wrap">
-            <h3 class="mb-0 text-opacity-50 text-dark"><del>1,500</del></h3>
-            <h3 class="mb-0">1,000</h3>
-            <p class="mb-0">TZS /month</p>
-          </div>
-          <p class="mb-0">Perfect for teachers, students, and parents who want ongoing access to all STEM contents</p>
-        </div>
-        <div class="pt-8 border-top d-flex flex-column gap-6">
-          <h6 class="mb-0 fw-normal">What’s included:</h6>
-          <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">For teachers, students & parents</h6>
-            </li>
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">All 3D models and VR experiments</h6>
-            </li>
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">Competitions and club features (teachers)</h6>
-            </li>
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">Weekly sessions and student management</h6>
-            </li>
-          </ul>
-        </div>
-        <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="individual">
-          <span class="fw-semibold">Subscribe now</span>
-          <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
-        </a>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
-    <div class="card border shadow-none w-100" data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000">
-      <div class="card-body p-7 p-xxl-5 d-flex flex-column gap-8">
-        <div class="d-flex flex-column gap-6">
-          <h5 class="mb-0 fw-medium">Public secondary school</h5>
-          <div class="hstack gap-2">
-            <h3 class="mb-0">0</h3>
-            <p class="mb-0">TZS /month</p>
-          </div>
-          <p class="mb-0">Fully subsidised access for government-run secondary schools. Same platform features at no cost to support public education.</p>
-        </div>
-        <div class="pt-8 border-top d-flex flex-column gap-6">
-          <h6 class="mb-0 fw-normal">What’s included:</h6>
-          <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">Free access for registered public schools</h6>
-            </li>
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">All STEM resources and activities</h6>
-            </li>
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">3D models, VR experiments & quizzes</h6>
-            </li>
-            <li class="hstack gap-3">
-              <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
-              <h6 class="mb-0 fw-normal">Eligibility verified by school registration</h6>
-            </li>
-          </ul>
-        </div>
-        @if($isUnlinkedStudent)
-          <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="public-school-student">
-            <span class="fw-semibold">Learn more</span>
+          @if (! empty($package->features))
+            <div class="pt-8 border-top d-flex flex-column gap-6">
+              <h6 class="mb-0 fw-normal">What’s included:</h6>
+              <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
+                @foreach ($package->features as $feature)
+                  <li class="hstack gap-3">
+                    <span class="round-32 rounded-circle bg-primary flex-shrink-0 hstack justify-content-center"><iconify-icon icon="lucide:check" class="fs-6 text-dark"></iconify-icon></span>
+                    <h6 class="mb-0 fw-normal">{{ $feature }}</h6>
+                  </li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
+          <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="{{ $package->resolvedCtaAction($isUnlinkedStudent) }}">
+            <span class="fw-semibold">{{ $package->cta_label }}</span>
             <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
           </a>
-       
-        @else
-          <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="public-school-teacher">
-            <span class="fw-semibold">Learn more</span>
-            <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
-          </a>
-        @endif
+        </div>
       </div>
     </div>
-  </div>
+  @endforeach
 </div>
 @endif
 

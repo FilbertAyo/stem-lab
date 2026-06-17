@@ -79,6 +79,53 @@ class User extends Authenticatable
         return $this->subscription_tier === 'public_school' && $this->isClubLinked();
     }
 
+    public function hasApprovedClubMembership(): bool
+    {
+        if ($this->relationLoaded('teacherClubs')) {
+            return $this->teacherClubs->contains(fn (TeacherClub $membership) => $membership->status === 'approved');
+        }
+
+        return $this->teacherClubs()->where('status', 'approved')->exists();
+    }
+
+    /**
+     * Subsidised access via a linked STEM club (students) or approved club membership (teachers).
+     */
+    public function hasSubsidizedSchoolAccess(): bool
+    {
+        if ($this->hasPublicSchoolAccess()) {
+            return true;
+        }
+
+        return $this->role === 'teacher' && $this->hasApprovedClubMembership();
+    }
+
+    public function platformPlanLabel(): string
+    {
+        if (in_array($this->subscription_tier, ['individual', 'pro'], true)) {
+            return 'Pro';
+        }
+
+        if ($this->hasSubsidizedSchoolAccess()) {
+            return 'Free';
+        }
+
+        return 'Trial';
+    }
+
+    public function platformPlanBadgeClass(): string
+    {
+        if (in_array($this->subscription_tier, ['individual', 'pro'], true)) {
+            return 'bg-dark text-white';
+        }
+
+        if ($this->hasSubsidizedSchoolAccess()) {
+            return 'bg-success-subtle text-success-emphasis border border-success-subtle';
+        }
+
+        return 'bg-light text-dark border';
+    }
+
     /**
      * Get the school class associated with this user (student accounts).
      */

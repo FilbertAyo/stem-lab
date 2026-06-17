@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ProjectCategoryController as AdminProjectCategory
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\SubscriptionPackageController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VrExperimentController;
@@ -227,6 +228,12 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::post('/create', [\App\Http\Controllers\Admin\DatabaseBackupController::class, 'create'])->name('create');
             Route::get('/download/{filename}', [\App\Http\Controllers\Admin\DatabaseBackupController::class, 'download'])->name('download');
             Route::delete('/delete/{filename}', [\App\Http\Controllers\Admin\DatabaseBackupController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('subscription-packages')->name('subscription-packages.')->group(function () {
+            Route::get('/', [SubscriptionPackageController::class, 'index'])->name('index');
+            Route::get('/{subscriptionPackage}/edit', [SubscriptionPackageController::class, 'edit'])->name('edit');
+            Route::put('/{subscriptionPackage}', [SubscriptionPackageController::class, 'update'])->name('update');
         });
 
         // Settings routes

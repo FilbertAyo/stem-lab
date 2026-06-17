@@ -28,7 +28,6 @@
           @php($navUser = Auth::user())
           @php($navName = $navUser->name ?? 'User')
           @php($navInitials = collect(preg_split('/\s+/', trim($navName)))->filter()->take(2)->map(fn ($part) => strtoupper(substr($part, 0, 1)))->implode('') ?: 'U')
-          @php($navRoleLabel = ($navUser->role ?? '') === 'teacher' ? 'Teacher' : 'Student')
 
           <div class="dropdown">
             <button
@@ -49,7 +48,7 @@
                   <div class="min-w-0">
                     <span class="fw-semibold d-block text-truncate">{{ $navUser->name ?? 'User' }}</span>
                     <small class="text-muted d-block text-truncate">{{ $navUser->email ?? 'user@example.com' }}</small>
-                    <span class="badge bg-light text-dark border mt-2">{{ $navRoleLabel }}</span>
+                    <span class="badge mt-2 {{ $navUser->platformPlanBadgeClass() }}">{{ $navUser->platformPlanLabel() }}</span>
                   </div>
                 </div>
               </li>

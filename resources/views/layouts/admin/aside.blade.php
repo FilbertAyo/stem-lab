@@ -192,6 +192,13 @@
           </li>
 
           <li class="pc-item">
+            <a href="{{ route('admin.subscription-packages.index') }}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-credit-card"></i></span>
+              <span class="pc-mtext">Subscription Packages</span>
+            </a>
+          </li>
+
+          <li class="pc-item">
             <a href="{{ route('admin.settings.index') }}" class="pc-link">
               <span class="pc-micon"><i class="ti ti-settings"></i></span>
               <span class="pc-mtext">System Settings</span>

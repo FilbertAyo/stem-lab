@@ -13,6 +13,7 @@ use App\Models\ProjectCategory;
 use App\Models\School;
 use App\Models\SchoolClass;
 use App\Models\Subject;
+use App\Models\SubscriptionPackage;
 use App\Models\TeacherClub;
 use App\Models\User;
 use App\Models\VrAssessmentAttempt;
@@ -27,6 +28,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -73,6 +75,13 @@ class AppServiceProvider extends ServiceProvider
 
         // Clear caches when models are created, updated, or deleted
         $this->registerModelEvents();
+
+        View::composer('client.back.partials.package', function ($view): void {
+            $view->with(
+                'subscriptionPackages',
+                SubscriptionPackage::query()->active()->ordered()->get()
+            );
+        });
 
         // Ensure admin routes generate URLs with admin subdomain
         // This is handled automatically by Route::domain(), but we ensure it's set correctly
