@@ -272,10 +272,8 @@
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="POST" action="{{ route('client.students.store') }}" id="registerStudentForm">
+                    <form method="POST" action="{{ route('client.clubs.students.store', $teacherClub) }}" id="registerStudentForm">
                         @csrf
-                        <input type="hidden" name="teacher_club_id" value="{{ $teacherClub->id }}">
-                        <input type="hidden" name="redirect_to" value="{{ route('client.clubs.show', $teacherClub, absolute: false) }}">
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="register_name" class="form-label">Student Name <span class="text-danger">*</span></label>
@@ -327,10 +325,8 @@
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="POST" action="{{ route('client.students.bulk-store') }}" enctype="multipart/form-data" id="bulkUploadForm">
+                    <form method="POST" action="{{ route('client.clubs.students.bulk-store', $teacherClub) }}" enctype="multipart/form-data" id="bulkUploadForm">
                         @csrf
-                        <input type="hidden" name="teacher_club_id" value="{{ $teacherClub->id }}">
-                        <input type="hidden" name="redirect_to" value="{{ route('client.clubs.show', $teacherClub, absolute: false) }}">
                         <div class="modal-body">
                             <div class="alert alert-info">
                                 <i class="bi bi-info-circle me-2"></i>

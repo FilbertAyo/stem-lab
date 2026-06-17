@@ -16,9 +16,28 @@ use Illuminate\Validation\ValidationException;
 class StudentController extends Controller
 {
     /**
-     * Store a newly registered student.
+     * Store a newly registered student from the club show page.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, TeacherClub $teacherClub): RedirectResponse
+    {
+        $this->authorizeClubPageAccess($teacherClub);
+
+        $validated = $this->validateForClubMutation($request, [
+            'name' => ['required', 'string', 'max:255'],
+            'date_of_birth' => ['required', 'string', 'max:32'],
+            'gender' => ['required', 'string', 'in:male,female,other'],
+            'school_class_id' => ['required', 'exists:school_classes,id'],
+        ], $teacherClub);
+
+        $writableClub = $this->resolveWritableTeacherClub($teacherClub);
+
+        return $this->createStudentFromValidated($request, $writableClub, $teacherClub, $validated);
+    }
+
+    /**
+     * @deprecated Use store() with club-scoped route instead.
+     */
+    public function storeWithoutRouteClub(Request $request): RedirectResponse
     {
         $validated = $this->validateForClubMutation($request, [
             'teacher_club_id' => ['required', $this->teacherClubIdRule()],
@@ -29,54 +48,30 @@ class StudentController extends Controller
             'redirect_to' => ['nullable', 'string', 'max:2048'],
         ]);
 
-        $teacherClub = $this->resolveContextTeacherClub($validated['teacher_club_id']);
+        $pageClub = $this->findTeacherClubByIdOrUlid($validated['teacher_club_id']);
+        abort_if($pageClub === null, 404);
 
-        $parsedDob = app(StudentCsvBulkImportService::class)->parseDateOfBirth($validated['date_of_birth']);
-        if ($parsedDob === null) {
-            return $this->redirectAfterStudentMutation($request, $teacherClub)
-                ->withErrors(['date_of_birth' => 'Invalid date of birth. Use DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD.'])
-                ->withInput();
-        }
+        $this->authorizeClubPageAccess($pageClub);
 
-        if ($parsedDob->isFuture()) {
-            return $this->redirectAfterStudentMutation($request, $teacherClub)
-                ->withErrors(['date_of_birth' => 'Date of birth cannot be in the future.'])
-                ->withInput();
-        }
+        $writableClub = $this->resolveWritableTeacherClub($pageClub);
 
-        $age = $parsedDob->age;
-        if ($age < 1 || $age > 150) {
-            return $this->redirectAfterStudentMutation($request, $teacherClub)
-                ->withErrors(['date_of_birth' => 'Date of birth must result in age between 1 and 150.'])
-                ->withInput();
-        }
-
-        Student::create([
-            'teacher_club_id' => $teacherClub->id,
-            'name' => $validated['name'],
-            'date_of_birth' => $parsedDob->format('Y-m-d'),
-            'age' => $age,
-            'gender' => $validated['gender'],
-            'school_class_id' => $validated['school_class_id'],
-        ]);
-
-        return $this->redirectAfterStudentMutation($request, $teacherClub, 'Student registered successfully!');
+        return $this->createStudentFromValidated($request, $writableClub, $pageClub, $validated);
     }
 
     /**
-     * Store multiple students from CSV file.
+     * Store multiple students from CSV on the club show page.
      */
-    public function bulkStore(Request $request, StudentCsvBulkImportService $csvImport): RedirectResponse
+    public function bulkStore(Request $request, TeacherClub $teacherClub, StudentCsvBulkImportService $csvImport): RedirectResponse
     {
+        $this->authorizeClubPageAccess($teacherClub);
+
         $validated = $this->validateForClubMutation($request, [
-            'teacher_club_id' => ['required', $this->teacherClubIdRule()],
             'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
-            'redirect_to' => ['nullable', 'string', 'max:2048'],
-        ]);
+        ], $teacherClub);
 
-        $teacherClub = $this->resolveContextTeacherClub($validated['teacher_club_id']);
+        $writableClub = $this->resolveWritableTeacherClub($teacherClub);
 
-        $result = $csvImport->import($teacherClub, $request->file('csv_file'));
+        $result = $csvImport->import($writableClub, $request->file('csv_file'));
 
         if ($result['errors'] !== []) {
             return $this->redirectAfterStudentMutation($request, $teacherClub)
@@ -92,6 +87,25 @@ class StudentController extends Controller
     }
 
     /**
+     * @deprecated Use bulkStore() with club-scoped route instead.
+     */
+    public function bulkStoreWithoutRouteClub(Request $request, StudentCsvBulkImportService $csvImport): RedirectResponse
+    {
+        $validated = $this->validateForClubMutation($request, [
+            'teacher_club_id' => ['required', $this->teacherClubIdRule()],
+            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
+            'redirect_to' => ['nullable', 'string', 'max:2048'],
+        ]);
+
+        $pageClub = $this->findTeacherClubByIdOrUlid($validated['teacher_club_id']);
+        abort_if($pageClub === null, 404);
+
+        $this->authorizeClubPageAccess($pageClub);
+
+        return $this->bulkStore($request, $pageClub, $csvImport);
+    }
+
+    /**
      * Update a student owned by the current teacher (approved club).
      */
     public function update(Request $request, Student $student): RedirectResponse
@@ -104,7 +118,7 @@ class StudentController extends Controller
             'school_class_id' => ['required', 'exists:school_classes,id'],
             'date_of_birth' => ['required', 'string', 'max:32'],
             'redirect_to' => ['nullable', 'string', 'max:2048'],
-        ]);
+        ], $student->teacherClub);
 
         $parsedDob = app(StudentCsvBulkImportService::class)->parseDateOfBirth($validated['date_of_birth']);
         if ($parsedDob === null) {
@@ -165,12 +179,14 @@ class StudentController extends Controller
     {
         $user = Auth::user();
 
+        $pageClub = $this->findTeacherClubFromRequest($request);
+
         $validated = $this->validateForClubMutation($request, [
             'student_ids' => ['required', 'array', 'min:1'],
             'student_ids.*' => ['integer', 'exists:students,id'],
             'redirect_to' => ['nullable', 'string', 'max:2048'],
             'teacher_club_id' => ['nullable', $this->teacherClubIdRule()],
-        ]);
+        ], $pageClub);
 
         $manageableTeacherClubIds = $user->approvedCoMemberTeacherClubIds();
 
@@ -184,9 +200,9 @@ class StudentController extends Controller
 
         $requested = count(array_unique($validated['student_ids']));
 
-        $teacherClub = null;
-        if (! empty($validated['teacher_club_id'])) {
-            $teacherClub = TeacherClub::query()->find($validated['teacher_club_id']);
+        $teacherClub = $pageClub;
+        if ($teacherClub === null && ! empty($validated['teacher_club_id'])) {
+            $teacherClub = $this->findTeacherClubByIdOrUlid($validated['teacher_club_id']);
         }
         if ($teacherClub === null && $students->isNotEmpty()) {
             $teacherClub = $students->first()->teacherClub;
@@ -213,47 +229,89 @@ class StudentController extends Controller
     }
 
     /**
+     * @param  array<string, mixed>  $validated
+     */
+    private function createStudentFromValidated(
+        Request $request,
+        TeacherClub $writableClub,
+        TeacherClub $pageClub,
+        array $validated,
+    ): RedirectResponse {
+        $parsedDob = app(StudentCsvBulkImportService::class)->parseDateOfBirth($validated['date_of_birth']);
+        if ($parsedDob === null) {
+            return $this->redirectAfterStudentMutation($request, $pageClub)
+                ->withErrors(['date_of_birth' => 'Invalid date of birth. Use DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD.'])
+                ->withInput();
+        }
+
+        if ($parsedDob->isFuture()) {
+            return $this->redirectAfterStudentMutation($request, $pageClub)
+                ->withErrors(['date_of_birth' => 'Date of birth cannot be in the future.'])
+                ->withInput();
+        }
+
+        $age = $parsedDob->age;
+        if ($age < 1 || $age > 150) {
+            return $this->redirectAfterStudentMutation($request, $pageClub)
+                ->withErrors(['date_of_birth' => 'Date of birth must result in age between 1 and 150.'])
+                ->withInput();
+        }
+
+        Student::create([
+            'teacher_club_id' => $writableClub->id,
+            'name' => $validated['name'],
+            'date_of_birth' => $parsedDob->format('Y-m-d'),
+            'age' => $age,
+            'gender' => $validated['gender'],
+            'school_class_id' => $validated['school_class_id'],
+        ]);
+
+        return $this->redirectAfterStudentMutation($request, $pageClub, 'Student registered successfully!');
+    }
+
+    /**
      * @param  array<string, mixed>  $rules
      * @return array<string, mixed>
      */
-    private function validateForClubMutation(Request $request, array $rules): array
+    private function validateForClubMutation(Request $request, array $rules, ?TeacherClub $pageClub = null): array
     {
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             throw (new ValidationException($validator))
-                ->redirectTo($this->resolveReturnUrl($request, $this->findTeacherClubFromRequest($request)));
+                ->redirectTo($this->resolveReturnUrl($request, $pageClub));
         }
 
         return $validator->validated();
     }
 
-    /**
-     * Resolve the teacher's own approved membership for the club context on the form.
-     * Any approved co-member at the same school club may register students.
-     */
-    private function resolveContextTeacherClub(int|string $submittedTeacherClubId): TeacherClub
+    private function authorizeClubPageAccess(TeacherClub $teacherClub): void
     {
         /** @var User $user */
         $user = Auth::user();
 
-        $submitted = $this->findTeacherClubByIdOrUlid($submittedTeacherClubId);
-
-        abort_if($submitted === null, 404);
-
         abort_unless(
-            $user->approvedCoMemberTeacherClubIds()->contains($submitted->id),
+            $user->approvedCoMemberTeacherClubIds()->contains($teacherClub->id),
             403,
         );
+    }
+
+    /**
+     * Resolve the teacher's own approved membership for the club context on the page.
+     */
+    private function resolveWritableTeacherClub(TeacherClub $pageClub): TeacherClub
+    {
+        /** @var User $user */
+        $user = Auth::user();
 
         $query = $user->teacherClubs()
-            ->where('club_id', $submitted->club_id)
+            ->where('club_id', $pageClub->club_id)
             ->approved();
 
-        if ($submitted->school_id === null) {
+        if ($pageClub->school_id === null) {
             $query->whereNull('school_id');
         } else {
-            $query->where('school_id', $submitted->school_id);
+            $query->where('school_id', $pageClub->school_id);
         }
 
         return $query->firstOrFail();
@@ -326,20 +384,23 @@ class StudentController extends Controller
 
     private function resolveReturnUrl(Request $request, ?TeacherClub $teacherClub = null): string
     {
+        if ($teacherClub !== null) {
+            return route('client.clubs.show', $teacherClub, absolute: false);
+        }
+
+        $teacherClub = $this->findTeacherClubFromRequest($request);
+        if ($teacherClub !== null) {
+            $user = Auth::user();
+            if ($user && $user->approvedCoMemberTeacherClubIds()->contains($teacherClub->id)) {
+                return route('client.clubs.show', $teacherClub, absolute: false);
+            }
+        }
+
         $target = $request->input('redirect_to');
         if (is_string($target) && $target !== '') {
             $normalized = $this->normalizeRedirectTarget($target);
             if ($normalized !== null) {
                 return $normalized;
-            }
-        }
-
-        $teacherClub ??= $this->findTeacherClubFromRequest($request);
-
-        if ($teacherClub !== null) {
-            $user = Auth::user();
-            if ($user && $user->approvedCoMemberTeacherClubIds()->contains($teacherClub->id)) {
-                return route('client.clubs.show', $teacherClub, absolute: false);
             }
         }
 

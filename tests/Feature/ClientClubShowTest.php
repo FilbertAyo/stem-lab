@@ -68,13 +68,11 @@ test('student store from club show redirects back to show page', function () {
         'is_active' => true,
     ]);
 
-    $response = $this->actingAs($teacher)->post(route('client.students.store'), [
-        'teacher_club_id' => $teacherClub->id,
+    $response = $this->actingAs($teacher)->post(route('client.clubs.students.store', $teacherClub), [
         'name' => 'Test Student',
         'date_of_birth' => '2011-07-14',
         'gender' => 'female',
         'school_class_id' => $schoolClass->id,
-        'redirect_to' => route('client.clubs.show', $teacherClub, absolute: false),
     ]);
 
     $response->assertRedirect(route('client.clubs.show', $teacherClub));
@@ -87,9 +85,7 @@ test('student store validation failure redirects back to club show not students 
     $teacherClub = createTeacherClubForCompetition($competition, $school);
     $teacher = $teacherClub->user;
 
-    $response = $this->actingAs($teacher)->post(route('client.students.store'), [
-        'teacher_club_id' => $teacherClub->id,
-        'redirect_to' => route('client.clubs.show', $teacherClub, absolute: false),
+    $response = $this->actingAs($teacher)->post(route('client.clubs.students.store', $teacherClub), [
         'gender' => 'female',
     ]);
 
@@ -115,13 +111,11 @@ test('co member teacher can register student from shared club page', function ()
         'is_active' => true,
     ]);
 
-    $response = $this->actingAs($coTeacher)->post(route('client.students.store'), [
-        'teacher_club_id' => $leaderClub->id,
+    $response = $this->actingAs($coTeacher)->post(route('client.clubs.students.store', $leaderClub), [
         'name' => 'Co-member Student',
         'date_of_birth' => '2010-05-20',
         'gender' => 'male',
         'school_class_id' => $schoolClass->id,
-        'redirect_to' => route('client.clubs.show', $leaderClub, absolute: false),
     ]);
 
     $response->assertRedirect(route('client.clubs.show', $leaderClub));
@@ -138,18 +132,27 @@ test('student store accepts day first date of birth format', function () {
         'is_active' => true,
     ]);
 
-    $response = $this->actingAs($teacher)->post(route('client.students.store'), [
-        'teacher_club_id' => $teacherClub->id,
+    $response = $this->actingAs($teacher)->post(route('client.clubs.students.store', $teacherClub), [
         'name' => 'Day First Student',
-        'date_of_birth' => '14-07-2011',
+        'date_of_birth' => '14-08-2007',
         'gender' => 'female',
         'school_class_id' => $schoolClass->id,
-        'redirect_to' => route('client.clubs.show', $teacherClub, absolute: false),
     ]);
 
     $response->assertRedirect(route('client.clubs.show', $teacherClub));
     $response->assertSessionHas('status');
     expect(Student::query()->where('teacher_club_id', $teacherClub->id)->where('name', 'Day First Student')->exists())->toBeTrue();
+});
+
+test('club show form posts to club scoped student route not students index trap', function () {
+    ['school' => $school, 'competition' => $competition] = createCompetitionFixture();
+    $teacherClub = createTeacherClubForCompetition($competition, $school);
+
+    $response = $this->actingAs($teacherClub->user)->get(route('client.clubs.show', $teacherClub));
+
+    $response->assertOk();
+    $response->assertSee(route('client.clubs.students.store', $teacherClub, absolute: false), false);
+    $response->assertDontSee('action="'.url('/students').'"', false);
 });
 
 test('clubs index shows view club link for joined membership', function () {

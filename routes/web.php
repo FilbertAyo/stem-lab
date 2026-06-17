@@ -11,8 +11,8 @@ use App\Http\Controllers\Admin\ProjectCategoryController as AdminProjectCategory
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\SubscriptionPackageController;
 use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\SubscriptionPackageController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VrExperimentController;
 use App\Http\Controllers\Admin\WeeklySessionController;
@@ -24,8 +24,8 @@ use App\Http\Controllers\Client\DashboardController as ClientDashboardController
 use App\Http\Controllers\Client\Model3dController as ClientModel3dController;
 use App\Http\Controllers\Client\ProjectController as ClientProjectController;
 use App\Http\Controllers\Client\StudentClubController as ClientStudentClubController;
-use App\Http\Controllers\Client\SubscriptionPackageController as ClientSubscriptionPackageController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
+use App\Http\Controllers\Client\SubscriptionPackageController as ClientSubscriptionPackageController;
 use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicCompetitionController;
@@ -368,113 +368,115 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
     });
 
     Route::middleware('student.onboarded')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::post('/subscription-packages/select', [ClientSubscriptionPackageController::class, 'select'])
-        ->name('client.subscription-packages.select');
+        Route::post('/subscription-packages/select', [ClientSubscriptionPackageController::class, 'select'])
+            ->name('client.subscription-packages.select');
 
-    Route::prefix('models/3d')->name('client.models.3d.')->group(function () {
-        Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
+        Route::prefix('models/3d')->name('client.models.3d.')->group(function () {
+            Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
 
-        // Question routes (must come before /{model3d} to avoid route conflicts)
-        Route::get('/{model3d}/questions', [\App\Http\Controllers\Client\ModelQuestionController::class, 'getQuestions'])->name('questions.get');
-        Route::post('/{model3d}/questions/submit', [\App\Http\Controllers\Client\ModelQuestionController::class, 'submitAnswers'])->name('questions.submit');
+            // Question routes (must come before /{model3d} to avoid route conflicts)
+            Route::get('/{model3d}/questions', [\App\Http\Controllers\Client\ModelQuestionController::class, 'getQuestions'])->name('questions.get');
+            Route::post('/{model3d}/questions/submit', [\App\Http\Controllers\Client\ModelQuestionController::class, 'submitAnswers'])->name('questions.submit');
 
-        Route::get('/{model3d}', [ClientModel3dController::class, 'show'])->name('show');
-    });
-
-    // Projects routes (client)
-    Route::prefix('projects')->name('client.projects.')->group(function () {
-        Route::get('/', [ClientProjectController::class, 'index'])->name('index');
-        Route::get('/{project}', [ClientProjectController::class, 'show'])->name('show');
-    });
-
-    // VR Experiments routes
-    Route::prefix('vr-experiments')->name('client.vr-experiments.')->group(function () {
-        Route::get('/', [ClientVrExperimentController::class, 'index'])->name('index');
-        Route::get('/math/practice', [ClientVrExperimentController::class, 'mathPractice'])->name('math.practice');
-        Route::get('/math', [ClientVrExperimentController::class, 'math'])->name('math');
-        Route::get('/experience/{slug}', [ClientVrExperimentController::class, 'showStatic'])->name('show.static');
-        Route::get('/{vrExperiment}', [ClientVrExperimentController::class, 'show'])->name('show');
-    });
-
-    // VR Assessment/Quiz routes
-    Route::prefix('vr-quizzes')->name('client.vr-assessments.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Client\VrAssessmentController::class, 'index'])->name('index');
-        Route::get('/{questionBank}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'show'])->name('show');
-        Route::post('/{questionBank}/start', [\App\Http\Controllers\Client\VrAssessmentController::class, 'start'])->name('start');
-        Route::get('/attempt/{attempt}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'take'])->name('take');
-        Route::post('/attempt/{attempt}/save-answer', [\App\Http\Controllers\Client\VrAssessmentController::class, 'saveAnswer'])->name('save-answer');
-        Route::post('/attempt/{attempt}/submit', [\App\Http\Controllers\Client\VrAssessmentController::class, 'submit'])->name('submit');
-        Route::get('/attempt/{attempt}/results', [\App\Http\Controllers\Client\VrAssessmentController::class, 'results'])->name('results');
-    });
-
-    // Student club linkup (student-only)
-    Route::middleware('student')->prefix('activities/my-club')->name('client.student-club.')->group(function () {
-        Route::get('/', [ClientStudentClubController::class, 'index'])->name('index');
-        Route::post('/lookup', [ClientStudentClubController::class, 'lookup'])
-            ->middleware('throttle:10,1')
-            ->name('lookup');
-        Route::get('/confirm', [ClientStudentClubController::class, 'confirm'])->name('confirm');
-        Route::post('/link', [ClientStudentClubController::class, 'link'])
-            ->middleware('throttle:10,1')
-            ->name('link');
-    });
-
-    // Teacher-only routes
-    Route::middleware('teacher')->group(function () {
-        Route::prefix('clubs')->name('client.clubs.')->group(function () {
-            Route::get('/', [ClientClubController::class, 'index'])->name('index');
-            Route::post('/transfer-leadership', [ClientClubController::class, 'transferLeadership'])->name('transfer-leadership');
-            Route::get('/pending-requests', [ClientClubController::class, 'pendingRequests'])->name('pending-requests');
-            Route::get('/join/{club}', [ClientClubController::class, 'showJoinForm'])->name('join.form');
-            Route::post('/join/{club}', [ClientClubController::class, 'join'])->name('join');
-            Route::post('/{teacherClub}/approve', [ClientClubController::class, 'approveRequest'])->name('approve-request');
-            Route::post('/{teacherClub}/reject', [ClientClubController::class, 'rejectRequest'])->name('reject-request');
-            Route::get('/{teacherClub}', [ClientClubController::class, 'show'])->name('show');
+            Route::get('/{model3d}', [ClientModel3dController::class, 'show'])->name('show');
         });
 
-        // Student registration routes (mutations only; listing lives on club show page)
-        Route::redirect('/students', '/clubs', 302)->name('client.students.index');
-        Route::post('/students', [ClientStudentController::class, 'store'])->name('client.students.store');
-        Route::put('/students/{student}', [ClientStudentController::class, 'update'])->name('client.students.update');
-        Route::delete('/students/{student}', [ClientStudentController::class, 'destroy'])->name('client.students.destroy');
-        Route::post('/students/bulk', [ClientStudentController::class, 'bulkStore'])->name('client.students.bulk-store');
-        Route::post('/students/bulk-destroy', [ClientStudentController::class, 'bulkDestroy'])->name('client.students.bulk-destroy');
-
-        // Weekly Sessions routes
-        Route::prefix('weekly-sessions')->name('client.weekly-sessions.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Client\WeeklySessionController::class, 'index'])->name('index');
-            Route::get('/{weeklySession}', [\App\Http\Controllers\Client\WeeklySessionController::class, 'show'])->name('show');
-            Route::get('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'createReport'])->name('report.create');
-            Route::post('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'storeReport'])->name('report.store');
-            Route::post('/{weeklySession}/report/upload-pdf', [\App\Http\Controllers\Client\WeeklySessionController::class, 'uploadPdfReport'])->name('report.upload-pdf');
-            Route::get('/{weeklySession}/report/edit', [\App\Http\Controllers\Client\WeeklySessionController::class, 'editReport'])->name('report.edit');
-            Route::put('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'updateReport'])->name('report.update');
+        // Projects routes (client)
+        Route::prefix('projects')->name('client.projects.')->group(function () {
+            Route::get('/', [ClientProjectController::class, 'index'])->name('index');
+            Route::get('/{project}', [ClientProjectController::class, 'show'])->name('show');
         });
 
-        // Competition routes for teachers
-        Route::prefix('competitions')->name('client.competitions.')->group(function () {
-            Route::get('/', [ClientCompetitionController::class, 'index'])->name('index');
-            Route::get('/{competition}/register/representatives', [ClientCompetitionController::class, 'registerRepresentatives'])->name('register.representatives');
-            Route::post('/{competition}/register/representatives', [ClientCompetitionController::class, 'storeRegistrationRepresentatives'])->name('register.representatives.store');
-            Route::post('/{competition}/register/bulk-students', [ClientCompetitionController::class, 'bulkImportStudents'])->name('register.bulk-students');
-            Route::delete('/{competition}/register/pool-students', [ClientCompetitionController::class, 'clearPoolStudents'])->name('register.pool-students.clear');
-            Route::get('/{competition}/register/csv-template', [ClientCompetitionController::class, 'downloadRegistrationCsvTemplate'])->name('register.csv-template');
-            Route::get('/{competition}/register', [ClientCompetitionController::class, 'register'])->name('register');
-            Route::post('/{competition}/register', [ClientCompetitionController::class, 'storeRegistration'])->name('register.store');
-            Route::get('/{competition}/idea', [ClientCompetitionController::class, 'createIdea'])->name('idea');
-            Route::post('/{competition}/idea', [ClientCompetitionController::class, 'storeIdea'])->name('idea.store');
-            Route::get('/{competition}/prototype', [ClientCompetitionController::class, 'createPrototype'])->name('prototype');
-            Route::post('/{competition}/prototype', [ClientCompetitionController::class, 'storePrototype'])->name('prototype.store');
-            Route::get('/{competition}/prototype-modification', [ClientCompetitionController::class, 'createPrototypeModification'])->name('prototype-modification');
-            Route::post('/{competition}/prototype-modification', [ClientCompetitionController::class, 'storePrototypeModification'])->name('prototype-modification.store');
-            Route::delete('/{competition}/attachment', [ClientCompetitionController::class, 'deleteAttachment'])->name('attachment.delete');
-            Route::get('/{competition}', [ClientCompetitionController::class, 'show'])->name('show');
+        // VR Experiments routes
+        Route::prefix('vr-experiments')->name('client.vr-experiments.')->group(function () {
+            Route::get('/', [ClientVrExperimentController::class, 'index'])->name('index');
+            Route::get('/math/practice', [ClientVrExperimentController::class, 'mathPractice'])->name('math.practice');
+            Route::get('/math', [ClientVrExperimentController::class, 'math'])->name('math');
+            Route::get('/experience/{slug}', [ClientVrExperimentController::class, 'showStatic'])->name('show.static');
+            Route::get('/{vrExperiment}', [ClientVrExperimentController::class, 'show'])->name('show');
         });
-    });
+
+        // VR Assessment/Quiz routes
+        Route::prefix('vr-quizzes')->name('client.vr-assessments.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Client\VrAssessmentController::class, 'index'])->name('index');
+            Route::get('/{questionBank}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'show'])->name('show');
+            Route::post('/{questionBank}/start', [\App\Http\Controllers\Client\VrAssessmentController::class, 'start'])->name('start');
+            Route::get('/attempt/{attempt}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'take'])->name('take');
+            Route::post('/attempt/{attempt}/save-answer', [\App\Http\Controllers\Client\VrAssessmentController::class, 'saveAnswer'])->name('save-answer');
+            Route::post('/attempt/{attempt}/submit', [\App\Http\Controllers\Client\VrAssessmentController::class, 'submit'])->name('submit');
+            Route::get('/attempt/{attempt}/results', [\App\Http\Controllers\Client\VrAssessmentController::class, 'results'])->name('results');
+        });
+
+        // Student club linkup (student-only)
+        Route::middleware('student')->prefix('activities/my-club')->name('client.student-club.')->group(function () {
+            Route::get('/', [ClientStudentClubController::class, 'index'])->name('index');
+            Route::post('/lookup', [ClientStudentClubController::class, 'lookup'])
+                ->middleware('throttle:10,1')
+                ->name('lookup');
+            Route::get('/confirm', [ClientStudentClubController::class, 'confirm'])->name('confirm');
+            Route::post('/link', [ClientStudentClubController::class, 'link'])
+                ->middleware('throttle:10,1')
+                ->name('link');
+        });
+
+        // Teacher-only routes
+        Route::middleware('teacher')->group(function () {
+            Route::prefix('clubs')->name('client.clubs.')->group(function () {
+                Route::get('/', [ClientClubController::class, 'index'])->name('index');
+                Route::post('/transfer-leadership', [ClientClubController::class, 'transferLeadership'])->name('transfer-leadership');
+                Route::get('/pending-requests', [ClientClubController::class, 'pendingRequests'])->name('pending-requests');
+                Route::get('/join/{club}', [ClientClubController::class, 'showJoinForm'])->name('join.form');
+                Route::post('/join/{club}', [ClientClubController::class, 'join'])->name('join');
+                Route::post('/{teacherClub}/approve', [ClientClubController::class, 'approveRequest'])->name('approve-request');
+                Route::post('/{teacherClub}/reject', [ClientClubController::class, 'rejectRequest'])->name('reject-request');
+                Route::post('/{teacherClub}/students', [ClientStudentController::class, 'store'])->name('students.store');
+                Route::post('/{teacherClub}/students/bulk', [ClientStudentController::class, 'bulkStore'])->name('students.bulk-store');
+                Route::get('/{teacherClub}', [ClientClubController::class, 'show'])->name('show');
+            });
+
+            // Legacy student routes (kept for backwards compatibility; club show forms use client.clubs.students.*)
+            Route::redirect('/students', '/clubs', 302)->name('client.students.index');
+            Route::post('/students', [ClientStudentController::class, 'storeWithoutRouteClub'])->name('client.students.store');
+            Route::put('/students/{student}', [ClientStudentController::class, 'update'])->name('client.students.update');
+            Route::delete('/students/{student}', [ClientStudentController::class, 'destroy'])->name('client.students.destroy');
+            Route::post('/students/bulk', [ClientStudentController::class, 'bulkStoreWithoutRouteClub'])->name('client.students.bulk-store');
+            Route::post('/students/bulk-destroy', [ClientStudentController::class, 'bulkDestroy'])->name('client.students.bulk-destroy');
+
+            // Weekly Sessions routes
+            Route::prefix('weekly-sessions')->name('client.weekly-sessions.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Client\WeeklySessionController::class, 'index'])->name('index');
+                Route::get('/{weeklySession}', [\App\Http\Controllers\Client\WeeklySessionController::class, 'show'])->name('show');
+                Route::get('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'createReport'])->name('report.create');
+                Route::post('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'storeReport'])->name('report.store');
+                Route::post('/{weeklySession}/report/upload-pdf', [\App\Http\Controllers\Client\WeeklySessionController::class, 'uploadPdfReport'])->name('report.upload-pdf');
+                Route::get('/{weeklySession}/report/edit', [\App\Http\Controllers\Client\WeeklySessionController::class, 'editReport'])->name('report.edit');
+                Route::put('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'updateReport'])->name('report.update');
+            });
+
+            // Competition routes for teachers
+            Route::prefix('competitions')->name('client.competitions.')->group(function () {
+                Route::get('/', [ClientCompetitionController::class, 'index'])->name('index');
+                Route::get('/{competition}/register/representatives', [ClientCompetitionController::class, 'registerRepresentatives'])->name('register.representatives');
+                Route::post('/{competition}/register/representatives', [ClientCompetitionController::class, 'storeRegistrationRepresentatives'])->name('register.representatives.store');
+                Route::post('/{competition}/register/bulk-students', [ClientCompetitionController::class, 'bulkImportStudents'])->name('register.bulk-students');
+                Route::delete('/{competition}/register/pool-students', [ClientCompetitionController::class, 'clearPoolStudents'])->name('register.pool-students.clear');
+                Route::get('/{competition}/register/csv-template', [ClientCompetitionController::class, 'downloadRegistrationCsvTemplate'])->name('register.csv-template');
+                Route::get('/{competition}/register', [ClientCompetitionController::class, 'register'])->name('register');
+                Route::post('/{competition}/register', [ClientCompetitionController::class, 'storeRegistration'])->name('register.store');
+                Route::get('/{competition}/idea', [ClientCompetitionController::class, 'createIdea'])->name('idea');
+                Route::post('/{competition}/idea', [ClientCompetitionController::class, 'storeIdea'])->name('idea.store');
+                Route::get('/{competition}/prototype', [ClientCompetitionController::class, 'createPrototype'])->name('prototype');
+                Route::post('/{competition}/prototype', [ClientCompetitionController::class, 'storePrototype'])->name('prototype.store');
+                Route::get('/{competition}/prototype-modification', [ClientCompetitionController::class, 'createPrototypeModification'])->name('prototype-modification');
+                Route::post('/{competition}/prototype-modification', [ClientCompetitionController::class, 'storePrototypeModification'])->name('prototype-modification.store');
+                Route::delete('/{competition}/attachment', [ClientCompetitionController::class, 'deleteAttachment'])->name('attachment.delete');
+                Route::get('/{competition}', [ClientCompetitionController::class, 'show'])->name('show');
+            });
+        });
     });
 });
 
