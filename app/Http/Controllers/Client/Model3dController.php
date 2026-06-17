@@ -77,7 +77,7 @@ class Model3dController extends Controller
             ];
         }
 
-        return view('client.back.models.3d.index', array_merge([
+        return view('client.back.models.3d.index', [
             'model3ds' => $model3ds,
             'modelsBySubject' => collect(),
             'subjectsWithModels' => collect(),
@@ -88,7 +88,7 @@ class Model3dController extends Controller
             'search' => $search,
             'sort' => $sort,
             'totalModels' => $totalModels,
-        ], $this->classFilterViewData()));
+        ]);
     }
 
     /**
@@ -131,10 +131,7 @@ class Model3dController extends Controller
             'has_attempted' => $answeredQuestions > 0,
         ];
 
-        return view('client.back.models.3d.show', array_merge(
-            compact('model3d', 'progress'),
-            $this->classFilterViewData()
-        ));
+        return view('client.back.models.3d.show', compact('model3d', 'progress'));
     }
 }
 

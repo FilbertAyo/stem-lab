@@ -92,7 +92,7 @@ class VrExperimentController extends Controller
             $vrExperiments = $query->paginate($perPage)->withQueryString();
         }
 
-        return view('client.back.vr-experiments.index', array_merge([
+        return view('client.back.vr-experiments.index', [
             'vrExperiments' => $vrExperiments,
             'experimentsBySubject' => collect(),
             'subjectsWithExperiments' => collect(),
@@ -102,7 +102,7 @@ class VrExperimentController extends Controller
             'search' => $search,
             'sort' => $sort,
             'totalExperiments' => $totalExperiments,
-        ], $this->classFilterViewData()));
+        ]);
     }
 
     /**
@@ -148,11 +148,11 @@ class VrExperimentController extends Controller
             abort(404);
         }
 
-        return view('client.back.vr-experiments.show', array_merge([
+        return view('client.back.vr-experiments.show', [
             'vrExperiment' => $vrExperiment,
             'subjects' => $subjects,
             'isStatic' => false,
-        ], $this->classFilterViewData()));
+        ]);
     }
 
     /**

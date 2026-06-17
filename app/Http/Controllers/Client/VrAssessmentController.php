@@ -41,10 +41,7 @@ class VrAssessmentController extends Controller
             ->get()
             ->groupBy('question_bank_id');
 
-        return view('client.back.vr-assessments.index', array_merge(
-            compact('questionBanks', 'userAttempts'),
-            $this->classFilterViewData($user)
-        ));
+        return view('client.back.vr-assessments.index', compact('questionBanks', 'userAttempts'));
     }
 
     /**

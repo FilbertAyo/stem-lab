@@ -48,11 +48,11 @@ class ProjectController extends Controller
 
         $projects = $projectsQuery->paginate(12)->withQueryString();
 
-        return view('client.back.projects.index', array_merge([
+        return view('client.back.projects.index', [
             'categories' => $categories,
             'activeCategory' => $activeCategory,
             'projects' => $projects,
-        ], $this->classFilterViewData()));
+        ]);
     }
 
     /**
@@ -82,11 +82,11 @@ class ProjectController extends Controller
 
         $activeCategory = $project->category;
 
-        return view('client.back.projects.show', array_merge([
+        return view('client.back.projects.show', [
             'project' => $project,
             'categories' => $categories,
             'activeCategory' => $activeCategory,
-        ], $this->classFilterViewData()));
+        ]);
     }
 }
 
