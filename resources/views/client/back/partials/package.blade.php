@@ -5,6 +5,7 @@
   $isLinkedStudent = $isStudent && $packageUser->hasPublicSchoolAccess();
   $isUnlinkedStudent = $isStudent && ! $packageUser->isClubLinked();
   $publicSchoolPackage = $subscriptionPackages->firstWhere('slug', 'public-school');
+  $activePackageSlug = $packageUser?->activeSubscriptionPackageSlug();
 @endphp
 
 <div class="col-12 mb-3" id="platform-subscription">
@@ -44,12 +45,19 @@
 @else
 <div class="row">
   @foreach ($subscriptionPackages as $package)
+    @php
+      $isActivePackage = $activePackageSlug === $package->slug;
+      $ctaAction = $package->resolvedCtaAction($isUnlinkedStudent);
+    @endphp
     <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
-      <div class="card border shadow-none w-100" data-aos="fade-up" data-aos-delay="{{ $package->sort_order * 100 }}" data-aos-duration="1000">
+      <div class="card border shadow-none w-100 {{ $isActivePackage ? 'border-success-subtle' : '' }}" data-aos="fade-up" data-aos-delay="{{ $package->sort_order * 100 }}" data-aos-duration="1000">
         <div class="card-body p-7 p-xxl-5 d-flex flex-column gap-8">
           <div class="d-flex flex-column gap-6">
-            <div class="@if($package->badge_label) hstack gap-3 @endif">
+            <div class="hstack gap-3 flex-wrap">
               <h5 class="mb-0 fw-medium">{{ $package->name }}</h5>
+              @if ($isActivePackage)
+                <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Your plan</span>
+              @endif
               @if ($package->badge_label)
                 <span class="badge text-bg-dark hstack gap-2"><iconify-icon icon="lucide:flame" class="fs-5"></iconify-icon>{{ $package->badge_label }}</span>
               @endif
@@ -82,10 +90,17 @@
               </ul>
             </div>
           @endif
-          <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="{{ $package->resolvedCtaAction($isUnlinkedStudent) }}">
-            <span class="fw-semibold">{{ $package->cta_label }}</span>
-            <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
-          </a>
+          @if ($isActivePackage)
+            <button type="button" class="btn btn-outline-success d-inline-flex align-items-center gap-2 w-100 justify-content-center" disabled>
+              <span class="fw-semibold">Current plan</span>
+              <iconify-icon icon="lucide:check" class="fs-5"></iconify-icon>
+            </button>
+          @else
+            <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="{{ $ctaAction }}" data-slug="{{ $package->slug }}">
+              <span class="fw-semibold">{{ $package->cta_label }}</span>
+              <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
+            </a>
+          @endif
         </div>
       </div>
     </div>
@@ -113,10 +128,17 @@
           <p class="small text-muted mb-3">
             Join <strong>Chomoza STEM Labs</strong> as a teacher or school representative. Once your request is approved, your school won’t need to subscribe—you’ll have full platform access at 0 TZS/month, including student roster management and weekly sessions.
           </p>
-          <a href="{{ route('client.clubs.join.form', ['club' => 1]) }}" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center">
-            <span class="fw-semibold">Join Chomoza STEM Labs</span>
-            <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
-          </a>
+          @if ($publicSchoolClub)
+            <a href="{{ route('client.clubs.join.form', $publicSchoolClub) }}" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center">
+              <span class="fw-semibold">Join {{ $publicSchoolClub->name }}</span>
+              <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
+            </a>
+          @else
+            <a href="{{ route('client.clubs.index') }}" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center">
+              <span class="fw-semibold">Browse STEM clubs</span>
+              <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
+            </a>
+          @endif
         </div>
       </div>
     </div>
@@ -161,6 +183,11 @@
   </div>
 </div>
 
+<form id="package-select-form" method="POST" action="{{ route('client.subscription-packages.select') }}" class="d-none">
+  @csrf
+  <input type="hidden" name="package" id="package-select-input" value="">
+</form>
+
 {{-- Toast: subscription action placeholder (replace with real flow later) --}}
 <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;">
   <div id="package-action-toast" class="toast align-items-center border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
@@ -182,28 +209,41 @@
 @push('scripts')
 <script>
 (function() {
+  var selectForm = document.getElementById('package-select-form');
+  var selectInput = document.getElementById('package-select-input');
+
   document.querySelectorAll('.js-package-action').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
       var packageType = btn.getAttribute('data-package');
+      var packageSlug = btn.getAttribute('data-slug');
       var modalId = null;
+
       if (packageType === 'public-school-teacher') {
         modalId = 'public-school-modal-teacher';
       } else if (packageType === 'public-school-student') {
         modalId = 'public-school-modal-student';
       }
+
       if (modalId) {
         var modalEl = document.getElementById(modalId);
         if (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
           var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
           modal.show();
         }
-      } else {
-        var toastEl = document.getElementById('package-action-toast');
-        if (toastEl && typeof bootstrap !== 'undefined' && bootstrap.Toast) {
-          var toast = bootstrap.Toast.getOrCreateInstance(toastEl);
-          toast.show();
-        }
+        return;
+      }
+
+      if (selectForm && selectInput && (packageSlug === 'free-trial' || packageSlug === 'individual')) {
+        selectInput.value = packageSlug;
+        selectForm.submit();
+        return;
+      }
+
+      var toastEl = document.getElementById('package-action-toast');
+      if (toastEl && typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+        var toast = bootstrap.Toast.getOrCreateInstance(toastEl);
+        toast.show();
       }
     });
   });

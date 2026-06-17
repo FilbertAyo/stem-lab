@@ -131,12 +131,24 @@ class ClubController extends Controller
     /**
      * Show the form for joining a club (school details form).
      */
-    public function showJoinForm(Club $club): View
+    public function showJoinForm(Club $club): View|RedirectResponse
     {
         $user = Auth::user();
 
-        if ($user->teacherClubs()->where('club_id', $club->id)->exists()) {
-            abort(403, 'You have already submitted a request to join this club.');
+        $existingMembership = $user->teacherClubs()
+            ->where('club_id', $club->id)
+            ->first();
+
+        if ($existingMembership) {
+            if ($existingMembership->status === 'approved') {
+                return redirect()
+                    ->route('client.clubs.show', $existingMembership)
+                    ->with('status', 'You are already a member of this club.');
+            }
+
+            return redirect()
+                ->route('client.clubs.index')
+                ->with('status', 'Your request to join this club is pending approval.');
         }
 
         $existingTeacherClub = $user->teacherClubs()->with('school')->first();

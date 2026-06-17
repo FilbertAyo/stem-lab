@@ -13,6 +13,7 @@ class TeacherClubJoinService
 {
     public function __construct(
         private readonly CompetitionParticipantRegistrationService $participantRegistrationService,
+        private readonly SubscriptionSelectionService $subscriptionSelectionService,
     ) {}
 
     /**
@@ -105,6 +106,10 @@ class TeacherClubJoinService
 
         $teacherClub = TeacherClub::create($teacherClubData);
         $teacherClub->load(['user', 'school']);
+
+        if ($teacherClub->status === 'approved') {
+            $this->subscriptionSelectionService->applyPublicSchoolAccess($user);
+        }
 
         $this->participantRegistrationService->ensureForClubMembership($teacherClub, $competition);
 

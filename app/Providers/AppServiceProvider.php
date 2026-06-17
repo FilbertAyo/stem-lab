@@ -77,10 +77,17 @@ class AppServiceProvider extends ServiceProvider
         $this->registerModelEvents();
 
         View::composer('client.back.partials.package', function ($view): void {
-            $view->with(
-                'subscriptionPackages',
-                SubscriptionPackage::query()->active()->ordered()->get()
-            );
+            $publicSchoolClub = Club::query()
+                ->active()
+                ->where('name', 'like', '%Chomoza%')
+                ->ordered()
+                ->first()
+                ?? Club::query()->active()->ordered()->first();
+
+            $view->with([
+                'subscriptionPackages' => SubscriptionPackage::query()->active()->ordered()->get(),
+                'publicSchoolClub' => $publicSchoolClub,
+            ]);
         });
 
         // Ensure admin routes generate URLs with admin subdomain

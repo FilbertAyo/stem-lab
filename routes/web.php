@@ -24,6 +24,7 @@ use App\Http\Controllers\Client\DashboardController as ClientDashboardController
 use App\Http\Controllers\Client\Model3dController as ClientModel3dController;
 use App\Http\Controllers\Client\ProjectController as ClientProjectController;
 use App\Http\Controllers\Client\StudentClubController as ClientStudentClubController;
+use App\Http\Controllers\Client\SubscriptionPackageController as ClientSubscriptionPackageController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
 use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentController;
 use App\Http\Controllers\ProfileController;
@@ -370,6 +371,9 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/subscription-packages/select', [ClientSubscriptionPackageController::class, 'select'])
+        ->name('client.subscription-packages.select');
 
     Route::prefix('models/3d')->name('client.models.3d.')->group(function () {
         Route::get('/', [ClientModel3dController::class, 'index'])->name('index');

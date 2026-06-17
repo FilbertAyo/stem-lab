@@ -126,6 +126,29 @@ class User extends Authenticatable
         return 'bg-light text-dark border';
     }
 
+    public function activeSubscriptionPackageSlug(): ?string
+    {
+        if ($this->hasPublicSchoolAccess()) {
+            return 'public-school';
+        }
+
+        if ($this->role === 'teacher' && $this->hasApprovedClubMembership()) {
+            return 'public-school';
+        }
+
+        return match ($this->subscription_tier) {
+            'trial' => 'free-trial',
+            'individual', 'pro' => 'individual',
+            'public_school' => 'public-school',
+            default => null,
+        };
+    }
+
+    public function hasActiveSubscriptionPackage(string $slug): bool
+    {
+        return $this->activeSubscriptionPackageSlug() === $slug;
+    }
+
     /**
      * Get the school class associated with this user (student accounts).
      */

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPublicUlid;
+use App\Services\SubscriptionSelectionService;
 use App\Services\TeacherClubCodeService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -120,7 +121,13 @@ class TeacherClub extends Model
      */
     public function approve(): bool
     {
-        return $this->update(['status' => 'approved']);
+        $approved = $this->update(['status' => 'approved']);
+
+        if ($approved) {
+            app(SubscriptionSelectionService::class)->applyPublicSchoolAccess($this->user);
+        }
+
+        return $approved;
     }
 
     /**
