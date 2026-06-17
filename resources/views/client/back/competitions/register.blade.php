@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="col-12">
+    <div class="col-lg-9">
         @php($girlsInPool = $students->where('gender', 'female')->count())
         @php($poolCount = $students->count())
         @php($poolRatio = $poolCount > 0 ? round(($girlsInPool / $poolCount) * 100, 2) : 0)

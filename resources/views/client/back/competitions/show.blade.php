@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="col-12">
+    <div class="col-lg-9">
         <div class="dashboard-content-header mb-3">
             <h4 class="mb-1">{{ $competition->name }}</h4>
        

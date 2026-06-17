@@ -35,13 +35,12 @@
     <div class="dashboard-main">
       <div class="container">
         <div class="row">
-          <!-- Left Sidebar (hidden on profile, dashboard, VR experiments, 3D models, projects, competitions — full width) -->
+          <!-- Left Sidebar (hidden on profile, dashboard, VR experiments, 3D models, projects — full width) -->
           @if (!request()->routeIs('profile.*')
                && !request()->routeIs('dashboard')
                && !request()->routeIs('client.vr-experiments.*')
                && !request()->routeIs('client.models.3d.*')
-               && !request()->routeIs('client.projects.*')
-               && !request()->routeIs('client.competitions.*'))
+               && !request()->routeIs('client.projects.*'))
             @include('layouts.client.aside')
           @endif
 

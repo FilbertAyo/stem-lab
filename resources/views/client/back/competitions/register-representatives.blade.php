@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="col-12">
+    <div class="col-lg-9">
         @php($repCount = max(1, (int) ($competition->representative_count ?? 10)))
         @php($girlsInPool = $students->where('gender', 'female')->count())
         @php($poolCount = $students->count())

@@ -16,12 +16,10 @@
                         || request()->routeIs('client.clubs.*')
                         || request()->routeIs('client.student-club.*')
                         || request()->routeIs('client.vr-assessments.*')
+                        || request()->routeIs('client.competitions.*')
                       ? 'active' : '' }}">
             Activities
           </a>
-          @if(Auth::user()->role === 'teacher')
-          <a href="{{ route('client.competitions.index') }}" class="{{ request()->routeIs('client.competitions.*') ? 'active' : '' }}">Competitions</a>
-          @endif
         </nav>
         <div class="d-flex align-items-center gap-3">
 

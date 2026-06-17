@@ -13,6 +13,12 @@
                     Clubs <iconify-icon icon="lucide:chevron-right"></iconify-icon>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('client.competitions.index') }}"
+                   class="{{ request()->routeIs('client.competitions.*') ? 'active' : '' }}">
+                    Competitions <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+                </a>
+            </li>
         @endif
         @if(Auth::user()->role === 'student')
             <li>
