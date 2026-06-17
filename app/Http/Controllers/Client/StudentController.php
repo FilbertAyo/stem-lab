@@ -7,7 +7,6 @@ use App\Models\Student;
 use App\Models\TeacherClub;
 use App\Models\User;
 use App\Services\StudentCsvBulkImportService;
-use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,9 +21,9 @@ class StudentController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $this->validateForClubMutation($request, [
-            'teacher_club_id' => ['required', 'exists:teacher_clubs,id'],
+            'teacher_club_id' => ['required', $this->teacherClubIdRule()],
             'name' => ['required', 'string', 'max:255'],
-            'date_of_birth' => ['required', 'date_format:Y-m-d', 'before_or_equal:today'],
+            'date_of_birth' => ['required', 'string', 'max:32'],
             'gender' => ['required', 'string', 'in:male,female,other'],
             'school_class_id' => ['required', 'exists:school_classes,id'],
             'redirect_to' => ['nullable', 'string', 'max:2048'],
@@ -32,7 +31,20 @@ class StudentController extends Controller
 
         $teacherClub = $this->resolveContextTeacherClub($validated['teacher_club_id']);
 
-        $age = Carbon::parse($validated['date_of_birth'])->age;
+        $parsedDob = app(StudentCsvBulkImportService::class)->parseDateOfBirth($validated['date_of_birth']);
+        if ($parsedDob === null) {
+            return $this->redirectAfterStudentMutation($request, $teacherClub)
+                ->withErrors(['date_of_birth' => 'Invalid date of birth. Use DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD.'])
+                ->withInput();
+        }
+
+        if ($parsedDob->isFuture()) {
+            return $this->redirectAfterStudentMutation($request, $teacherClub)
+                ->withErrors(['date_of_birth' => 'Date of birth cannot be in the future.'])
+                ->withInput();
+        }
+
+        $age = $parsedDob->age;
         if ($age < 1 || $age > 150) {
             return $this->redirectAfterStudentMutation($request, $teacherClub)
                 ->withErrors(['date_of_birth' => 'Date of birth must result in age between 1 and 150.'])
@@ -42,7 +54,7 @@ class StudentController extends Controller
         Student::create([
             'teacher_club_id' => $teacherClub->id,
             'name' => $validated['name'],
-            'date_of_birth' => $validated['date_of_birth'],
+            'date_of_birth' => $parsedDob->format('Y-m-d'),
             'age' => $age,
             'gender' => $validated['gender'],
             'school_class_id' => $validated['school_class_id'],
@@ -57,7 +69,7 @@ class StudentController extends Controller
     public function bulkStore(Request $request, StudentCsvBulkImportService $csvImport): RedirectResponse
     {
         $validated = $this->validateForClubMutation($request, [
-            'teacher_club_id' => ['required', 'exists:teacher_clubs,id'],
+            'teacher_club_id' => ['required', $this->teacherClubIdRule()],
             'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
             'redirect_to' => ['nullable', 'string', 'max:2048'],
         ]);
@@ -90,11 +102,24 @@ class StudentController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'gender' => ['required', 'string', 'in:male,female,other'],
             'school_class_id' => ['required', 'exists:school_classes,id'],
-            'date_of_birth' => ['required', 'date_format:Y-m-d', 'before_or_equal:today'],
+            'date_of_birth' => ['required', 'string', 'max:32'],
             'redirect_to' => ['nullable', 'string', 'max:2048'],
         ]);
 
-        $age = Carbon::parse($validated['date_of_birth'])->age;
+        $parsedDob = app(StudentCsvBulkImportService::class)->parseDateOfBirth($validated['date_of_birth']);
+        if ($parsedDob === null) {
+            return $this->redirectAfterStudentMutation($request, $student->teacherClub)
+                ->withErrors(['date_of_birth' => 'Invalid date of birth. Use DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD.'])
+                ->withInput();
+        }
+
+        if ($parsedDob->isFuture()) {
+            return $this->redirectAfterStudentMutation($request, $student->teacherClub)
+                ->withErrors(['date_of_birth' => 'Date of birth cannot be in the future.'])
+                ->withInput();
+        }
+
+        $age = $parsedDob->age;
         if ($age < 1 || $age > 150) {
             return $this->redirectAfterStudentMutation($request, $student->teacherClub)
                 ->withErrors(['date_of_birth' => 'Date of birth must result in age between 1 and 150.'])
@@ -105,7 +130,7 @@ class StudentController extends Controller
             'name' => $validated['name'],
             'gender' => $validated['gender'],
             'school_class_id' => (int) $validated['school_class_id'],
-            'date_of_birth' => $validated['date_of_birth'],
+            'date_of_birth' => $parsedDob->format('Y-m-d'),
             'age' => $age,
         ]);
 
@@ -144,7 +169,7 @@ class StudentController extends Controller
             'student_ids' => ['required', 'array', 'min:1'],
             'student_ids.*' => ['integer', 'exists:students,id'],
             'redirect_to' => ['nullable', 'string', 'max:2048'],
-            'teacher_club_id' => ['nullable', 'exists:teacher_clubs,id'],
+            'teacher_club_id' => ['nullable', $this->teacherClubIdRule()],
         ]);
 
         $manageableTeacherClubIds = $user->approvedCoMemberTeacherClubIds();
@@ -197,7 +222,7 @@ class StudentController extends Controller
 
         if ($validator->fails()) {
             throw (new ValidationException($validator))
-                ->redirectTo($this->resolveReturnUrl($request));
+                ->redirectTo($this->resolveReturnUrl($request, $this->findTeacherClubFromRequest($request)));
         }
 
         return $validator->validated();
@@ -207,12 +232,14 @@ class StudentController extends Controller
      * Resolve the teacher's own approved membership for the club context on the form.
      * Any approved co-member at the same school club may register students.
      */
-    private function resolveContextTeacherClub(int $submittedTeacherClubId): TeacherClub
+    private function resolveContextTeacherClub(int|string $submittedTeacherClubId): TeacherClub
     {
         /** @var User $user */
         $user = Auth::user();
 
-        $submitted = TeacherClub::query()->findOrFail($submittedTeacherClubId);
+        $submitted = $this->findTeacherClubByIdOrUlid($submittedTeacherClubId);
+
+        abort_if($submitted === null, 404);
 
         abort_unless(
             $user->approvedCoMemberTeacherClubIds()->contains($submitted->id),
@@ -230,6 +257,49 @@ class StudentController extends Controller
         }
 
         return $query->firstOrFail();
+    }
+
+    private function teacherClubIdRule(): \Closure
+    {
+        return function (string $attribute, mixed $value, \Closure $fail): void {
+            if (! is_scalar($value) || $value === '') {
+                $fail('The selected club membership is invalid.');
+
+                return;
+            }
+
+            if ($this->findTeacherClubByIdOrUlid($value) === null) {
+                $fail('The selected club membership is invalid.');
+            }
+        };
+    }
+
+    private function findTeacherClubFromRequest(Request $request): ?TeacherClub
+    {
+        $teacherClubId = $request->input('teacher_club_id');
+
+        if (! is_scalar($teacherClubId) || $teacherClubId === '') {
+            return null;
+        }
+
+        return $this->findTeacherClubByIdOrUlid($teacherClubId);
+    }
+
+    private function findTeacherClubByIdOrUlid(mixed $value): ?TeacherClub
+    {
+        if (! is_scalar($value) || $value === '') {
+            return null;
+        }
+
+        $query = TeacherClub::query();
+
+        if (is_numeric($value)) {
+            $query->where('id', (int) $value);
+        } else {
+            $query->where('ulid', (string) $value);
+        }
+
+        return $query->first();
     }
 
     private function authorizeStudentForTeacher(Student $student): void
@@ -257,25 +327,39 @@ class StudentController extends Controller
     private function resolveReturnUrl(Request $request, ?TeacherClub $teacherClub = null): string
     {
         $target = $request->input('redirect_to');
-        if (is_string($target) && $target !== '' && str_starts_with($target, '/') && ! str_starts_with($target, '//')) {
-            return $target;
+        if (is_string($target) && $target !== '') {
+            $normalized = $this->normalizeRedirectTarget($target);
+            if ($normalized !== null) {
+                return $normalized;
+            }
         }
+
+        $teacherClub ??= $this->findTeacherClubFromRequest($request);
 
         if ($teacherClub !== null) {
-            return route('client.clubs.show', $teacherClub, absolute: false);
-        }
-
-        $teacherClubId = $request->input('teacher_club_id');
-        if (is_numeric($teacherClubId)) {
-            $membership = TeacherClub::query()->find((int) $teacherClubId);
-            if ($membership !== null) {
-                $user = Auth::user();
-                if ($user && $user->approvedCoMemberTeacherClubIds()->contains($membership->id)) {
-                    return route('client.clubs.show', $membership, absolute: false);
-                }
+            $user = Auth::user();
+            if ($user && $user->approvedCoMemberTeacherClubIds()->contains($teacherClub->id)) {
+                return route('client.clubs.show', $teacherClub, absolute: false);
             }
         }
 
         return route('client.clubs.index', absolute: false);
+    }
+
+    private function normalizeRedirectTarget(string $target): ?string
+    {
+        if (str_starts_with($target, '/') && ! str_starts_with($target, '//')) {
+            return $target;
+        }
+
+        $appUrl = rtrim((string) config('app.url'), '/');
+        if ($appUrl !== '' && str_starts_with($target, $appUrl)) {
+            $path = parse_url($target, PHP_URL_PATH) ?: '/';
+            $query = parse_url($target, PHP_URL_QUERY);
+
+            return $query ? $path.'?'.$query : $path;
+        }
+
+        return null;
     }
 }

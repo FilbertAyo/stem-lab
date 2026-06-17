@@ -12,3 +12,15 @@
     </div>
 @endif
 
+@if ($errors->any())
+    <div class="alert alert-dismissible fade show text-danger-emphasis bg-danger-subtle border border-danger-subtle" role="alert">
+        <strong>Please fix the following:</strong>
+        <ul class="mb-0 mt-2">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+

@@ -265,9 +265,9 @@ class StudentCsvBulkImportService
     }
 
     /**
-     * Parse a CSV date_of_birth cell. Tries ISO first, then day-first formats common in spreadsheets.
+     * Parse a date_of_birth value. Tries ISO first, then day-first formats common in spreadsheets.
      */
-    private function parseDateOfBirth(string $dob): ?Carbon
+    public function parseDateOfBirth(string $dob): ?Carbon
     {
         $dob = trim($dob);
         if ($dob === '') {

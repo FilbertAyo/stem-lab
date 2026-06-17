@@ -128,6 +128,30 @@ test('co member teacher can register student from shared club page', function ()
     expect(Student::query()->where('teacher_club_id', $coTeacherClub->id)->where('name', 'Co-member Student')->exists())->toBeTrue();
 });
 
+test('student store accepts day first date of birth format', function () {
+    ['school' => $school, 'competition' => $competition] = createCompetitionFixture();
+    $teacherClub = createTeacherClubForCompetition($competition, $school);
+    $teacher = $teacherClub->user;
+
+    $schoolClass = SchoolClass::query()->create([
+        'name' => 'Form 3 '.Str::random(6),
+        'is_active' => true,
+    ]);
+
+    $response = $this->actingAs($teacher)->post(route('client.students.store'), [
+        'teacher_club_id' => $teacherClub->id,
+        'name' => 'Day First Student',
+        'date_of_birth' => '14-07-2011',
+        'gender' => 'female',
+        'school_class_id' => $schoolClass->id,
+        'redirect_to' => route('client.clubs.show', $teacherClub, absolute: false),
+    ]);
+
+    $response->assertRedirect(route('client.clubs.show', $teacherClub));
+    $response->assertSessionHas('status');
+    expect(Student::query()->where('teacher_club_id', $teacherClub->id)->where('name', 'Day First Student')->exists())->toBeTrue();
+});
+
 test('clubs index shows view club link for joined membership', function () {
     ['school' => $school, 'competition' => $competition] = createCompetitionFixture();
     $teacherClub = createTeacherClubForCompetition($competition, $school);

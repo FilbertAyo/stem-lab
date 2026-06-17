@@ -278,19 +278,20 @@
                         <input type="hidden" name="redirect_to" value="{{ route('client.clubs.show', $teacherClub, absolute: false) }}">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Student Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control border p-2 @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
+                                <label for="register_name" class="form-label">Student Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control border p-2 @error('name') is-invalid @enderror" id="register_name" name="name" value="{{ old('name') }}" required>
                                 @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="date_of_birth" class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control border p-2 @error('date_of_birth') is-invalid @enderror" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}" max="{{ now()->toDateString() }}" required>
+                                    <label for="register_date_of_birth" class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control border p-2 @error('date_of_birth') is-invalid @enderror" id="register_date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}" placeholder="DD-MM-YYYY" inputmode="numeric" required>
+                                    <div class="form-text">Use DD-MM-YYYY (same format as bulk CSV), e.g. 14-07-2011</div>
                                     @error('date_of_birth')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="gender" class="form-label">Gender <span class="text-danger">*</span></label>
-                                    <select class="form-select border p-2 @error('gender') is-invalid @enderror" id="gender" name="gender" required>
+                                    <label for="register_gender" class="form-label">Gender <span class="text-danger">*</span></label>
+                                    <select class="form-select border p-2 @error('gender') is-invalid @enderror" id="register_gender" name="gender" required>
                                         <option value="">Select gender...</option>
                                         <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
                                         <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
@@ -299,8 +300,8 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="school_class_id" class="form-label">Class <span class="text-danger">*</span></label>
-                                <select class="form-select border p-2 @error('school_class_id') is-invalid @enderror" id="school_class_id" name="school_class_id" required>
+                                <label for="register_school_class_id" class="form-label">Class <span class="text-danger">*</span></label>
+                                <select class="form-select border p-2 @error('school_class_id') is-invalid @enderror" id="register_school_class_id" name="school_class_id" required>
                                     <option value="">Select class...</option>
                                     @foreach($classes as $class)
                                         <option value="{{ $class->id }}" {{ old('school_class_id') == $class->id ? 'selected' : '' }}>{{ $class->name }}</option>
