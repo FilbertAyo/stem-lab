@@ -16,6 +16,7 @@ sudo -u www-data composer install --optimize-autoloader --no-dev
 
 # Run database migrations
 echo "Running database migrations..."
+sudo -u www-data php artisan migrate:sync-squash
 sudo -u www-data php artisan migrate --force
 
 # Clear and cache configurations
