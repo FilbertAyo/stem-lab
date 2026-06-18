@@ -14,21 +14,14 @@ sudo -u www-data git reset --hard origin/main
 echo "Installing Composer dependencies..."
 sudo -u www-data composer install --optimize-autoloader --no-dev
 
-# Run database migrations
+# Run database migrations (only applies new migrations; does not re-run old ones or seed data)
 echo "Running database migrations..."
 sudo -u www-data php artisan migrate --force
 
-# Optional: seed PhET VR experiments (74 sims, multi-class via pivot — NOT one row per class).
-# Run once after deploy when the library is empty or needs a refresh:
-#   SEED_PHET=1 bash deploy.sh
-# Or manually:
+# NOTE: Do not add seeders here. Routine deploy must not overwrite admin content
+# (VR experiments, thumbnails, active flags, etc.). To load PhET sims once, run manually:
 #   sudo -u www-data php artisan db:seed --class=SubjectSeeder --force
 #   sudo -u www-data php artisan db:seed --class=PhetVrExperimentSeeder --force
-if [ "${SEED_PHET:-}" = "1" ]; then
-    echo "Seeding subjects and PhET VR experiments..."
-    sudo -u www-data php artisan db:seed --class=SubjectSeeder --force
-    sudo -u www-data php artisan db:seed --class=PhetVrExperimentSeeder --force
-fi
 
 # Clear and cache configurations
 echo "Clearing and caching configurations..."
