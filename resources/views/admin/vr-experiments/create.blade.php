@@ -6,7 +6,11 @@
 
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('admin.vr-experiments.store') }}" method="POST" enctype="multipart/form-data">
+                    @if ($errors->has('upload'))
+                        <div class="alert alert-danger">{{ $errors->first('upload') }}</div>
+                    @endif
+
+                    <form action="{{ route('admin.vr-experiments.store') }}" method="POST" enctype="multipart/form-data" data-validate-uploads>
                         @csrf
 
                         <div class="row">
@@ -125,6 +129,8 @@
             </div>
         </div>
     </div>
+
+    @include('admin.partials.file-upload-validation')
 
 </x-admin-layout>
 

@@ -6,7 +6,11 @@
 
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('admin.vr-experiments.update', $vrExperiment) }}" method="POST" enctype="multipart/form-data">
+                    @if ($errors->has('upload'))
+                        <div class="alert alert-danger">{{ $errors->first('upload') }}</div>
+                    @endif
+
+                    <form action="{{ route('admin.vr-experiments.update', $vrExperiment) }}" method="POST" enctype="multipart/form-data" data-validate-uploads>
                         @csrf
                         @method('PUT')
 
@@ -142,6 +146,8 @@
             </div>
         </div>
     </div>
+
+    @include('admin.partials.file-upload-validation')
 
 </x-admin-layout>
 

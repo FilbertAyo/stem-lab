@@ -6,7 +6,11 @@
 
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('admin.models.3d.store') }}" method="POST" enctype="multipart/form-data">
+                    @if ($errors->has('upload'))
+                        <div class="alert alert-danger">{{ $errors->first('upload') }}</div>
+                    @endif
+
+                    <form action="{{ route('admin.models.3d.store') }}" method="POST" enctype="multipart/form-data" data-validate-uploads>
                         @csrf
 
                         <div class="row">
@@ -82,7 +86,7 @@
                                 @error('thumbnail')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-text text-muted">Upload a thumbnail image (jpeg, png, jpg, gif, webp). Max size: 3MB</small>
+                                <small class="form-text text-muted">Upload a thumbnail image (jpeg, png, jpg, gif, webp). Max size: 5 MB</small>
                             </div>
                         </div>
 
@@ -137,6 +141,8 @@
             </div>
         </div>
     </div>
+
+    @include('admin.partials.file-upload-validation')
 
 </x-admin-layout>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\ValidatesUploads;
 use App\Http\Controllers\Controller;
 use App\Models\Model3d;
 use App\Models\SchoolClass;
@@ -13,6 +14,59 @@ use Illuminate\View\View;
 
 class Model3dController extends Controller
 {
+    use ValidatesUploads;
+
+    private const GLB_MAX_KB = 102400;
+
+    private const THUMBNAIL_MAX_KB = 5120;
+
+    /**
+     * @return array<string, array{label: string, max_kb: int, extensions?: list<string>}>
+     */
+    private function uploadFieldLimits(): array
+    {
+        return [
+            'file' => [
+                'label' => 'GLB file',
+                'max_kb' => self::GLB_MAX_KB,
+                'extensions' => ['glb'],
+            ],
+            'thumbnail' => [
+                'label' => 'Thumbnail',
+                'max_kb' => self::THUMBNAIL_MAX_KB,
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function validationRules(): array
+    {
+        return [
+            'subject_id' => ['required', 'exists:subjects,id'],
+            'class_ids' => ['required', 'array', 'min:1'],
+            'class_ids.*' => ['integer', 'exists:school_classes,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'file' => $this->glbUploadRules(self::GLB_MAX_KB),
+            'thumbnail' => $this->imageUploadRules(self::THUMBNAIL_MAX_KB),
+            'description' => ['nullable', 'string'],
+            'tags' => ['nullable', 'string', 'max:500'],
+            'is_active' => ['boolean'],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function validationMessages(): array
+    {
+        return array_merge(
+            $this->glbUploadMessages(self::GLB_MAX_KB),
+            $this->imageUploadMessages('thumbnail', self::THUMBNAIL_MAX_KB)
+        );
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -20,20 +74,18 @@ class Model3dController extends Controller
     {
         $query = Model3d::withSubject()->with('schoolClasses')->withCount('questions');
 
-        // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%')
-                  ->orWhere('tags', 'like', '%' . $search . '%')
+                $q->where('name', 'like', '%'.$search.'%')
+                  ->orWhere('description', 'like', '%'.$search.'%')
+                  ->orWhere('tags', 'like', '%'.$search.'%')
                   ->orWhereHas('subject', function ($subjectQuery) use ($search) {
-                      $subjectQuery->where('subject_name', 'like', '%' . $search . '%');
+                      $subjectQuery->where('subject_name', 'like', '%'.$search.'%');
                   });
             });
         }
 
-        // Status filter
         if ($request->filled('status')) {
             $status = $request->status;
             if ($status === 'active') {
@@ -41,10 +93,10 @@ class Model3dController extends Controller
             } elseif ($status === 'inactive') {
                 $query->where('is_active', false);
             }
-            // If status is 'all', no filter is applied
         }
 
         $model3ds = $query->latest()->paginate(15)->withQueryString();
+
         return view('admin.models.3d.index', compact('model3ds'));
     }
 
@@ -55,8 +107,9 @@ class Model3dController extends Controller
     {
         $subjects = CacheService::getActiveSubjects();
         $classes = SchoolClass::active()->ordered()->get();
+        $uploadLimits = $this->uploadFieldLimits();
 
-        return view('admin.models.3d.create', compact('subjects', 'classes'));
+        return view('admin.models.3d.create', compact('subjects', 'classes', 'uploadLimits'));
     }
 
     /**
@@ -64,70 +117,28 @@ class Model3dController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'subject_id' => ['required', 'exists:subjects,id'],
-            'class_ids' => ['required', 'array', 'min:1'],
-            'class_ids.*' => ['integer', 'exists:school_classes,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'file' => [
-                'nullable',
-                'file',
-                'max:102400', // Max 100MB for GLB files (102400 KB = 100 MB)
-                function ($attribute, $value, $fail) {
-                    if ($value && $value->isValid()) {
-                        $extension = strtolower($value->getClientOriginalExtension());
-                        
-                        // Check extension - this is the most reliable check for GLB files
-                        if ($extension !== 'glb') {
-                            $fail('The file must be a GLB file.');
-                            return;
-                        }
+        if ($response = $this->validateUploadedFiles($request, $this->uploadFieldLimits())) {
+            return $response;
+        }
 
-                        // Check PHP upload limits
-                        $maxUploadSize = self::getPhpMaxUploadSizeStatic();
-                        $fileSize = $value->getSize();
-                        
-                        if ($fileSize > $maxUploadSize) {
-                            $maxSizeMB = round($maxUploadSize / 1024 / 1024, 2);
-                            $fail("The file is too large. Maximum upload size allowed by server is {$maxSizeMB}MB. Please contact your administrator to increase PHP upload_max_filesize and post_max_size settings.");
-                        }
-                    } elseif ($value && !$value->isValid()) {
-                        // Handle upload errors
-                        $error = $value->getError();
-                        if ($error === UPLOAD_ERR_INI_SIZE || $error === UPLOAD_ERR_FORM_SIZE) {
-                            $maxSizeMB = round(self::getPhpMaxUploadSizeStatic() / 1024 / 1024, 2);
-                            $fail("The file is too large. Maximum upload size allowed by server is {$maxSizeMB}MB. Please contact your administrator to increase PHP upload_max_filesize and post_max_size settings.");
-                        } else {
-                            $fail('File upload failed. Please try again.');
-                        }
-                    }
-                },
-            ],
-            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // Max 5MB
-            'description' => ['nullable', 'string'],
-            'tags' => ['nullable', 'string', 'max:500'],
-            'is_active' => ['boolean'],
-        ]);
+        $validated = $request->validate(
+            $this->validationRules(),
+            $this->validationMessages()
+        );
 
-        // Handle GLB file upload - preserve .glb extension
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
-            // Ensure .glb extension
-            if (!str_ends_with(strtolower($filename), '.glb')) {
+            $filename = time().'_'.str_replace(' ', '_', $file->getClientOriginalName());
+            if (! str_ends_with(strtolower($filename), '.glb')) {
                 $filename .= '.glb';
             }
-            $filePath = $file->storeAs('models/3d', $filename, 'public');
-            $validated['file'] = $filePath;
+            $validated['file'] = $file->storeAs('models/3d', $filename, 'public');
         }
 
-        // Handle thumbnail upload
         if ($request->hasFile('thumbnail')) {
-            $thumbnailPath = $request->file('thumbnail')->store('models/3d/thumbnails', 'public');
-            $validated['thumbnail'] = $thumbnailPath;
+            $validated['thumbnail'] = $request->file('thumbnail')->store('models/3d/thumbnails', 'public');
         }
 
-        // Set is_active default
         $validated['is_active'] = $request->has('is_active');
 
         $classIds = $validated['class_ids'];
@@ -136,7 +147,6 @@ class Model3dController extends Controller
         $model3d = Model3d::create($validated);
         $model3d->schoolClasses()->sync($classIds);
 
-        // Clear model-related caches
         CacheService::clearModelCaches();
 
         return redirect()->route('admin.models.3d.index')
@@ -149,6 +159,7 @@ class Model3dController extends Controller
     public function show(Model3d $model3d): View
     {
         $model3d->load(['subject', 'schoolClasses']);
+
         return view('admin.models.3d.show', compact('model3d'));
     }
 
@@ -159,10 +170,11 @@ class Model3dController extends Controller
     {
         $subjects = CacheService::getActiveSubjects();
         $classes = SchoolClass::active()->ordered()->get();
+        $uploadLimits = $this->uploadFieldLimits();
 
         $model3d->load('schoolClasses');
 
-        return view('admin.models.3d.edit', compact('model3d', 'subjects', 'classes'));
+        return view('admin.models.3d.edit', compact('model3d', 'subjects', 'classes', 'uploadLimits'));
     }
 
     /**
@@ -170,84 +182,38 @@ class Model3dController extends Controller
      */
     public function update(Request $request, Model3d $model3d): RedirectResponse
     {
-        $validated = $request->validate([
-            'subject_id' => ['required', 'exists:subjects,id'],
-            'class_ids' => ['required', 'array', 'min:1'],
-            'class_ids.*' => ['integer', 'exists:school_classes,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'file' => [
-                'nullable',
-                'file',
-                'max:102400', // Max 100MB for GLB files (102400 KB = 100 MB)
-                function ($attribute, $value, $fail) {
-                    if ($value && $value->isValid()) {
-                        $extension = strtolower($value->getClientOriginalExtension());
-                        
-                        // Check extension
-                        if ($extension !== 'glb') {
-                            $fail('The file must be a GLB file.');
-                            return;
-                        }
+        if ($response = $this->validateUploadedFiles($request, $this->uploadFieldLimits())) {
+            return $response;
+        }
 
-                        // Check PHP upload limits
-                        $maxUploadSize = self::getPhpMaxUploadSizeStatic();
-                        $fileSize = $value->getSize();
-                        
-                        if ($fileSize > $maxUploadSize) {
-                            $maxSizeMB = round($maxUploadSize / 1024 / 1024, 2);
-                            $fail("The file is too large. Maximum upload size allowed by server is {$maxSizeMB}MB. Please contact your administrator to increase PHP upload_max_filesize and post_max_size settings.");
-                        }
-                    } elseif ($value && !$value->isValid()) {
-                        // Handle upload errors
-                        $error = $value->getError();
-                        if ($error === UPLOAD_ERR_INI_SIZE || $error === UPLOAD_ERR_FORM_SIZE) {
-                            $maxSizeMB = round(self::getPhpMaxUploadSizeStatic() / 1024 / 1024, 2);
-                            $fail("The file is too large. Maximum upload size allowed by server is {$maxSizeMB}MB. Please contact your administrator to increase PHP upload_max_filesize and post_max_size settings.");
-                        } else {
-                            $fail('File upload failed. Please try again.');
-                        }
-                    }
-                },
-            ],
-            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // Max 5MB
-            'description' => ['nullable', 'string'],
-            'tags' => ['nullable', 'string', 'max:500'],
-            'is_active' => ['boolean'],
-        ]);
+        $validated = $request->validate(
+            $this->validationRules(),
+            $this->validationMessages()
+        );
 
-        // Handle GLB file upload - preserve .glb extension
         if ($request->hasFile('file')) {
-            // Delete old file if exists
             if ($model3d->file && Storage::disk('public')->exists($model3d->file)) {
                 Storage::disk('public')->delete($model3d->file);
             }
             $file = $request->file('file');
-            $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
-            // Ensure .glb extension
-            if (!str_ends_with(strtolower($filename), '.glb')) {
+            $filename = time().'_'.str_replace(' ', '_', $file->getClientOriginalName());
+            if (! str_ends_with(strtolower($filename), '.glb')) {
                 $filename .= '.glb';
             }
-            $filePath = $file->storeAs('models/3d', $filename, 'public');
-            $validated['file'] = $filePath;
+            $validated['file'] = $file->storeAs('models/3d', $filename, 'public');
         } else {
-            // Keep existing file if not updating
             unset($validated['file']);
         }
 
-        // Handle thumbnail upload
         if ($request->hasFile('thumbnail')) {
-            // Delete old thumbnail if exists
             if ($model3d->thumbnail && Storage::disk('public')->exists($model3d->thumbnail)) {
                 Storage::disk('public')->delete($model3d->thumbnail);
             }
-            $thumbnailPath = $request->file('thumbnail')->store('models/3d/thumbnails', 'public');
-            $validated['thumbnail'] = $thumbnailPath;
+            $validated['thumbnail'] = $request->file('thumbnail')->store('models/3d/thumbnails', 'public');
         } else {
-            // Keep existing thumbnail if not updating
             unset($validated['thumbnail']);
         }
 
-        // Set is_active
         $validated['is_active'] = $request->has('is_active');
 
         $classIds = $validated['class_ids'];
@@ -256,7 +222,6 @@ class Model3dController extends Controller
         $model3d->update($validated);
         $model3d->schoolClasses()->sync($classIds);
 
-        // Clear model-related caches
         CacheService::clearModelCaches();
 
         return redirect()->route('admin.models.3d.index')
@@ -268,75 +233,19 @@ class Model3dController extends Controller
      */
     public function destroy(Model3d $model3d): RedirectResponse
     {
-        // Delete GLB file if exists
         if ($model3d->file && Storage::disk('public')->exists($model3d->file)) {
             Storage::disk('public')->delete($model3d->file);
         }
 
-        // Delete thumbnail if exists
         if ($model3d->thumbnail && Storage::disk('public')->exists($model3d->thumbnail)) {
             Storage::disk('public')->delete($model3d->thumbnail);
         }
 
-        // Delete the model record
         $model3d->delete();
 
-        // Clear model-related caches
         CacheService::clearModelCaches();
 
         return redirect()->route('admin.models.3d.index')
             ->with('success', '3D model and associated files deleted successfully.');
-    }
-
-    /**
-     * Get the maximum upload size allowed by PHP configuration.
-     * Returns the minimum of upload_max_filesize and post_max_size.
-     *
-     * @return int Maximum upload size in bytes
-     */
-    private function getPhpMaxUploadSize(): int
-    {
-        return self::getPhpMaxUploadSizeStatic();
-    }
-
-    /**
-     * Get the maximum upload size allowed by PHP configuration (static version for use in closures).
-     * Returns the minimum of upload_max_filesize and post_max_size.
-     *
-     * @return int Maximum upload size in bytes
-     */
-    private static function getPhpMaxUploadSizeStatic(): int
-    {
-        $uploadMax = self::parseSize(ini_get('upload_max_filesize'));
-        $postMax = self::parseSize(ini_get('post_max_size'));
-        
-        // Return the smaller of the two, but at least 1MB
-        return min($uploadMax, $postMax);
-    }
-
-    /**
-     * Parse PHP size string (e.g., "2M", "512K", "1G") to bytes.
-     *
-     * @param string $size PHP size string
-     * @return int Size in bytes
-     */
-    private static function parseSize(string $size): int
-    {
-        $size = trim($size);
-        $last = strtolower($size[strlen($size) - 1]);
-        $value = (int) $size;
-        
-        switch ($last) {
-            case 'g':
-                $value *= 1024;
-                // no break
-            case 'm':
-                $value *= 1024;
-                // no break
-            case 'k':
-                $value *= 1024;
-        }
-        
-        return $value;
     }
 }

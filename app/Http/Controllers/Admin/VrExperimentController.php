@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\ValidatesUploads;
 use App\Http\Controllers\Controller;
 use App\Models\SchoolClass;
-use App\Models\Subject;
 use App\Models\VrExperiment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +13,8 @@ use Illuminate\View\View;
 
 class VrExperimentController extends Controller
 {
+    use ValidatesUploads;
+
     private const THUMBNAIL_MAX_KB = 1024;
 
     /**
@@ -24,7 +26,7 @@ class VrExperimentController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'external_url' => ['required', 'url', 'max:2048'],
-            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:'.self::THUMBNAIL_MAX_KB],
+            'thumbnail' => $this->imageUploadRules(self::THUMBNAIL_MAX_KB),
             'class_ids' => ['required', 'array', 'min:1'],
             'class_ids.*' => ['integer', 'exists:school_classes,id'],
             'subject_id' => ['required', 'exists:subjects,id'],
@@ -37,31 +39,22 @@ class VrExperimentController extends Controller
      */
     private function validationMessages(): array
     {
+        return $this->imageUploadMessages('thumbnail', self::THUMBNAIL_MAX_KB);
+    }
+
+    /**
+     * @return array<string, array{label: string, max_kb: int}>
+     */
+    private function uploadFieldLimits(): array
+    {
         return [
-            'thumbnail.image' => 'The thumbnail must be an image file (JPEG, PNG, GIF, or WebP).',
-            'thumbnail.mimes' => 'The thumbnail must be a JPEG, PNG, GIF, or WebP image.',
-            'thumbnail.max' => 'The thumbnail must not be larger than 1 MB. Please choose a smaller image.',
+            'thumbnail' => [
+                'label' => 'Thumbnail',
+                'max_kb' => self::THUMBNAIL_MAX_KB,
+            ],
         ];
     }
 
-    private function validateThumbnailUpload(Request $request): ?RedirectResponse
-    {
-        if (! $request->hasFile('thumbnail')) {
-            return null;
-        }
-
-        $file = $request->file('thumbnail');
-
-        if (! $file->isValid()) {
-            return back()
-                ->withErrors([
-                    'thumbnail' => 'The thumbnail could not be uploaded. Please use an image smaller than 1 MB.',
-                ])
-                ->withInput();
-        }
-
-        return null;
-    }
     /**
      * Display a listing of the resource.
      */
@@ -96,8 +89,9 @@ class VrExperimentController extends Controller
     {
         $classes = SchoolClass::active()->ordered()->get();
         $subjects = \App\Services\CacheService::getActiveSubjects();
+        $uploadLimits = $this->uploadFieldLimits();
 
-        return view('admin.vr-experiments.create', compact('classes', 'subjects'));
+        return view('admin.vr-experiments.create', compact('classes', 'subjects', 'uploadLimits'));
     }
 
     /**
@@ -105,7 +99,7 @@ class VrExperimentController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if ($response = $this->validateThumbnailUpload($request)) {
+        if ($response = $this->validateUploadedFiles($request, $this->uploadFieldLimits())) {
             return $response;
         }
 
@@ -138,8 +132,9 @@ class VrExperimentController extends Controller
         $vrExperiment->load('schoolClasses');
         $classes = SchoolClass::active()->ordered()->get();
         $subjects = \App\Services\CacheService::getActiveSubjects();
+        $uploadLimits = $this->uploadFieldLimits();
 
-        return view('admin.vr-experiments.edit', compact('vrExperiment', 'classes', 'subjects'));
+        return view('admin.vr-experiments.edit', compact('vrExperiment', 'classes', 'subjects', 'uploadLimits'));
     }
 
     /**
@@ -147,7 +142,7 @@ class VrExperimentController extends Controller
      */
     public function update(Request $request, VrExperiment $vrExperiment): RedirectResponse
     {
-        if ($response = $this->validateThumbnailUpload($request)) {
+        if ($response = $this->validateUploadedFiles($request, $this->uploadFieldLimits())) {
             return $response;
         }
 
