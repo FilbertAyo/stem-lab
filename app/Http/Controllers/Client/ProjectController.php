@@ -55,10 +55,21 @@ class ProjectController extends Controller
 
         $projects = $projectsQuery->paginate(12)->withQueryString();
 
+        $gridData = [
+            'loading' => false,
+            'projects' => $projects,
+            'activeCategory' => $activeCategory,
+        ];
+
+        if ($request->header('X-Card-Grid')) {
+            return view('client.back.projects._cards-grid', $gridData);
+        }
+
         return view('client.back.projects.index', [
             'categories' => $categories,
             'activeCategory' => $activeCategory,
             'projects' => $projects,
+            'loading' => false,
         ]);
     }
 

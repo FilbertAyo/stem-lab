@@ -389,3 +389,13 @@
   background: var(--bs-light);
 }
 
+/* Card skeleton loaders */
+.card-skeleton .placeholder {
+  min-height: 1em;
+}
+
+.card-skeleton [data-skeleton-image] {
+  display: block;
+  height: 190px;
+}
+

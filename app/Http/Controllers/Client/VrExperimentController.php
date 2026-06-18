@@ -10,6 +10,7 @@ use App\Models\VrExperiment;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Http\RedirectResponse;
 
 class VrExperimentController extends Controller
 {
@@ -28,7 +29,7 @@ class VrExperimentController extends Controller
     /**
      * Display a listing of the VR experiments available to students.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         $subjectId = $request->input('subject');
         $search = $request->input('search');
@@ -97,6 +98,17 @@ class VrExperimentController extends Controller
             $vrExperiments = $query->paginate($perPage)->withQueryString();
         }
 
+        $gridData = [
+            'loading' => false,
+            'vrExperiments' => $vrExperiments,
+            'search' => $search,
+            'selectedSubject' => $subjectId,
+        ];
+
+        if ($request->header('X-Card-Grid')) {
+            return view('client.back.vr-experiments._cards-grid', $gridData);
+        }
+
         return view('client.back.vr-experiments.index', [
             'vrExperiments' => $vrExperiments,
             'experimentsBySubject' => collect(),
@@ -107,6 +119,7 @@ class VrExperimentController extends Controller
             'search' => $search,
             'sort' => $sort,
             'totalExperiments' => $totalExperiments,
+            'loading' => false,
         ]);
     }
 

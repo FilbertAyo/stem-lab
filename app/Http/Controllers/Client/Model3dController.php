@@ -83,6 +83,17 @@ class Model3dController extends Controller
             ];
         }
 
+        $gridData = [
+            'loading' => false,
+            'model3ds' => $model3ds,
+            'search' => $search,
+            'selectedSubject' => $subjectId,
+        ];
+
+        if ($request->header('X-Card-Grid')) {
+            return view('client.back.models.3d._cards-grid', $gridData);
+        }
+
         return view('client.back.models.3d.index', [
             'model3ds' => $model3ds,
             'modelsBySubject' => collect(),
@@ -94,6 +105,7 @@ class Model3dController extends Controller
             'search' => $search,
             'sort' => $sort,
             'totalModels' => $totalModels,
+            'loading' => false,
         ]);
     }
 
