@@ -12,6 +12,7 @@ use App\Models\Project;
 use App\Models\ProjectCategory;
 use App\Models\School;
 use App\Models\SchoolClass;
+use App\Models\Student;
 use App\Models\Subject;
 use App\Models\SubscriptionPackage;
 use App\Models\TeacherClub;
@@ -21,11 +22,13 @@ use App\Models\VrExperiment;
 use App\Models\VrQuestionBank;
 use App\Models\WeeklySession;
 use App\Models\WeeklySessionReport;
+use App\Policies\TeacherStudentPolicy;
 use App\Services\CacheService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -64,6 +67,8 @@ class AppServiceProvider extends ServiceProvider
         $this->bindUlidWithLegacyId('subject', Subject::class);
 
         Event::listen(Registered::class, SendWelcomeEmail::class);
+
+        Gate::policy(Student::class, TeacherStudentPolicy::class);
 
         // Use custom "remember me" duration from config (e.g. 14 days) for client login
         $rememberMinutes = config('auth.guards.web.remember');

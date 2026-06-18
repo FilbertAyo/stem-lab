@@ -6,6 +6,7 @@ use App\DataTransferObjects\StudentClubMatch;
 use App\Models\Student;
 use App\Models\TeacherClub;
 use App\Models\User;
+use App\Services\Learning\StudentProgressSummaryService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -15,6 +16,8 @@ class StudentClubLinkService
 
     public function __construct(
         private readonly ShortCodeGenerator $codeGenerator,
+        private readonly StudentProgressSummaryService $progressSummaryService,
+        private readonly TeacherClubNotificationService $notificationService,
     ) {}
 
     public function normalizeCode(string $code): string
@@ -109,11 +112,16 @@ class StudentClubLinkService
                 'club_linked_at' => $linkedAt,
             ])->save();
 
-            return $student->fresh([
+            $student = $student->fresh([
                 'schoolClass',
                 'teacherClub.club',
                 'teacherClub.school.regionModel',
             ]);
+
+            $this->progressSummaryService->recomputeForStudent($student);
+            $this->notificationService->notifyStudentJoined($student);
+
+            return $student;
         });
     }
 

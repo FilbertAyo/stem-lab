@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Model3d;
 use App\Models\ModelQuestion;
 use App\Models\ModelQuestionAnswer;
+use App\Enums\LearningEventType;
 use App\Services\CacheService;
+use App\Services\Learning\StudentLearningEventRecorder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +18,10 @@ use Illuminate\Support\Facades\Cache;
 class ModelQuestionController extends Controller
 {
     use ResolvesStudentClassContext;
+
+    public function __construct(
+        private readonly StudentLearningEventRecorder $eventRecorder,
+    ) {}
 
     /**
      * Submit answers for questions related to a 3D model.
@@ -82,6 +88,31 @@ class ModelQuestionController extends Controller
                 'correct_answer' => $correctAnswer,
                 'explanation' => $question->explanation,
             ];
+        }
+
+        $user = Auth::user();
+        if ($user) {
+            $this->eventRecorder->record(
+                $user,
+                LearningEventType::ModelQuestionAnswered,
+                $model3d,
+                ['score' => $totalScore, 'total' => $totalQuestions],
+            );
+
+            $totalOnModel = ModelQuestion::query()->where('model_id', $model3d->id)->count();
+            $answeredOnModel = ModelQuestionAnswer::query()
+                ->where('user_id', $userId)
+                ->where('model_id', $model3d->id)
+                ->count();
+
+            if ($totalOnModel > 0 && $answeredOnModel >= $totalOnModel) {
+                $this->eventRecorder->record(
+                    $user,
+                    LearningEventType::ModelCompleted,
+                    $model3d,
+                    ['score' => $totalScore, 'total' => $totalQuestions],
+                );
+            }
         }
 
         return response()->json([

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\Concerns\ResolvesStudentClassContext;
 use App\Http\Controllers\Controller;
+use App\Enums\LearningEventType;
 use App\Services\CacheService;
+use App\Services\Learning\StudentLearningEventRecorder;
 use App\Models\VrAssessmentAttempt;
 use App\Models\VrQuestion;
 use App\Models\VrQuestionAnswer;
@@ -18,6 +20,10 @@ use Illuminate\Support\Facades\Auth;
 class VrAssessmentController extends Controller
 {
     use ResolvesStudentClassContext;
+
+    public function __construct(
+        private readonly StudentLearningEventRecorder $eventRecorder,
+    ) {}
 
     /**
      * Display a listing of available quizzes.
@@ -253,6 +259,20 @@ class VrAssessmentController extends Controller
             'score' => $score,
             'passed' => $passed,
         ]);
+
+        $user = Auth::user();
+        if ($user) {
+            $this->eventRecorder->record(
+                $user,
+                LearningEventType::VrQuizCompleted,
+                $attempt,
+                [
+                    'label' => $attempt->questionBank->title ?? 'VR Quiz',
+                    'score' => $score,
+                    'passed' => $passed,
+                ],
+            );
+        }
     }
 
     /**

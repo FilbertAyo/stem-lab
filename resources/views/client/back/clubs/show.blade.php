@@ -128,6 +128,8 @@
                                                     <th>Age</th>
                                                     <th>Gender</th>
                                                     <th>Class</th>
+                                                    <th>Platform</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -146,6 +148,21 @@
                                                         <td>{{ $student->age }}</td>
                                                         <td>{{ ucfirst($student->gender) }}</td>
                                                         <td>{{ $student->schoolClass->name ?? '—' }}</td>
+                                                        <td>
+                                                            @if($student->isLinked())
+                                                                <span class="badge bg-success">Registered</span>
+                                                                @if($student->linked_at)
+                                                                    <div class="small text-muted">{{ $student->linked_at->format('M d, Y') }}</div>
+                                                                @endif
+                                                            @else
+                                                                <span class="badge bg-secondary">Pending</span>
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-end">
+                                                            @if($student->isLinked())
+                                                                <a href="{{ route('client.my-students.show', $student) }}" class="btn btn-sm btn-outline-primary">Progress</a>
+                                                            @endif
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>

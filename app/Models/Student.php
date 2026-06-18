@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Services\ShortCodeGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Student extends Model
 {
@@ -67,6 +69,16 @@ class Student extends Model
     public function competitionRegistrationMembers()
     {
         return $this->hasMany(CompetitionRegistrationStudent::class);
+    }
+
+    public function progressSummary(): HasOne
+    {
+        return $this->hasOne(StudentProgressSummary::class);
+    }
+
+    public function learningEvents(): HasMany
+    {
+        return $this->hasMany(StudentLearningEvent::class);
     }
 }
 

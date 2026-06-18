@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'track.admin.activity' => \App\Http\Middleware\TrackAdminActivity::class,
             'track.client.activity' => \App\Http\Middleware\TrackClientActivity::class,
             'student.onboarded' => \App\Http\Middleware\EnsureStudentOnboardingComplete::class,
+            'club.linked.for.learning' => \App\Http\Middleware\EnsureClubLinkedForLearning::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

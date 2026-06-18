@@ -11,8 +11,11 @@
           <a href="{{ route('client.projects.index') }}" class="{{ request()->routeIs('client.projects.*') ? 'active' : '' }}">Projects</a>
 
           @php($isTeacher = Auth::user()->role === 'teacher')
-          <a href="{{ $isTeacher ? route('client.weekly-sessions.index') : route('client.vr-assessments.index') }}"
-             class="{{ request()->routeIs('client.weekly-sessions.*')
+          @php($unreadNotificationCount = $isTeacher ? Auth::user()->unreadNotifications()->count() : 0)
+          <a href="{{ $isTeacher ? route('client.my-students.index') : route('client.vr-assessments.index') }}"
+             class="{{ request()->routeIs('client.my-students.*')
+                        || request()->routeIs('client.notifications.*')
+                        || request()->routeIs('client.weekly-sessions.*')
                         || request()->routeIs('client.clubs.*')
                         || request()->routeIs('client.student-club.*')
                         || request()->routeIs('client.vr-assessments.*')
@@ -22,6 +25,44 @@
           </a>
         </nav>
         <div class="d-flex align-items-center gap-3">
+
+          @if($isTeacher)
+            <div class="dropdown">
+              <button type="button"
+                      class="btn btn-link text-dark position-relative p-2 text-decoration-none dropdown-toggle"
+                      id="teacherNotificationsDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      aria-label="Notifications">
+                <i class="bi bi-bell fs-5"></i>
+                @if($unreadNotificationCount > 0)
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ $unreadNotificationCount > 9 ? '9+' : $unreadNotificationCount }}
+                  </span>
+                @endif
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width: 320px;" aria-labelledby="teacherNotificationsDropdown">
+                <li class="dropdown-header d-flex justify-content-between align-items-center">
+                  <span class="fw-semibold">Notifications</span>
+                  <a href="{{ route('client.notifications.index') }}" class="small">View all</a>
+                </li>
+                @forelse(Auth::user()->unreadNotifications()->limit(5)->get() as $notification)
+                  @php($data = $notification->data)
+                  <li>
+                    <form method="POST" action="{{ route('client.notifications.read', $notification->id) }}">
+                      @csrf
+                      <button type="submit" class="dropdown-item text-wrap">
+                        <span class="d-block small">{{ $data['message'] ?? 'Notification' }}</span>
+                        <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+                      </button>
+                    </form>
+                  </li>
+                @empty
+                  <li><span class="dropdown-item-text text-muted small">No new notifications</span></li>
+                @endforelse
+              </ul>
+            </div>
+          @endif
 
           @php($navUser = Auth::user())
           @php($navName = $navUser->name ?? 'User')

@@ -8,6 +8,7 @@ use App\Models\CompetitionRegistration;
 use App\Models\ModelQuestionAnswer;
 use App\Models\Student;
 use App\Models\VrAssessmentAttempt;
+use App\Services\Teacher\TeacherClubAnalyticsService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -207,6 +208,7 @@ class DashboardController extends Controller
         $competitionNotificationCount = 0;
         $topCompetitionReminders = collect();
         $competitionShortcuts = [];
+        $clubStats = null;
 
         if ($user->role === 'teacher') {
             $competitionNotificationCount = $competitionReminders->count();
@@ -231,6 +233,10 @@ class DashboardController extends Controller
                     'route' => route('client.competitions.index'),
                 ],
             ];
+
+            if ($user->hasApprovedClubMembership()) {
+                $clubStats = app(TeacherClubAnalyticsService::class)->aggregate($user);
+            }
         }
 
         $showPhoneReminder = in_array($user->role, ['teacher', 'student', 'parent'], true)
@@ -241,6 +247,7 @@ class DashboardController extends Controller
             'topCompetitionReminders',
             'competitionNotificationCount',
             'competitionShortcuts',
+            'clubStats',
             'showPhoneReminder'
         ));
     }

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\Concerns\ResolvesStudentClassContext;
 use App\Http\Controllers\Controller;
+use App\Enums\LearningEventType;
 use App\Models\Model3d;
 use App\Services\CacheService;
+use App\Services\Learning\StudentLearningEventRecorder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -13,6 +15,10 @@ use Illuminate\View\View;
 class Model3dController extends Controller
 {
     use ResolvesStudentClassContext;
+
+    public function __construct(
+        private readonly StudentLearningEventRecorder $eventRecorder,
+    ) {}
 
     /**
      * Display a listing of the 3D models available to students.
@@ -130,6 +136,16 @@ class Model3dController extends Controller
             'is_completed' => $isCompleted,
             'has_attempted' => $answeredQuestions > 0,
         ];
+
+        $user = Auth::user();
+        if ($user) {
+            $this->eventRecorder->record(
+                $user,
+                LearningEventType::ModelViewed,
+                $model3d,
+                ['label' => $model3d->name],
+            );
+        }
 
         return view('client.back.models.3d.show', compact('model3d', 'progress'));
     }

@@ -13,6 +13,8 @@
     ];
     $competitionNotificationCount = $competitionNotificationCount ?? 0;
     $competitionShortcuts = $competitionShortcuts ?? [];
+    $clubStats = $clubStats ?? null;
+    $isTeacher = Auth::user()->role === 'teacher';
 @endphp
 
 <x-app-layout>
@@ -41,7 +43,44 @@
 
         
         <section class="row mb-4">
-        @if(Auth::user()->role === 'teacher' && $stats['total_competitions'] > 0)
+        @if($isTeacher && $clubStats)
+          <div class="col-6 col-lg-3 col-md-6 mb-3">
+            <div class="card border shadow-none h-100">
+              <div class="card-body">
+                <h6 class="text-muted mb-1 small">Registered students</h6>
+                <h4 class="mb-0 fw-bold">{{ $clubStats['registered'] }}</h4>
+                <small class="text-muted">of {{ $clubStats['total_roster'] }} on roster</small>
+                <a href="{{ route('client.my-students.index') }}" class="btn btn-primary text-white text-decoration-none mt-2">
+                  My Students
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3 col-md-6 mb-3">
+            <div class="card border shadow-none h-100">
+              <div class="card-body">
+                <h6 class="text-muted mb-1 small">Active this week</h6>
+                <h4 class="mb-0 fw-bold">{{ $clubStats['active'] }}</h4>
+                <a href="{{ route('client.my-students.index', ['activity' => 'active']) }}" class="btn btn-outline-primary text-decoration-none mt-2">
+                  View active
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3 col-md-6 mb-3">
+            <div class="card border shadow-none h-100">
+              <div class="card-body">
+                <h6 class="text-muted mb-1 small">Needs attention</h6>
+                <h4 class="mb-0 fw-bold text-danger">{{ $clubStats['needs_attention'] }}</h4>
+                <a href="{{ route('client.my-students.index', ['attention' => 'needs_support']) }}" class="btn btn-outline-danger text-decoration-none mt-2">
+                  Review
+                </a>
+              </div>
+            </div>
+          </div>
+        @endif
+
+        @if($isTeacher && $stats['total_competitions'] > 0)
           <div class="col-6 col-lg-3 col-md-6 mb-3">
             <div class="card border shadow-none h-100">
               <div class="card-body">
@@ -76,6 +115,7 @@
           @endforeach
         @endif
 
+        @if(! $isTeacher)
           <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="card border shadow-none h-100">
                     <div class="card-body">
@@ -104,8 +144,9 @@
                     </div>
                 </div>
             </div>
+        @endif
 
-            @if(Auth::user()->role === 'teacher' && $stats['total_competitions'] > 0)
+            @if($isTeacher && $stats['total_competitions'] > 0)
                 <div class="col-6 col-lg-3 col-md-6 mb-3">
                     <div class="card border shadow-none h-100">
                         <div class="card-body">
@@ -116,21 +157,6 @@
                                     @if($stats['total_submissions'] > 0)
                                         <small class="text-muted">{{ $stats['total_submissions'] }} submissions</small>
                                     @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-            @if(Auth::user()->role === 'teacher' && $stats['total_students'] > 0)
-                <div class="col-6 col-lg-3 col-md-6 mb-3">
-                    <div class="card border shadow-none h-100">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="text-muted mb-1 small">My Students</h6>
-                                    <h4 class="mb-0 fw-bold">{{ $stats['total_students'] }}</h4>
                                 </div>
                             </div>
                         </div>

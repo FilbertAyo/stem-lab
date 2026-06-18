@@ -4,14 +4,21 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\Concerns\ResolvesStudentClassContext;
 use App\Http\Controllers\Controller;
+use App\Enums\LearningEventType;
 use App\Models\Project;
 use App\Models\ProjectCategory;
+use App\Services\Learning\StudentLearningEventRecorder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
     use ResolvesStudentClassContext;
+
+    public function __construct(
+        private readonly StudentLearningEventRecorder $eventRecorder,
+    ) {}
 
     /**
      * Show list of published projects with category sidebar.
@@ -81,6 +88,16 @@ class ProjectController extends Controller
             ->get();
 
         $activeCategory = $project->category;
+
+        $user = Auth::user();
+        if ($user) {
+            $this->eventRecorder->record(
+                $user,
+                LearningEventType::ProjectViewed,
+                $project,
+                ['label' => $project->title],
+            );
+        }
 
         return view('client.back.projects.show', [
             'project' => $project,

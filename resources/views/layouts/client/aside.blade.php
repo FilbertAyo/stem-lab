@@ -2,6 +2,12 @@
     <ul class="category-list">
         @if(Auth::user()->role === 'teacher')
             <li>
+                <a href="{{ route('client.my-students.index') }}"
+                   class="{{ request()->routeIs('client.my-students.*') ? 'active' : '' }}">
+                    My Students <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('client.weekly-sessions.index') }}"
                    class="{{ request()->routeIs('client.weekly-sessions.*') ? 'active' : '' }}">
                     Weekly Sessions <iconify-icon icon="lucide:chevron-right"></iconify-icon>

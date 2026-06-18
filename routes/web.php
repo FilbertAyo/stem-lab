@@ -22,10 +22,12 @@ use App\Http\Controllers\Client\ClubController as ClientClubController;
 use App\Http\Controllers\Client\CompetitionController as ClientCompetitionController;
 use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
 use App\Http\Controllers\Client\Model3dController as ClientModel3dController;
+use App\Http\Controllers\Client\MyStudentsController as ClientMyStudentsController;
 use App\Http\Controllers\Client\ProjectController as ClientProjectController;
 use App\Http\Controllers\Client\StudentClubController as ClientStudentClubController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
 use App\Http\Controllers\Client\SubscriptionPackageController as ClientSubscriptionPackageController;
+use App\Http\Controllers\Client\TeacherNotificationController as ClientTeacherNotificationController;
 use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicCompetitionController;
@@ -375,6 +377,7 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
         Route::post('/subscription-packages/select', [ClientSubscriptionPackageController::class, 'select'])
             ->name('client.subscription-packages.select');
 
+        Route::middleware('club.linked.for.learning')->group(function () {
         Route::prefix('models/3d')->name('client.models.3d.')->group(function () {
             Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
 
@@ -410,6 +413,7 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
             Route::post('/attempt/{attempt}/submit', [\App\Http\Controllers\Client\VrAssessmentController::class, 'submit'])->name('submit');
             Route::get('/attempt/{attempt}/results', [\App\Http\Controllers\Client\VrAssessmentController::class, 'results'])->name('results');
         });
+        });
 
         // Student club linkup (student-only)
         Route::middleware('student')->prefix('activities/my-club')->name('client.student-club.')->group(function () {
@@ -425,6 +429,15 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
 
         // Teacher-only routes
         Route::middleware('teacher')->group(function () {
+            Route::get('/my-students', [ClientMyStudentsController::class, 'index'])->name('client.my-students.index');
+            Route::get('/my-students/{student}', [ClientMyStudentsController::class, 'show'])->name('client.my-students.show');
+
+            Route::prefix('notifications')->name('client.notifications.')->group(function () {
+                Route::get('/', [ClientTeacherNotificationController::class, 'index'])->name('index');
+                Route::post('/read-all', [ClientTeacherNotificationController::class, 'markAllRead'])->name('read-all');
+                Route::post('/{id}/read', [ClientTeacherNotificationController::class, 'markRead'])->name('read');
+            });
+
             Route::prefix('clubs')->name('client.clubs.')->group(function () {
                 Route::get('/', [ClientClubController::class, 'index'])->name('index');
                 Route::post('/transfer-leadership', [ClientClubController::class, 'transferLeadership'])->name('transfer-leadership');
