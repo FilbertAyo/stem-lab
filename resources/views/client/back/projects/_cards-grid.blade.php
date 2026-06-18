@@ -39,7 +39,7 @@
                 Showing {{ $projects->firstItem() }} – {{ $projects->lastItem() }} of {{ $projects->total() }}
             </div>
             <div>
-                {{ $projects->links('pagination::bootstrap-5') }}
+                {{ $projects->links('pagination::client-bootstrap-5') }}
             </div>
         </div>
     @endif

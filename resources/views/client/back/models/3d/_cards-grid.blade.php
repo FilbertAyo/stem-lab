@@ -70,7 +70,7 @@
     @if($model3ds->hasPages())
         <nav class="mt-4" aria-label="Model navigation">
             <div class="d-flex justify-content-center">
-                {{ $model3ds->links('pagination::bootstrap-5') }}
+                {{ $model3ds->links('pagination::client-bootstrap-5') }}
             </div>
         </nav>
     @endif

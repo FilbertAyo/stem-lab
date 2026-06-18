@@ -70,7 +70,7 @@
     @if($vrExperiments->hasPages())
         <nav class="mt-4" aria-label="Experiment navigation">
             <div class="d-flex justify-content-center">
-                {{ $vrExperiments->links('pagination::bootstrap-5') }}
+                {{ $vrExperiments->links('pagination::client-bootstrap-5') }}
             </div>
         </nav>
     @endif
