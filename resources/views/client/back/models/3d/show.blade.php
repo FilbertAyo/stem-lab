@@ -18,7 +18,7 @@
         <section class="row">
             <!-- 3D Model Viewer Column -->
             <div class="col-lg-8 col-12 mb-4">
-                <div class="card border shadow-none mb-4">
+                <div class="card border shadow-none mb-4 rounded-0 overflow-hidden">
                     <div class="card-body p-0">
                         @include('client.back.models.3d._viewer', ['model3d' => $model3d])
                     </div>
