@@ -89,7 +89,7 @@ class CacheService
     public static function getActiveQuestionBanks()
     {
         return Cache::remember(self::QUESTION_BANKS, self::TTL_MEDIUM, function () {
-            return \App\Models\VrQuestionBank::with(['vrExperiment.schoolClass', 'vrExperiment.subject'])
+            return \App\Models\VrQuestionBank::with(['vrExperiment.schoolClasses', 'vrExperiment.subject'])
                 ->where('is_active', true)
                 ->whereHas('vrExperiment', function ($query) {
                     $query->where('is_active', true)

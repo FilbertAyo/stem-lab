@@ -70,7 +70,7 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <span class="badge bg-info">{{ $bank->vrExperiment->schoolClass->name ?? 'N/A' }}</span>
+                                            <span class="badge bg-info">{{ $bank->vrExperiment->schoolClasses->pluck('name')->join(', ') ?: 'All Classes' }}</span>
                                             <span class="badge bg-primary">{{ $bank->vrExperiment->subject->subject_name ?? 'N/A' }}</span>
                                         </td>
                                         <td>

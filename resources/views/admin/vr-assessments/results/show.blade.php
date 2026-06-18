@@ -73,7 +73,7 @@
                             <strong>Experiment:</strong> {{ $attempt->questionBank->vrExperiment->name }}
                         </div>
                         <div class="col-md-3">
-                            <strong>Class:</strong> {{ $attempt->questionBank->vrExperiment->schoolClass->name ?? 'N/A' }}
+                            <strong>Class:</strong> {{ $attempt->questionBank->vrExperiment->schoolClasses->pluck('name')->join(', ') ?: 'All Classes' }}
                         </div>
                         <div class="col-md-3">
                             <strong>Subject:</strong> {{ $attempt->questionBank->vrExperiment->subject->subject_name ?? 'N/A' }}

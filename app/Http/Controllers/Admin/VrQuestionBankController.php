@@ -16,7 +16,7 @@ class VrQuestionBankController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = VrQuestionBank::with(['vrExperiment.schoolClass', 'vrExperiment.subject'])
+        $query = VrQuestionBank::with(['vrExperiment.schoolClasses', 'vrExperiment.subject'])
             ->withCount('questions');
 
         // Search functionality
@@ -30,7 +30,7 @@ class VrQuestionBankController extends Controller
                                ->orWhereHas('subject', function ($subjectQuery) use ($search) {
                                    $subjectQuery->where('subject_name', 'like', '%' . $search . '%');
                                })
-                               ->orWhereHas('schoolClass', function ($classQuery) use ($search) {
+                               ->orWhereHas('schoolClasses', function ($classQuery) use ($search) {
                                    $classQuery->where('name', 'like', '%' . $search . '%');
                                });
                   });
@@ -47,7 +47,7 @@ class VrQuestionBankController extends Controller
      */
     public function create(): View
     {
-        $experiments = VrExperiment::with(['schoolClass', 'subject'])
+        $experiments = VrExperiment::with(['schoolClasses', 'subject'])
             ->where('is_active', true)
             ->orderBy('name')
             ->get();
@@ -87,7 +87,7 @@ class VrQuestionBankController extends Controller
      */
     public function show(VrQuestionBank $questionBank): View
     {
-        $questionBank->load(['vrExperiment.schoolClass', 'vrExperiment.subject', 'questions' => function ($query) {
+        $questionBank->load(['vrExperiment.schoolClasses', 'vrExperiment.subject', 'questions' => function ($query) {
             $query->orderBy('order');
         }]);
 
@@ -99,7 +99,7 @@ class VrQuestionBankController extends Controller
      */
     public function edit(VrQuestionBank $questionBank): View
     {
-        $experiments = VrExperiment::with(['schoolClass', 'subject'])
+        $experiments = VrExperiment::with(['schoolClasses', 'subject'])
             ->where('is_active', true)
             ->orderBy('name')
             ->get();

@@ -142,14 +142,5 @@
     "class_names": ["Form 3", "Form 4"],
     "phet_slug": "wave-interference",
     "thumbnail_url": "https://phet.colorado.edu/sims/html/wave-interference/latest/wave-interference-900.png"
-  },
-  {
-    "name": "Greenhouse Effect",
-    "description": "How to use:\n1. Open the sim and observe how infrared photons are emitted from the Earth's surface.\n2. Add greenhouse gases (CO₂, CH₄, water vapour) and watch photons being absorbed and re-emitted.\n3. Compare the temperature with 1750 (pre-industrial) vs present-day atmosphere.\n4. Increase cloud cover and observe its effect on temperature.\n5. Use the thermometer to record and compare temperatures under different atmospheric conditions.\n\nLearning outcomes:\n- Explain how greenhouse gases absorb and re-emit infrared radiation, warming the atmosphere.\n- Name the main greenhouse gases and identify biological and human sources of each.\n- Describe the natural greenhouse effect and distinguish it from enhanced greenhouse effect.\n- Explain the consequences of global warming for ecosystems and biodiversity.\n- Discuss the role of deforestation and respiration in carbon dioxide levels.",
-    "external_url": "https://phet.colorado.edu/sims/html/greenhouse-effect/latest/greenhouse-effect_en.html",
-    "subject_name": "Biology",
-    "class_names": ["Form 2", "Form 3", "Form 4"],
-    "phet_slug": "greenhouse-effect",
-    "thumbnail_url": "https://phet.colorado.edu/sims/html/greenhouse-effect/latest/greenhouse-effect-900.png"
   }
 ]

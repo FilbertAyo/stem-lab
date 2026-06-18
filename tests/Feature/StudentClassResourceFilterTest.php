@@ -67,19 +67,19 @@ test('student with a class only sees matching stem resources', function () {
         'name' => 'Cell VR',
         'description' => 'Explore cells',
         'external_url' => 'https://example.com/cell',
-        'school_class_id' => $formTwo->id,
         'subject_id' => $subject->id,
         'is_active' => true,
     ]);
+    $matchingExperiment->schoolClasses()->attach($formTwo->id);
 
-    VrExperiment::query()->create([
+    $physicsExperiment = VrExperiment::query()->create([
         'name' => 'Physics VR',
         'description' => 'Explore forces',
         'external_url' => 'https://example.com/physics',
-        'school_class_id' => $formThree->id,
         'subject_id' => $subject->id,
         'is_active' => true,
     ]);
+    $physicsExperiment->schoolClasses()->attach($formThree->id);
 
     $matchingProject = Project::query()->create([
         'name' => 'LED Blink',
@@ -108,7 +108,7 @@ test('student with a class only sees matching stem resources', function () {
     ]);
 
     VrQuestionBank::query()->create([
-        'vr_experiment_id' => VrExperiment::query()->where('name', 'Physics VR')->value('id'),
+        'vr_experiment_id' => $physicsExperiment->id,
         'title' => 'Physics Quiz',
         'is_active' => true,
     ]);
@@ -223,4 +223,29 @@ test('student sees a model assigned to multiple classes when their class is incl
         ->get(route('client.models.3d.index'))
         ->assertOk()
         ->assertSee('Shared Skeleton Model');
+});
+
+test('student sees a vr experiment assigned to multiple classes when their class is included', function () {
+    ['student' => $student, 'schoolClass' => $formTwo] = createStudentWithClass();
+
+    $formThree = SchoolClass::query()->create([
+        'name' => 'Form 3 '.Str::random(4),
+        'is_active' => true,
+    ]);
+
+    $subject = createSubject();
+
+    $sharedExperiment = VrExperiment::query()->create([
+        'name' => 'Shared Forces Lab',
+        'description' => 'Explore shared forces',
+        'external_url' => 'https://example.com/shared-forces',
+        'subject_id' => $subject->id,
+        'is_active' => true,
+    ]);
+    $sharedExperiment->schoolClasses()->attach([$formTwo->id, $formThree->id]);
+
+    $this->actingAs($student)
+        ->get(route('client.vr-experiments.index'))
+        ->assertOk()
+        ->assertSee('Shared Forces Lab');
 });

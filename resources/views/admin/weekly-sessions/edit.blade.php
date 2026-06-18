@@ -157,8 +157,8 @@
                                     @foreach($vrExperiments as $experiment)
                                         <option value="{{ $experiment->id }}" {{ old('vr_experiment_id', $weeklySession->vr_experiment_id) == $experiment->id ? 'selected' : '' }}>
                                             {{ $experiment->name }}
-                                            @if($experiment->schoolClass)
-                                                ({{ $experiment->schoolClass->name }})
+                                            @if($experiment->schoolClasses->isNotEmpty())
+                                                ({{ $experiment->schoolClasses->pluck('name')->join(', ') }})
                                             @endif
                                         </option>
                                     @endforeach

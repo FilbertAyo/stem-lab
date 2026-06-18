@@ -49,6 +49,8 @@ class PhetVrExperimentSeeder extends Seeder
                 throw new RuntimeException("Subject not found: {$experiment['subject_name']}");
             }
 
+            $classIds = [];
+
             foreach ($experiment['class_names'] as $className) {
                 $class = SchoolClass::where('name', $className)->first();
 
@@ -56,20 +58,22 @@ class PhetVrExperimentSeeder extends Seeder
                     throw new RuntimeException("School class not found: {$className}");
                 }
 
-                VrExperiment::updateOrCreate(
-                    [
-                        'name' => $experiment['name'],
-                        'school_class_id' => $class->id,
-                        'subject_id' => $subject->id,
-                    ],
-                    [
-                        'description' => $experiment['description'] ?? null,
-                        'external_url' => $experiment['external_url'],
-                        'thumbnail' => null,
-                        'is_active' => false,
-                    ]
-                );
+                $classIds[] = $class->id;
             }
+
+            $vrExperiment = VrExperiment::updateOrCreate(
+                [
+                    'name' => $experiment['name'],
+                    'subject_id' => $subject->id,
+                    'external_url' => $experiment['external_url'],
+                ],
+                [
+                    'description' => $experiment['description'] ?? null,
+                    'is_active' => false,
+                ]
+            );
+
+            $vrExperiment->schoolClasses()->sync(array_values(array_unique($classIds)));
         }
     }
 }

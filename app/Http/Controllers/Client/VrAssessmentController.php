@@ -55,7 +55,7 @@ class VrAssessmentController extends Controller
      */
     public function show(VrQuestionBank $questionBank): View
     {
-        $questionBank->load(['vrExperiment.schoolClass', 'vrExperiment.subject']);
+        $questionBank->load(['vrExperiment.schoolClasses', 'vrExperiment.subject']);
         
         // Ensure the bank, experiment, and subject are all active
         if (!$questionBank->is_active 

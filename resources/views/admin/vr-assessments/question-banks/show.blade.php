@@ -7,7 +7,7 @@
                     <h5 class="mb-0">{{ $questionBank->title }}</h5>
                     <p class="text-muted mb-0 small">
                         Experiment: {{ $questionBank->vrExperiment->name }} |
-                        {{ $questionBank->vrExperiment->schoolClass->name ?? 'N/A' }} -
+                        {{ $questionBank->vrExperiment->schoolClasses->pluck('name')->join(', ') ?: 'All Classes' }} -
                         {{ $questionBank->vrExperiment->subject->subject_name ?? 'N/A' }}
                     </p>
                 </div>

@@ -41,19 +41,28 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="school_class_id" class="form-label">Class <span class="text-danger">*</span></label>
-                                <select class="form-select @error('school_class_id') is-invalid @enderror"
-                                        id="school_class_id" name="school_class_id" required>
-                                    <option value="">Select a class</option>
+                                <label class="form-label">Classes <span class="text-danger">*</span></label>
+                                <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
                                     @foreach($classes as $class)
-                                        <option value="{{ $class->id }}" 
-                                                {{ old('school_class_id', $vrExperiment->school_class_id) == $class->id ? 'selected' : '' }}>
-                                            {{ $class->name }}
-                                        </option>
+                                        <div class="form-check">
+                                            <input class="form-check-input @error('class_ids') is-invalid @enderror @error('class_ids.*') is-invalid @enderror"
+                                                   type="checkbox"
+                                                   name="class_ids[]"
+                                                   value="{{ $class->id }}"
+                                                   id="class_{{ $class->id }}"
+                                                   {{ in_array($class->id, old('class_ids', $vrExperiment->schoolClasses->pluck('id')->all())) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="class_{{ $class->id }}">
+                                                {{ $class->name }}
+                                            </label>
+                                        </div>
                                     @endforeach
-                                </select>
-                                @error('school_class_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                </div>
+                                <small class="form-text text-muted">Select one or more classes that can access this experiment.</small>
+                                @error('class_ids')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                                @error('class_ids.*')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>

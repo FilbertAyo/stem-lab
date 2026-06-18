@@ -22,7 +22,7 @@
                                 <option value="">Select an experiment</option>
                                 @foreach($experiments as $experiment)
                                     <option value="{{ $experiment->id }}" {{ old('vr_experiment_id', $questionBank->vr_experiment_id) == $experiment->id ? 'selected' : '' }}>
-                                        {{ $experiment->name }} ({{ $experiment->schoolClass->name ?? 'N/A' }} - {{ $experiment->subject->subject_name ?? 'N/A' }})
+                                        {{ $experiment->name }} ({{ $experiment->schoolClasses->pluck('name')->join(', ') ?: 'All Classes' }} - {{ $experiment->subject->subject_name ?? 'N/A' }})
                                     </option>
                                 @endforeach
                             </select>

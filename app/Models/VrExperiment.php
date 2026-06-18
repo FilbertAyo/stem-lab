@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPublicUlid;
-use App\Models\Concerns\ScopedToSchoolClass;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class VrExperiment extends Model
 {
-    use HasFactory, HasPublicUlid, ScopedToSchoolClass;
+    use HasFactory, HasPublicUlid;
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +24,6 @@ class VrExperiment extends Model
         'description',
         'external_url',
         'thumbnail',
-        'school_class_id',
         'subject_id',
         'is_active',
     ];
@@ -47,11 +46,57 @@ class VrExperiment extends Model
     }
 
     /**
+     * Get the school classes that can access this experiment.
+     */
+    public function schoolClasses(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            SchoolClass::class,
+            'vr_experiment_school_class',
+            'vr_experiment_id',
+            'school_class_id'
+        )->withTimestamps();
+    }
+
+    /**
      * Get all question banks for this experiment.
      */
     public function questionBanks(): HasMany
     {
         return $this->hasMany(VrQuestionBank::class);
+    }
+
+    /**
+     * Limit results to content for the student's class.
+     * When no class is set on the student, no filter is applied.
+     */
+    public function scopeVisibleToStudentClass(Builder $query, ?int $schoolClassId): Builder
+    {
+        if ($schoolClassId === null) {
+            return $query;
+        }
+
+        return $query->where(function (Builder $classQuery) use ($schoolClassId) {
+            $classQuery->whereDoesntHave('schoolClasses')
+                ->orWhereHas('schoolClasses', fn (Builder $relation) => $relation->where('school_classes.id', $schoolClassId));
+        });
+    }
+
+    public function isAccessibleToStudentClass(?int $schoolClassId): bool
+    {
+        if ($schoolClassId === null) {
+            return true;
+        }
+
+        if (! $this->relationLoaded('schoolClasses')) {
+            $this->load('schoolClasses');
+        }
+
+        if ($this->schoolClasses->isEmpty()) {
+            return true;
+        }
+
+        return $this->schoolClasses->contains('id', $schoolClassId);
     }
 
     /**
@@ -105,5 +150,3 @@ class VrExperiment extends Model
         return $this->hasMany(WeeklySession::class);
     }
 }
-
-

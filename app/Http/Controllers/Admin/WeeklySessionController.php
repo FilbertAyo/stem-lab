@@ -29,7 +29,7 @@ class WeeklySessionController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = WeeklySession::with(['club', 'subject', 'vrExperiment', 'classes', 'model3ds', 'creator'])
+        $query = WeeklySession::with(['club', 'subject', 'vrExperiment.schoolClasses', 'classes', 'model3ds', 'creator'])
             ->orderedByDate();
 
         // Filter by club
@@ -78,7 +78,7 @@ class WeeklySessionController extends Controller
         $clubs = Club::active()->ordered()->get();
         $subjects = Subject::active()->ordered()->get();
         $classes = SchoolClass::active()->ordered()->get();
-        $vrExperiments = VrExperiment::active()->ordered()->get();
+        $vrExperiments = VrExperiment::with('schoolClasses')->active()->ordered()->get();
         $projects = Project::active()->ordered()->get();
 
         return view('admin.weekly-sessions.create', compact('clubs', 'subjects', 'classes', 'vrExperiments', 'projects'));
@@ -124,7 +124,7 @@ class WeeklySessionController extends Controller
      */
     public function show(WeeklySession $weeklySession): View
     {
-        $weeklySession->load(['club', 'subject', 'vrExperiment', 'classes', 'project', 'creator']);
+        $weeklySession->load(['club', 'subject', 'vrExperiment.schoolClasses', 'classes', 'project', 'creator']);
 
         return view('admin.weekly-sessions.show', compact('weeklySession'));
     }
@@ -137,7 +137,7 @@ class WeeklySessionController extends Controller
         $clubs = Club::active()->ordered()->get();
         $subjects = Subject::active()->ordered()->get();
         $classes = SchoolClass::active()->ordered()->get();
-        $vrExperiments = VrExperiment::active()->ordered()->get();
+        $vrExperiments = VrExperiment::with('schoolClasses')->active()->ordered()->get();
         $projects = Project::active()->ordered()->get();
 
         $weeklySession->load(['classes', 'project']);

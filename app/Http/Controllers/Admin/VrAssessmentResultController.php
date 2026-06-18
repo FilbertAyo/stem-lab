@@ -17,7 +17,7 @@ class VrAssessmentResultController extends Controller
     {
         $query = VrAssessmentAttempt::with([
             'user',
-            'questionBank.vrExperiment.schoolClass',
+            'questionBank.vrExperiment.schoolClasses',
             'questionBank.vrExperiment.subject'
         ])
         ->whereNotNull('completed_at')

@@ -80,7 +80,7 @@
                                         <td>
                                             <small>{{ $attempt->questionBank->vrExperiment->name }}</small>
                                             <br>
-                                            <span class="badge bg-info">{{ $attempt->questionBank->vrExperiment->schoolClass->name ?? 'N/A' }}</span>
+                                            <span class="badge bg-info">{{ $attempt->questionBank->vrExperiment->schoolClasses->pluck('name')->join(', ') ?: 'All Classes' }}</span>
                                         </td>
                                         <td>
                                             <span class="fs-5 fw-bold {{ $attempt->passed ? 'text-success' : 'text-danger' }}">

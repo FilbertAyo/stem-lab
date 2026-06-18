@@ -76,7 +76,7 @@
                             <p class="mb-2">{{ $questionBank->vrExperiment->name }}</p>
                             <div class="d-flex gap-2 flex-wrap">
                                 <span class="badge bg-primary">{{ $questionBank->vrExperiment->subject->subject_name ?? 'General' }}</span>
-                                <span class="badge bg-info">{{ $questionBank->vrExperiment->schoolClass->name ?? 'All Classes' }}</span>
+                                <span class="badge bg-info">{{ $questionBank->vrExperiment->schoolClasses->pluck('name')->join(', ') ?: 'All Classes' }}</span>
                             </div>
                             <a href="{{ route('client.vr-experiments.show', $questionBank->vrExperiment) }}" 
                                class="btn btn-sm btn-outline-primary mt-2">

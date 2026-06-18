@@ -113,9 +113,9 @@
                                         <span class="badge bg-success">
                                             <i class="ti ti-vr"></i> {{ $weeklySession->vrExperiment->name }}
                                         </span>
-                                        @if($weeklySession->vrExperiment->schoolClass)
+                                        @if($weeklySession->vrExperiment->schoolClasses->isNotEmpty())
                                             <div class="small text-muted mt-1">
-                                                Class: {{ $weeklySession->vrExperiment->schoolClass->name }}
+                                                Classes: {{ $weeklySession->vrExperiment->schoolClasses->pluck('name')->join(', ') }}
                                             </div>
                                         @endif
                                     </div>

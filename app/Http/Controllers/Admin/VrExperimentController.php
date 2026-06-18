@@ -18,25 +18,25 @@ class VrExperimentController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = VrExperiment::with(['schoolClass', 'subject'])->withSubject();
+        $query = VrExperiment::with(['schoolClasses', 'subject'])->withSubject();
 
-        // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%')
-                  ->orWhere('external_url', 'like', '%' . $search . '%')
+                $q->where('name', 'like', '%'.$search.'%')
+                  ->orWhere('description', 'like', '%'.$search.'%')
+                  ->orWhere('external_url', 'like', '%'.$search.'%')
                   ->orWhereHas('subject', function ($subjectQuery) use ($search) {
-                      $subjectQuery->where('subject_name', 'like', '%' . $search . '%');
+                      $subjectQuery->where('subject_name', 'like', '%'.$search.'%');
                   })
-                  ->orWhereHas('schoolClass', function ($classQuery) use ($search) {
-                      $classQuery->where('name', 'like', '%' . $search . '%');
+                  ->orWhereHas('schoolClasses', function ($classQuery) use ($search) {
+                      $classQuery->where('name', 'like', '%'.$search.'%');
                   });
             });
         }
 
         $vrExperiments = $query->latest()->paginate(15)->withQueryString();
+
         return view('admin.vr-experiments.index', compact('vrExperiments'));
     }
 
@@ -47,6 +47,7 @@ class VrExperimentController extends Controller
     {
         $classes = SchoolClass::active()->ordered()->get();
         $subjects = \App\Services\CacheService::getActiveSubjects();
+
         return view('admin.vr-experiments.create', compact('classes', 'subjects'));
     }
 
@@ -59,22 +60,24 @@ class VrExperimentController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'external_url' => ['required', 'url', 'max:2048'],
-            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // Max 5MB
-            'school_class_id' => ['required', 'exists:school_classes,id'],
+            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
+            'class_ids' => ['required', 'array', 'min:1'],
+            'class_ids.*' => ['integer', 'exists:school_classes,id'],
             'subject_id' => ['required', 'exists:subjects,id'],
             'is_active' => ['boolean'],
         ]);
 
-        // Handle thumbnail upload
         if ($request->hasFile('thumbnail')) {
-            $thumbnailPath = $request->file('thumbnail')->store('vr-experiments/thumbnails', 'public');
-            $validated['thumbnail'] = $thumbnailPath;
+            $validated['thumbnail'] = $request->file('thumbnail')->store('vr-experiments/thumbnails', 'public');
         }
 
-        // Set is_active default
         $validated['is_active'] = $request->has('is_active');
 
-        VrExperiment::create($validated);
+        $classIds = $validated['class_ids'];
+        unset($validated['class_ids']);
+
+        $vrExperiment = VrExperiment::create($validated);
+        $vrExperiment->schoolClasses()->sync($classIds);
 
         return redirect()->route('admin.vr-experiments.index')
             ->with('success', 'VR Experiment created successfully.');
@@ -85,8 +88,10 @@ class VrExperimentController extends Controller
      */
     public function edit(VrExperiment $vrExperiment): View
     {
+        $vrExperiment->load('schoolClasses');
         $classes = SchoolClass::active()->ordered()->get();
         $subjects = \App\Services\CacheService::getActiveSubjects();
+
         return view('admin.vr-experiments.edit', compact('vrExperiment', 'classes', 'subjects'));
     }
 
@@ -99,29 +104,29 @@ class VrExperimentController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'external_url' => ['required', 'url', 'max:2048'],
-            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // Max 5MB
-            'school_class_id' => ['required', 'exists:school_classes,id'],
+            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
+            'class_ids' => ['required', 'array', 'min:1'],
+            'class_ids.*' => ['integer', 'exists:school_classes,id'],
             'subject_id' => ['required', 'exists:subjects,id'],
             'is_active' => ['boolean'],
         ]);
 
-        // Handle thumbnail upload
         if ($request->hasFile('thumbnail')) {
-            // Delete old thumbnail if exists
             if ($vrExperiment->thumbnail && Storage::disk('public')->exists($vrExperiment->thumbnail)) {
                 Storage::disk('public')->delete($vrExperiment->thumbnail);
             }
-            $thumbnailPath = $request->file('thumbnail')->store('vr-experiments/thumbnails', 'public');
-            $validated['thumbnail'] = $thumbnailPath;
+            $validated['thumbnail'] = $request->file('thumbnail')->store('vr-experiments/thumbnails', 'public');
         } else {
-            // Keep existing thumbnail if not updating
             unset($validated['thumbnail']);
         }
 
-        // Set is_active
         $validated['is_active'] = $request->has('is_active');
 
+        $classIds = $validated['class_ids'];
+        unset($validated['class_ids']);
+
         $vrExperiment->update($validated);
+        $vrExperiment->schoolClasses()->sync($classIds);
 
         return redirect()->route('admin.vr-experiments.index')
             ->with('success', 'VR Experiment updated successfully.');
@@ -132,16 +137,13 @@ class VrExperimentController extends Controller
      */
     public function destroy(VrExperiment $vrExperiment): RedirectResponse
     {
-        // Delete thumbnail if exists
         if ($vrExperiment->thumbnail && Storage::disk('public')->exists($vrExperiment->thumbnail)) {
             Storage::disk('public')->delete($vrExperiment->thumbnail);
         }
 
-        // Delete the experiment record
         $vrExperiment->delete();
 
         return redirect()->route('admin.vr-experiments.index')
             ->with('success', 'VR Experiment deleted successfully.');
     }
 }
-

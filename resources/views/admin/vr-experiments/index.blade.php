@@ -74,9 +74,11 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="badge bg-info">
-                                                {{ $experiment->schoolClass->name ?? 'N/A' }}
-                                            </span>
+                                            @forelse($experiment->schoolClasses as $class)
+                                                <span class="badge bg-info me-1">{{ $class->name }}</span>
+                                            @empty
+                                                <span class="text-muted">All Classes</span>
+                                            @endforelse
                                         </td>
                                         <td>
                                             <a href="{{ $experiment->external_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
