@@ -2,7 +2,7 @@
     <div class="col-lg-9">
 
         <div class="dashboard-content-header">
-            <div>
+           
                 <div>
                     <h4 class="mb-1">My Students</h4>
                     <p class="text-muted mb-0 small">Monitor club students who have joined the platform and track their learning progress.</p>
@@ -10,7 +10,7 @@
                 <a href="{{ route('client.clubs.index') }}" class="btn btn-outline-secondary btn-sm float-end">
                     <i class="bi bi-people me-1"></i>Manage roster
                 </a>
-            </div>
+            
         </div>
 
         @include('elements.client-validation')
