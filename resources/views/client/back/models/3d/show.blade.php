@@ -128,7 +128,7 @@
                     });
 
                     modelViewer.addEventListener('error', () => {
-                        loadingState.innerHTML = '<p class="text-danger mb-0 small">Unable to load this 3D model. Try the embedded view if available.</p>';
+                        loadingState.innerHTML = '<p class="text-danger mb-0 small">Unable to load this model. Try switching to the labelled model if available.</p>';
                     });
                 });
             </script>

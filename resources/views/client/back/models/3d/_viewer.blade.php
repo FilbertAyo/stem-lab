@@ -13,20 +13,19 @@
             <div class="viewer-toolbar d-flex flex-wrap align-items-center justify-content-between gap-2 px-3 py-2 border-bottom bg-white">
                 <div class="d-flex align-items-center gap-2">
                     <span class="badge bg-light text-dark border">
-                        <i class="bi bi-layers me-1"></i>Two formats available
+                        <i class="bi bi-layers me-1"></i>Two ways to view
                     </span>
-                    <span class="text-muted small d-none d-md-inline">Choose how you want to explore this model</span>
-                </div>
-                <div class="btn-group viewer-mode-toggle" role="group" aria-label="Viewer mode">
+              </div>
+                <div class="btn-group viewer-mode-toggle" role="group" aria-label="Model viewing mode">
                     <button type="button"
                             class="btn btn-sm {{ $defaultMode === 'glb' ? 'btn-primary' : 'btn-outline-secondary' }}"
                             data-viewer-mode="glb">
-                        <i class="bi bi-box me-1"></i>GLB model
+                        <i class="bi bi-badge-3d me-1"></i>Interactive model
                     </button>
                     <button type="button"
                             class="btn btn-sm {{ $defaultMode === 'embed' ? 'btn-primary' : 'btn-outline-secondary' }}"
                             data-viewer-mode="embed">
-                        <i class="bi bi-play-btn me-1"></i>Embedded view
+                        <i class="bi bi-tags me-1"></i>Labelled model
                     </button>
                 </div>
             </div>
@@ -227,6 +226,6 @@
 @else
     <div class="text-center py-5">
         <i class="bi bi-exclamation-triangle text-warning fs-1 mb-3"></i>
-        <p class="mb-0 text-muted">This model does not have a GLB file or embed URL yet.</p>
+        <p class="mb-0 text-muted">This model is not available to view yet.</p>
     </div>
 @endif

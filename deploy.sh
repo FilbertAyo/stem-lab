@@ -40,12 +40,6 @@ sudo chmod -R 755 /var/www/adilishastemlabs.com/html
 sudo chmod -R 775 /var/www/adilishastemlabs.com/html/storage
 sudo chmod -R 775 /var/www/adilishastemlabs.com/html/bootstrap/cache
 
-# Ensure nginx/PHP upload limits allow GLB and thumbnail uploads (idempotent)
-if [ -f "deploy/setup-upload-limits.sh" ]; then
-    echo "Ensuring server upload limits..."
-    sudo bash deploy/setup-upload-limits.sh
-fi
-
 # Disable maintenance mode
 echo "Disabling maintenance mode..."
 sudo -u www-data php artisan up
