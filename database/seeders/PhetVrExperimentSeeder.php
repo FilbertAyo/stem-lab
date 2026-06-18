@@ -21,6 +21,7 @@ class PhetVrExperimentSeeder extends Seeder
         'phet_chemistry_experiments.json',
         'phet_biology_experiments.json',
         'phet_mathematics_experiments.json',
+        'phet_batch2_experiments.json',
     ];
 
     public function run(): void
