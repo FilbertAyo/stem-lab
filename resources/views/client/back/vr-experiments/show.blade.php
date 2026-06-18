@@ -4,34 +4,16 @@
     {{-- Same sidebar as index: All Experiments + subject links (no global aside on vr-experiments.*) --}}
     <div class="col-12">
         <div class="row">
-            <div class="col-lg-3 dashboard-sidebar mb-4 mb-lg-0">
-                <ul class="category-list">
-                    <li>
-                        <a href="{{ route('client.vr-experiments.index') }}"
-                           class="">
-                            All Experiments <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-                        </a>
-                    </li>
-                    @foreach($subjects as $subject)
-                        <li>
-                            <a href="{{ route('client.vr-experiments.index', ['subject' => $subject->id]) }}"
-                               class="{{ (string) $subject->id === (string) ($vrExperiment->subject_id ?? '') ? 'active' : '' }}">
-                                {{ $subject->subject_name }} <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-                            </a>
-                        </li>
-                    @endforeach
-                    <li>
-                        <a href="{{ route('client.vr-experiments.math') }}"
-                           class="{{ request()->routeIs('client.vr-experiments.math') ? 'active' : '' }}">
-                            Mathematics <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            @include('client.back.vr-experiments._sidebar', [
+                'subjects' => $subjects,
+                'vrExperiment' => $vrExperiment,
+            ])
 
             <div class="col-lg-9">
 
         @php($isStatic = $isStatic ?? false)
+        @php($mathematicsSubject = $subjects->firstWhere('subject_name', 'Mathematics'))
+        @php($isMathExperiment = $mathematicsSubject && (string) ($vrExperiment->subject_id ?? '') === (string) $mathematicsSubject->id)
         <div class="dashboard-content-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
             <div>
                 <h4 class="mb-1">{{ $vrExperiment->name }}</h4>
@@ -40,8 +22,8 @@
                 </p>
             </div>
             <div class="d-flex gap-2">
-                <a href="{{ route('client.vr-experiments.index') }}" class="badge bg-light-soft text-dark border d-flex align-items-center" style="font-size: 0.95rem;">
-                   Back to library
+                <a href="{{ $isMathExperiment ? route('client.vr-experiments.math') : route('client.vr-experiments.index') }}" class="badge bg-light-soft text-dark border d-flex align-items-center" style="font-size: 0.95rem;">
+                   Back to {{ $isMathExperiment ? 'Mathematics' : 'library' }}
                 </a>
             </div>
         </div>

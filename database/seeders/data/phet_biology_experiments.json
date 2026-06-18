@@ -1,0 +1,155 @@
+[
+  {
+    "name": "Natural Selection",
+    "description": "How to use:\n1. Open the sim and observe a population of bunnies in a habitat.\n2. Add a selection pressure such as wolves or change the environment to arctic.\n3. Introduce a mutation (brown fur or long teeth) and watch how traits spread.\n4. Use the population graph to track how trait frequencies change over generations.\n5. Add multiple selection pressures simultaneously and observe the combined effect.\n\nLearning outcomes:\n- Explain natural selection as the differential survival of organisms with favourable traits.\n- Describe how environmental change affects which traits are advantageous.\n- Explain how mutations introduce new heritable variation into a population.\n- Interpret population graphs to describe changes in allele frequency over time.\n- Relate the concept of adaptation to survival and reproduction in a specific environment.",
+    "external_url": "https://phet.colorado.edu/sims/html/natural-selection/latest/natural-selection_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "natural-selection",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/natural-selection/latest/natural-selection-900.png"
+  },
+  {
+    "name": "Gene Expression Essentials",
+    "description": "How to use:\n1. Open the 'Intro' screen and observe the DNA strand inside the cell nucleus.\n2. Activate transcription by enabling RNA polymerase and watch mRNA synthesis.\n3. Move to the ribosome and observe translation of mRNA into a protein chain.\n4. Toggle between manual and automatic mode to control each step.\n5. Use the 'Multiple Cells' screen to observe gene expression across a population of cells.\n\nLearning outcomes:\n- Describe the central dogma: DNA → mRNA → Protein.\n- Explain the process of transcription including the role of RNA polymerase.\n- Explain the process of translation including codons, tRNA, and ribosomes.\n- Distinguish between the roles of mRNA, tRNA, and rRNA.\n- Relate gene expression to the production of proteins that determine cell function.",
+    "external_url": "https://phet.colorado.edu/sims/html/gene-expression-essentials/latest/gene-expression-essentials_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 4"],
+    "phet_slug": "gene-expression-essentials",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/gene-expression-essentials/latest/gene-expression-essentials-900.png"
+  },
+  {
+    "name": "Membrane Channels",
+    "description": "How to use:\n1. Open the sim and observe the phospholipid bilayer membrane.\n2. Add solute particles to one side and observe passive diffusion through the membrane.\n3. Add channel proteins and observe how they facilitate ion transport.\n4. Enable the sodium-potassium pump and observe active transport against the gradient.\n5. Compare the speed of transport with and without carrier proteins.\n\nLearning outcomes:\n- Describe the structure of the phospholipid bilayer.\n- Explain passive diffusion as movement from high to low concentration.\n- Explain facilitated diffusion as passive transport through protein channels.\n- Distinguish between passive transport and active transport in terms of energy use.\n- Describe the role of the sodium-potassium pump in maintaining cell potential.",
+    "external_url": "https://phet.colorado.edu/sims/html/membrane-channels/latest/membrane-channels_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "membrane-channels",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/membrane-channels/latest/membrane-channels-900.png"
+  },
+  {
+    "name": "Neuron",
+    "description": "How to use:\n1. Open the sim and observe the resting neuron with its charge distribution.\n2. Inject a stimulus using the electrode tool and watch the action potential propagate.\n3. Observe the opening and closing of sodium and potassium channels in real time.\n4. Use the chart to track voltage changes across the membrane over time.\n5. Increase or decrease stimulus strength and observe threshold effects.\n\nLearning outcomes:\n- Describe the resting membrane potential and the ion distribution that creates it.\n- Explain how an action potential is generated when threshold is reached.\n- Describe the roles of sodium and potassium channels in depolarisation and repolarisation.\n- Explain the refractory period and why it limits action potential frequency.\n- Relate nerve impulse transmission to the function of the nervous system.",
+    "external_url": "https://phet.colorado.edu/sims/html/neuron/latest/neuron_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 4"],
+    "phet_slug": "neuron",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/neuron/latest/neuron-900.png"
+  },
+  {
+    "name": "The Photoelectric Effect",
+    "description": "How to use:\n1. Open the sim and shine light on a metal target surface.\n2. Adjust the frequency of light and observe whether electrons are ejected.\n3. Increase the intensity of light and observe the effect on current but not ejection threshold.\n4. Change the metal target and compare work function values.\n5. Use the energy diagram to relate photon energy to electron ejection.\n\nLearning outcomes:\n- Explain that light energy is carried in discrete packets called photons.\n- Describe the relationship between light frequency and photon energy (E = hf).\n- Explain why increasing intensity does not eject electrons below threshold frequency.\n- Define work function as the minimum energy needed to eject an electron.\n- Relate the photoelectric effect to real-world applications such as solar cells.",
+    "external_url": "https://phet.colorado.edu/sims/html/photoelectric-effect/latest/photoelectric-effect_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 4"],
+    "phet_slug": "photoelectric-effect",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/photoelectric-effect/latest/photoelectric-effect-900.png"
+  },
+  {
+    "name": "Diffusion",
+    "description": "How to use:\n1. Open the sim and place particles of two different types on opposite sides of the membrane.\n2. Open the membrane barrier and observe particles spreading across the container.\n3. Adjust the number of particles and temperature using the controls.\n4. Use the concentration graph to track how concentrations equalise over time.\n5. Compare diffusion rates of light vs heavy particles at the same temperature.\n\nLearning outcomes:\n- Define diffusion as the net movement of particles from high to low concentration.\n- Explain that diffusion results from random particle motion, not directed movement.\n- Describe how temperature affects the rate of diffusion.\n- Explain how particle size affects diffusion rate.\n- Relate diffusion to biological processes such as gas exchange in the lungs and alveoli.",
+    "external_url": "https://phet.colorado.edu/sims/html/diffusion/latest/diffusion_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "diffusion",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/diffusion/latest/diffusion-900.png"
+  },
+  {
+    "name": "Osmosis",
+    "description": "How to use:\n1. Open the sim and observe the semi-permeable membrane dividing the container.\n2. Add solute particles to one side and observe water molecule movement.\n3. Track the water levels on each side as osmosis proceeds.\n4. Adjust the solute concentration and observe how the rate and direction change.\n5. Observe equilibrium when water potential equalises on both sides.\n\nLearning outcomes:\n- Define osmosis as the movement of water through a semi-permeable membrane.\n- Explain that water moves from a region of lower solute concentration to higher.\n- Define water potential and relate it to solute concentration.\n- Predict the direction of osmosis given two concentrations.\n- Apply osmosis to biological contexts: turgor pressure in plant cells, crenation in animal cells.",
+    "external_url": "https://phet.colorado.edu/sims/html/osmosis/latest/osmosis_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "osmosis",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/osmosis/latest/osmosis-900.png"
+  },
+  {
+    "name": "Eating and Exercise",
+    "description": "How to use:\n1. Open the sim and select a character with a starting body composition.\n2. Choose daily meals from the food options and observe calorie intake.\n3. Add exercise activities and observe how calories are burned.\n4. Track body fat percentage and weight over simulated days.\n5. Compare outcomes of different diet and exercise combinations.\n\nLearning outcomes:\n- Explain the concept of energy balance: calories in vs calories out.\n- Identify macronutrients (carbohydrates, fats, proteins) and their energy values.\n- Describe how different types of exercise affect energy expenditure.\n- Explain the role of metabolism in energy use at rest and during activity.\n- Discuss lifestyle choices that contribute to healthy body composition.",
+    "external_url": "https://phet.colorado.edu/sims/html/eating-and-exercise/latest/eating-and-exercise_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "eating-and-exercise",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/eating-and-exercise/latest/eating-and-exercise-900.png"
+  },
+  {
+    "name": "Molecules and Light",
+    "description": "How to use:\n1. Open the sim and select a molecule (e.g. CO₂, H₂O, O₃, CH₄, N₂).\n2. Shine different types of light (microwave, infrared, visible, UV) at the molecule.\n3. Observe whether the molecule absorbs the light and what happens (vibration, rotation, or no effect).\n4. Compare which molecules absorb infrared radiation (greenhouse gases) vs which do not.\n5. Use the 'Photon Energies' panel to relate wavelength to photon energy.\n\nLearning outcomes:\n- Explain that molecules absorb specific wavelengths of electromagnetic radiation.\n- Describe how CO₂ and H₂O absorb infrared radiation and contribute to the greenhouse effect.\n- Relate molecular vibration and rotation to the absorption of infrared light.\n- Explain why O₂ and N₂ do not absorb infrared radiation.\n- Connect UV absorption by O₃ (ozone) to the protection of organisms from UV damage.",
+    "external_url": "https://phet.colorado.edu/sims/html/molecules-and-light/latest/molecules-and-light_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "molecules-and-light",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/molecules-and-light/latest/molecules-and-light-900.png"
+  },
+  {
+    "name": "My Solar System",
+    "description": "How to use:\n1. Open the sim and select a preset system (e.g. Sun and Earth, or binary stars).\n2. Observe orbital paths and gravitational interactions between bodies.\n3. Adjust the mass and initial velocity of bodies using sliders.\n4. Add a third body and observe how orbits become less stable.\n5. Enable the gravity force vectors to visualise the direction and magnitude of gravitational pull.\n\nLearning outcomes:\n- Describe how gravity governs the motion of planets and moons.\n- Explain that orbital shape depends on initial velocity relative to gravitational pull.\n- Relate the mass of a central body to the orbital speed of satellites.\n- Describe conditions that lead to stable vs unstable orbital systems.\n- Connect planetary motion to real-world phenomena such as seasons and tidal effects.",
+    "external_url": "https://phet.colorado.edu/sims/html/my-solar-system/latest/my-solar-system_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "my-solar-system",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/my-solar-system/latest/my-solar-system-900.png"
+  },
+  {
+    "name": "Plate Tectonics",
+    "description": "How to use:\n1. Open the sim and observe the cross-section of the Earth showing tectonic plates.\n2. Move plates toward each other (convergent), apart (divergent), or side-by-side (transform).\n3. Select oceanic or continental crust and observe how boundary type changes outcomes.\n4. Enable the density and composition panel to understand subduction.\n5. Switch to the 'Plate Motion' screen to observe real plate movements and hotspot tracks.\n\nLearning outcomes:\n- Name the three types of plate boundaries and describe the motion at each.\n- Explain how subduction occurs when dense oceanic crust meets less dense continental crust.\n- Describe how volcanoes and earthquakes are linked to plate boundary activity.\n- Explain how mid-ocean ridges form at divergent boundaries.\n- Relate plate tectonics to the distribution of ecosystems and species across continents.",
+    "external_url": "https://phet.colorado.edu/sims/html/plate-tectonics/latest/plate-tectonics_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "plate-tectonics",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/plate-tectonics/latest/plate-tectonics-900.png"
+  },
+  {
+    "name": "Radioactive Dating Game",
+    "description": "How to use:\n1. Open the sim and select the 'Decay' screen to observe a single atom decaying over time.\n2. Switch to the 'Measurement' screen and use the carbon-14 or uranium-238 probe on samples.\n3. Estimate the age of the sample from the percentage of parent isotope remaining.\n4. Use the half-life chart to calculate age from the decay curve.\n5. Test your estimates against the revealed actual ages for each sample.\n\nLearning outcomes:\n- Define radioactive decay and half-life.\n- Explain how the ratio of parent to daughter isotopes indicates the age of a sample.\n- Apply carbon-14 dating to biological and archaeological samples.\n- Explain why uranium-238 is used for dating very old geological samples.\n- Discuss the use of radiometric dating as evidence for the age of the Earth and evolution.",
+    "external_url": "https://phet.colorado.edu/sims/html/radioactive-dating-game/latest/radioactive-dating-game_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "radioactive-dating-game",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/radioactive-dating-game/latest/radioactive-dating-game-900.png"
+  },
+  {
+    "name": "Energy Forms and Changes",
+    "description": "How to use:\n1. Open the 'Intro' screen and observe energy transfer between objects (iron, brick, water).\n2. Add a heat source or ice and observe temperature changes and energy flow arrows.\n3. Switch to the 'Systems' screen and connect energy sources (solar, water wheel) to outputs.\n4. Observe how energy transforms from one form to another through the system.\n5. Identify where energy is lost as heat and discuss efficiency.\n\nLearning outcomes:\n- Identify forms of energy: thermal, mechanical, chemical, light, and electrical.\n- Describe energy transfer as flow from hotter to cooler objects.\n- Explain that energy transforms but is never created or destroyed.\n- Relate photosynthesis to the conversion of light energy to chemical energy.\n- Discuss energy efficiency and losses in biological and mechanical systems.",
+    "external_url": "https://phet.colorado.edu/sims/html/energy-forms-and-changes/latest/energy-forms-and-changes_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "energy-forms-and-changes",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/energy-forms-and-changes/latest/energy-forms-and-changes-900.png"
+  },
+  {
+    "name": "Fluid Pressure and Flow",
+    "description": "How to use:\n1. Open the sim and use the pressure gauge to measure pressure at different depths in the fluid.\n2. Change the fluid type (water, honey, gasoline) and compare pressure readings.\n3. Switch to the 'Flow' screen and observe fluid moving through pipes of different diameters.\n4. Adjust the pipe diameter and observe how flow speed changes (Bernoulli effect).\n5. Add a fluxmeter to measure and compare flow rates in different pipe sections.\n\nLearning outcomes:\n- Explain how blood pressure varies in arteries, capillaries, and veins by analogy to fluid flow.\n- Describe how vessel diameter affects blood flow speed in the circulatory system.\n- Relate fluid pressure to depth, linking to concepts of blood pressure in the body.\n- Explain the continuity principle: fluid speeds up in narrower vessels.\n- Apply knowledge of fluid flow to understand conditions like high blood pressure and atherosclerosis.",
+    "external_url": "https://phet.colorado.edu/sims/html/fluid-pressure-and-flow/latest/fluid-pressure-and-flow_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "fluid-pressure-and-flow",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/fluid-pressure-and-flow/latest/fluid-pressure-and-flow-900.png"
+  },
+  {
+    "name": "Charges and Fields",
+    "description": "How to use:\n1. Open the sim and place positive and negative charges on the workspace.\n2. Observe the electric field arrows that appear around the charges.\n3. Use the voltage sensor to map equipotential lines around the charges.\n4. Add multiple charges and observe how fields superpose.\n5. Trace field lines to visualise how a test charge would move in the field.\n\nLearning outcomes:\n- Explain how charged particles create electric fields in the space around them.\n- Describe the direction of electric field lines relative to charge sign.\n- Relate electric field strength to the density of field lines.\n- Connect the concept of electric fields to the movement of ions across nerve cell membranes.\n- Explain how electrochemical gradients drive ion movement in biological systems.",
+    "external_url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 4"],
+    "phet_slug": "charges-and-fields",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields-900.png"
+  },
+  {
+    "name": "Wave Interference",
+    "description": "How to use:\n1. Open the 'Interference' screen and activate two wave sources.\n2. Observe the interference pattern of constructive and destructive zones.\n3. Adjust the frequency and separation of the sources to change the pattern.\n4. Switch to the 'Diffraction' screen and pass waves through a single slit.\n5. Change the slit width and wavelength to see how diffraction patterns change.\n\nLearning outcomes:\n- Explain constructive interference as the superposition of waves in phase.\n- Explain destructive interference as the superposition of waves out of phase.\n- Describe diffraction as the spreading of waves after passing through a gap.\n- Relate wave interference to real biological phenomena such as hearing and echolocation.\n- Explain how ultrasound imaging uses wave reflection and interference to produce images.",
+    "external_url": "https://phet.colorado.edu/sims/html/wave-interference/latest/wave-interference_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "wave-interference",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/wave-interference/latest/wave-interference-900.png"
+  },
+  {
+    "name": "Greenhouse Effect",
+    "description": "How to use:\n1. Open the sim and observe how infrared photons are emitted from the Earth's surface.\n2. Add greenhouse gases (CO₂, CH₄, water vapour) and watch photons being absorbed and re-emitted.\n3. Compare the temperature with 1750 (pre-industrial) vs present-day atmosphere.\n4. Increase cloud cover and observe its effect on temperature.\n5. Use the thermometer to record and compare temperatures under different atmospheric conditions.\n\nLearning outcomes:\n- Explain how greenhouse gases absorb and re-emit infrared radiation, warming the atmosphere.\n- Name the main greenhouse gases and identify biological and human sources of each.\n- Describe the natural greenhouse effect and distinguish it from enhanced greenhouse effect.\n- Explain the consequences of global warming for ecosystems and biodiversity.\n- Discuss the role of deforestation and respiration in carbon dioxide levels.",
+    "external_url": "https://phet.colorado.edu/sims/html/greenhouse-effect/latest/greenhouse-effect_en.html",
+    "subject_name": "Biology",
+    "class_names": ["Form 2", "Form 3", "Form 4"],
+    "phet_slug": "greenhouse-effect",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/greenhouse-effect/latest/greenhouse-effect-900.png"
+  }
+]

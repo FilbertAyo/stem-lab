@@ -5,30 +5,7 @@
     {{-- Same sidebar as math page --}}
     <div class="col-12">
         <div class="row">
-            <div class="col-lg-3 dashboard-sidebar mb-4 mb-lg-0">
-                <ul class="category-list">
-                    <li>
-                        <a href="{{ route('client.vr-experiments.index', request()->only(['search', 'sort'])) }}"
-                           class="">
-                            All Experiments <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-                        </a>
-                    </li>
-                    @foreach($subjects as $subject)
-                        <li>
-                            <a href="{{ route('client.vr-experiments.index', array_merge(request()->only(['search', 'sort']), ['subject' => $subject->id])) }}"
-                               class="">
-                                {{ $subject->subject_name }} <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-                            </a>
-                        </li>
-                    @endforeach
-                    <li>
-                        <a href="{{ route('client.vr-experiments.math') }}"
-                           class="{{ request()->routeIs('client.vr-experiments.math*') ? 'active' : '' }}">
-                            Mathematics <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            @include('client.back.vr-experiments._sidebar', ['subjects' => $subjects])
 
             <div class="col-lg-9">
                 <div class="dashboard-content-header d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">

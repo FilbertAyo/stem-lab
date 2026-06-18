@@ -1,0 +1,182 @@
+[
+  {
+    "name": "Forces and Motion: Basics",
+    "description": "How to use:\n1. Open the sim and select the 'Net Force' screen.\n2. Add characters to each side of the rope and observe the net force arrow.\n3. Switch to the 'Motion' screen and apply a force to the object.\n4. Toggle friction on/off and observe how the object accelerates or decelerates.\n5. Use the 'Acceleration' screen to relate force, mass, and acceleration.\n\nLearning outcomes:\n- Understand that unbalanced forces cause motion and acceleration.\n- Explain Newton's First and Second Laws using real examples.\n- Describe how friction opposes motion and affects net force.\n- Read and interpret force diagrams (free-body diagrams).\n- Predict how changing mass or force changes acceleration.",
+    "external_url": "https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "forces-and-motion-basics",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics-900.png"
+  },
+  {
+    "name": "Gravity and Orbits",
+    "description": "How to use:\n1. Launch the sim and select the 'Model' screen.\n2. Turn on gravity and observe how the Sun attracts the Earth.\n3. Adjust the mass of the Sun or Earth using sliders and observe orbital changes.\n4. Enable velocity vectors to see how orbital speed changes.\n5. Try the 'To Scale' mode to appreciate real astronomical distances.\n\nLearning outcomes:\n- Explain that gravity acts between all masses and decreases with distance.\n- Describe how gravitational force keeps planets in orbit.\n- Relate orbital speed to the distance from the central body.\n- Understand the relationship between mass and gravitational attraction.\n- Apply Newton's Law of Universal Gravitation qualitatively.",
+    "external_url": "https://phet.colorado.edu/sims/html/gravity-and-orbits/latest/gravity-and-orbits_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "gravity-and-orbits",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/gravity-and-orbits/latest/gravity-and-orbits-900.png"
+  },
+  {
+    "name": "Energy Skate Park: Basics",
+    "description": "How to use:\n1. Open the sim and place the skater at the top of a ramp.\n2. Release the skater and watch the energy bar graphs change.\n3. Add friction using the slider and observe energy loss as heat.\n4. Build a custom track and observe conservation of energy.\n5. Use the pie chart to compare kinetic, potential, and thermal energy.\n\nLearning outcomes:\n- State the Law of Conservation of Energy.\n- Distinguish between kinetic energy and gravitational potential energy.\n- Explain how friction converts mechanical energy to thermal energy.\n- Predict the skater's speed at different points on the track.\n- Relate height to potential energy and speed to kinetic energy.",
+    "external_url": "https://phet.colorado.edu/sims/html/energy-skate-park-basics/latest/energy-skate-park-basics_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "energy-skate-park-basics",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/energy-skate-park-basics/latest/energy-skate-park-basics-900.png"
+  },
+  {
+    "name": "Energy Skate Park",
+    "description": "How to use:\n1. Select the 'Playground' screen and design a custom track.\n2. Adjust the skater's mass and starting height.\n3. Enable the energy graph to monitor KE, PE, and thermal energy over time.\n4. Use the reference height tool to change the zero-potential energy level.\n5. Record data at different positions and plot graphs of energy vs position.\n\nLearning outcomes:\n- Quantitatively calculate kinetic and gravitational potential energy.\n- Demonstrate that total mechanical energy is conserved without friction.\n- Analyse how energy transforms at different positions on a track.\n- Use energy concepts to predict velocity from height.\n- Understand the role of reference level in potential energy calculations.",
+    "external_url": "https://phet.colorado.edu/sims/html/energy-skate-park/latest/energy-skate-park_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "energy-skate-park",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/energy-skate-park/latest/energy-skate-park-900.png"
+  },
+  {
+    "name": "Balloons and Static Electricity",
+    "description": "How to use:\n1. Open the sim and rub the balloon against the sweater.\n2. Observe charge transfer by watching the positive and negative charge indicators.\n3. Move the charged balloon near the wall and observe induced charge.\n4. Add a second balloon and explore attraction and repulsion.\n5. Reset and repeat with different rubbing amounts to compare charge levels.\n\nLearning outcomes:\n- Explain charging by friction and the transfer of electrons.\n- Distinguish between conductors and insulators using the wall example.\n- Describe attraction between oppositely charged objects.\n- Explain induced charge separation without direct contact.\n- Apply the principle that like charges repel and unlike charges attract.",
+    "external_url": "https://phet.colorado.edu/sims/html/balloons-and-static-electricity/latest/balloons-and-static-electricity_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "balloons-and-static-electricity",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/balloons-and-static-electricity/latest/balloons-and-static-electricity-900.png"
+  },
+  {
+    "name": "Circuit Construction Kit: DC",
+    "description": "How to use:\n1. Drag components (battery, resistor, bulb, wire, switch) onto the workspace.\n2. Connect them in series or parallel circuits.\n3. Use the voltmeter and ammeter to measure voltage and current.\n4. Vary resistance values and observe changes in current and bulb brightness.\n5. Toggle between schematic and real-world views.\n\nLearning outcomes:\n- Build and identify series and parallel circuits.\n- Apply Ohm's Law (V = IR) to calculate current and resistance.\n- Explain the relationship between resistance and brightness in a bulb.\n- Use circuit symbols correctly in schematic diagrams.\n- Compare voltage distribution in series vs parallel circuits.",
+    "external_url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "circuit-construction-kit-dc",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc-900.png"
+  },
+  {
+    "name": "Circuit Construction Kit: DC - Virtual Lab",
+    "description": "How to use:\n1. Open the Virtual Lab screen for an open-ended workspace.\n2. Build a circuit with a battery, resistors, and light bulbs.\n3. Use the ammeter to measure current at different points.\n4. Change battery voltage and observe effects on brightness and current.\n5. Introduce a short circuit and observe the outcome safely.\n\nLearning outcomes:\n- Investigate the effect of voltage on current in a circuit.\n- Verify Kirchhoff's current law in parallel branches.\n- Understand short circuits and their dangers.\n- Measure and record electrical quantities systematically.\n- Design a circuit that meets a specific brightness requirement.",
+    "external_url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-dc-virtual-lab/latest/circuit-construction-kit-dc-virtual-lab_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 4"],
+    "phet_slug": "circuit-construction-kit-dc-virtual-lab",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-dc-virtual-lab/latest/circuit-construction-kit-dc-virtual-lab-900.png"
+  },
+  {
+    "name": "Wave on a String",
+    "description": "How to use:\n1. Select 'Oscillate' mode and observe the wave produced on the string.\n2. Adjust frequency and amplitude sliders and observe the wave shape.\n3. Switch end conditions between fixed, loose, and no end.\n4. Enable the ruler and timer to measure wavelength and period.\n5. Switch to 'Pulse' mode to observe a single wave pulse travelling.\n\nLearning outcomes:\n- Define amplitude, frequency, wavelength, and period.\n- Explain the relationship between frequency and wavelength.\n- Describe reflection of waves at fixed and free ends.\n- Distinguish transverse waves using the string model.\n- Use the wave equation v = fλ to calculate wave speed.",
+    "external_url": "https://phet.colorado.edu/sims/html/wave-on-a-string/latest/wave-on-a-string_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "wave-on-a-string",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/wave-on-a-string/latest/wave-on-a-string-900.png"
+  },
+  {
+    "name": "Waves Intro",
+    "description": "How to use:\n1. Open the 'Water' screen and tap the water to create waves.\n2. Use the frequency and amplitude sliders to change wave properties.\n3. Switch between Water, Sound, and Light screens.\n4. Enable the measuring tools to measure wavelength and frequency.\n5. Compare how the three types of waves behave differently.\n\nLearning outcomes:\n- Identify properties of waves: frequency, amplitude, wavelength, and speed.\n- Compare transverse and longitudinal wave behaviour.\n- Explain how sound and light are both wave phenomena.\n- Describe how amplitude relates to the energy carried by a wave.\n- Use models to explain wave behaviour in different media.",
+    "external_url": "https://phet.colorado.edu/sims/html/waves-intro/latest/waves-intro_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3"],
+    "phet_slug": "waves-intro",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/waves-intro/latest/waves-intro-900.png"
+  },
+  {
+    "name": "Sound",
+    "description": "How to use:\n1. Open the sim and select the 'Listen to a Single Source' screen.\n2. Adjust frequency (pitch) and amplitude (loudness) using sliders.\n3. Enable particle view to see longitudinal compression waves.\n4. Add a second source and observe interference patterns.\n5. Use the 'Measure' screen to record frequency and observe the waveform.\n\nLearning outcomes:\n- Explain that sound travels as longitudinal (compression) waves.\n- Relate frequency to pitch and amplitude to loudness.\n- Describe how sound waves require a medium to travel.\n- Explain constructive and destructive interference of sound.\n- Connect particle motion to pressure variation in sound waves.",
+    "external_url": "https://phet.colorado.edu/sims/html/sound-waves/latest/sound-waves_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "sound-waves",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/sound-waves/latest/sound-waves-900.png"
+  },
+  {
+    "name": "Bending Light",
+    "description": "How to use:\n1. Select the 'Intro' screen and shine a laser at a glass surface.\n2. Rotate the laser to change the angle of incidence and observe refraction.\n3. Change the material (water, glass, mystery) and note how the angle changes.\n4. Use the protractor to measure angles of incidence and refraction.\n5. Explore total internal reflection by increasing the angle beyond the critical angle.\n\nLearning outcomes:\n- State Snell's Law and apply it to calculate refractive index.\n- Explain refraction as a change in wave speed at a boundary.\n- Define critical angle and describe total internal reflection.\n- Compare optical densities of different materials.\n- Relate refractive index to the speed of light in a medium.",
+    "external_url": "https://phet.colorado.edu/sims/html/bending-light/latest/bending-light_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "bending-light",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/bending-light/latest/bending-light-900.png"
+  },
+  {
+    "name": "Color Vision",
+    "description": "How to use:\n1. Open the 'Single Bulb' screen and select a colored light source.\n2. Shine the light through filters and observe the resulting colour.\n3. Switch to 'RGB Bulbs' and mix red, green, and blue light.\n4. Adjust intensity of each colour and predict the resulting mixed colour.\n5. Test colour mixing with a white surface and then a coloured surface.\n\nLearning outcomes:\n- Explain that white light is composed of all colours of the spectrum.\n- Describe additive colour mixing using red, green, and blue light.\n- Explain how filters work by absorbing certain wavelengths.\n- Relate colour perception to the wavelength of visible light.\n- Distinguish between additive (light) and subtractive (pigment) mixing.",
+    "external_url": "https://phet.colorado.edu/sims/html/color-vision/latest/color-vision_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "color-vision",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/color-vision/latest/color-vision-900.png"
+  },
+  {
+    "name": "Geometric Optics",
+    "description": "How to use:\n1. Open the sim and place an object in front of the converging lens.\n2. Move the object to different distances and observe the image position.\n3. Change the lens radius of curvature to alter focal length.\n4. Use the ruler to measure object distance, image distance, and focal length.\n5. Switch to a diverging lens and compare image characteristics.\n\nLearning outcomes:\n- Apply the lens formula (1/f = 1/v + 1/u) to predict image position.\n- Distinguish between real and virtual images formed by lenses.\n- Explain how converging and diverging lenses form images.\n- Relate focal length to the radius of curvature of a lens.\n- Describe practical applications of lenses (cameras, spectacles, projectors).",
+    "external_url": "https://phet.colorado.edu/sims/html/geometric-optics/latest/geometric-optics_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 4"],
+    "phet_slug": "geometric-optics",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/geometric-optics/latest/geometric-optics-900.png"
+  },
+  {
+    "name": "Ohm's Law",
+    "description": "How to use:\n1. Open the sim and observe the circuit with a battery and resistor.\n2. Adjust the voltage slider and observe the change in current.\n3. Adjust the resistance slider and observe the change in current.\n4. Read the equation V = IR displayed dynamically as you interact.\n5. Record several sets of values to build a V-I data table.\n\nLearning outcomes:\n- State and apply Ohm's Law: V = IR.\n- Describe the relationship between voltage, current, and resistance.\n- Predict current when voltage or resistance changes.\n- Interpret a V-I graph to determine resistance.\n- Explain the meaning of resistance in practical circuits.",
+    "external_url": "https://phet.colorado.edu/sims/html/ohms-law/latest/ohms-law_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "ohms-law",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/ohms-law/latest/ohms-law-900.png"
+  },
+  {
+    "name": "Resistance in a Wire",
+    "description": "How to use:\n1. Open the sim and observe the wire with its resistance displayed.\n2. Adjust the resistivity slider (material property) and note the effect.\n3. Change the length of the wire and observe how resistance changes.\n4. Change the cross-sectional area and observe the inverse relationship.\n5. Record results to verify the formula R = ρL/A.\n\nLearning outcomes:\n- State the formula for resistance: R = ρL/A.\n- Explain how length, cross-sectional area, and material affect resistance.\n- Describe resistivity as a material property.\n- Predict how doubling length or halving area changes resistance.\n- Apply knowledge to real-world contexts such as choosing wire thickness.",
+    "external_url": "https://phet.colorado.edu/sims/html/resistance-in-a-wire/latest/resistance-in-a-wire_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "resistance-in-a-wire",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/resistance-in-a-wire/latest/resistance-in-a-wire-900.png"
+  },
+  {
+    "name": "Faraday's Law",
+    "description": "How to use:\n1. Open the sim and move the bar magnet toward the coil.\n2. Observe the voltmeter deflect as the magnet moves.\n3. Flip the magnet and notice the voltage reverses direction.\n4. Change the number of coil loops and compare the induced voltage.\n5. Move the magnet faster or slower to observe the effect on EMF.\n\nLearning outcomes:\n- State Faraday's Law: EMF is induced by a changing magnetic flux.\n- Explain how speed of magnet motion affects induced EMF.\n- Describe how the number of coil turns affects induced voltage.\n- Apply Lenz's Law to predict the direction of induced current.\n- Connect the principle to real devices like generators and transformers.",
+    "external_url": "https://phet.colorado.edu/sims/html/faradays-law/latest/faradays-law_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 4"],
+    "phet_slug": "faradays-law",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/faradays-law/latest/faradays-law-900.png"
+  },
+  {
+    "name": "Projectile Motion",
+    "description": "How to use:\n1. Launch the sim and select a projectile (e.g., cannonball or baseball).\n2. Set the launch angle and initial speed using the sliders.\n3. Fire the projectile and observe the parabolic trajectory.\n4. Enable air resistance and compare trajectories with and without it.\n5. Use the measuring tape to determine range and maximum height.\n\nLearning outcomes:\n- Resolve projectile motion into independent horizontal and vertical components.\n- Explain that horizontal velocity remains constant (ignoring air resistance).\n- Calculate time of flight, range, and maximum height.\n- Describe how launch angle affects range and height.\n- Explain the effect of air resistance on projectile trajectories.",
+    "external_url": "https://phet.colorado.edu/sims/html/projectile-motion/latest/projectile-motion_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "projectile-motion",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/projectile-motion/latest/projectile-motion-900.png"
+  },
+  {
+    "name": "Gravity Force Lab",
+    "description": "How to use:\n1. Open the sim and observe the two masses with a force arrow between them.\n2. Adjust mass 1 and mass 2 using sliders and observe force changes.\n3. Move the masses closer or further apart and observe the inverse-square relationship.\n4. Use the ruler to record separation distances alongside force readings.\n5. Record data in a table and calculate the gravitational constant.\n\nLearning outcomes:\n- State Newton's Law of Universal Gravitation: F = Gm₁m₂/r².\n- Explain that gravitational force increases with mass.\n- Explain that gravitational force decreases with the square of distance.\n- Calculate gravitational force between two objects.\n- Distinguish gravitational force from other fundamental forces.",
+    "external_url": "https://phet.colorado.edu/sims/html/gravity-force-lab/latest/gravity-force-lab_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "gravity-force-lab",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/gravity-force-lab/latest/gravity-force-lab-900.png"
+  },
+  {
+    "name": "Masses and Springs",
+    "description": "How to use:\n1. Hang a mass on the spring and observe it oscillate.\n2. Adjust the spring constant and observe changes in oscillation frequency.\n3. Change the hanging mass and measure the new period.\n4. Enable the energy panel to see KE and PE exchange during oscillation.\n5. Use the stopwatch to measure 10 complete oscillations and calculate the period.\n\nLearning outcomes:\n- Describe simple harmonic motion (SHM) using a spring-mass system.\n- Apply Hooke's Law: F = -kx.\n- Explain that period depends on mass and spring constant, not amplitude.\n- Relate energy transformation between kinetic and potential energy in SHM.\n- Calculate frequency and period of oscillation.",
+    "external_url": "https://phet.colorado.edu/sims/html/masses-and-springs/latest/masses-and-springs_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "masses-and-springs",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/masses-and-springs/latest/masses-and-springs-900.png"
+  },
+  {
+    "name": "Under Pressure",
+    "description": "How to use:\n1. Open the sim and add water to the container.\n2. Move the sensor to different depths and read the pressure values.\n3. Switch between water, honey, and gasoline to compare pressure at same depth.\n4. Enable the atmosphere and observe how atmospheric pressure adds to fluid pressure.\n5. Use the grid and sensor to collect pressure vs depth data and plot a graph.\n\nLearning outcomes:\n- State the formula for fluid pressure: P = hρg.\n- Explain that pressure increases with depth in a fluid.\n- Describe how fluid density affects pressure at a given depth.\n- Explain that pressure acts equally in all directions at the same depth.\n- Apply pressure concepts to real-world examples such as dams and diving.",
+    "external_url": "https://phet.colorado.edu/sims/html/under-pressure/latest/under-pressure_en.html",
+    "subject_name": "Physics",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "under-pressure",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/under-pressure/latest/under-pressure-900.png"
+  }
+]

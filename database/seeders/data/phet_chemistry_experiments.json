@@ -1,0 +1,164 @@
+[
+  {
+    "name": "Build an Atom",
+    "description": "How to use:\n1. Open the sim and drag protons, neutrons, and electrons into the atom model.\n2. Observe how the element name, symbol, and mass number update in real time.\n3. Add or remove electrons to create ions and observe charge changes.\n4. Switch to the 'Symbol' screen to practice reading atomic notation.\n5. Play the game mode to test your understanding of atomic structure.\n\nLearning outcomes:\n- Identify the subatomic particles: protons, neutrons, and electrons.\n- Explain how the number of protons determines the element identity.\n- Distinguish between atoms and ions based on electron count.\n- Interpret atomic symbols showing mass number and atomic number.\n- Describe the structure of the atom including the nucleus and electron shells.",
+    "external_url": "https://phet.colorado.edu/sims/html/build-an-atom/latest/build-an-atom_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "build-an-atom",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/build-an-atom/latest/build-an-atom-900.png"
+  },
+  {
+    "name": "Isotopes and Atomic Mass",
+    "description": "How to use:\n1. Open the sim and select an element from the periodic table.\n2. Add or remove neutrons to create different isotopes of the element.\n3. Observe how the mass number and stability change with each isotope.\n4. Switch to the 'Mix Isotopes' screen and adjust the percentage abundance of each isotope.\n5. Read off the calculated average atomic mass and compare it to the periodic table value.\n\nLearning outcomes:\n- Define isotopes as atoms of the same element with different numbers of neutrons.\n- Calculate average atomic mass from isotope abundances.\n- Explain why average atomic mass is not a whole number.\n- Distinguish between stable and unstable (radioactive) isotopes.\n- Relate the concept of isotopes to real applications such as carbon dating.",
+    "external_url": "https://phet.colorado.edu/sims/html/isotopes-and-atomic-mass/latest/isotopes-and-atomic-mass_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "isotopes-and-atomic-mass",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/isotopes-and-atomic-mass/latest/isotopes-and-atomic-mass-900.png"
+  },
+  {
+    "name": "Atomic Interactions",
+    "description": "How to use:\n1. Open the sim and select two atoms from the element options.\n2. Move the atoms toward each other and observe the interaction force.\n3. Read the potential energy graph as the atoms approach and overlap.\n4. Compare attractive and repulsive forces at different distances.\n5. Try different atom combinations (e.g. neon–neon vs argon–argon) and compare bond strengths.\n\nLearning outcomes:\n- Explain that atoms experience both attractive and repulsive forces.\n- Describe the concept of bond length as the equilibrium distance between atoms.\n- Relate bond energy to the depth of the potential energy well.\n- Compare intermolecular force strengths across different elements.\n- Understand the basis of van der Waals forces at the atomic level.",
+    "external_url": "https://phet.colorado.edu/sims/html/atomic-interactions/latest/atomic-interactions_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "atomic-interactions",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/atomic-interactions/latest/atomic-interactions-900.png"
+  },
+  {
+    "name": "Build a Molecule",
+    "description": "How to use:\n1. Open the sim and select atoms from the kit at the bottom.\n2. Drag atoms onto the workspace and connect them to form molecules.\n3. Match the target molecule shown in the collection box.\n4. Rotate the 3D model to explore the molecule's geometry.\n5. Advance through levels to build more complex molecules like water, CO₂, and ammonia.\n\nLearning outcomes:\n- Name common molecules and write their chemical formulae.\n- Explain covalent bonding as the sharing of electron pairs.\n- Describe the 3D shape of simple molecules (linear, bent, tetrahedral).\n- Identify the atoms present in a molecule from its formula.\n- Connect molecular structure to the properties of everyday substances.",
+    "external_url": "https://phet.colorado.edu/sims/html/build-a-molecule/latest/build-a-molecule_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "build-a-molecule",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/build-a-molecule/latest/build-a-molecule-900.png"
+  },
+  {
+    "name": "Molecule Shapes",
+    "description": "How to use:\n1. Open the 'Model' screen and select a central atom.\n2. Add bonding pairs and lone pairs around the central atom using the controls.\n3. Observe the 3D shape that forms and read the geometry label.\n4. Switch to the 'Real Molecules' screen and explore water, methane, and ammonia.\n5. Toggle bond angles to measure and record the angles for each geometry.\n\nLearning outcomes:\n- Apply VSEPR theory to predict the shapes of molecules.\n- Name molecular geometries: linear, trigonal planar, tetrahedral, bent, pyramidal.\n- Explain how lone pairs affect bond angles and molecular shape.\n- Draw dot-and-cross diagrams and connect them to 3D geometry.\n- Describe how molecular shape influences the polarity of a molecule.",
+    "external_url": "https://phet.colorado.edu/sims/html/molecule-shapes/latest/molecule-shapes_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "molecule-shapes",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/molecule-shapes/latest/molecule-shapes-900.png"
+  },
+  {
+    "name": "Molecule Polarity",
+    "description": "How to use:\n1. Open the 'Two Atoms' screen and change the electronegativity of each atom.\n2. Observe the bond dipole arrow and partial charge symbols (δ+ and δ−).\n3. Switch to the 'Three Atoms' screen and adjust the bond angle and electronegativities.\n4. Enable the electric field lines to visualise how polarity affects the molecule.\n5. Use the 'Real Molecules' screen to compare polarity in water, CO₂, and ammonia.\n\nLearning outcomes:\n- Define electronegativity and explain its trend across the periodic table.\n- Distinguish between polar and non-polar covalent bonds.\n- Explain how molecular shape determines whether a molecule is polar overall.\n- Predict the direction of bond dipoles using electronegativity differences.\n- Relate molecular polarity to properties like solubility and boiling point.",
+    "external_url": "https://phet.colorado.edu/sims/html/molecule-polarity/latest/molecule-polarity_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "molecule-polarity",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/molecule-polarity/latest/molecule-polarity-900.png"
+  },
+  {
+    "name": "States of Matter: Basics",
+    "description": "How to use:\n1. Open the sim and select a substance (neon, argon, water, or oxygen).\n2. Observe particle motion in the solid, liquid, and gas states.\n3. Use the pump to add more particles and observe pressure changes.\n4. Use the heat/cool buttons to change the state of the substance.\n5. Switch between substances and compare how particle behaviour differs.\n\nLearning outcomes:\n- Describe particle arrangement and motion in solids, liquids, and gases.\n- Explain melting, boiling, and condensation at the particle level.\n- Relate temperature to the average kinetic energy of particles.\n- Predict how adding heat affects the state of a substance.\n- Compare intermolecular forces in different substances using observable differences.",
+    "external_url": "https://phet.colorado.edu/sims/html/states-of-matter-basics/latest/states-of-matter-basics_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "states-of-matter-basics",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/states-of-matter-basics/latest/states-of-matter-basics-900.png"
+  },
+  {
+    "name": "States of Matter",
+    "description": "How to use:\n1. Select a substance and observe the phase diagram and particle motion together.\n2. Use the heat/cool controls to move across phase boundaries.\n3. Observe the phase diagram highlight as temperature and pressure change.\n4. Use the interaction potential screen to relate forces to state changes.\n5. Compare substances with strong vs weak intermolecular forces.\n\nLearning outcomes:\n- Interpret a phase diagram and identify triple point and critical point.\n- Explain phase transitions in terms of energy input and particle interactions.\n- Describe how pressure affects boiling and melting points.\n- Relate the strength of intermolecular forces to melting and boiling temperatures.\n- Distinguish between evaporation and boiling at the particle level.",
+    "external_url": "https://phet.colorado.edu/sims/html/states-of-matter/latest/states-of-matter_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "states-of-matter",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/states-of-matter/latest/states-of-matter-900.png"
+  },
+  {
+    "name": "Gas Properties",
+    "description": "How to use:\n1. Open the sim and pump heavy or light gas molecules into the box.\n2. Adjust the volume using the wall handle and observe pressure changes.\n3. Use the heat/cool bucket to change temperature and observe pressure and speed.\n4. Open the 'Ideal' screen to explore Boyle's Law, Charles' Law, and Gay-Lussac's Law.\n5. Record data sets and plot graphs to verify each gas law.\n\nLearning outcomes:\n- State and apply Boyle's Law: P ∝ 1/V at constant temperature.\n- State and apply Charles' Law: V ∝ T at constant pressure.\n- Explain gas pressure in terms of particle collisions with container walls.\n- Apply the ideal gas equation PV = nRT qualitatively.\n- Describe how molar mass affects the speed of gas molecules.",
+    "external_url": "https://phet.colorado.edu/sims/html/gas-properties/latest/gas-properties_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "gas-properties",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/gas-properties/latest/gas-properties-900.png"
+  },
+  {
+    "name": "Concentration",
+    "description": "How to use:\n1. Open the sim and shake solute into the beaker of water.\n2. Read the concentration value on the probe as you add more solute.\n3. Add or remove water using the controls and observe how concentration changes.\n4. Use the evaporation slider to concentrate the solution and approach saturation.\n5. Switch between different solutes and compare their maximum solubility.\n\nLearning outcomes:\n- Define concentration as the amount of solute per unit volume of solution.\n- Explain how adding solute or removing solvent increases concentration.\n- Describe saturation as the point where no more solute can dissolve.\n- Relate colour intensity of a solution to its concentration.\n- Calculate concentration in mol/L given moles of solute and volume.",
+    "external_url": "https://phet.colorado.edu/sims/html/concentration/latest/concentration_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "concentration",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/concentration/latest/concentration-900.png"
+  },
+  {
+    "name": "Molarity",
+    "description": "How to use:\n1. Open the sim and select a solute from the dropdown menu.\n2. Adjust the moles of solute slider and observe the molarity reading.\n3. Adjust the solution volume slider and observe how molarity changes.\n4. Switch solutes to compare different compounds and their colours in solution.\n5. Record moles and volumes, then calculate molarity manually and verify with the sim.\n\nLearning outcomes:\n- Define molarity as moles of solute per litre of solution (mol/L).\n- Calculate molarity using the formula M = n/V.\n- Predict how diluting or concentrating a solution changes molarity.\n- Explain the difference between solute, solvent, and solution.\n- Connect molarity to practical applications such as preparing solutions in the lab.",
+    "external_url": "https://phet.colorado.edu/sims/html/molarity/latest/molarity_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "molarity",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/molarity/latest/molarity-900.png"
+  },
+  {
+    "name": "Beer's Law Lab",
+    "description": "How to use:\n1. Open the sim and select a solution in the cuvette.\n2. Adjust the concentration and observe the colour intensity change.\n3. Use the light source and detector to measure absorbance and transmittance.\n4. Change the wavelength of light and observe how absorbance varies.\n5. Record absorbance vs concentration data and plot a calibration curve.\n\nLearning outcomes:\n- State Beer-Lambert Law: absorbance is proportional to concentration.\n- Explain how a spectrophotometer measures concentration using light absorption.\n- Distinguish between absorbance and transmittance.\n- Use a calibration curve to determine an unknown concentration.\n- Relate the colour of a solution to the wavelengths of light it absorbs.",
+    "external_url": "https://phet.colorado.edu/sims/html/beers-law-lab/latest/beers-law-lab_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 4"],
+    "phet_slug": "beers-law-lab",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/beers-law-lab/latest/beers-law-lab-900.png"
+  },
+  {
+    "name": "pH Scale",
+    "description": "How to use:\n1. Open the sim and drag common solutions (e.g. lemon juice, bleach, water) into the beaker.\n2. Use the pH meter to measure the pH of each solution.\n3. Zoom into the particle view to see H₃O⁺ and OH⁻ ion concentrations.\n4. Switch to the 'My Solution' screen and adjust acid/base concentration manually.\n5. Observe how diluting an acid or base changes the pH.\n\nLearning outcomes:\n- Define pH as a measure of hydrogen ion concentration in a solution.\n- Classify solutions as acidic (pH < 7), neutral (pH = 7), or basic (pH > 7).\n- Explain that pH is a logarithmic scale.\n- Relate pH to the relative concentrations of H₃O⁺ and OH⁻ ions.\n- Give everyday examples of acids and bases and their approximate pH values.",
+    "external_url": "https://phet.colorado.edu/sims/html/ph-scale/latest/ph-scale_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "ph-scale",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/ph-scale/latest/ph-scale-900.png"
+  },
+  {
+    "name": "Acid-Base Solutions",
+    "description": "How to use:\n1. Open the 'Introduction' screen and select a strong acid (HCl) solution.\n2. Dip the pH paper or probe to measure pH, then test conductivity with the electrodes.\n3. Switch to a weak acid (acetic acid) at the same concentration and compare.\n4. Use the 'My Solution' screen to adjust acid/base strength and concentration.\n5. Observe particle-level ion diagrams to see the degree of dissociation.\n\nLearning outcomes:\n- Distinguish between strong and weak acids based on degree of dissociation.\n- Explain why a weak acid has a higher pH than a strong acid at the same concentration.\n- Relate electrical conductivity to ion concentration in solution.\n- Define acids and bases using the Arrhenius model (H⁺ and OH⁻ donors).\n- Predict pH changes when concentration of a strong or weak acid is changed.",
+    "external_url": "https://phet.colorado.edu/sims/html/acid-base-solutions/latest/acid-base-solutions_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "acid-base-solutions",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/acid-base-solutions/latest/acid-base-solutions-900.png"
+  },
+  {
+    "name": "Reactants, Products and Leftovers",
+    "description": "How to use:\n1. Open the 'Sandwiches' screen and use ingredients to make sandwiches — observe which ingredient runs out first.\n2. Switch to the 'Molecules' screen and select a reaction (e.g. 2H₂ + O₂ → 2H₂O).\n3. Set the number of reactant molecules and observe how many product molecules form.\n4. Identify the limiting reagent as the one that is completely consumed.\n5. Record the number of leftovers and verify by manual stoichiometric calculation.\n\nLearning outcomes:\n- Define limiting reagent as the reactant that is completely used up first.\n- Define excess reagent as the reactant remaining after the reaction.\n- Calculate the theoretical yield of a product from given reactant amounts.\n- Apply molar ratios from a balanced equation to solve stoichiometry problems.\n- Explain why the amount of product is determined by the limiting reagent.",
+    "external_url": "https://phet.colorado.edu/sims/html/reactants-products-and-leftovers/latest/reactants-products-and-leftovers_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "reactants-products-and-leftovers",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/reactants-products-and-leftovers/latest/reactants-products-and-leftovers-900.png"
+  },
+  {
+    "name": "Balancing Chemical Equations",
+    "description": "How to use:\n1. Open the 'Introduction' screen and choose an unbalanced equation.\n2. Adjust the coefficients in front of each formula using the up/down arrows.\n3. Watch the molecule count on each side update and check if the scale balances.\n4. Use the 'Game' screen to balance increasingly complex equations under a timer.\n5. Verify each balanced equation by confirming atom counts are equal on both sides.\n\nLearning outcomes:\n- State the Law of Conservation of Mass as it applies to chemical reactions.\n- Balance simple chemical equations by adjusting stoichiometric coefficients.\n- Explain why only coefficients, not subscripts, can be changed when balancing.\n- Identify reactants and products in a chemical equation.\n- Write and balance equations for combustion, synthesis, and decomposition reactions.",
+    "external_url": "https://phet.colorado.edu/sims/html/balancing-chemical-equations/latest/balancing-chemical-equations_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "balancing-chemical-equations",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/balancing-chemical-equations/latest/balancing-chemical-equations-900.png"
+  },
+  {
+    "name": "Rutherford Scattering",
+    "description": "How to use:\n1. Open the sim and fire alpha particles at the gold foil target.\n2. Observe the paths of alpha particles — most pass through, some deflect, a few bounce back.\n3. Toggle between the Plum Pudding model and Rutherford's Nuclear model.\n4. Adjust the number of protons in the nucleus and observe the deflection angle changes.\n5. Compare results for different target atoms (hydrogen vs gold).\n\nLearning outcomes:\n- Describe Rutherford's gold foil experiment and its key observations.\n- Explain why the Plum Pudding model was rejected based on the experiment.\n- Describe Rutherford's nuclear model: a small, dense, positive nucleus.\n- Explain that most of an atom is empty space.\n- Relate nuclear charge to the degree of alpha particle deflection.",
+    "external_url": "https://phet.colorado.edu/sims/html/rutherford-scattering/latest/rutherford-scattering_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "rutherford-scattering",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/rutherford-scattering/latest/rutherford-scattering-900.png"
+  },
+  {
+    "name": "Greenhouse Effect",
+    "description": "How to use:\n1. Open the sim and observe infrared photons emitted by the Earth.\n2. Add greenhouse gases (CO₂, CH₄, H₂O) to the atmosphere using the controls.\n3. Observe how photons are absorbed and re-emitted by gas molecules.\n4. Increase the concentration of greenhouse gases and observe the temperature rise.\n5. Switch between 1750 (pre-industrial) and today's atmosphere to compare.\n\nLearning outcomes:\n- Explain the greenhouse effect at the molecular level.\n- Identify the main greenhouse gases and their sources.\n- Describe how greenhouse gases trap heat by absorbing infrared radiation.\n- Explain the link between increased greenhouse gas concentration and global warming.\n- Discuss the chemistry of CO₂ production from combustion of fossil fuels.",
+    "external_url": "https://phet.colorado.edu/sims/html/greenhouse-effect/latest/greenhouse-effect_en.html",
+    "subject_name": "Chemistry",
+    "class_names": ["Form 2", "Form 3", "Form 4"],
+    "phet_slug": "greenhouse-effect",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/greenhouse-effect/latest/greenhouse-effect-900.png"
+  }
+]

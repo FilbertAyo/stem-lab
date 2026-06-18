@@ -1,0 +1,182 @@
+[
+  {
+    "name": "Graphing Lines",
+    "description": "How to use:\n1. Open the sim and select the 'Slope-Intercept' screen.\n2. Adjust the slope (m) and y-intercept (b) sliders and observe the line change in real time.\n3. Switch to the 'Point-Slope' screen and drag the point to a new position.\n4. Switch to the 'Slope' screen and place two points to calculate rise over run.\n5. Use the 'Line Game' screen to match given lines by choosing correct equations.\n\nLearning outcomes:\n- Write and interpret the equation of a straight line in the form y = mx + c.\n- Define slope as rise divided by run and calculate it from two points.\n- Explain the effect of changing gradient and y-intercept on a line's position.\n- Identify parallel lines by comparing their gradients.\n- Plot straight-line graphs accurately on a Cartesian plane.",
+    "external_url": "https://phet.colorado.edu/sims/html/graphing-lines/latest/graphing-lines_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "graphing-lines",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/graphing-lines/latest/graphing-lines-900.png"
+  },
+  {
+    "name": "Graphing Slope-Intercept",
+    "description": "How to use:\n1. Open the sim and observe the default line on the graph.\n2. Drag the slope and intercept handles directly on the graph to change the line.\n3. Read off the updated equation as you manipulate the line.\n4. Challenge yourself to match a target line shown on screen.\n5. Toggle the grid and values display to practise reading coordinates precisely.\n\nLearning outcomes:\n- Manipulate and interpret straight-line graphs in slope-intercept form.\n- Identify gradient and y-intercept directly from a graph.\n- Translate between graphical and algebraic representations of a line.\n- Explain what a positive, negative, zero, and undefined gradient look like graphically.\n- Solve simultaneous equations graphically by identifying intersection points.",
+    "external_url": "https://phet.colorado.edu/sims/html/graphing-slope-intercept/latest/graphing-slope-intercept_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "graphing-slope-intercept",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/graphing-slope-intercept/latest/graphing-slope-intercept-900.png"
+  },
+  {
+    "name": "Graphing Quadratics",
+    "description": "How to use:\n1. Open the 'Explore' screen and adjust the values of a, b, and c in y = ax² + bx + c.\n2. Observe how each coefficient affects the shape, direction, and position of the parabola.\n3. Switch to vertex form y = a(x − h)² + k and adjust h and k to shift the curve.\n4. Enable the axis of symmetry and vertex point to locate key features.\n5. Use the 'Focus and Directrix' screen to explore the geometric definition of a parabola.\n\nLearning outcomes:\n- Identify the key features of a parabola: vertex, axis of symmetry, roots, and y-intercept.\n- Explain the effect of coefficient a on the width and direction of a parabola.\n- Convert between standard form, vertex form, and factored form of a quadratic.\n- Find the roots of a quadratic equation graphically.\n- Relate the discriminant to the number of x-intercepts a parabola has.",
+    "external_url": "https://phet.colorado.edu/sims/html/graphing-quadratics/latest/graphing-quadratics_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "graphing-quadratics",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/graphing-quadratics/latest/graphing-quadratics-900.png"
+  },
+  {
+    "name": "Function Builder",
+    "description": "How to use:\n1. Open the sim and drag function cards (e.g. +3, ×2, x²) into the machine slots.\n2. Feed input values into the machine and observe the output.\n3. Chain multiple functions together and predict the composite output.\n4. Switch to the 'Equations' screen and match function machines to algebraic expressions.\n5. Use the 'My Functions' screen to create and test custom function rules.\n\nLearning outcomes:\n- Define a function as a rule that assigns exactly one output to each input.\n- Evaluate a function for given input values.\n- Understand and apply composition of functions.\n- Represent functions using machines, tables, graphs, and equations.\n- Identify the domain and range of a simple function from its table of values.",
+    "external_url": "https://phet.colorado.edu/sims/html/function-builder/latest/function-builder_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "function-builder",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/function-builder/latest/function-builder-900.png"
+  },
+  {
+    "name": "Function Builder: Basics",
+    "description": "How to use:\n1. Open the sim and choose a function card to place in the machine.\n2. Feed picture or number inputs and observe the transformed outputs.\n3. Try to predict the output before sending the input through.\n4. Build two-step function machines and observe the combined transformation.\n5. Work backwards from an output to find the unknown input.\n\nLearning outcomes:\n- Understand a function as an input–output relationship with a consistent rule.\n- Apply single and two-step function rules to numerical inputs.\n- Reverse a function to find an input from a known output (inverse thinking).\n- Represent a function as a table of values.\n- Build foundations for algebraic thinking and equation solving.",
+    "external_url": "https://phet.colorado.edu/sims/html/function-builder-basics/latest/function-builder-basics_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1"],
+    "phet_slug": "function-builder-basics",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/function-builder-basics/latest/function-builder-basics-900.png"
+  },
+  {
+    "name": "Arithmetic",
+    "description": "How to use:\n1. Open the sim and choose between Multiply, Factor, or Divide modes.\n2. In Multiply mode, fill in the missing factor to complete the equation.\n3. In Factor mode, decompose a number into its two factors using the grid.\n4. In Divide mode, drag the dividend and divisor into the correct positions.\n5. Use the timed challenge to improve speed and accuracy.\n\nLearning outcomes:\n- Recall and apply multiplication facts fluently.\n- Understand the relationship between multiplication and division.\n- Factor numbers by identifying pairs of factors that multiply to a given product.\n- Apply the area model to visualise multiplication of two-digit numbers.\n- Develop number sense and mental calculation strategies.",
+    "external_url": "https://phet.colorado.edu/sims/html/arithmetic/latest/arithmetic_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1"],
+    "phet_slug": "arithmetic",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/arithmetic/latest/arithmetic-900.png"
+  },
+  {
+    "name": "Area Model Algebra",
+    "description": "How to use:\n1. Open the 'Explore' screen and set the length and width of the rectangle using the sliders.\n2. Observe how the total area is decomposed into partial products.\n3. Switch to expressions with variables and expand brackets using the area model.\n4. Use the 'Variables' screen to multiply binomials such as (x + 3)(x + 2).\n5. Compare the area model result to the standard FOIL expansion.\n\nLearning outcomes:\n- Use the area model to multiply two-digit numbers and algebraic expressions.\n- Expand brackets of the form (a + b)(c + d) using the distributive property.\n- Factorise simple quadratic expressions by reversing the area model.\n- Connect algebraic expansion to the geometric concept of area.\n- Identify partial products and relate them to terms in an expanded expression.",
+    "external_url": "https://phet.colorado.edu/sims/html/area-model-algebra/latest/area-model-algebra_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 2", "Form 3"],
+    "phet_slug": "area-model-algebra",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/area-model-algebra/latest/area-model-algebra-900.png"
+  },
+  {
+    "name": "Area Model Introduction",
+    "description": "How to use:\n1. Open the sim and drag the width and height handles to set dimensions.\n2. Observe the rectangle fill with unit squares to show the area.\n3. Switch to a partitioned model and observe how partial areas add up.\n4. Try the 'Game' mode to calculate areas of partitioned rectangles.\n5. Record the partial products and verify by multiplying the full dimensions.\n\nLearning outcomes:\n- Define area as the number of unit squares that fill a shape.\n- Calculate the area of a rectangle using length × width.\n- Use the distributive property through the area model for multiplication.\n- Break a rectangle into parts to simplify multiplication of larger numbers.\n- Develop understanding of multiplication as repeated addition of rows.",
+    "external_url": "https://phet.colorado.edu/sims/html/area-model-introduction/latest/area-model-introduction_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1"],
+    "phet_slug": "area-model-introduction",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/area-model-introduction/latest/area-model-introduction-900.png"
+  },
+  {
+    "name": "Fractions: Intro",
+    "description": "How to use:\n1. Open the sim and use the fraction slider to select a numerator and denominator.\n2. Observe the fraction bar and number line update simultaneously.\n3. Switch to 'Mixed Numbers' and build fractions greater than one.\n4. Use the 'Lab' screen to compare two fractions side by side.\n5. Try the 'Matching' game to identify equivalent fractions.\n\nLearning outcomes:\n- Define a fraction as part of a whole and identify numerator and denominator.\n- Represent fractions on a number line and as part of a shape.\n- Convert between improper fractions and mixed numbers.\n- Identify and generate equivalent fractions.\n- Compare fractions with different denominators using a visual model.",
+    "external_url": "https://phet.colorado.edu/sims/html/fractions-intro/latest/fractions-intro_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1"],
+    "phet_slug": "fractions-intro",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/fractions-intro/latest/fractions-intro-900.png"
+  },
+  {
+    "name": "Fraction Matcher",
+    "description": "How to use:\n1. Open the sim and observe two fraction representations on screen.\n2. Decide whether the two fractions are equivalent and drag them to the matching area.\n3. Use the number line and area model as visual aids to confirm equivalence.\n4. Advance through levels with increasingly complex fractions.\n5. Record your score and review any mismatched pairs at the end of each level.\n\nLearning outcomes:\n- Recognise equivalent fractions using visual area and number line models.\n- Simplify fractions by identifying common factors of numerator and denominator.\n- Compare fractions with unlike denominators by converting to a common denominator.\n- Develop fluency with fractions through repeated practice.\n- Build confidence in moving between visual and symbolic fraction representations.",
+    "external_url": "https://phet.colorado.edu/sims/html/fraction-matcher/latest/fraction-matcher_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1"],
+    "phet_slug": "fraction-matcher",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/fraction-matcher/latest/fraction-matcher-900.png"
+  },
+  {
+    "name": "Fractions: Equality",
+    "description": "How to use:\n1. Open the sim and observe two fraction models side by side.\n2. Adjust numerators and denominators to create equivalent fractions.\n3. Use the visual bar model to verify that both fractions represent the same portion.\n4. Try the challenge mode where one fraction is hidden and must be deduced.\n5. Record pairs of equivalent fractions and identify the multiplier used.\n\nLearning outcomes:\n- Understand that equivalent fractions represent the same quantity.\n- Multiply or divide numerator and denominator by the same number to find equivalents.\n- Use visual models to verify fraction equality.\n- Simplify fractions to their lowest terms.\n- Apply equivalent fractions to adding and subtracting fractions with unlike denominators.",
+    "external_url": "https://phet.colorado.edu/sims/html/fractions-equality/latest/fractions-equality_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1"],
+    "phet_slug": "fractions-equality",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/fractions-equality/latest/fractions-equality-900.png"
+  },
+  {
+    "name": "Number Line: Integers",
+    "description": "How to use:\n1. Open the sim and observe a number line with positive and negative integers.\n2. Place a point on the number line and read its value.\n3. Use the 'Distance' screen to find the distance between two points.\n4. Add positive or negative values and observe movement left or right along the line.\n5. Use the chip model alongside the number line to visualise addition and subtraction of integers.\n\nLearning outcomes:\n- Place positive and negative integers correctly on a number line.\n- Compare integers using greater than and less than symbols.\n- Add and subtract integers using the number line as a model.\n- Define absolute value as the distance from zero on a number line.\n- Apply integer operations to real-life contexts such as temperature and altitude.",
+    "external_url": "https://phet.colorado.edu/sims/html/number-line-integers/latest/number-line-integers_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "number-line-integers",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/number-line-integers/latest/number-line-integers-900.png"
+  },
+  {
+    "name": "Number Line: Operations",
+    "description": "How to use:\n1. Open the sim and select addition or subtraction mode.\n2. Set the starting number and the operation value using the controls.\n3. Observe the jump arrows on the number line showing the operation.\n4. Try negative operands and observe movement in the opposite direction.\n5. Chain two operations and predict the final position before confirming.\n\nLearning outcomes:\n- Model addition and subtraction of integers using directed jumps on a number line.\n- Explain why subtracting a negative number is equivalent to adding a positive.\n- Solve problems involving operations with negative numbers.\n- Represent multi-step calculations visually on a number line.\n- Connect number line operations to algebraic manipulation of equations.",
+    "external_url": "https://phet.colorado.edu/sims/html/number-line-operations/latest/number-line-operations_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "number-line-operations",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/number-line-operations/latest/number-line-operations-900.png"
+  },
+  {
+    "name": "Ratio and Proportion",
+    "description": "How to use:\n1. Open the sim and adjust the two quantity sliders to set up a ratio.\n2. Observe the ratio readout and the visual bar comparison.\n3. Find the target ratio by adjusting quantities to match the challenge ratio.\n4. Switch to the 'Discover' screen and explore what ratio keeps two quantities proportional.\n5. Test your understanding with the challenge mode requiring specific ratio targets.\n\nLearning outcomes:\n- Define ratio as a comparison of two quantities.\n- Simplify ratios and express them in the form a:b.\n- Identify proportional relationships between two quantities.\n- Solve proportion problems using the unitary method.\n- Apply ratio and proportion to real-world contexts such as mixing, scaling, and speed.",
+    "external_url": "https://phet.colorado.edu/sims/html/ratio-and-proportion/latest/ratio-and-proportion_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "ratio-and-proportion",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/ratio-and-proportion/latest/ratio-and-proportion-900.png"
+  },
+  {
+    "name": "Equality Explorer",
+    "description": "How to use:\n1. Open the 'Basics' screen and place objects on the balance scale.\n2. Add or remove weights on each side to keep the scale balanced.\n3. Switch to the 'Variables' screen and use x-tiles alongside number tiles.\n4. Perform the same operation on both sides to maintain equality.\n5. Solve for x by isolating the variable tile on one side of the balance.\n\nLearning outcomes:\n- Understand equality as balance between two expressions.\n- Apply inverse operations to solve one-step and two-step linear equations.\n- Explain why the same operation must be performed on both sides of an equation.\n- Represent and solve equations involving one variable.\n- Translate word problems into algebraic equations and solve them.",
+    "external_url": "https://phet.colorado.edu/sims/html/equality-explorer/latest/equality-explorer_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1", "Form 2"],
+    "phet_slug": "equality-explorer",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/equality-explorer/latest/equality-explorer-900.png"
+  },
+  {
+    "name": "Equality Explorer: Basics",
+    "description": "How to use:\n1. Open the sim and observe the balance scale with number tiles.\n2. Drag coins and objects onto the pans to explore balance.\n3. Add equal amounts to both sides and confirm the scale stays balanced.\n4. Remove objects from one side to observe imbalance.\n5. Challenge yourself to make specific total values on each side using minimum tiles.\n\nLearning outcomes:\n- Understand that an equation represents a balanced relationship.\n- Model simple equations concretely using a balance metaphor.\n- Recognise that adding or removing the same value from both sides preserves equality.\n- Develop intuition for equation solving before formal algebraic methods.\n- Connect the balance model to writing and checking simple numerical equations.",
+    "external_url": "https://phet.colorado.edu/sims/html/equality-explorer-basics/latest/equality-explorer-basics_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 1"],
+    "phet_slug": "equality-explorer-basics",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/equality-explorer-basics/latest/equality-explorer-basics-900.png"
+  },
+  {
+    "name": "Equality Explorer: Two Variables",
+    "description": "How to use:\n1. Open the sim and introduce two variable tiles (x and y) on the balance scale.\n2. Set values for x and y using the sliders and observe whether the scale balances.\n3. Build two different equations using x and y tiles and solve the system visually.\n4. Change variable values and observe which combinations satisfy both equations.\n5. Record solution pairs and verify them by substitution.\n\nLearning outcomes:\n- Set up and solve simultaneous linear equations in two variables.\n- Understand that a solution to a system satisfies both equations simultaneously.\n- Use substitution and elimination methods to solve simultaneous equations.\n- Represent solutions as ordered pairs (x, y) and locate them on a graph.\n- Apply simultaneous equations to real-world problems involving two unknowns.",
+    "external_url": "https://phet.colorado.edu/sims/html/equality-explorer-two-variables/latest/equality-explorer-two-variables_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "equality-explorer-two-variables",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/equality-explorer-two-variables/latest/equality-explorer-two-variables-900.png"
+  },
+  {
+    "name": "Curve Fitting",
+    "description": "How to use:\n1. Open the sim and plot data points on the graph by clicking to place them.\n2. Select the type of curve to fit: linear, quadratic, cubic, or quartic.\n3. Adjust the coefficients manually or enable best-fit mode.\n4. Observe the R² value to assess goodness of fit.\n5. Add noise to the data and observe how it affects the fitted curve.\n\nLearning outcomes:\n- Describe a line or curve of best fit and explain its purpose.\n- Interpret the R² value as a measure of how well a model fits data.\n- Distinguish between linear and non-linear data trends.\n- Use a fitted equation to make predictions beyond the data range (extrapolation).\n- Understand the effect of outliers and noise on the accuracy of a fitted model.",
+    "external_url": "https://phet.colorado.edu/sims/html/curve-fitting/latest/curve-fitting_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "curve-fitting",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/curve-fitting/latest/curve-fitting-900.png"
+  },
+  {
+    "name": "Least-Squares Regression",
+    "description": "How to use:\n1. Open the sim and plot data points by clicking on the graph.\n2. Manually drag a line of best fit and observe the residuals (vertical error lines).\n3. Enable the sum of squared residuals display and minimise it by adjusting the line.\n4. Click 'Best Fit Line' to reveal the mathematically optimal regression line.\n5. Add or remove data points and observe how outliers affect the regression line.\n\nLearning outcomes:\n- Define a residual as the difference between an observed and predicted value.\n- Explain the least-squares criterion for choosing the best-fit line.\n- Calculate and interpret the gradient and intercept of a regression line.\n- Use the regression line to make predictions for given x-values.\n- Discuss the limitations of linear regression, including the effect of outliers.",
+    "external_url": "https://phet.colorado.edu/sims/html/least-squares-regression/latest/least-squares-regression_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 4"],
+    "phet_slug": "least-squares-regression",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/least-squares-regression/latest/least-squares-regression-900.png"
+  },
+  {
+    "name": "Trig Tour",
+    "description": "How to use:\n1. Open the sim and rotate the angle on the unit circle using the handle.\n2. Observe the sine, cosine, and tangent values update as the angle changes.\n3. Enable the graph view to see how sin θ and cos θ vary as waves over 0°–360°.\n4. Toggle between degrees and radians and compare the two scales.\n5. Identify special angles (0°, 30°, 45°, 60°, 90°) and record their exact trig values.\n\nLearning outcomes:\n- Define sine, cosine, and tangent using the unit circle.\n- Read off trigonometric values for any angle between 0° and 360°.\n- Describe the period, amplitude, and shape of the sine and cosine graphs.\n- Explain why trigonometric functions are periodic.\n- Apply trigonometric ratios to calculate sides and angles in right-angled triangles.",
+    "external_url": "https://phet.colorado.edu/sims/html/trig-tour/latest/trig-tour_en.html",
+    "subject_name": "Mathematics",
+    "class_names": ["Form 3", "Form 4"],
+    "phet_slug": "trig-tour",
+    "thumbnail_url": "https://phet.colorado.edu/sims/html/trig-tour/latest/trig-tour-900.png"
+  }
+]

@@ -1,50 +1,32 @@
 <x-app-layout>
     @php($subjects = $subjects ?? collect())
     @php($smileyTutorCredential = $smileyTutorCredential ?? null)
+    @php($vrExperiments = $vrExperiments ?? null)
 
-    {{-- Same sidebar as index: All Experiments + subject links + Mathematics --}}
     <div class="col-12">
         <div class="row">
-            <div class="col-lg-3 dashboard-sidebar mb-4 mb-lg-0">
-                <ul class="category-list">
-                    <li>
-                        <a href="{{ route('client.vr-experiments.index', request()->only(['search', 'sort'])) }}"
-                           class="">
-                            All Experiments <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-                        </a>
-                    </li>
-                    @foreach($subjects as $subject)
-                        <li>
-                            <a href="{{ route('client.vr-experiments.index', array_merge(request()->only(['search', 'sort']), ['subject' => $subject->id])) }}"
-                               class="">
-                                {{ $subject->subject_name }} <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-                            </a>
-                        </li>
-                    @endforeach
-                    <li>
-                        <a href="{{ route('client.vr-experiments.math') }}"
-                           class="active">
-                            Mathematics <iconify-icon icon="lucide:chevron-right"></iconify-icon>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            @include('client.back.vr-experiments._sidebar', ['subjects' => $subjects])
 
             <div class="col-lg-9">
                 <div class="dashboard-content-header mb-4">
                     <h3 class="mb-2">Mathematics</h3>
-                    <p class="text-muted mb-0">Practice math with SmileyTutor and earn rewards.</p>
+                    <p class="text-muted mb-0">Practice with SmileyTutor and explore mathematics simulations.</p>
                 </div>
+
+                @include('client.back.partials.class-filter-notice')
 
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body p-4">
-                        <div class=" mb-4">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <h5 class="fw-semibold mb-0">SmileyTutor Practice</h5>
+                            <span class="badge bg-light text-dark border">Partner platform</span>
+                        </div>
+
+                        <div class="mb-4">
                             <img src="{{ asset('images/tutorweb-logo.png') }}" alt="SmileyTutor" class="img-fluid rounded mb-3" style="max-height: 80px; width: auto;">
-                        
                             <p class="text-muted mb-0">We extend our mathematics content through SmileyTutor so you can learn and earn.</p>
                         </div>
 
-                        <h5 class="fw-semibold mb-3">How learners do mathematics</h5>
                         <p class="mb-3">
                             Our mathematics offering is powered by a partnership with <strong>SmileyTutor</strong>. Learners practice mathematics in an <strong>interactive way</strong> on the SmileyTutor platform: work through drills, build skills, and stay engaged with instant feedback.
                         </p>
@@ -93,6 +75,50 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="dashboard-content-header mb-3">
+                    <h5 class="fw-semibold mb-1">Mathematics Simulations</h5>
+                    <p class="text-muted mb-0 small">Interactive VR experiments uploaded for mathematics, like other subjects in the library.</p>
+                </div>
+
+                @if($vrExperiments && $vrExperiments->total() > 0)
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <p class="text-muted mb-0 small">
+                            Showing {{ $vrExperiments->firstItem() }}-{{ $vrExperiments->lastItem() }} of {{ $vrExperiments->total() }} simulations
+                        </p>
+                        @if($vrExperiments->hasPages())
+                            <span class="text-muted small">
+                                Page {{ $vrExperiments->currentPage() }} of {{ $vrExperiments->lastPage() }}
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="row g-4">
+                        @foreach($vrExperiments as $experiment)
+                            <div class="col-12 col-md-6 col-xl-4">
+                                @include('client.back.vr-experiments._experiment-card', ['experiment' => $experiment])
+                            </div>
+                        @endforeach
+                    </div>
+
+                    @if($vrExperiments->hasPages())
+                        <nav class="mt-4" aria-label="Mathematics simulation navigation">
+                            <div class="d-flex justify-content-center">
+                                {{ $vrExperiments->links('pagination::bootstrap-5') }}
+                            </div>
+                        </nav>
+                    @endif
+                @else
+                    <div class="card border shadow-none">
+                        <div class="card-body text-center py-5">
+                            <i class="bi bi-vr display-4 text-muted mb-3"></i>
+                            <h5 class="fw-semibold mb-2">No mathematics simulations yet</h5>
+                            <p class="text-muted mb-0">
+                                When your instructor uploads mathematics VR experiments, they will appear here alongside SmileyTutor.
+                            </p>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

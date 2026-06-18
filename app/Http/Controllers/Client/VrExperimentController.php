@@ -41,6 +41,11 @@ class VrExperimentController extends Controller
         // Get cached subjects
         $subjects = CacheService::getActiveSubjects();
 
+        $mathematicsSubject = $this->mathematicsSubject($subjects);
+        if ($mathematicsSubject && $subjectId && (string) $subjectId === (string) $mathematicsSubject->id) {
+            return redirect()->route('client.vr-experiments.math');
+        }
+
         $staticExperiments = $this->getStaticExperiments();
         $staticCount = $staticExperiments->count();
         $dbTotal = VrExperiment::where('is_active', true)
@@ -106,16 +111,29 @@ class VrExperimentController extends Controller
     }
 
     /**
-     * Mathematics subject page: SmileyTutor partnership and practice link.
+     * Mathematics panel: SmileyTutor partnership plus uploaded math simulations.
      */
     public function math(): View
     {
         $subjects = CacheService::getActiveSubjects();
         $smileyTutorCredential = auth()->user()?->smileyTutorCredential;
+        $mathematicsSubject = $this->mathematicsSubject($subjects);
+        $schoolClassId = $this->studentSchoolClassId();
+
+        $vrExperiments = $mathematicsSubject
+            ? VrExperiment::active()
+                ->withSubject()
+                ->visibleToStudentClass($schoolClassId)
+                ->forSubject($mathematicsSubject->id)
+                ->latest()
+                ->paginate(12)
+            : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 12);
 
         return view('client.back.vr-experiments.math', [
             'subjects' => $subjects,
             'smileyTutorCredential' => $smileyTutorCredential,
+            'vrExperiments' => $vrExperiments,
+            'mathematicsSubject' => $mathematicsSubject,
         ]);
     }
 
@@ -190,6 +208,14 @@ class VrExperimentController extends Controller
             'subjects' => $subjects,
             'isStatic' => true,
         ]);
+    }
+
+    /**
+     * @param  \Illuminate\Support\Collection<int, Subject>  $subjects
+     */
+    protected function mathematicsSubject($subjects): ?Subject
+    {
+        return $subjects->firstWhere('subject_name', 'Mathematics');
     }
 }
 
