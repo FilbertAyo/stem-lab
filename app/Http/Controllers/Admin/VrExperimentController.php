@@ -13,6 +13,55 @@ use Illuminate\View\View;
 
 class VrExperimentController extends Controller
 {
+    private const THUMBNAIL_MAX_KB = 1024;
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function validationRules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'external_url' => ['required', 'url', 'max:2048'],
+            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:'.self::THUMBNAIL_MAX_KB],
+            'class_ids' => ['required', 'array', 'min:1'],
+            'class_ids.*' => ['integer', 'exists:school_classes,id'],
+            'subject_id' => ['required', 'exists:subjects,id'],
+            'is_active' => ['boolean'],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function validationMessages(): array
+    {
+        return [
+            'thumbnail.image' => 'The thumbnail must be an image file (JPEG, PNG, GIF, or WebP).',
+            'thumbnail.mimes' => 'The thumbnail must be a JPEG, PNG, GIF, or WebP image.',
+            'thumbnail.max' => 'The thumbnail must not be larger than 1 MB. Please choose a smaller image.',
+        ];
+    }
+
+    private function validateThumbnailUpload(Request $request): ?RedirectResponse
+    {
+        if (! $request->hasFile('thumbnail')) {
+            return null;
+        }
+
+        $file = $request->file('thumbnail');
+
+        if (! $file->isValid()) {
+            return back()
+                ->withErrors([
+                    'thumbnail' => 'The thumbnail could not be uploaded. Please use an image smaller than 1 MB.',
+                ])
+                ->withInput();
+        }
+
+        return null;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -56,16 +105,14 @@ class VrExperimentController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'external_url' => ['required', 'url', 'max:2048'],
-            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
-            'class_ids' => ['required', 'array', 'min:1'],
-            'class_ids.*' => ['integer', 'exists:school_classes,id'],
-            'subject_id' => ['required', 'exists:subjects,id'],
-            'is_active' => ['boolean'],
-        ]);
+        if ($response = $this->validateThumbnailUpload($request)) {
+            return $response;
+        }
+
+        $validated = $request->validate(
+            $this->validationRules(),
+            $this->validationMessages()
+        );
 
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] = $request->file('thumbnail')->store('vr-experiments/thumbnails', 'public');
@@ -100,16 +147,14 @@ class VrExperimentController extends Controller
      */
     public function update(Request $request, VrExperiment $vrExperiment): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'external_url' => ['required', 'url', 'max:2048'],
-            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
-            'class_ids' => ['required', 'array', 'min:1'],
-            'class_ids.*' => ['integer', 'exists:school_classes,id'],
-            'subject_id' => ['required', 'exists:subjects,id'],
-            'is_active' => ['boolean'],
-        ]);
+        if ($response = $this->validateThumbnailUpload($request)) {
+            return $response;
+        }
+
+        $validated = $request->validate(
+            $this->validationRules(),
+            $this->validationMessages()
+        );
 
         if ($request->hasFile('thumbnail')) {
             if ($vrExperiment->thumbnail && Storage::disk('public')->exists($vrExperiment->thumbnail)) {
