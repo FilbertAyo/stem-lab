@@ -6,9 +6,9 @@
     <div class="col-lg-9">
 
         <div class="dashboard-content-header">
-            <a href="{{ route('client.my-students.index') }}" class="text-muted small text-decoration-none">
-                <i class="bi bi-arrow-left me-1"></i>Back to My Students
-            </a>
+          
+
+            <div>
             <h4 class="mb-1 mt-1">{{ $student->name }}</h4>
             <p class="text-muted mb-0 small">
                 {{ $student->schoolClass->name ?? 'No class' }}
@@ -17,6 +17,11 @@
                     · {{ $student->teacherClub->club->name }}
                 @endif
             </p>
+              </div>
+              <a href="{{ route('client.my-students.index') }}" class="btn btn-outline-secondary btn-sm float-end">
+                <i class="bi bi-arrow-left me-1"></i>Back to My Students
+            </a>
+         
         </div>
 
         @if(! $student->isLinked())
