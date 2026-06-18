@@ -88,7 +88,7 @@
                                 @error('thumbnail')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-text text-muted">Upload a preview image (JPEG, PNG, GIF, or WebP). Maximum size: 1 MB.</small>
+                                <small class="form-text text-muted">Upload a preview image (JPEG, PNG, GIF, or WebP). Maximum size: 5 MB.</small>
                             </div>
                         </div>
 

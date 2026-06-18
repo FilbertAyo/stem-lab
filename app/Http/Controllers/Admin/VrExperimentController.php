@@ -15,7 +15,7 @@ class VrExperimentController extends Controller
 {
     use ValidatesUploads;
 
-    private const THUMBNAIL_MAX_KB = 1024;
+    private const THUMBNAIL_MAX_KB = 5120;
 
     /**
      * @return array<string, mixed>
