@@ -73,7 +73,7 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="file" class="form-label">GLB File</label>
+                                <label for="file" class="form-label">GLB File <span class="text-muted">(optional if embed is provided)</span></label>
                                 @if($model3d->file)
                                     <div class="mb-2">
                                         <p class="mb-1">Current File:</p>
@@ -89,7 +89,7 @@
                                 @error('file')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-text text-muted">Upload a new GLB file to replace the current one. Max size: 100MB</small>
+                                <small class="form-text text-muted">Upload a new GLB file to replace the current one. Max size: 100MB.</small>
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -110,6 +110,17 @@
                                 @enderror
                                 <small class="form-text text-muted">Upload a new thumbnail to replace the current one (jpeg, png, jpg, gif, webp). Max size: 5MB</small>
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="embed_url" class="form-label">Embed URL <span class="text-muted">(optional if GLB is provided)</span></label>
+                            <textarea class="form-control @error('embed_url') is-invalid @enderror"
+                                      id="embed_url" name="embed_url" rows="3"
+                                      placeholder="Paste a Sketchfab embed link or iframe snippet">{{ old('embed_url', $model3d->embed_url) }}</textarea>
+                            @error('embed_url')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="form-text text-muted">Paste the Sketchfab embed URL or iframe snippet. Leave empty to remove the embed. At least one of GLB file or embed URL must remain.</small>
                         </div>
 
                         <div class="mb-3">

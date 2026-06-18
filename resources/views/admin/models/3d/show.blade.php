@@ -14,26 +14,10 @@
                 </div>
             </div>
 
-            @if($model3d->file)
-                <!-- 3D Model Viewer - Full Width -->
+            @if($model3d->hasViewer())
                 <div class="card mb-4">
-                    <div class="card-body p-0" style="position: relative;">
-                        <div id="model-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 10; background: rgba(245, 245, 245, 0.9); padding: 20px; border-radius: 8px;">
-                            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <p class="mt-3 mb-0">Loading 3D Model...</p>
-                        </div>
-                        <model-viewer
-                            id="model-viewer"
-                            src="{{ asset('storage/' . $model3d->file) }}"
-                            alt="{{ $model3d->name }}"
-                            auto-rotate
-                            camera-controls
-                            touch-action="pan-y"
-                            shadow-intensity="1"
-                            style="width: 100%; height: 600px; background: #f5f5f5;"
-                        ></model-viewer>
+                    <div class="card-body p-0">
+                        @include('client.back.models.3d._viewer', ['model3d' => $model3d])
                     </div>
                 </div>
             @endif
@@ -70,7 +54,20 @@
                                             <i class="ti ti-download"></i> Download GLB File
                                         </a>
                                     @else
-                                        <p class="text-muted">No file uploaded</p>
+                                        <p class="text-muted mb-0">No GLB file uploaded</p>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>Embed URL:</strong>
+                                <div class="mt-2">
+                                    @if($model3d->embed_url)
+                                        <a href="{{ $model3d->embed_url }}" class="small d-block text-break" target="_blank" rel="noopener">
+                                            {{ $model3d->embed_url }}
+                                        </a>
+                                    @else
+                                        <p class="text-muted mb-0">No embed URL provided</p>
                                     @endif
                                 </div>
                             </div>
@@ -98,7 +95,7 @@
         </div>
     </div>
 
-    @if($model3d->file)
+    @if($model3d->hasGlb())
         @once
             @push('scripts')
                 <script

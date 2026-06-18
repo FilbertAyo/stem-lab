@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Model3d;
 use App\Models\SchoolClass;
 use App\Services\CacheService;
+use App\Support\Model3dEmbed;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -49,6 +50,7 @@ class Model3dController extends Controller
             'class_ids.*' => ['integer', 'exists:school_classes,id'],
             'name' => ['required', 'string', 'max:255'],
             'file' => $this->glbUploadRules(self::GLB_MAX_KB),
+            'embed_url' => ['nullable', 'string', 'max:5000'],
             'thumbnail' => $this->imageUploadRules(self::THUMBNAIL_MAX_KB),
             'description' => ['nullable', 'string'],
             'tags' => ['nullable', 'string', 'max:500'],
@@ -63,8 +65,55 @@ class Model3dController extends Controller
     {
         return array_merge(
             $this->glbUploadMessages(self::GLB_MAX_KB),
-            $this->imageUploadMessages('thumbnail', self::THUMBNAIL_MAX_KB)
+            $this->imageUploadMessages('thumbnail', self::THUMBNAIL_MAX_KB),
+            [
+                'embed_url.max' => 'The embed URL is too long. Paste only the embed link or iframe snippet.',
+            ]
         );
+    }
+
+    private function validateModelSource(Request $request, ?Model3d $model3d = null): ?RedirectResponse
+    {
+        $embedInput = $request->input('embed_url');
+        $normalizedEmbed = Model3dEmbed::normalizeInput(is_string($embedInput) ? $embedInput : null);
+        $hasNewFile = $request->hasFile('file');
+        $hasExistingFile = $model3d?->hasGlb() ?? false;
+        $willHaveFile = $hasNewFile || $hasExistingFile;
+        $willHaveEmbed = filled($normalizedEmbed);
+
+        if ($request->filled('embed_url') && $normalizedEmbed === null) {
+            return back()
+                ->withErrors([
+                    'embed_url' => 'Enter a valid embed URL or paste the iframe snippet from Sketchfab.',
+                ])
+                ->withInput();
+        }
+
+        if (! $willHaveFile && ! $willHaveEmbed) {
+            return back()
+                ->withErrors([
+                    'file' => 'Provide a GLB file and/or an embed URL.',
+                    'embed_url' => 'Provide a GLB file and/or an embed URL.',
+                ])
+                ->withInput();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     * @return array<string, mixed>
+     */
+    private function prepareValidatedPayload(Request $request, array $validated, ?Model3d $model3d = null): array
+    {
+        if ($request->filled('embed_url')) {
+            $validated['embed_url'] = Model3dEmbed::normalizeInput($request->input('embed_url'));
+        } else {
+            $validated['embed_url'] = null;
+        }
+
+        return $validated;
     }
 
     /**
@@ -121,10 +170,16 @@ class Model3dController extends Controller
             return $response;
         }
 
+        if ($response = $this->validateModelSource($request)) {
+            return $response;
+        }
+
         $validated = $request->validate(
             $this->validationRules(),
             $this->validationMessages()
         );
+
+        $validated = $this->prepareValidatedPayload($request, $validated);
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -186,10 +241,16 @@ class Model3dController extends Controller
             return $response;
         }
 
+        if ($response = $this->validateModelSource($request, $model3d)) {
+            return $response;
+        }
+
         $validated = $request->validate(
             $this->validationRules(),
             $this->validationMessages()
         );
+
+        $validated = $this->prepareValidatedPayload($request, $validated, $model3d);
 
         if ($request->hasFile('file')) {
             if ($model3d->file && Storage::disk('public')->exists($model3d->file)) {

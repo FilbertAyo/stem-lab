@@ -70,13 +70,13 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="file" class="form-label">GLB File</label>
+                                <label for="file" class="form-label">GLB File <span class="text-muted">(optional if embed is provided)</span></label>
                                 <input type="file" class="form-control @error('file') is-invalid @enderror"
                                        id="file" name="file" accept=".glb">
                                 @error('file')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <small class="form-text text-muted">Upload a GLB 3D model file. Max size: 100MB (subject to server PHP configuration)</small>
+                                <small class="form-text text-muted">Upload a GLB 3D model file. Max size: 100MB. You can also use an embed URL instead, or provide both.</small>
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -88,6 +88,17 @@
                                 @enderror
                                 <small class="form-text text-muted">Upload a thumbnail image (jpeg, png, jpg, gif, webp). Max size: 5 MB</small>
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="embed_url" class="form-label">Embed URL <span class="text-muted">(optional if GLB is provided)</span></label>
+                            <textarea class="form-control @error('embed_url') is-invalid @enderror"
+                                      id="embed_url" name="embed_url" rows="3"
+                                      placeholder="Paste a Sketchfab embed link or iframe snippet">{{ old('embed_url') }}</textarea>
+                            @error('embed_url')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="form-text text-muted">Use this when the model is hosted online (e.g. Sketchfab). Paste the embed URL or full iframe code. At least one of GLB file or embed URL is required.</small>
                         </div>
 
                         <div class="mb-3">

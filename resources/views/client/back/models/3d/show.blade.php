@@ -20,32 +20,7 @@
             <div class="col-lg-8 col-12 mb-4">
                 <div class="card border shadow-none mb-4">
                     <div class="card-body p-0">
-                        @if($model3d->file)
-                            <div class="position-relative">
-                                <div id="model-loading" class="position-absolute top-50 start-50 translate-middle text-center bg-white bg-opacity-75 rounded-3 px-4 py-3 shadow-sm">
-                                    <div class="spinner-border text-primary mb-2" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                    <p class="mb-0 text-muted small">Rendering 3D model</p>
-                                </div>
-                                <model-viewer
-                                    id="model-viewer"
-                                    src="{{ asset('storage/' . $model3d->file) }}"
-                                    alt="{{ $model3d->name }}"
-                                    auto-rotate
-                                    camera-controls
-                                    touch-action="pan-y"
-                                    ar
-                                    shadow-intensity="0.8"
-                                    style="width: 100%; height: 520px; background: #f4f6fb;"
-                                ></model-viewer>
-                            </div>
-                        @else
-                            <div class="text-center py-5">
-                                <i class="bi bi-exclamation-triangle text-warning fs-1 mb-3"></i>
-                                <p class="mb-0 text-muted">The 3D file for this model is not available.</p>
-                            </div>
-                        @endif
+                        @include('client.back.models.3d._viewer', ['model3d' => $model3d])
                     </div>
                 </div>
 
@@ -131,7 +106,7 @@
         </section>
     </div>
 
-    @if($model3d->file)
+    @if($model3d->hasGlb())
         @once
             @push('scripts')
                 <script type="module" src="https://unpkg.com/@google/model-viewer@3.3.0/dist/model-viewer.min.js"></script>
@@ -153,10 +128,17 @@
                     });
 
                     modelViewer.addEventListener('error', () => {
-                        loadingState.innerHTML = '<p class="text-danger mb-0 small">Unable to load this 3D model. Please try again later.</p>';
+                        loadingState.innerHTML = '<p class="text-danger mb-0 small">Unable to load this 3D model. Try the embedded view if available.</p>';
                     });
+                });
+            </script>
+        @endpush
+    @endif
 
-                    // Load questions
+    @if($model3d->hasViewer())
+        @push('scripts')
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
                     loadQuestions();
                 });
 

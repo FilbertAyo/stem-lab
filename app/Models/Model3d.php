@@ -24,6 +24,7 @@ class Model3d extends Model
         'subject_id',
         'name',
         'file',
+        'embed_url',
         'thumbnail',
         'description',
         'tags',
@@ -104,6 +105,36 @@ class Model3d extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
+    }
+
+    public function hasGlb(): bool
+    {
+        return filled($this->file);
+    }
+
+    public function hasEmbed(): bool
+    {
+        return filled($this->embed_url);
+    }
+
+    public function hasViewer(): bool
+    {
+        return $this->hasGlb() || $this->hasEmbed();
+    }
+
+    public function defaultViewerMode(): string
+    {
+        return $this->hasGlb() ? 'glb' : 'embed';
+    }
+
+    public function viewerEmbedUrl(): ?string
+    {
+        return \App\Support\Model3dEmbed::viewerUrl($this->embed_url, $this->name);
+    }
+
+    public function isSketchfabEmbed(): bool
+    {
+        return \App\Support\Model3dEmbed::isSketchfabUrl($this->embed_url);
     }
 
     /**
