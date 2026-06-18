@@ -47,7 +47,7 @@
                                     <th>Thumbnail</th>
                                     <th>Name</th>
                                     <th>Subject</th>
-                                    <th>Class</th>
+                                    <th>Classes</th>
                                     <th>External URL</th>
                                     <th>Status</th>
                                     <th>Actions</th>

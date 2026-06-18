@@ -18,6 +18,18 @@ sudo -u www-data composer install --optimize-autoloader --no-dev
 echo "Running database migrations..."
 sudo -u www-data php artisan migrate --force
 
+# Optional: seed PhET VR experiments (74 sims, multi-class via pivot — NOT one row per class).
+# Run once after deploy when the library is empty or needs a refresh:
+#   SEED_PHET=1 bash deploy.sh
+# Or manually:
+#   sudo -u www-data php artisan db:seed --class=SubjectSeeder --force
+#   sudo -u www-data php artisan db:seed --class=PhetVrExperimentSeeder --force
+if [ "${SEED_PHET:-}" = "1" ]; then
+    echo "Seeding subjects and PhET VR experiments..."
+    sudo -u www-data php artisan db:seed --class=SubjectSeeder --force
+    sudo -u www-data php artisan db:seed --class=PhetVrExperimentSeeder --force
+fi
+
 # Clear and cache configurations
 echo "Clearing and caching configurations..."
 sudo -u www-data php artisan config:cache

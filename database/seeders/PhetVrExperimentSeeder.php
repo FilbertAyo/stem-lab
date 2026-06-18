@@ -61,18 +61,19 @@ class PhetVrExperimentSeeder extends Seeder
                 $classIds[] = $class->id;
             }
 
-            $vrExperiment = VrExperiment::updateOrCreate(
-                [
-                    'name' => $experiment['name'],
-                    'subject_id' => $subject->id,
-                    'external_url' => $experiment['external_url'],
-                ],
-                [
-                    'description' => $experiment['description'] ?? null,
-                    'is_active' => false,
-                ]
-            );
+            $vrExperiment = VrExperiment::firstOrNew([
+                'name' => $experiment['name'],
+                'subject_id' => $subject->id,
+                'external_url' => $experiment['external_url'],
+            ]);
 
+            $vrExperiment->description = $experiment['description'] ?? null;
+
+            if (! $vrExperiment->exists) {
+                $vrExperiment->is_active = false;
+            }
+
+            $vrExperiment->save();
             $vrExperiment->schoolClasses()->sync(array_values(array_unique($classIds)));
         }
     }
