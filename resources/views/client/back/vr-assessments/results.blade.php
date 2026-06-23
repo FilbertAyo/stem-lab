@@ -35,8 +35,7 @@
                         @endif
 
                         <div class="quiz-score-ring {{ $passed ? 'is-passed' : 'is-failed' }} mt-4">
-                            <span class="display-6 fw-bold lh-1">{{ number_format($attempt->score, 1) }}%</span>
-                            <small class="text-muted">Your score</small>
+                            <span class="fw-bold lh-1 fs-4">{{ number_format($attempt->score, 1) }}%</span>
                         </div>
                     </div>
 
