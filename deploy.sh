@@ -22,6 +22,8 @@ sudo -u www-data php artisan migrate --force
 # (VR experiments, thumbnails, active flags, etc.). To load PhET sims once, run manually:
 #   sudo -u www-data php artisan db:seed --class=SubjectSeeder --force
 #   sudo -u www-data php artisan db:seed --class=PhetVrExperimentSeeder --force
+# To load curriculum-aligned quiz questions (skips experiments not in DB):
+#   sudo -u www-data php artisan db:seed --class=PhetVrQuestionSeeder --force
 
 # Clear and cache configurations
 echo "Clearing and caching configurations..."

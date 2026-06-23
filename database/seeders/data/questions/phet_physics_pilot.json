@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html",
+    "phet_slug": "forces-and-motion-basics",
+    "question_bank": {
+      "title": "Forces and Motion: Basics — Physics Assessment",
+      "description": "TIE Physics competences 13.1.1, 13.1.2, 13.1.3, 13.2.1 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "When the forces acting on an object are balanced, the object will:",
+        "options": [
+          "Accelerate",
+          "Remain at rest or move at constant velocity",
+          "Always slow down",
+          "Change direction only"
+        ],
+        "correct_answer": "Remain at rest or move at constant velocity",
+        "explanation": "Balanced forces produce zero net force, so there is no acceleration (Newton's First Law).",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Unbalanced forces acting on an object cause:",
+        "options": [
+          "No change in motion",
+          "Acceleration",
+          "Constant speed only",
+          "Zero net force"
+        ],
+        "correct_answer": "Acceleration",
+        "explanation": "A non-zero net force changes the object's velocity (Newton's Second Law).",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The SI unit of force is the:",
+        "options": [
+          "Joule",
+          "Watt",
+          "Newton",
+          "Kilogram"
+        ],
+        "correct_answer": "Newton",
+        "explanation": "Force is measured in newtons (N) in the SI system.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "If the net force on a 4 kg object is 8 N, its acceleration is:",
+        "options": [
+          "32 m/s²",
+          "2 m/s²",
+          "0.5 m/s²",
+          "4 m/s²"
+        ],
+        "correct_answer": "2 m/s²",
+        "explanation": "From F = ma, a = F/m = 8/4 = 2 m/s².",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Friction always acts in the direction opposite to the motion of an object.",
+        "correct_answer": "True",
+        "explanation": "Friction opposes relative motion between surfaces in contact.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "Newton's First Law states that an object in motion stays in motion unless acted on by an unbalanced force.",
+        "correct_answer": "True",
+        "explanation": "This is the law of inertia.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "In the tug-of-war screen, adding more people on one side increases the:",
+        "options": [
+          "Mass of the rope only",
+          "Net force in that direction",
+          "Friction only",
+          "Weight of the ground"
+        ],
+        "correct_answer": "Net force in that direction",
+        "explanation": "More applied force on one side creates a larger net force arrow.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "For the same mass, a larger net force produces:",
+        "options": [
+          "Smaller acceleration",
+          "Greater acceleration",
+          "No acceleration",
+          "Constant velocity only"
+        ],
+        "correct_answer": "Greater acceleration",
+        "explanation": "Acceleration is directly proportional to net force when mass is constant (F = ma).",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "State Newton's Second Law as an equation.",
+        "correct_answer": "F = ma",
+        "explanation": "Force equals mass multiplied by acceleration.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one variable you can change in the simulation to observe its effect on acceleration.",
+        "correct_answer": "force",
+        "explanation": "You can change applied force, mass, or friction and observe the effect on motion.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/moving-man/latest/moving-man_en.html",
+    "phet_slug": "moving-man",
+    "question_bank": {
+      "title": "The Moving Man — Physics Assessment",
+      "description": "TIE Physics competences 13.1.1, 13.1.3, 13.2.2 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "On a position–time graph, the gradient (slope) represents:",
+        "options": [
+          "Acceleration",
+          "Velocity",
+          "Distance only",
+          "Force"
+        ],
+        "correct_answer": "Velocity",
+        "explanation": "The slope of a position–time graph gives velocity.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "On a velocity–time graph, the gradient represents:",
+        "options": [
+          "Position",
+          "Acceleration",
+          "Mass",
+          "Displacement only"
+        ],
+        "correct_answer": "Acceleration",
+        "explanation": "The slope of a velocity–time graph gives acceleration.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Uniform motion is shown on a velocity–time graph as:",
+        "options": [
+          "A horizontal straight line",
+          "A curved line",
+          "A vertical line",
+          "A decreasing line only"
+        ],
+        "correct_answer": "A horizontal straight line",
+        "explanation": "Constant velocity appears as a horizontal line on a v–t graph.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Motion with constant positive acceleration produces a position–time graph that is:",
+        "options": [
+          "A straight horizontal line",
+          "A parabolic curve",
+          "A vertical line",
+          "A decreasing straight line"
+        ],
+        "correct_answer": "A parabolic curve",
+        "explanation": "Constant acceleration gives a curved (parabolic) position–time graph.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A negative velocity means the object is moving in the opposite direction to the positive axis.",
+        "correct_answer": "True",
+        "explanation": "Sign of velocity indicates direction of motion along the axis.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "When acceleration is zero, velocity remains constant.",
+        "correct_answer": "True",
+        "explanation": "Zero acceleration means no change in velocity.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "If the velocity–time graph is a horizontal line at 2 m/s, the motion is:",
+        "options": [
+          "Accelerating",
+          "Decelerating",
+          "Uniform (constant velocity)",
+          "At rest"
+        ],
+        "correct_answer": "Uniform (constant velocity)",
+        "explanation": "Constant velocity of 2 m/s means uniform motion.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "If the slope of the velocity–time graph is zero, the acceleration is:",
+        "options": [
+          "Increasing",
+          "Zero",
+          "Maximum",
+          "Negative only"
+        ],
+        "correct_answer": "Zero",
+        "explanation": "Zero slope on v–t means acceleration is zero.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What physical quantity is represented by the area under a velocity–time graph?",
+        "correct_answer": "displacement",
+        "explanation": "Area under a v–t graph gives displacement.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one kinematic quantity you can read from the simulation graphs.",
+        "correct_answer": "velocity",
+        "explanation": "The sim displays position, velocity, and acceleration graphs.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/energy-skate-park-basics/latest/energy-skate-park-basics_en.html",
+    "phet_slug": "energy-skate-park-basics",
+    "question_bank": {
+      "title": "Energy Skate Park: Basics — Physics Assessment",
+      "description": "TIE Physics competences 13.1.1, 13.1.3 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "At the highest point of the track (without friction), most of the skater's energy is:",
+        "options": [
+          "Kinetic energy",
+          "Gravitational potential energy",
+          "Thermal energy",
+          "Sound energy"
+        ],
+        "correct_answer": "Gravitational potential energy",
+        "explanation": "At maximum height, speed is lowest and gravitational PE is greatest.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "When friction is turned on in the simulation, mechanical energy is converted mainly into:",
+        "options": [
+          "Light energy only",
+          "Thermal energy",
+          "Nuclear energy",
+          "Chemical energy"
+        ],
+        "correct_answer": "Thermal energy",
+        "explanation": "Friction converts mechanical energy to heat (thermal energy).",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Without friction, the total mechanical energy of the skater as they move along the track:",
+        "options": [
+          "Increases continuously",
+          "Decreases to zero",
+          "Remains constant",
+          "Becomes zero at the bottom"
+        ],
+        "correct_answer": "Remains constant",
+        "explanation": "Mechanical energy is conserved when friction is negligible.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "true_false",
+        "question_text": "As the skater moves down a ramp, kinetic energy generally increases.",
+        "correct_answer": "True",
+        "explanation": "PE converts to KE as height decreases.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "mcq",
+        "question_text": "Changing the reference height in the sim affects:",
+        "options": [
+          "The skater's mass",
+          "The value of gravitational potential energy measured",
+          "The force of friction only",
+          "The skater's charge"
+        ],
+        "correct_answer": "The value of gravitational potential energy measured",
+        "explanation": "Reference level defines zero PE; changing it shifts PE values.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "At the lowest point of the track (no friction), the skater's speed is:",
+        "options": [
+          "Zero",
+          "Greatest",
+          "Constant at all points",
+          "Negative"
+        ],
+        "correct_answer": "Greatest",
+        "explanation": "Maximum KE (and speed) occurs where PE is minimum.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "The law of conservation of energy states that energy cannot be created or destroyed, only transformed.",
+        "correct_answer": "True",
+        "explanation": "Total energy in an isolated system is conserved.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Adding friction causes the total mechanical energy of the skater to:",
+        "options": [
+          "Increase",
+          "Stay exactly the same",
+          "Decrease over time",
+          "Double"
+        ],
+        "correct_answer": "Decrease over time",
+        "explanation": "Some mechanical energy is lost as thermal energy due to friction.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name two forms of energy displayed in the energy bar chart.",
+        "correct_answer": "kinetic energy",
+        "explanation": "The sim shows kinetic, gravitational potential, and thermal energy.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "As height increases, what happens to gravitational potential energy?",
+        "correct_answer": "increases",
+        "explanation": "Gravitational PE increases with height: PE = mgh.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/balloons-and-static-electricity/latest/balloons-and-static-electricity_en.html",
+    "phet_slug": "balloons-and-static-electricity",
+    "question_bank": {
+      "title": "Balloons and Static Electricity — Physics Assessment",
+      "description": "TIE Physics competences 13.1.1, 13.1.2 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Rubbing the balloon on the sweater transfers charge mainly by:",
+        "options": [
+          "Magnetic induction",
+          "Friction (charging by rubbing)",
+          "Conduction through the air",
+          "Nuclear decay"
+        ],
+        "correct_answer": "Friction (charging by rubbing)",
+        "explanation": "Rubbing transfers electrons between materials by friction.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Two balloons with the same type of charge will:",
+        "options": [
+          "Attract each other",
+          "Repel each other",
+          "Have no interaction",
+          "Lose all charge instantly"
+        ],
+        "correct_answer": "Repel each other",
+        "explanation": "Like charges repel each other.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Objects with opposite types of charge will:",
+        "options": [
+          "Repel",
+          "Attract",
+          "Not interact",
+          "Always neutralise instantly"
+        ],
+        "correct_answer": "Attract",
+        "explanation": "Unlike charges attract each other.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "true_false",
+        "question_text": "An insulator does not allow charge to move easily through it.",
+        "correct_answer": "True",
+        "explanation": "In insulators, electrons are not free to move throughout the material.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "mcq",
+        "question_text": "A charged balloon is brought near a neutral wall and sticks because of:",
+        "options": [
+          "Gravitational force only",
+          "Induced charge separation in the wall",
+          "Magnetic force",
+          "Nuclear force"
+        ],
+        "correct_answer": "Induced charge separation in the wall",
+        "explanation": "The charged balloon induces opposite charge near the surface, causing attraction.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "When the balloon is rubbed on the sweater, electrons are transferred between the two objects.",
+        "correct_answer": "True",
+        "explanation": "Charging by friction involves electron transfer.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "In the simulation, the balloon and sweater are examples of:",
+        "options": [
+          "Conductors only",
+          "Electrical insulators",
+          "Semiconductors",
+          "Superconductors"
+        ],
+        "correct_answer": "Electrical insulators",
+        "explanation": "Rubber and wool are insulating materials in this context.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "If both balloons have negative charge, they will:",
+        "options": [
+          "Attract",
+          "Repel",
+          "Not interact",
+          "Merge charges"
+        ],
+        "correct_answer": "Repel",
+        "explanation": "Like negative charges repel.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What is meant by charging by friction?",
+        "correct_answer": "transfer of electrons",
+        "explanation": "Charging by friction is the transfer of electrons when two materials are rubbed together.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What happens when a charged balloon is brought near a neutral wall?",
+        "correct_answer": "attraction",
+        "explanation": "Induced charges cause attraction between the balloon and the wall.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/ohms-law/latest/ohms-law_en.html",
+    "phet_slug": "ohms-law",
+    "question_bank": {
+      "title": "Ohm's Law — Physics Assessment",
+      "description": "TIE Physics competences 13.1.1, 13.1.2, 13.1.3, 13.2.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Ohm's Law is written as:",
+        "options": [
+          "V = IR",
+          "P = IV",
+          "F = ma",
+          "E = mc²"
+        ],
+        "correct_answer": "V = IR",
+        "explanation": "Voltage equals current multiplied by resistance.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "If voltage is kept constant and resistance is doubled, the current:",
+        "options": [
+          "Doubles",
+          "Halves",
+          "Stays the same",
+          "Becomes zero always"
+        ],
+        "correct_answer": "Halves",
+        "explanation": "From I = V/R, current is inversely proportional to resistance.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The SI unit of electrical resistance is the:",
+        "options": [
+          "Ampere",
+          "Volt",
+          "Ohm",
+          "Watt"
+        ],
+        "correct_answer": "Ohm",
+        "explanation": "Resistance is measured in ohms (Ω).",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The SI unit of electric current is the:",
+        "options": [
+          "Coulomb",
+          "Ampere",
+          "Ohm",
+          "Joule"
+        ],
+        "correct_answer": "Ampere",
+        "explanation": "Current is measured in amperes (A).",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "For an ohmic conductor, voltage is directly proportional to current when resistance is constant.",
+        "correct_answer": "True",
+        "explanation": "Ohm's Law: V ∝ I when R is fixed.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "Resistance measures how much a component opposes the flow of electric current.",
+        "correct_answer": "True",
+        "explanation": "Higher resistance means less current for the same voltage.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "If resistance is constant and voltage is doubled, the current:",
+        "options": [
+          "Halves",
+          "Doubles",
+          "Stays the same",
+          "Quadruples"
+        ],
+        "correct_answer": "Doubles",
+        "explanation": "Current is directly proportional to voltage when R is constant.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "On a voltage–current graph for an ohmic resistor, the slope represents:",
+        "options": [
+          "Current",
+          "Resistance",
+          "Power only",
+          "Charge"
+        ],
+        "correct_answer": "Resistance",
+        "explanation": "From V = IR, slope ΔV/ΔI equals R.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "State Ohm's Law as an equation.",
+        "correct_answer": "V = IR",
+        "explanation": "Voltage = current × resistance.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name two electrical quantities you can adjust in the Ohm's Law simulation.",
+        "correct_answer": "voltage",
+        "explanation": "The sim allows adjustment of voltage and resistance to observe current.",
+        "points": 1
+      }
+    ]
+  }
+]

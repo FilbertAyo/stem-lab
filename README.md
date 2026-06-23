@@ -20,15 +20,15 @@ There are some fix or changes i will be going to introduce to the system so i wi
 
    * Teachers can see which students from their uploaded list have successfully created platform accounts.
 
-6. **Track learning activities only for registered students** 
+6. **Track learning activities only for registered students** - DONE
 
    * Progress tracking is available only for students who have registered and are actively using the platform.
 
-7. **Create a teacher progress dashboard**
+7. **Create a teacher progress dashboard** - DONE
 
    * Teachers can view each student's learning progress from one place.
 
-8. **Display key student performance indicators**
+8. **Display key student performance indicators** - DONE
 
    * Show metrics such as:
 
@@ -38,7 +38,7 @@ There are some fix or changes i will be going to introduce to the system so i wi
      * Projects submitted
      * Last activity date
 
-9. **Provide club-level analytics**
+9. **Provide club-level analytics** - DONE
 
    * Teachers can see overall statistics such as:
 
@@ -47,14 +47,14 @@ There are some fix or changes i will be going to introduce to the system so i wi
      * Active students
      * Average performance
 
-10. **Notify teachers when new students join their club**
+10. **Notify teachers when new students join their club** - DONE
 
     * The system informs teachers whenever a student successfully registers and becomes linked to their club.
 
-11. **Enable filtering and searching of students**
+11. **Enable filtering and searching of students** - DONE
 
     * Teachers can filter students by class, activity level, registration status, or performance.
 
-12. **Highlight students who need support**
+12. **Highlight students who need support** - DONE
 
     * The system identifies students who are inactive, falling behind, or not completing assigned activities so teachers can follow up.
