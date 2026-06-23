@@ -82,9 +82,9 @@
                                         </td>
                                         <td>
                                             @if($bank->is_active)
-                                                <span class="badge bg-light-success text-success border-success">Active</span>
+                                                <span class="badge bg-light-success text-success b-success">Active</span>
                                             @else
-                                                <span class="badge bg-light-secondary text-secondary border-secondary">Inactive</span>
+                                                <span class="badge bg-light-secondary text-secondary b-secondary">Inactive</span>
                                             @endif
                                         </td>
                                         <td>
