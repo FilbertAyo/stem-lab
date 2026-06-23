@@ -2,7 +2,7 @@
     <div class="col-lg-9">
 
         {{-- Sticky quiz toolbar --}}
-        <div class="quiz-toolbar p-3 mb-4 sticky-top" style="top: 4.5rem; z-index: 1020;">
+        <div class="quiz-toolbar p-3 mb-4">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div class="min-w-0">
                     <h5 class="fw-bold mb-1 text-truncate">{{ $attempt->questionBank->title }}</h5>
@@ -37,7 +37,11 @@
         <div class="row g-4">
             <div class="col-lg-8">
                 @foreach($attempt->questionBank->questions as $index => $question)
-                    <div class="card border shadow-none quiz-question-card mb-3"
+                    @php
+                        $existingAnswer = $attempt->answers->where('question_id', $question->id)->first();
+                        $isAnswered = in_array($question->id, $answeredQuestionIds);
+                    @endphp
+                    <div class="card border shadow-none quiz-question-card mb-3 {{ $isAnswered ? 'border-success border-opacity-25' : '' }}"
                          id="question-{{ $question->id }}"
                          data-question-id="{{ $question->id }}">
                         <div class="card-body">
@@ -45,9 +49,9 @@
                                 <span class="badge bg-light text-dark border">
                                     Question {{ $index + 1 }} of {{ $attempt->total_questions }}
                                 </span>
-                                <span class="badge {{ in_array($question->id, $answeredQuestionIds) ? 'bg-success' : 'bg-light text-dark border' }}"
+                                <span class="badge {{ $isAnswered ? 'bg-success' : 'bg-light text-dark border' }}"
                                       id="status-{{ $question->id }}">
-                                    @if(in_array($question->id, $answeredQuestionIds))
+                                    @if($isAnswered)
                                         <i class="bi bi-check-circle me-1"></i>Answered
                                     @else
                                         Not answered
@@ -61,77 +65,77 @@
                                 <div class="d-flex flex-column gap-2">
                                     @foreach($question->options as $optionIndex => $option)
                                         @php
-                                            $existingAnswer = $attempt->answers->where('question_id', $question->id)->first();
                                             $isSelected = $existingAnswer && $existingAnswer->student_answer === $option;
                                         @endphp
-                                        <div class="quiz-option-item p-3 {{ $isSelected ? 'is-selected' : '' }}"
-                                             onclick="selectOption({{ $question->id }}, '{{ addslashes($option) }}', this)">
+                                        <label class="quiz-option-item p-3 mb-0 d-block {{ $isSelected ? 'is-selected' : '' }}"
+                                               for="option_{{ $question->id }}_{{ $optionIndex }}">
                                             <div class="form-check mb-0">
                                                 <input class="form-check-input"
                                                        type="radio"
                                                        name="answer_{{ $question->id }}"
                                                        id="option_{{ $question->id }}_{{ $optionIndex }}"
                                                        value="{{ $option }}"
-                                                       {{ $isSelected ? 'checked' : '' }}>
-                                                <label class="form-check-label w-100 cursor-pointer"
-                                                       for="option_{{ $question->id }}_{{ $optionIndex }}">
+                                                       data-question-id="{{ $question->id }}"
+                                                       data-answer="{{ $option }}"
+                                                       {{ $isSelected ? 'checked' : '' }}
+                                                       onchange="selectOptionFromInput(this)">
+                                                <span class="form-check-label w-100 cursor-pointer">
                                                     <span class="badge bg-light text-dark border me-2">{{ chr(65 + $optionIndex) }}</span>
                                                     {{ $option }}
-                                                </label>
+                                                </span>
                                             </div>
-                                        </div>
+                                        </label>
                                     @endforeach
                                 </div>
                             @elseif($question->question_type === 'true_false')
-                                @php
-                                    $existingAnswer = $attempt->answers->where('question_id', $question->id)->first();
-                                @endphp
                                 <div class="row g-2">
-                                    <div class="col-6">
-                                        <div class="quiz-option-item p-3 h-100 text-center {{ $existingAnswer && $existingAnswer->student_answer === 'True' ? 'is-selected' : '' }}"
-                                             onclick="selectOption({{ $question->id }}, 'True', this)">
-                                            <input class="form-check-input d-none"
-                                                   type="radio"
-                                                   name="answer_{{ $question->id }}"
-                                                   id="true_{{ $question->id }}"
-                                                   value="True"
-                                                   {{ $existingAnswer && $existingAnswer->student_answer === 'True' ? 'checked' : '' }}>
-                                            <label class="mb-0 fw-semibold cursor-pointer" for="true_{{ $question->id }}">
-                                                <i class="bi bi-check-circle text-success me-1"></i>True
+                                    @foreach(['True', 'False'] as $tfValue)
+                                        @php
+                                            $isSelected = $existingAnswer && $existingAnswer->student_answer === $tfValue;
+                                        @endphp
+                                        <div class="col-6">
+                                            <label class="quiz-option-item p-3 mb-0 d-block h-100 {{ $isSelected ? 'is-selected' : '' }}"
+                                                   for="{{ strtolower($tfValue) }}_{{ $question->id }}">
+                                                <div class="form-check mb-0">
+                                                    <input class="form-check-input"
+                                                           type="radio"
+                                                           name="answer_{{ $question->id }}"
+                                                           id="{{ strtolower($tfValue) }}_{{ $question->id }}"
+                                                           value="{{ $tfValue }}"
+                                                           data-question-id="{{ $question->id }}"
+                                                           data-answer="{{ $tfValue }}"
+                                                           {{ $isSelected ? 'checked' : '' }}
+                                                           onchange="selectOptionFromInput(this)">
+                                                    <span class="form-check-label fw-semibold cursor-pointer">{{ $tfValue }}</span>
+                                                </div>
                                             </label>
                                         </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="quiz-option-item p-3 h-100 text-center {{ $existingAnswer && $existingAnswer->student_answer === 'False' ? 'is-selected' : '' }}"
-                                             onclick="selectOption({{ $question->id }}, 'False', this)">
-                                            <input class="form-check-input d-none"
-                                                   type="radio"
-                                                   name="answer_{{ $question->id }}"
-                                                   id="false_{{ $question->id }}"
-                                                   value="False"
-                                                   {{ $existingAnswer && $existingAnswer->student_answer === 'False' ? 'checked' : '' }}>
-                                            <label class="mb-0 fw-semibold cursor-pointer" for="false_{{ $question->id }}">
-                                                <i class="bi bi-x-circle text-danger me-1"></i>False
-                                            </label>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             @else
-                                @php
-                                    $existingAnswer = $attempt->answers->where('question_id', $question->id)->first();
-                                @endphp
                                 <div class="input-group">
                                     <input type="text"
                                            class="form-control border"
                                            id="input_{{ $question->id }}"
                                            placeholder="Type your answer..."
-                                           value="{{ $existingAnswer ? $existingAnswer->student_answer : '' }}">
+                                           value="{{ $existingAnswer ? $existingAnswer->student_answer : '' }}"
+                                           onkeydown="if (event.key === 'Enter') saveShortAnswer({{ $question->id }})">
                                     <button class="btn btn-primary text-white"
                                             type="button"
+                                            id="save-btn-{{ $question->id }}"
                                             onclick="saveShortAnswer({{ $question->id }})">
                                         <i class="bi bi-check-lg me-1"></i>Save
                                     </button>
                                 </div>
+                                @if($isAnswered)
+                                    <small class="text-success mt-2 d-block" id="saved-hint-{{ $question->id }}">
+                                        <i class="bi bi-check-circle me-1"></i>Answer saved
+                                    </small>
+                                @else
+                                    <small class="text-muted mt-2 d-none" id="saved-hint-{{ $question->id }}">
+                                        <i class="bi bi-check-circle me-1"></i>Answer saved
+                                    </small>
+                                @endif
                             @endif
                         </div>
                     </div>
@@ -161,7 +165,7 @@
 
             {{-- Question navigator --}}
             <div class="col-lg-4">
-                <div class="card border shadow-none sticky-top" style="top: 5.5rem;">
+                <div class="card border shadow-none dashboard-sticky-below-header">
                     <div class="card-header bg-light-soft py-3">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bi bi-grid-3x3-gap me-1 text-primary"></i>Question navigator
@@ -170,8 +174,9 @@
                     <div class="card-body">
                         <div class="d-flex flex-wrap gap-2 mb-3">
                             @foreach($attempt->questionBank->questions as $index => $question)
+                                @php($navAnswered = in_array($question->id, $answeredQuestionIds))
                                 <a href="#question-{{ $question->id }}"
-                                   class="btn btn-sm btn-outline-secondary quiz-nav-btn {{ in_array($question->id, $answeredQuestionIds) ? 'is-answered' : '' }}"
+                                   class="btn btn-sm quiz-nav-btn {{ $navAnswered ? 'btn-success' : 'btn-outline-secondary' }}"
                                    id="nav-{{ $question->id }}">
                                     {{ $index + 1 }}
                                 </a>
@@ -197,7 +202,6 @@
 
     @push('scripts')
     <script>
-        const attemptId = {{ $attempt->id }};
         const totalQuestions = {{ $attempt->total_questions }};
         let answeredCount = {{ count($answeredQuestionIds) }};
 
@@ -208,6 +212,54 @@
             hint.textContent = remaining === 0
                 ? 'All questions answered. You can submit when ready.'
                 : remaining + ' question(s) still unanswered.';
+        }
+
+        function markQuestionAnswered(questionId) {
+            const statusBadge = document.getElementById('status-' + questionId);
+            if (statusBadge) {
+                statusBadge.innerHTML = '<i class="bi bi-check-circle me-1"></i>Answered';
+                statusBadge.classList.remove('bg-light', 'text-dark', 'border');
+                statusBadge.classList.add('bg-success');
+            }
+
+            const questionCard = document.getElementById('question-' + questionId);
+            if (questionCard) {
+                questionCard.classList.add('border-success', 'border-opacity-25');
+            }
+
+            const navBtn = document.getElementById('nav-' + questionId);
+            if (navBtn) {
+                navBtn.classList.remove('btn-outline-secondary');
+                navBtn.classList.add('btn-success');
+            }
+
+            const savedHint = document.getElementById('saved-hint-' + questionId);
+            if (savedHint) {
+                savedHint.classList.remove('d-none', 'text-muted');
+                savedHint.classList.add('text-success');
+            }
+        }
+
+        function updateOptionSelection(questionId) {
+            const card = document.getElementById('question-' + questionId);
+            if (!card) return;
+
+            card.querySelectorAll('.quiz-option-item').forEach(item => {
+                item.classList.remove('is-selected');
+            });
+
+            const checked = card.querySelector('input[type="radio"]:checked');
+            if (checked) {
+                checked.closest('.quiz-option-item')?.classList.add('is-selected');
+            }
+        }
+
+        function selectOptionFromInput(input) {
+            const questionId = parseInt(input.dataset.questionId, 10);
+            const answer = input.dataset.answer || input.value;
+
+            updateOptionSelection(questionId);
+            saveAnswer(questionId, answer);
         }
 
         @if($timeRemaining !== null)
@@ -238,30 +290,17 @@
         }, 1000);
         @endif
 
-        function selectOption(questionId, answer, element) {
-            const card = document.getElementById('question-' + questionId);
-            card.querySelectorAll('.quiz-option-item').forEach(item => {
-                item.classList.remove('is-selected');
-            });
-            element.classList.add('is-selected');
-
-            const radio = element.querySelector('input[type="radio"]');
-            if (radio) {
-                radio.checked = true;
-            }
-
-            saveAnswer(questionId, answer);
-        }
-
         function saveShortAnswer(questionId) {
             const input = document.getElementById('input_' + questionId);
             const answer = input.value.trim();
 
             if (!answer) {
-                alert('Please enter an answer');
+                input.classList.add('is-invalid');
+                input.focus();
                 return;
             }
 
+            input.classList.remove('is-invalid');
             saveAnswer(questionId, answer);
         }
 
@@ -281,14 +320,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    const statusBadge = document.getElementById('status-' + questionId);
-                    statusBadge.innerHTML = '<i class="bi bi-check-circle me-1"></i>Answered';
-                    statusBadge.classList.remove('bg-light', 'text-dark', 'border');
-                    statusBadge.classList.add('bg-success');
-
-                    const navBtn = document.getElementById('nav-' + questionId);
-                    navBtn.classList.remove('btn-outline-secondary');
-                    navBtn.classList.add('is-answered');
+                    markQuestionAnswered(questionId);
 
                     answeredCount = data.answered_count;
                     document.getElementById('answered-count').textContent = answeredCount;

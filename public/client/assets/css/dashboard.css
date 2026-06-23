@@ -1,6 +1,7 @@
  .dashboard-header {
   background: var(--bs-white);
   padding: 1rem 0;
+  z-index: 1030;
 }
 
 .user-nav-toggle {
@@ -113,8 +114,10 @@
 }
 .dashboard-sidebar {
   padding-right: 2rem;
-  top: 6rem;
-  align-self: start;
+  position: sticky;
+  top: 5.5rem;
+  z-index: 1010;
+  align-self: flex-start;
 }
 .dashboard-sidebar .filter-btn {
   display: flex;
@@ -471,6 +474,16 @@
   border: 1px solid rgba(var(--bs-dark-rgb), 0.08);
   border-radius: 0.5rem;
   background: var(--bs-body-bg);
+  position: sticky;
+  top: 5.5rem;
+  z-index: 1015;
+}
+
+.dashboard-sticky-below-header {
+  position: sticky;
+  top: 5.5rem;
+  z-index: 1010;
+  align-self: flex-start;
 }
 
 .quiz-progress-track {
@@ -508,6 +521,12 @@
 .quiz-option-item.is-selected {
   border-color: var(--bs-primary);
   background-color: rgba(var(--bs-primary-rgb), 0.08);
+  box-shadow: 0 0 0 1px rgba(var(--bs-primary-rgb), 0.15);
+}
+
+.quiz-option-item.is-selected .form-check-input:checked {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
 }
 
 .quiz-nav-btn {
@@ -518,11 +537,12 @@
   align-items: center;
   justify-content: center;
   font-weight: 600;
+  text-decoration: none;
 }
 
-.quiz-nav-btn.is-answered {
-  background-color: var(--bs-success);
-  border-color: var(--bs-success);
+.quiz-nav-btn.btn-success,
+.quiz-nav-btn.btn-success:hover,
+.quiz-nav-btn.btn-success:focus {
   color: #fff;
 }
 

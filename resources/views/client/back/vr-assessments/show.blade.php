@@ -150,7 +150,7 @@
 
             {{-- Start quiz panel --}}
             <div class="col-lg-4">
-                <div class="card border shadow-none quiz-start-panel sticky-top" style="top: 5.5rem;">
+                <div class="card border shadow-none quiz-start-panel dashboard-sticky-below-header">
                     <div class="card-header bg-light-soft py-3">
                         <h5 class="mb-0 fw-semibold">
                             <i class="bi bi-play-circle me-2 text-primary"></i>

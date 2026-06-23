@@ -26,11 +26,11 @@
                     <div class="quiz-results-banner {{ $passed ? 'is-passed' : 'is-failed' }}">
                         @if($passed)
                             <i class="bi bi-trophy-fill text-warning d-block mb-3" style="font-size: 3rem;"></i>
-                            <h2 class="fw-bold text-success mb-2">Congratulations!</h2>
+                            <h4 class="fw-bold text-success mb-2">Congratulations!</h4>
                             <p class="text-muted mb-0">You passed this quiz. Great work!</p>
                         @else
                             <i class="bi bi-arrow-repeat text-danger d-block mb-3" style="font-size: 3rem;"></i>
-                            <h2 class="fw-bold text-danger mb-2">Keep trying</h2>
+                            <h4 class="fw-bold text-danger mb-2">Keep trying</h4>
                             <p class="text-muted mb-0">
                                 You scored below {{ $attempt->questionBank->passing_score }}%. Review your answers and try again.
                             </p>
@@ -205,7 +205,7 @@
 
             {{-- Sidebar --}}
             <div class="col-lg-4">
-                <div class="card border shadow-none sticky-top" style="top: 5.5rem;">
+                <div class="card border shadow-none dashboard-sticky-below-header">
                     <div class="card-header bg-light-soft py-3">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bi bi-clipboard-data me-1 text-primary"></i>Quiz summary
