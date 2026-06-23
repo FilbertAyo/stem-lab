@@ -65,11 +65,6 @@ class Project extends Model
             ->withTimestamps();
     }
 
-    public function steps(): HasMany
-    {
-        return $this->hasMany(ProjectStep::class)->orderBy('step_number');
-    }
-
     public function resources(): HasMany
     {
         return $this->hasMany(ProjectResource::class)->orderBy('sort_order');

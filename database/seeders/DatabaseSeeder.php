@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             SmileyTutorCredentialSeeder::class,
             RegionSeeder::class,
             SubscriptionPackageSeeder::class,
+            ProjectSeeder::class,
         ]);
     }
 }

@@ -6,57 +6,50 @@
                     <h5 class="mb-0">Projects</h5>
                     <p class="text-muted mb-0">Create and manage project guides</p>
                 </div>
-                <a href="{{ route('admin.projects.create') }}" class="btn btn-primary">
+                <a href="{{ route('admin.projects.create') }}" class="btn btn-primary btn-sm">
                     <i class="ti ti-plus"></i> Add Project
                 </a>
+            </div> 
+
+            
+            <div class="card mb-3">
+                <div class="card-body p-3">
+                    <ul class="nav nav-tabs mb-0" id="projects-platforms-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a
+                                class="nav-link {{ request()->routeIs('admin.projects.index') ? 'active' : '' }}"
+                                href="{{ route('admin.projects.index') }}"
+                                role="tab"
+                                aria-selected="{{ request()->routeIs('admin.projects.index') ? 'true' : 'false' }}"
+                            >
+                                Projects
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a
+                                class="nav-link {{ request()->routeIs('admin.platforms.*') ? 'active' : '' }}"
+                                href="{{ route('admin.platforms.index') }}"
+                                role="tab"
+                                aria-selected="{{ request()->routeIs('admin.platforms.*') ? 'true' : 'false' }}"
+                            >
+                                Platforms
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a
+                                class="nav-link {{ request()->routeIs('admin.project-categories.*') ? 'active' : '' }}"
+                                href="{{ route('admin.project-categories.index') }}"
+                                role="tab"
+                                aria-selected="{{ request()->routeIs('admin.project-categories.*') ? 'true' : 'false' }}"
+                            >
+                                Categories
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
+       
 
-            <ul class="nav nav-tabs mb-3" id="projects-platforms-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a
-                        class="nav-link {{ request()->routeIs('admin.projects.index') ? 'active' : '' }}"
-                        href="{{ route('admin.projects.index') }}"
-                        role="tab"
-                        aria-selected="{{ request()->routeIs('admin.projects.index') ? 'true' : 'false' }}"
-                    >
-                        Projects
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a
-                        class="nav-link {{ request()->routeIs('admin.platforms.*') ? 'active' : '' }}"
-                        href="{{ route('admin.platforms.index') }}"
-                        role="tab"
-                        aria-selected="{{ request()->routeIs('admin.platforms.*') ? 'true' : 'false' }}"
-                    >
-                        Platforms
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a
-                        class="nav-link {{ request()->routeIs('admin.project-categories.*') ? 'active' : '' }}"
-                        href="{{ route('admin.project-categories.index') }}"
-                        role="tab"
-                        aria-selected="{{ request()->routeIs('admin.project-categories.*') ? 'true' : 'false' }}"
-                    >
-                        Categories
-                    </a>
-                </li>
-            </ul>
-
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    Please fix the errors below and try again.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
 
             <!-- Filters -->
             <div class="card mb-3">
@@ -137,7 +130,7 @@
                                         </td>
                                         <td>{{ $project->category?->name ?? '—' }}</td>
                                         <td>
-                                            <span class="badge bg-light text-dark text-capitalize">{{ $project->difficulty }}</span>
+                                            <span class="badge bg-light b-dark text-dark text-capitalize">{{ $project->difficulty }}</span>
                                         </td>
                                         <td>
                                             <span class="badge bg-warning">{{ $project->tags_count }}</span>
@@ -147,10 +140,10 @@
                                         </td>
                                         <td>
                                             <div class="d-flex flex-column gap-1">
-                                                <span class="badge {{ $project->is_published ? 'bg-success' : 'bg-secondary' }}">
+                                                <span class="badge {{ $project->is_published ? 'bg-light-success text-success b-success' : 'bg-light-secondary text-secondary b-secondary' }}">
                                                     {{ $project->is_published ? 'Published' : 'Draft' }}
                                                 </span>
-                                                <span class="badge {{ $project->is_active ? 'bg-primary' : 'bg-dark' }}">
+                                                <span class="badge {{ $project->is_active ? 'bg-light-success text-success b-success' : 'bg-light-dark text-dark b-dark' }}">
                                                     {{ $project->is_active ? 'Active' : 'Inactive' }}
                                                 </span>
                                             </div>

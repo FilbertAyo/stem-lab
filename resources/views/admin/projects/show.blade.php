@@ -3,11 +3,12 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="mb-0">Project Details</h5>
+
                 <div class="d-flex gap-2">
-                    <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-primary">
+                    <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-primary btn-sm">
                         <i class="ti ti-edit"></i> Edit
                     </a>
-                    <a href="{{ route('admin.projects.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('admin.projects.index') }}" class="btn btn-secondary btn-sm">
                         <i class="ti ti-arrow-left"></i> Back to List
                     </a>
                 </div>
@@ -54,43 +55,18 @@
 
                             @if($project->description)
                                 <h6 class="fw-semibold mb-2">Description</h6>
-                                <p class="text-muted mb-4">{{ $project->description }}</p>
+                                <p class="text-muted mb-4 bg-light p-3">{{ $project->description }}</p>
                             @endif
 
                             @if($project->guide)
-                                <h6 class="fw-semibold mb-2">Overview / guide</h6>
-                                <div class="text-muted mb-4" style="white-space: pre-wrap;">{{ $project->guide }}</div>
-                            @endif
-
-                            @if($project->steps->isNotEmpty())
-                                <h6 class="fw-semibold mb-3">Steps</h6>
-                                <div class="mb-4">
-                                    @foreach($project->steps as $step)
-                                        <div class="border rounded p-3 mb-2">
-                                            <div class="d-flex align-items-start gap-2">
-                                                <span class="badge bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; min-width: 28px;">{{ $step->step_number }}</span>
-                                                <div class="flex-grow-1">
-                                                    <strong>{{ $step->title }}</strong>
-                                                    @if($step->description)
-                                                        <p class="text-muted small mb-2 mt-1">{{ $step->description }}</p>
-                                                    @endif
-                                                    @if($step->image)
-                                                        <img src="{{ Storage::url($step->image) }}" alt="Step {{ $step->step_number }}" class="img-fluid rounded mb-2" style="max-height: 200px;">
-                                                    @endif
-                                                    @if($step->code_snippet)
-                                                        <pre class="bg-dark text-white p-2 rounded small mb-0" style="white-space: pre-wrap; font-size: 0.8rem;">{{ $step->code_snippet }}</pre>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
+                                <h6 class="fw-semibold mb-2">Guide notes</h6>
+                                <div class="text-muted mb-4 bg-light p-3">{!! $project->guide !!}</div>
                             @endif
 
                             @if($project->codes->isNotEmpty())
                                 <h6 class="fw-semibold mb-2">Code blocks</h6>
                                 @foreach($project->codes as $code)
-                                    <div class="mb-3">
+                                    <div class="mb-3 bg-light p-3">
                                         <div class="d-flex justify-content-between align-items-center mb-1">
                                             <span class="fw-semibold">{{ $code->title }}</span>
                                             <span class="badge bg-secondary">{{ $code->language }}</span>
@@ -132,10 +108,10 @@
                         </div>
                         <div class="card-body">
                             <div class="d-flex flex-wrap gap-2">
-                                <span class="badge {{ $project->is_published ? 'bg-success' : 'bg-secondary' }}">
+                                <span class="badge {{ $project->is_published ? 'bg-light-success text-success b-success' : 'bg-light-secondary text-secondary b-secondary' }}">
                                     {{ $project->is_published ? 'Published' : 'Draft' }}
                                 </span>
-                                <span class="badge {{ $project->is_active ? 'bg-primary' : 'bg-dark' }}">
+                                <span class="badge {{ $project->is_active ? 'bg-light-success text-success b-success' : 'bg-light-dark text-dark b-dark' }}">
                                     {{ $project->is_active ? 'Active' : 'Inactive' }}
                                 </span>
                             </div>
@@ -153,7 +129,7 @@
                             <div class="card-header">
                                 <h6 class="mb-0">Equipment used</h6>
                             </div>
-                            <div class="card-body p-0">
+                            <div class="card-body p-2">
                                 <table class="table table-sm table-hover mb-0">
                                     <thead>
                                         <tr>

@@ -39,7 +39,7 @@ class ProjectController extends Controller
             ->active()
             ->visibleToStudentClass($schoolClassId)
             ->with(['category', 'platforms'])
-            ->withCount(['steps', 'codes', 'resources'])
+            ->withCount(['codes', 'resources'])
             ->ordered();
 
         $activeCategory = null;
@@ -87,7 +87,7 @@ class ProjectController extends Controller
             abort(404);
         }
 
-        $project->load(['category', 'tags', 'equipment', 'steps', 'resources', 'codes', 'platforms']);
+        $project->load(['category', 'tags', 'equipment', 'resources', 'codes', 'platforms']);
 
         // Categories for sidebar; highlight the current project's category
         $schoolClassId = $this->studentSchoolClassId();

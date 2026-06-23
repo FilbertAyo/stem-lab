@@ -18,12 +18,10 @@ sudo -u www-data composer install --optimize-autoloader --no-dev
 echo "Running database migrations..."
 sudo -u www-data php artisan migrate --force
 
-# NOTE: Do not add seeders here. Routine deploy must not overwrite admin content
-# (VR experiments, thumbnails, active flags, etc.). To load PhET sims once, run manually:
+# NOTE: Do not add seeders here. Routine deploy must not overwrite admin content.
+# PhetVrExperimentSeeder and PhetVrQuestionSeeder are disabled templates (already seeded on production).
+# To seed subjects/classes only when needed:
 #   sudo -u www-data php artisan db:seed --class=SubjectSeeder --force
-#   sudo -u www-data php artisan db:seed --class=PhetVrExperimentSeeder --force
-# To load curriculum-aligned quiz questions (skips experiments not in DB):
-#   sudo -u www-data php artisan db:seed --class=PhetVrQuestionSeeder --force
 
 # Clear and cache configurations
 echo "Clearing and caching configurations..."

@@ -10,7 +10,6 @@ use App\Models\ProjectCategory;
 use App\Models\SchoolClass;
 use App\Models\ProjectCode;
 use App\Models\ProjectResource;
-use App\Models\ProjectStep;
 use App\Models\ProjectTag;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -74,7 +73,7 @@ class ProjectController extends Controller
     {
         $project->load([
             'category', 'tags', 'equipment', 'author',
-            'steps', 'resources', 'codes', 'platforms',
+            'resources', 'codes', 'platforms',
         ]);
 
         return view('admin.projects.show', compact('project'));
@@ -115,14 +114,6 @@ class ProjectController extends Controller
             'equipment_notes.*' => ['nullable', 'string', 'max:255'],
             'platform_ids' => ['nullable', 'array'],
             'platform_ids.*' => ['integer', 'exists:platforms,id'],
-            'step_title' => ['nullable', 'array'],
-            'step_title.*' => ['nullable', 'string', 'max:255'],
-            'step_description' => ['nullable', 'array'],
-            'step_description.*' => ['nullable', 'string'],
-            'step_code_snippet' => ['nullable', 'array'],
-            'step_code_snippet.*' => ['nullable', 'string'],
-            'step_image' => ['nullable', 'array'],
-            'step_image.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
             'resource_title' => ['nullable', 'array'],
             'resource_title.*' => ['nullable', 'string', 'max:255'],
             'resource_type' => ['nullable', 'array'],
@@ -181,7 +172,6 @@ class ProjectController extends Controller
 
             $project->platforms()->sync($validated['platform_ids'] ?? []);
 
-            $this->syncSteps($project, $validated, $request);
             $this->syncResources($project, $validated, $request);
             $this->syncCodes($project, $validated);
 
@@ -207,7 +197,7 @@ class ProjectController extends Controller
 
     public function edit(Project $project): View
     {
-        $project->load(['tags', 'equipment', 'category', 'steps', 'resources', 'codes', 'platforms']);
+        $project->load(['tags', 'equipment', 'category', 'resources', 'codes', 'platforms']);
 
         $categories = ProjectCategory::ordered()->get();
         $tags = ProjectTag::orderBy('name')->get();
@@ -259,14 +249,6 @@ class ProjectController extends Controller
             'equipment_notes.*' => ['nullable', 'string', 'max:255'],
             'platform_ids' => ['nullable', 'array'],
             'platform_ids.*' => ['integer', 'exists:platforms,id'],
-            'step_title' => ['nullable', 'array'],
-            'step_title.*' => ['nullable', 'string', 'max:255'],
-            'step_description' => ['nullable', 'array'],
-            'step_description.*' => ['nullable', 'string'],
-            'step_code_snippet' => ['nullable', 'array'],
-            'step_code_snippet.*' => ['nullable', 'string'],
-            'step_image' => ['nullable', 'array'],
-            'step_image.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
             'resource_title' => ['nullable', 'array'],
             'resource_title.*' => ['nullable', 'string', 'max:255'],
             'resource_type' => ['nullable', 'array'],
@@ -348,7 +330,6 @@ class ProjectController extends Controller
             $project->tags()->sync($tagIds);
             $project->platforms()->sync($validated['platform_ids'] ?? []);
 
-            $this->syncSteps($project, $validated, $request);
             $this->syncResources($project, $validated, $request);
             $this->syncCodes($project, $validated);
 
@@ -379,7 +360,7 @@ class ProjectController extends Controller
 
     public function destroy(Project $project): RedirectResponse
     {
-        $project->load(['steps', 'resources']);
+        $project->load(['resources']);
         $projectName = $project->name;
         $projectSlug = $project->slug;
         $projectId = $project->id;
@@ -389,11 +370,6 @@ class ProjectController extends Controller
         }
         if ($project->circuit_image && Storage::disk('public')->exists($project->circuit_image)) {
             Storage::disk('public')->delete($project->circuit_image);
-        }
-        foreach ($project->steps as $step) {
-            if ($step->image && Storage::disk('public')->exists($step->image)) {
-                Storage::disk('public')->delete($step->image);
-            }
         }
         foreach ($project->resources as $resource) {
             if ($resource->file_path && Storage::disk('public')->exists($resource->file_path)) {
@@ -498,42 +474,6 @@ class ProjectController extends Controller
         }
 
         $project->equipment()->sync($sync);
-    }
-
-    private function syncSteps(Project $project, array $validated, Request $request): void
-    {
-        $project->steps()->delete();
-
-        $titles = $validated['step_title'] ?? [];
-        if (count($titles) === 0) {
-            return;
-        }
-
-        $descriptions = $validated['step_description'] ?? [];
-        $snippets = $validated['step_code_snippet'] ?? [];
-        $images = $request->file('step_image', []);
-        $stepNum = 0;
-
-        foreach ($titles as $i => $title) {
-            $title = trim((string) $title);
-            if ($title === '') {
-                continue;
-            }
-            $stepNum++;
-
-            $imagePath = null;
-            if (isset($images[$i]) && $images[$i]->isValid()) {
-                $imagePath = $images[$i]->store('projects/steps', 'public');
-            }
-
-            $project->steps()->create([
-                'step_number' => $stepNum,
-                'title' => $title,
-                'description' => trim((string) ($descriptions[$i] ?? '')) ?: null,
-                'code_snippet' => trim((string) ($snippets[$i] ?? '')) ?: null,
-                'image' => $imagePath,
-            ]);
-        }
     }
 
     private function syncResources(Project $project, array $validated, Request $request): void

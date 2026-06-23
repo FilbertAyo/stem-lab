@@ -6,12 +6,14 @@
                     <h5 class="mb-0">Platforms</h5>
                     <p class="text-muted mb-0">Tools & environments used in projects (e.g. Arduino, Python, Scratch)</p>
                 </div>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPlatformModal">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createPlatformModal">
                     <i class="ti ti-plus"></i> Add Platform
                 </button>
             </div>
 
-            <ul class="nav nav-tabs mb-3" id="projects-platforms-tab" role="tablist">
+            <div class="card mb-3">
+                <div class="card-body p-3">
+                    <ul class="nav nav-tabs mb-0" id="projects-platforms-tab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a
                         class="nav-link {{ request()->routeIs('admin.projects.index') ? 'active' : '' }}"
@@ -30,9 +32,21 @@
                         aria-selected="{{ request()->routeIs('admin.platforms.*') ? 'true' : 'false' }}"
                     >
                         Platforms
-                    </a>
-                </li>
-            </ul>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a
+                            class="nav-link {{ request()->routeIs('admin.project-categories.*') ? 'active' : '' }}"
+                            href="{{ route('admin.project-categories.index') }}"
+                            role="tab"
+                            aria-selected="{{ request()->routeIs('admin.project-categories.*') ? 'true' : 'false' }}"
+                        >
+                            Categories
+                        </a>
+                    </li>
+                </ul>
+                </div>
+            </div>
 
             
 

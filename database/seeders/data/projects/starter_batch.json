@@ -1,0 +1,622 @@
+[
+    {
+        "name": "LED Traffic Light System",
+        "slug": "led-traffic-light-system",
+        "category_slug": "home-automation",
+        "school_class": "Form 2",
+        "difficulty": "beginner",
+        "estimated_time": 90,
+        "platform_slugs": [
+            "arduino"
+        ],
+        "tags": [
+            "LED",
+            "circuits",
+            "Arduino",
+            "sequencing",
+            "electricity"
+        ],
+        "description": "Wire three coloured LEDs and program an Arduino to mimic a real traffic light sequence with safe timing delays.",
+        "external_link": "https://www.arduino.cc/reference/en/language/functions/time/delay/",
+        "is_published": false,
+        "is_active": true,
+        "guide": "<h4>What you will build</h4><p>A miniature traffic light on a breadboard: red, yellow, and green LEDs that turn on and off in the correct order, just like lights at a junction.</p><h4>What you will learn</h4><ul><li>How to connect LEDs safely with current-limiting resistors</li><li>How digital outputs control lights on and off</li><li>How to use <code>delay()</code> to create timed sequences</li><li>How electrical circuits relate to road safety systems</li></ul><h4>Safety first</h4><ul><li>Disconnect the USB cable before changing any wires</li><li>Never connect an LED directly to 5 V without a resistor</li><li>Keep drinks and metal objects away from the breadboard</li></ul><h4>You did it when…</h4><ul><li>Red stays on for about 5 seconds, then yellow for 2 seconds, then green for 5 seconds</li><li>The pattern repeats continuously without resetting the board</li><li>No LED flickers or stays dim — each colour is clearly visible</li></ul><h4>Step-by-step instructions</h4><ol><li><strong>Identify LED legs</strong><br>Hold the LED with the short leg (cathode) on the left. The long leg (anode) connects toward the Arduino pin through a resistor. If unsure, test briefly with a coin cell and resistor — the LED only lights one way.</li><li><strong>Place LEDs on the breadboard</strong><br>Insert the red LED in row 10, yellow in row 15, and green in row 20. Each cathode (short leg) goes into the breadboard ground rail via a jumper. Leave the anode side in the middle channel for resistors.</li><li><strong>Add current-limiting resistors</strong><br>Connect one 220 Ω resistor from each LED anode to a free row. Resistors prevent too much current from destroying the LED.</li><li><strong>Wire red LED to Arduino</strong><br>Run a jumper from the resistor end of the red LED to digital pin 9 on the Arduino.</li><li><strong>Wire yellow and green LEDs</strong><br>Connect yellow LED resistor to pin 10 and green LED resistor to pin 11.</li><li><strong>Connect ground</strong><br>Use a jumper from the breadboard ground rail (blue line) to the Arduino GND pin. All three LED cathodes must share this ground.</li><li><strong>Open Arduino IDE and select board</strong><br>Connect the Arduino via USB. In Tools → Board, choose Arduino Uno. In Tools → Port, select the COM port that appears.</li><li><strong>Upload the traffic light sketch</strong><br>Copy the code from the Code blocks section into a new sketch. Click Upload. Wait for “Done uploading.”</li><li><strong>Observe the sequence</strong><br>Watch the LEDs: red 5 s → yellow 2 s → green 5 s → repeat. Time with a phone stopwatch and adjust delay values if needed.</li><li><strong>Record and reflect</strong><br>Draw the circuit in your notebook. Label pins, resistors, and LED colours. Write one sentence explaining why a resistor is needed.</li></ol><h4>Code to upload</h4><p><strong>Traffic light sequence sketch</strong> <em>(Arduino C)</em></p><p>Controls three pins in sequence. Change delay values (milliseconds) to speed up or slow down the lights.</p><pre><code>const int RED_PIN = 9;\nconst int YELLOW_PIN = 10;\nconst int GREEN_PIN = 11;\n\nvoid setup() {\n  pinMode(RED_PIN, OUTPUT);\n  pinMode(YELLOW_PIN, OUTPUT);\n  pinMode(GREEN_PIN, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(RED_PIN, HIGH);\n  digitalWrite(YELLOW_PIN, LOW);\n  digitalWrite(GREEN_PIN, LOW);\n  delay(5000);\n\n  digitalWrite(RED_PIN, LOW);\n  digitalWrite(YELLOW_PIN, HIGH);\n  delay(2000);\n\n  digitalWrite(YELLOW_PIN, LOW);\n  digitalWrite(GREEN_PIN, HIGH);\n  delay(5000);\n\n  digitalWrite(GREEN_PIN, LOW);\n}</code></pre>",
+        "equipment": [
+            {
+                "name": "Arduino Uno",
+                "quantity": "1"
+            },
+            {
+                "name": "USB cable (A to B)",
+                "quantity": "1"
+            },
+            {
+                "name": "Breadboard (half size)",
+                "quantity": "1"
+            },
+            {
+                "name": "Jumper wires (male-to-male)",
+                "quantity": "10"
+            },
+            {
+                "name": "Red LED (5 mm)",
+                "quantity": "1"
+            },
+            {
+                "name": "Yellow LED (5 mm)",
+                "quantity": "1"
+            },
+            {
+                "name": "Green LED (5 mm)",
+                "quantity": "1"
+            },
+            {
+                "name": "220 Ω resistor",
+                "quantity": "3"
+            },
+            {
+                "name": "Computer with Arduino IDE",
+                "quantity": "1"
+            }
+        ],
+        "codes": [
+            {
+                "title": "Traffic light sequence sketch",
+                "language": "Arduino C",
+                "code": "const int RED_PIN = 9;\nconst int YELLOW_PIN = 10;\nconst int GREEN_PIN = 11;\n\nvoid setup() {\n  pinMode(RED_PIN, OUTPUT);\n  pinMode(YELLOW_PIN, OUTPUT);\n  pinMode(GREEN_PIN, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(RED_PIN, HIGH);\n  digitalWrite(YELLOW_PIN, LOW);\n  digitalWrite(GREEN_PIN, LOW);\n  delay(5000);\n\n  digitalWrite(RED_PIN, LOW);\n  digitalWrite(YELLOW_PIN, HIGH);\n  delay(2000);\n\n  digitalWrite(YELLOW_PIN, LOW);\n  digitalWrite(GREEN_PIN, HIGH);\n  delay(5000);\n\n  digitalWrite(GREEN_PIN, LOW);\n}",
+                "description": "Controls three pins in sequence. Change delay values (milliseconds) to speed up or slow down the lights."
+            }
+        ],
+        "resources": [
+            {
+                "title": "Arduino delay() reference",
+                "type": "link",
+                "url": "https://www.arduino.cc/reference/en/language/functions/time/delay/"
+            },
+            {
+                "title": "LED wiring basics",
+                "type": "link",
+                "url": "https://www.arduino.cc/en/Tutorial/BuiltInExamples/Blink"
+            }
+        ]
+    },
+    {
+        "name": "Automatic Night Lamp",
+        "slug": "automatic-night-lamp",
+        "category_slug": "home-automation",
+        "school_class": "Form 2",
+        "difficulty": "beginner",
+        "estimated_time": 120,
+        "platform_slugs": [
+            "arduino"
+        ],
+        "tags": [
+            "LDR",
+            "sensor",
+            "automation",
+            "light",
+            "Arduino"
+        ],
+        "description": "Build a lamp that turns on automatically when the room gets dark using a light-dependent resistor and one LED.",
+        "is_published": false,
+        "is_active": true,
+        "guide": "<h4>What you will build</h4><p>A small night lamp that senses darkness with an LDR (light-dependent resistor) and switches an LED on without you touching a button.</p><h4>What you will learn</h4><ul><li>How sensors change resistance with light level</li><li>How to read analog values with <code>analogRead()</code></li><li>How a voltage divider works in practice</li><li>How automated lighting saves energy</li></ul><h4>Safety first</h4><ul><li>Power off before rewiring</li><li>Do not look directly at bright LEDs at close range</li><li>Ask a teacher before using a soldering iron if you extend this project</li></ul><h4>You did it when…</h4><ul><li>LED is OFF when you shine a phone torch on the LDR</li><li>LED turns ON when you cover the LDR or switch off room lights</li><li>You can adjust the threshold in code so the lamp responds at a useful brightness level</li></ul><h4>Step-by-step instructions</h4><ol><li><strong>Build the LDR voltage divider</strong><br>Place the LDR between 5 V and analog pin A0. Connect the 10 kΩ resistor from A0 to GND. This divider produces a voltage that changes when light hits the LDR.</li><li><strong>Wire the LED output</strong><br>Connect the LED anode through a 220 Ω resistor to digital pin 8. Connect LED cathode to GND.</li><li><strong>Upload test sketch</strong><br>Upload the night lamp code. Open Serial Monitor at 9600 baud to see raw light readings while you cover and uncover the LDR.</li><li><strong>Find your threshold</strong><br>Note the number in bright light (often 700–900) and in darkness (often below 400). Set THRESHOLD in code between those values — try 500 first.</li><li><strong>Test in real conditions</strong><br>Place the breadboard on a desk. Turn off lights or cover the LDR with your hand. The LED should glow within one second.</li><li><strong>Calibrate sensitivity</strong><br>If the lamp turns on too easily, lower THRESHOLD. If it never turns on, raise THRESHOLD. Re-upload after each change.</li><li><strong>Document your circuit</strong><br>Draw the voltage divider and label A0, 5 V, and GND. Explain in writing why the reading drops when light decreases.</li></ol><h4>Code to upload</h4><p><strong>Night lamp with adjustable threshold</strong> <em>(Arduino C)</em></p><p>Reads light level every 100 ms. Change THRESHOLD to match your classroom lighting.</p><pre><code>const int LDR_PIN = A0;\nconst int LED_PIN = 8;\nconst int THRESHOLD = 500;\n\nvoid setup() {\n  pinMode(LED_PIN, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int light = analogRead(LDR_PIN);\n  Serial.println(light);\n\n  if (light &lt; THRESHOLD) {\n    digitalWrite(LED_PIN, HIGH);\n  } else {\n    digitalWrite(LED_PIN, LOW);\n  }\n\n  delay(100);\n}</code></pre>",
+        "equipment": [
+            {
+                "name": "Arduino Uno",
+                "quantity": "1"
+            },
+            {
+                "name": "LDR (photoresistor)",
+                "quantity": "1"
+            },
+            {
+                "name": "10 kΩ resistor",
+                "quantity": "1"
+            },
+            {
+                "name": "220 Ω resistor",
+                "quantity": "1"
+            },
+            {
+                "name": "White LED (5 mm)",
+                "quantity": "1"
+            },
+            {
+                "name": "Breadboard",
+                "quantity": "1"
+            },
+            {
+                "name": "Jumper wires",
+                "quantity": "8"
+            },
+            {
+                "name": "USB cable",
+                "quantity": "1"
+            }
+        ],
+        "codes": [
+            {
+                "title": "Night lamp with adjustable threshold",
+                "language": "Arduino C",
+                "code": "const int LDR_PIN = A0;\nconst int LED_PIN = 8;\nconst int THRESHOLD = 500;\n\nvoid setup() {\n  pinMode(LED_PIN, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int light = analogRead(LDR_PIN);\n  Serial.println(light);\n\n  if (light < THRESHOLD) {\n    digitalWrite(LED_PIN, HIGH);\n  } else {\n    digitalWrite(LED_PIN, LOW);\n  }\n\n  delay(100);\n}",
+                "description": "Reads light level every 100 ms. Change THRESHOLD to match your classroom lighting."
+            }
+        ],
+        "resources": [
+            {
+                "title": "Analog input tutorial",
+                "type": "link",
+                "url": "https://www.arduino.cc/en/Tutorial/BuiltInExamples/AnalogReadSerial"
+            }
+        ]
+    },
+    {
+        "name": "Temperature and Humidity Monitor",
+        "slug": "temperature-humidity-monitor",
+        "category_slug": "environment-monitoring",
+        "school_class": "Form 3",
+        "difficulty": "intermediate",
+        "estimated_time": 150,
+        "platform_slugs": [
+            "arduino"
+        ],
+        "tags": [
+            "DHT11",
+            "sensors",
+            "environment",
+            "data",
+            "LCD"
+        ],
+        "description": "Read temperature and humidity with a DHT11 sensor and display live readings on a 16×2 LCD screen.",
+        "is_published": false,
+        "is_active": true,
+        "guide": "<h4>What you will build</h4><p>A desktop weather station that shows current temperature (°C) and relative humidity (%) on an LCD display, updating every two seconds.</p><h4>What you will learn</h4><ul><li>How digital environmental sensors communicate with a microcontroller</li><li>How to wire and program an LCD display</li><li>How to collect and interpret environmental data</li><li>Why monitoring indoor climate matters for health and agriculture</li></ul><h4>Safety first</h4><ul><li>Handle the DHT11 by the plastic body, not the pins</li><li>Do not expose electronics to water spills</li><li>Use only 5 V from the Arduino — do not use external power without teacher guidance</li></ul><h4>You did it when…</h4><ul><li>LCD shows two lines: temperature and humidity</li><li>Values change when you breathe on the sensor or move it near a window</li><li>Readings are stable (not jumping randomly) after the sensor warms up for 30 seconds</li></ul><h4>Step-by-step instructions</h4><ol><li><strong>Install DHT library</strong><br>In Arduino IDE: Sketch → Include Library → Manage Libraries. Search for “DHT sensor library” by Adafruit and install it. Also install “Adafruit Unified Sensor” if prompted.</li><li><strong>Wire the DHT11</strong><br>Connect VCC to 5 V, GND to GND, and DATA to digital pin 2. Add a 10 kΩ pull-up resistor between DATA and 5 V if your module does not include one.</li><li><strong>Wire the I2C LCD</strong><br>Connect LCD VCC to 5 V, GND to GND, SDA to A4, and SCL to A5 on the Uno. Note the I2C address (often 0x27 or 0x3F) using an I2C scanner sketch if the display stays blank.</li><li><strong>Upload the monitor sketch</strong><br>Install the LiquidCrystal_I2C library if needed. Paste the project code, set the LCD address to match your module, and upload.</li><li><strong>Verify readings</strong><br>Compare temperature with a classroom thermometer. Humidity should rise when you cup your hands around the sensor.</li><li><strong>Log observations</strong><br>Record readings every 5 minutes for 30 minutes in a table. Note any patterns (e.g. humidity drops near an open window).</li><li><strong>Extend (optional)</strong><br>Add a comfort message: if humidity is above 70%, display “Humid” on line 2. Practice using if-else in your code.</li></ol><h4>Code to upload</h4><p><strong>DHT11 + I2C LCD monitor</strong> <em>(Arduino C)</em></p><p>Change 0x27 to 0x3F if your LCD address differs. Requires DHT and LiquidCrystal_I2C libraries.</p><pre><code>#include &lt;DHT.h&gt;\n#include &lt;Wire.h&gt;\n#include &lt;LiquidCrystal_I2C.h&gt;\n\n#define DHT_PIN 2\n#define DHT_TYPE DHT11\n\nDHT dht(DHT_PIN, DHT_TYPE);\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nvoid setup() {\n  dht.begin();\n  lcd.init();\n  lcd.backlight();\n  lcd.print(&quot;Starting...&quot;);\n  delay(1000);\n}\n\nvoid loop() {\n  float temp = dht.readTemperature();\n  float hum = dht.readHumidity();\n\n  if (isnan(temp) || isnan(hum)) {\n    lcd.clear();\n    lcd.print(&quot;Sensor error&quot;);\n    delay(2000);\n    return;\n  }\n\n  lcd.clear();\n  lcd.setCursor(0, 0);\n  lcd.print(&quot;Temp: &quot;);\n  lcd.print(temp, 1);\n  lcd.print(&quot; C&quot;);\n  lcd.setCursor(0, 1);\n  lcd.print(&quot;Hum:  &quot;);\n  lcd.print(hum, 0);\n  lcd.print(&quot; %&quot;);\n\n  delay(2000);\n}</code></pre>",
+        "equipment": [
+            {
+                "name": "Arduino Uno",
+                "quantity": "1"
+            },
+            {
+                "name": "DHT11 temperature-humidity sensor",
+                "quantity": "1"
+            },
+            {
+                "name": "16×2 LCD display (I2C backpack recommended)",
+                "quantity": "1"
+            },
+            {
+                "name": "Breadboard",
+                "quantity": "1"
+            },
+            {
+                "name": "Jumper wires",
+                "quantity": "10"
+            },
+            {
+                "name": "USB cable",
+                "quantity": "1"
+            },
+            {
+                "name": "Computer with Arduino IDE",
+                "quantity": "1"
+            }
+        ],
+        "codes": [
+            {
+                "title": "DHT11 + I2C LCD monitor",
+                "language": "Arduino C",
+                "code": "#include <DHT.h>\n#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\n\n#define DHT_PIN 2\n#define DHT_TYPE DHT11\n\nDHT dht(DHT_PIN, DHT_TYPE);\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nvoid setup() {\n  dht.begin();\n  lcd.init();\n  lcd.backlight();\n  lcd.print(\"Starting...\");\n  delay(1000);\n}\n\nvoid loop() {\n  float temp = dht.readTemperature();\n  float hum = dht.readHumidity();\n\n  if (isnan(temp) || isnan(hum)) {\n    lcd.clear();\n    lcd.print(\"Sensor error\");\n    delay(2000);\n    return;\n  }\n\n  lcd.clear();\n  lcd.setCursor(0, 0);\n  lcd.print(\"Temp: \");\n  lcd.print(temp, 1);\n  lcd.print(\" C\");\n  lcd.setCursor(0, 1);\n  lcd.print(\"Hum:  \");\n  lcd.print(hum, 0);\n  lcd.print(\" %\");\n\n  delay(2000);\n}",
+                "description": "Change 0x27 to 0x3F if your LCD address differs. Requires DHT and LiquidCrystal_I2C libraries."
+            }
+        ],
+        "resources": [
+            {
+                "title": "DHT11 datasheet overview",
+                "type": "link",
+                "url": "https://www.mouser.com/datasheet/2/735/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf"
+            },
+            {
+                "title": "Adafruit DHT library guide",
+                "type": "link",
+                "url": "https://learn.adafruit.com/dht"
+            }
+        ]
+    },
+    {
+        "name": "Line-Following Robot",
+        "slug": "line-following-robot",
+        "category_slug": "robotics",
+        "school_class": "Form 3",
+        "difficulty": "intermediate",
+        "estimated_time": 240,
+        "platform_slugs": [
+            "arduino"
+        ],
+        "tags": [
+            "robot",
+            "IR sensor",
+            "motors",
+            "automation",
+            "L298N"
+        ],
+        "description": "Build a small robot car that follows a black line on a white surface using infrared sensors and a motor driver.",
+        "is_published": false,
+        "is_active": true,
+        "guide": "<h4>What you will build</h4><p>A two-wheeled robot that drives along a track made with black electrical tape on a white poster board, correcting its path automatically.</p><h4>What you will learn</h4><ul><li>How IR sensors detect contrast between dark and light surfaces</li><li>How motor drivers control direction and speed of DC motors</li><li>How feedback loops let machines “decide” small corrections</li><li>Basic mechanical assembly and battery safety</li></ul><h4>Safety first</h4><ul><li>Disconnect batteries before wiring changes</li><li>Never short battery terminals with metal tools</li><li>Keep fingers clear of wheels when motors are powered</li><li>Charge LiPo batteries only with teacher supervision</li></ul><h4>You did it when…</h4><ul><li>Robot completes at least one full lap of a simple oval track without being carried</li><li>It recovers after a gentle curve (does not drive off the line immediately)</li><li>Both wheels spin in the correct forward direction</li></ul><h4>Step-by-step instructions</h4><ol><li><strong>Assemble the chassis</strong><br>Mount motors, wheels, and caster wheel according to your kit instructions. Ensure wheels are parallel and spin freely.</li><li><strong>Mount IR sensors</strong><br>Fix two IR sensors at the front, 1–2 cm apart, 5–10 mm above the ground. They should “see” the tape line between them on a straight section.</li><li><strong>Wire motors to L298N</strong><br>Connect left motor to OUT1/OUT2 and right motor to OUT3/OUT4. Connect L298N logic power to 5 V and GND from Arduino. Motor power (12 V input) goes to the battery — follow your module labels.</li><li><strong>Connect IR sensors</strong><br>Wire left sensor digital output to pin 7, right sensor to pin 8. Connect sensor VCC to 5 V and GND to common ground with the Arduino.</li><li><strong>Build a test track</strong><br>On white board, lay a closed loop of black tape about 3 cm wide. Include one gentle curve. Avoid sharp 90° turns until basic following works.</li><li><strong>Calibrate sensor readings</strong><br>Upload a test sketch that prints sensor values on Serial Monitor over white vs black. If readings do not change, adjust sensor height or sensitivity potentiometer.</li><li><strong>Upload line-follow logic</strong><br>Use the project code: both sensors on white → go forward; left on black → turn left; right on black → turn right; both on black → stop (end of line or cross).</li><li><strong>Tune motor speeds</strong><br>If the robot overshoots curves, reduce turn speed constants. If it is too slow, increase forward speed slightly. Re-test after each change.</li><li><strong>Time trial and improve</strong><br>Time one lap. Sketch the track and note where the robot failed. Adjust sensor position or code and try again.</li></ol><h4>Code to upload</h4><p><strong>Basic line follower</strong> <em>(Arduino C)</em></p><p>LOW on sensor = black line detected (common module behaviour). Swap HIGH/LOW if your sensors are inverted.</p><pre><code>const int LEFT_SENSOR = 7;\nconst int RIGHT_SENSOR = 8;\n\nconst int ENA = 5;\nconst int IN1 = 3;\nconst int IN2 = 4;\nconst int ENB = 6;\nconst int IN3 = 9;\nconst int IN4 = 10;\n\nvoid setup() {\n  pinMode(LEFT_SENSOR, INPUT);\n  pinMode(RIGHT_SENSOR, INPUT);\n  pinMode(IN1, OUTPUT);\n  pinMode(IN2, OUTPUT);\n  pinMode(IN3, OUTPUT);\n  pinMode(IN4, OUTPUT);\n  pinMode(ENA, OUTPUT);\n  pinMode(ENB, OUTPUT);\n}\n\nvoid setMotor(int en, int inA, int inB, int speed, bool forward) {\n  digitalWrite(inA, forward ? HIGH : LOW);\n  digitalWrite(inB, forward ? LOW : HIGH);\n  analogWrite(en, speed);\n}\n\nvoid loop() {\n  int left = digitalRead(LEFT_SENSOR);\n  int right = digitalRead(RIGHT_SENSOR);\n\n  if (left == LOW &amp;&amp; right == LOW) {\n    setMotor(ENA, IN1, IN2, 180, true);\n    setMotor(ENB, IN3, IN4, 180, true);\n  } else if (left == LOW) {\n    setMotor(ENA, IN1, IN2, 120, false);\n    setMotor(ENB, IN3, IN4, 180, true);\n  } else if (right == LOW) {\n    setMotor(ENA, IN1, IN2, 180, true);\n    setMotor(ENB, IN3, IN4, 120, false);\n  } else {\n    setMotor(ENA, IN1, IN2, 0, true);\n    setMotor(ENB, IN3, IN4, 0, true);\n  }\n\n  delay(10);\n}</code></pre>",
+        "equipment": [
+            {
+                "name": "Robot chassis kit with 2 DC motors",
+                "quantity": "1"
+            },
+            {
+                "name": "Arduino Uno",
+                "quantity": "1"
+            },
+            {
+                "name": "L298N motor driver module",
+                "quantity": "1"
+            },
+            {
+                "name": "IR line sensor module (2×)",
+                "quantity": "1"
+            },
+            {
+                "name": "Battery pack (4× AA or 2S LiPo with teacher approval)",
+                "quantity": "1"
+            },
+            {
+                "name": "Black electrical tape",
+                "quantity": "1 roll"
+            },
+            {
+                "name": "White poster board (A2 or larger)",
+                "quantity": "1"
+            },
+            {
+                "name": "Jumper wires",
+                "quantity": "15"
+            },
+            {
+                "name": "USB cable",
+                "quantity": "1"
+            }
+        ],
+        "codes": [
+            {
+                "title": "Basic line follower",
+                "language": "Arduino C",
+                "code": "const int LEFT_SENSOR = 7;\nconst int RIGHT_SENSOR = 8;\n\nconst int ENA = 5;\nconst int IN1 = 3;\nconst int IN2 = 4;\nconst int ENB = 6;\nconst int IN3 = 9;\nconst int IN4 = 10;\n\nvoid setup() {\n  pinMode(LEFT_SENSOR, INPUT);\n  pinMode(RIGHT_SENSOR, INPUT);\n  pinMode(IN1, OUTPUT);\n  pinMode(IN2, OUTPUT);\n  pinMode(IN3, OUTPUT);\n  pinMode(IN4, OUTPUT);\n  pinMode(ENA, OUTPUT);\n  pinMode(ENB, OUTPUT);\n}\n\nvoid setMotor(int en, int inA, int inB, int speed, bool forward) {\n  digitalWrite(inA, forward ? HIGH : LOW);\n  digitalWrite(inB, forward ? LOW : HIGH);\n  analogWrite(en, speed);\n}\n\nvoid loop() {\n  int left = digitalRead(LEFT_SENSOR);\n  int right = digitalRead(RIGHT_SENSOR);\n\n  if (left == LOW && right == LOW) {\n    setMotor(ENA, IN1, IN2, 180, true);\n    setMotor(ENB, IN3, IN4, 180, true);\n  } else if (left == LOW) {\n    setMotor(ENA, IN1, IN2, 120, false);\n    setMotor(ENB, IN3, IN4, 180, true);\n  } else if (right == LOW) {\n    setMotor(ENA, IN1, IN2, 180, true);\n    setMotor(ENB, IN3, IN4, 120, false);\n  } else {\n    setMotor(ENA, IN1, IN2, 0, true);\n    setMotor(ENB, IN3, IN4, 0, true);\n  }\n\n  delay(10);\n}",
+                "description": "LOW on sensor = black line detected (common module behaviour). Swap HIGH/LOW if your sensors are inverted."
+            }
+        ],
+        "resources": [
+            {
+                "title": "L298N wiring guide",
+                "type": "link",
+                "url": "https://lastminuteengineers.com/l298n-dc-stepper-driver-arduino-tutorial/"
+            }
+        ]
+    },
+    {
+        "name": "Paper Airplane Design Challenge",
+        "slug": "paper-airplane-design-challenge",
+        "category_slug": "aviation",
+        "school_class": "Form 1",
+        "difficulty": "beginner",
+        "estimated_time": 60,
+        "platform_slugs": [],
+        "tags": [
+            "aerodynamics",
+            "forces",
+            "flight",
+            "design",
+            "measurement"
+        ],
+        "description": "Design and test three paper airplane styles, measure flight distance and time, and analyse which design performs best.",
+        "is_published": false,
+        "is_active": true,
+        "guide": "<h4>What you will build</h4><p>Three different paper airplane designs that you fold, fly, measure, and compare using a simple data table.</p><h4>What you will learn</h4><ul><li>How wing shape affects lift and drag</li><li>How to measure distance and time accurately</li><li>How to record data and draw evidence-based conclusions</li><li>How engineers test and improve designs through iteration</li></ul><h4>Safety first</h4><ul><li>Fly only in an open area away from people’s faces</li><li>Do not throw airplanes toward roads or windows</li><li>Pick up all paper after the activity</li></ul><h4>You did it when…</h4><ul><li>You have flown each design at least 5 times and recorded results</li><li>You calculated average distance for each design</li><li>You wrote a short conclusion naming the best design and giving one physical reason why it flew farther</li></ul><h4>Step-by-step instructions</h4><ol><li><strong>Mark the flight lane</strong><br>Place masking tape as a start line. Clear a straight path at least 8 m long. One student throws; another measures from the start line to where the plane first touches the ground.</li><li><strong>Fold Design A — Dart</strong><br>Fold a classic pointed dart: sharp nose, narrow wings, tight folds. This design usually flies fast but may stall if thrown too hard.</li><li><strong>Fold Design B — Glider</strong><br>Fold a wide-wing glider with a blunt nose. Wings should be level and symmetrical. This design often stays in the air longer.</li><li><strong>Fold Design C — Your choice</strong><br>Create your own variation: change wing width, add winglets, or adjust tail flaps. Sketch your design before folding.</li><li><strong>Standardise the launch</strong><br>Stand behind the line. Hold the plane at the same point each throw. Launch at the same angle (about 15° above horizontal) with a smooth motion — no throwing as hard as possible.</li><li><strong>Record five trials per design</strong><br>Use a table with columns: Trial, Design, Distance (m), Time in air (s). Calculate the average distance for each design.</li><li><strong>Analyse results</strong><br>Which design had the greatest average distance? Which stayed airborne longest? Link your answer to wing area and nose shape.</li><li><strong>Improve the winner</strong><br>Make one small change to your best design (e.g. bend wing tips up 5 mm). Fly five more times. Did average distance improve?</li></ol>",
+        "equipment": [
+            {
+                "name": "A4 paper sheets",
+                "quantity": "15"
+            },
+            {
+                "name": "Measuring tape (10 m)",
+                "quantity": "1"
+            },
+            {
+                "name": "Stopwatch",
+                "quantity": "1"
+            },
+            {
+                "name": "Clipboard and pen",
+                "quantity": "1"
+            },
+            {
+                "name": "Masking tape (start line)",
+                "quantity": "1 roll"
+            },
+            {
+                "name": "Open indoor hall or field",
+                "quantity": "1"
+            }
+        ],
+        "codes": [],
+        "resources": [
+            {
+                "title": "NASA paper airplane activity",
+                "type": "link",
+                "url": "https://www.nasa.gov/stem-content/paper-airplane/"
+            }
+        ]
+    },
+    {
+        "name": "Water Rocket Launch",
+        "slug": "water-rocket-launch",
+        "category_slug": "aviation",
+        "school_class": "Form 2",
+        "difficulty": "intermediate",
+        "estimated_time": 120,
+        "platform_slugs": [],
+        "tags": [
+            "rocket",
+            "pressure",
+            "forces",
+            "projectile",
+            "Newton"
+        ],
+        "description": "Build a water-powered rocket from a plastic bottle, launch it safely outdoors, and measure how high or far it flies.",
+        "is_published": false,
+        "is_active": true,
+        "guide": "<h4>What you will build</h4><p>A reusable water rocket made from a PET bottle with cardboard fins and a nose cone, launched with a bicycle pump or launcher under teacher supervision.</p><h4>What you will learn</h4><ul><li>How pressurised air stores energy and releases it rapidly</li><li>How Newton’s third law explains rocket motion</li><li>How fin shape stabilises flight</li><li>How to conduct a safe outdoor experiment</li></ul><h4>Safety first — read carefully</h4><ul><li>Only launch outdoors with teacher permission and safety goggles for everyone</li><li>Never aim at people, buildings, or power lines</li><li>Stand at least 5 m from the launcher; one person pumps, one launches</li><li>Do not exceed recommended pump pressure (typically 40–60 psi / 3–4 bar)</li><li>Inspect the bottle for cracks before every launch — discard damaged bottles</li></ul><h4>You did it when…</h4><ul><li>Rocket launches vertically (or with stable arc) without tumbling immediately</li><li>You recorded at least 3 launches with water volume and pressure noted</li><li>You explained in writing how action-reaction pushes the rocket upward</li></ul><h4>Step-by-step instructions</h4><ol><li><strong>Prepare the bottle</strong><br>Remove labels. Cut three identical fins from cardboard (about 10 cm tall). Tape fins evenly spaced 120° apart at the base of the bottle. Fins must be straight and firmly attached.</li><li><strong>Add a nose cone</strong><br>Roll a paper or light cardboard cone and tape it to the bottle neck (opposite end from fins) to improve aerodynamics.</li><li><strong>Set up launcher</strong><br>With your teacher, place the launcher on flat ground. Check the release mechanism works before adding the bottle.</li><li><strong>Fill with water</strong><br>Fill the bottle one-third full with water (about 500 mL in a 1.5 L bottle). Too much water adds mass; too little reduces thrust.</li><li><strong>Pressurise</strong><br>Mount the bottle on the launcher upside-down. Pump slowly to the target pressure (start at 30 psi). Everyone stands clear.</li><li><strong>Launch and observe</strong><br>Release the rocket. Note flight path: stable, wobble, or immediate tumble. Measure approximate height using a clinometer or compare to a known tall object.</li><li><strong>Vary one variable</strong><br>Keep pressure constant. Try ¼ full vs ⅓ full water. Record which volume gave higher flight. Only change one thing at a time.</li><li><strong>Write your report</strong><br>Diagram the rocket. State Newton’s third law in your own words. Include a results table and one improvement for the next launch.</li></ol>",
+        "equipment": [
+            {
+                "name": "PET plastic bottle (1.5 L or 2 L)",
+                "quantity": "2"
+            },
+            {
+                "name": "Cardboard (for fins)",
+                "quantity": "1 sheet"
+            },
+            {
+                "name": "Duct tape",
+                "quantity": "1 roll"
+            },
+            {
+                "name": "Cork or rubber stopper (fits bottle)",
+                "quantity": "1"
+            },
+            {
+                "name": "Bicycle pump with pressure gauge",
+                "quantity": "1"
+            },
+            {
+                "name": "Water rocket launcher (school kit)",
+                "quantity": "1"
+            },
+            {
+                "name": "Safety goggles",
+                "quantity": "1 per student"
+            },
+            {
+                "name": "Measuring tape",
+                "quantity": "1"
+            },
+            {
+                "name": "Water",
+                "quantity": "as needed"
+            }
+        ],
+        "codes": [],
+        "resources": [
+            {
+                "title": "Water rocket safety guide",
+                "type": "link",
+                "url": "https://www.nasa.gov/stem-content/water-rocket-activity/"
+            }
+        ]
+    },
+    {
+        "name": "Scratch Interactive Game",
+        "slug": "scratch-interactive-game",
+        "category_slug": "coding",
+        "school_class": "Form 1",
+        "difficulty": "beginner",
+        "estimated_time": 90,
+        "platform_slugs": [
+            "scratch"
+        ],
+        "tags": [
+            "Scratch",
+            "game",
+            "loops",
+            "variables",
+            "logic"
+        ],
+        "description": "Create a catch-the-falling-object game in Scratch with a movable player, scoring, and a game-over condition.",
+        "external_link": "https://scratch.mit.edu/projects/editor/",
+        "is_published": false,
+        "is_active": true,
+        "guide": "<h4>What you will build</h4><p>A simple game where you move a basket left and right to catch falling stars. Each catch adds points; missing three stars ends the game.</p><h4>What you will learn</h4><ul><li>How sprites, costumes, and the stage work in Scratch</li><li>How event blocks (when key pressed) control movement</li><li>How variables store a score</li><li>How loops and conditions create game rules</li></ul><h4>You did it when…</h4><ul><li>Player moves smoothly with arrow keys</li><li>Score increases when the basket touches a falling sprite</li><li>Game stops or shows “Game Over” after three misses</li></ul><h4>Step-by-step instructions</h4><ol><li><strong>Open Scratch and choose sprites</strong><br>Go to scratch.mit.edu → Create. Delete the cat sprite if you prefer. Add a basket sprite (Sprite library → search “basket” or draw your own). Add a star or apple as the falling object.</li><li><strong>Position starting points</strong><br>Place the basket at the bottom centre. Place the star at a random top position using motion blocks: go to x: (pick random -200 to 200) y: 180.</li><li><strong>Move the basket with keys</strong><br>On the basket sprite, add: when green flag clicked → forever → if key right arrow pressed → change x by 10; if key left arrow pressed → change x by -10.</li><li><strong>Create a score variable</strong><br>Click Variables → Make a Variable → name it Score. When the star touches the basket, change Score by 1 and move the star to a new random top position.</li><li><strong>Make the star fall</strong><br>On the star sprite: forever → change y by -5. If y position &lt; -180, change Lives by -1 (create Lives variable starting at 3) and reset star to top.</li><li><strong>Add game over</strong><br>When Lives = 0, stop all, broadcast Game Over, and show a backdrop or sprite saying “Game Over — Score: [Score]”.</li><li><strong>Polish and share</strong><br>Add a sound when catching. Colour the backdrop. Test with a classmate. Save to your account and copy the project link for your teacher.</li></ol>",
+        "equipment": [
+            {
+                "name": "Computer with internet",
+                "quantity": "1"
+            },
+            {
+                "name": "Mouse",
+                "quantity": "1"
+            },
+            {
+                "name": "Scratch account (optional)",
+                "quantity": "1"
+            }
+        ],
+        "codes": [],
+        "resources": [
+            {
+                "title": "Scratch getting started",
+                "type": "link",
+                "url": "https://scratch.mit.edu/projects/editor/?tutorial=getStarted"
+            },
+            {
+                "title": "Scratch catch game cards",
+                "type": "link",
+                "url": "https://scratch.mit.edu/ideas"
+            }
+        ]
+    },
+    {
+        "name": "Python Calculator",
+        "slug": "python-calculator",
+        "category_slug": "coding",
+        "school_class": "Form 2",
+        "difficulty": "beginner",
+        "estimated_time": 75,
+        "platform_slugs": [
+            "python"
+        ],
+        "tags": [
+            "Python",
+            "functions",
+            "input",
+            "algorithms",
+            "math"
+        ],
+        "description": "Write a Python program that asks for two numbers and an operation, then prints the result with basic error handling.",
+        "is_published": false,
+        "is_active": true,
+        "guide": "<h4>What you will build</h4><p>A text-based calculator in Python that supports addition, subtraction, multiplication, and division on two numbers typed by the user.</p><h4>What you will learn</h4><ul><li>How to read user input with <code>input()</code></li><li>How to convert strings to numbers with <code>float()</code></li><li>How if-elif-else chooses between operations</li><li>How to handle division by zero gracefully</li></ul><h4>You did it when…</h4><ul><li>All four operations return correct answers for test pairs (e.g. 8 + 5 = 13)</li><li>Entering 0 as the second number for division shows an error message, not a crash</li><li>Entering letters instead of numbers shows a friendly “invalid input” message</li></ul><h4>Step-by-step instructions</h4><ol><li><strong>Create calculator.py</strong><br>Open your editor. Save an empty file as calculator.py in a folder you can find easily.</li><li><strong>Get two numbers</strong><br>Use input() to ask for the first and second number. Convert each with float(). Wrap in try/except ValueError to catch non-numeric input.</li><li><strong>Ask for the operation</strong><br>Prompt: “Enter operation (+, -, *, /):”. Store the answer in a variable called op.</li><li><strong>Calculate with if-elif</strong><br>If op is &#039;+&#039;, print a + b. Repeat for -, *, /. For &#039;/&#039;, check if b == 0 before dividing.</li><li><strong>Test all operations</strong><br>Run the program five times with known answers. Record inputs and outputs in a table in your notebook.</li><li><strong>Add a loop (extension)</strong><br>Wrap the main logic in while True so the user can calculate again. Add input(&#039;Press Enter to continue or type q to quit:&#039;) to exit.</li></ol><h4>Code to upload</h4><p><strong>Simple Python calculator</strong> <em>(Python)</em></p><p>Run with: python calculator.py</p><pre><code>def main():\n    try:\n        a = float(input(&#039;First number: &#039;))\n        b = float(input(&#039;Second number: &#039;))\n    except ValueError:\n        print(&#039;Invalid input. Please enter numbers only.&#039;)\n        return\n\n    op = input(&#039;Operation (+, -, *, /): &#039;).strip()\n\n    if op == &#039;+&#039;:\n        print(&#039;Result:&#039;, a + b)\n    elif op == &#039;-&#039;:\n        print(&#039;Result:&#039;, a - b)\n    elif op == &#039;*&#039;:\n        print(&#039;Result:&#039;, a * b)\n    elif op == &#039;/&#039;:\n        if b == 0:\n            print(&#039;Error: cannot divide by zero.&#039;)\n        else:\n            print(&#039;Result:&#039;, a / b)\n    else:\n        print(&#039;Unknown operation.&#039;)\n\nif __name__ == &#039;__main__&#039;:\n    main()</code></pre>",
+        "equipment": [
+            {
+                "name": "Computer with Python 3 installed",
+                "quantity": "1"
+            },
+            {
+                "name": "Text editor or IDLE",
+                "quantity": "1"
+            }
+        ],
+        "codes": [
+            {
+                "title": "Simple Python calculator",
+                "language": "Python",
+                "code": "def main():\n    try:\n        a = float(input('First number: '))\n        b = float(input('Second number: '))\n    except ValueError:\n        print('Invalid input. Please enter numbers only.')\n        return\n\n    op = input('Operation (+, -, *, /): ').strip()\n\n    if op == '+':\n        print('Result:', a + b)\n    elif op == '-':\n        print('Result:', a - b)\n    elif op == '*':\n        print('Result:', a * b)\n    elif op == '/':\n        if b == 0:\n            print('Error: cannot divide by zero.')\n        else:\n            print('Result:', a / b)\n    else:\n        print('Unknown operation.')\n\nif __name__ == '__main__':\n    main()",
+                "description": "Run with: python calculator.py"
+            }
+        ],
+        "resources": [
+            {
+                "title": "Python input() documentation",
+                "type": "link",
+                "url": "https://docs.python.org/3/library/functions.html#input"
+            }
+        ]
+    },
+    {
+        "name": "Geometric Construction Challenge",
+        "slug": "geometric-construction-challenge",
+        "category_slug": "mathematics",
+        "school_class": "Form 1",
+        "difficulty": "beginner",
+        "estimated_time": 60,
+        "platform_slugs": [],
+        "tags": [
+            "geometry",
+            "construction",
+            "compass",
+            "angles",
+            "triangles"
+        ],
+        "description": "Use compass and straightedge only to construct an equilateral triangle, perpendicular bisector, and angle bisector with accurate labels.",
+        "is_published": false,
+        "is_active": true,
+        "guide": "<h4>What you will build</h4><p>A neat geometry sheet showing three classic constructions made with compass and ruler — no freehand guessing.</p><h4>What you will learn</h4><ul><li>How arcs from a compass define equal distances</li><li>How perpendicular bisectors find the midpoint of a segment</li><li>How angle bisectors split an angle into two equal parts</li><li>Precision skills used in engineering and architecture drawings</li></ul><h4>You did it when…</h4><ul><li>Equilateral triangle sides measure the same length (±1 mm)</li><li>Perpendicular bisector crosses the segment at its midpoint at 90°</li><li>Angle bisector divides a 60° angle into two 30° angles (check with protractor)</li></ul><h4>Step-by-step instructions</h4><ol><li><strong>Construct a 6 cm line segment AB</strong><br>Draw a horizontal line AB exactly 6 cm long. Label endpoints A and B. This is the base for your equilateral triangle.</li><li><strong>Draw arcs from A and B</strong><br>Set compass to 6 cm. With centre A, draw an arc above AB. Without changing width, centre B and draw a second arc to cross the first at point C.</li><li><strong>Complete the equilateral triangle</strong><br>Join AC and BC with a ruler. All three sides should be 6 cm. Mark the three equal angles (60° each) with a protractor.</li><li><strong>Perpendicular bisector of AB</strong><br>On a new line segment PQ (8 cm), open compass more than half of PQ. Draw arcs from P and Q on both sides of the line. Join the two intersection points — this line is the perpendicular bisector.</li><li><strong>Mark the midpoint</strong><br>Where the bisector crosses PQ, label point M. Measure PM and MQ — they must be equal.</li><li><strong>Angle bisector of a 60° angle</strong><br>Use the 60° angle at A from your triangle (or draw a 60° angle with protractor). With compass on the vertex, draw an arc cutting both arms. From those intersection points, draw two more arcs that meet inside the angle. Join vertex to this meeting point — that is the bisector.</li><li><strong>Check and present</strong><br>Measure with protractor: each half-angle should be 30°. Write your name, date, and a one-sentence rule for each construction type.</li></ol>",
+        "equipment": [
+            {
+                "name": "Compass",
+                "quantity": "1"
+            },
+            {
+                "name": "Ruler (30 cm)",
+                "quantity": "1"
+            },
+            {
+                "name": "Sharp pencil",
+                "quantity": "1"
+            },
+            {
+                "name": "Eraser",
+                "quantity": "1"
+            },
+            {
+                "name": "Protractor",
+                "quantity": "1"
+            },
+            {
+                "name": "A4 graph paper",
+                "quantity": "3 sheets"
+            }
+        ],
+        "codes": [],
+        "resources": [
+            {
+                "title": "GeoGebra compass constructions",
+                "type": "link",
+                "url": "https://www.geogebra.org/geometry"
+            }
+        ]
+    },
+    {
+        "name": "Trigonometry in the Real World",
+        "slug": "trigonometry-in-the-real-world",
+        "category_slug": "mathematics",
+        "school_class": "Form 2",
+        "difficulty": "intermediate",
+        "estimated_time": 90,
+        "platform_slugs": [],
+        "tags": [
+            "trigonometry",
+            "measurement",
+            "tangent",
+            "angles",
+            "height"
+        ],
+        "description": "Measure the height of a flagpole or building using a clinometer, a measured distance, and the tangent ratio.",
+        "is_published": false,
+        "is_active": true,
+        "guide": "<h4>What you will build</h4><p>A field measurement procedure — not a physical object — that lets you calculate the height of a tall object you cannot climb.</p><h4>What you will learn</h4><ul><li>How tangent relates opposite and adjacent sides in a right triangle</li><li>How to measure angles of elevation accurately</li><li>How to apply trigonometry to real structures</li><li>How to estimate and compare error in measurements</li></ul><h4>Safety first</h4><ul><li>Do not walk backward while looking through a clinometer</li><li>Stay in designated areas — do not enter roads or restricted zones</li><li>Work in pairs: one sights, one records</li></ul><h4>You did it when…</h4><ul><li>You measured angle of elevation and horizontal distance to the object</li><li>You calculated height using tan(θ) and added your eye height</li><li>You compared your result with a classmate’s and explained any difference</li></ul><h4>Step-by-step instructions</h4><ol><li><strong>Make a simple clinometer</strong><br>Tape a straw along the straight edge of a protractor. Hang a weighted string from the centre point. When you sight upward through the straw, read the angle where the string crosses the scale (angle of elevation from eye level).</li><li><strong>Choose your target</strong><br>With teacher permission, select a flagpole or building corner. Stand on flat ground at a point where you can see the top clearly.</li><li><strong>Measure horizontal distance</strong><br>Walk straight toward the base (or use a known distance marked on the field). Measure distance d from your standing point to the base of the object in metres.</li><li><strong>Measure angle of elevation</strong><br>Sight the top of the object through the clinometer. Record angle θ in degrees. Repeat three times and average.</li><li><strong>Record eye height</strong><br>Measure h₁ — the height from the ground to your eye level (about 1.5 m for most students). Write this down.</li><li><strong>Calculate height</strong><br>Use opposite = d × tan(θ°). Total height H = h₁ + opposite. Show all working in your notebook. Use calculator in degree mode.</li><li><strong>Check reasonableness</strong><br>Does your answer make sense? A single-storey building is roughly 3 m; a flagpole might be 8–12 m. If your answer is 200 m, recheck angle and distance.</li><li><strong>Write a short report</strong><br>Include a diagram of the right triangle, labelled d, θ, h₁, and H. State one source of error (e.g. ground not level) and how you could improve accuracy.</li></ol>",
+        "equipment": [
+            {
+                "name": "Homemade clinometer (protractor + straw + string + weight)",
+                "quantity": "1"
+            },
+            {
+                "name": "Measuring tape (30 m)",
+                "quantity": "1"
+            },
+            {
+                "name": "Scientific calculator",
+                "quantity": "1"
+            },
+            {
+                "name": "Clipboard and worksheet",
+                "quantity": "1"
+            },
+            {
+                "name": "Tall object (flagpole, tree, or building)",
+                "quantity": "1"
+            }
+        ],
+        "codes": [],
+        "resources": [
+            {
+                "title": "Clinometer activity guide",
+                "type": "link",
+                "url": "https://www.mathsisfun.com/sine-cosine-tangent.html"
+            }
+        ]
+    }
+]
