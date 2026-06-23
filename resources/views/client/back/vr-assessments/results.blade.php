@@ -103,11 +103,11 @@
                                             Question {{ $index + 1 }}
                                         </span>
                                         @if($isCorrect)
-                                            <span class="badge bg-light-success text-success border-success">
+                                            <span class="badge bg-light-success text-success b-success">
                                                 <i class="bi bi-check-circle me-1"></i>Correct
                                             </span>
                                         @else
-                                            <span class="badge bg-light-danger text-danger border-danger">
+                                            <span class="badge bg-light-danger text-danger b-danger">
                                                 <i class="bi bi-x-circle me-1"></i>Incorrect
                                             </span>
                                         @endif
