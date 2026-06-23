@@ -15,32 +15,35 @@ class PhetVrQuestionSeeder extends Seeder
      *
      * Only attaches questions to experiments that already exist in the database.
      * Experiments removed from production are skipped (not recreated).
-     *
-     * @var array<int, string>
      */
-    private array $dataFiles = [
-        'questions/phet_physics_pilot.json',
-        'questions/phet_chemistry_pilot.json',
-        'questions/phet_biology_pilot.json',
-        'questions/phet_mathematics_pilot.json',
-        'questions/phet_physics_batch2.json',
-        'questions/phet_chemistry_batch2.json',
-        'questions/phet_biology_batch2.json',
-        'questions/phet_mathematics_batch2.json',
-    ];
-
     public function run(): void
     {
         $seeded = 0;
         $skipped = 0;
 
-        foreach ($this->dataFiles as $filename) {
-            [$fileSeeded, $fileSkipped] = $this->seedFromFile(database_path('seeders/data/'.$filename));
+        foreach ($this->discoverDataFiles() as $path) {
+            [$fileSeeded, $fileSkipped] = $this->seedFromFile($path);
             $seeded += $fileSeeded;
             $skipped += $fileSkipped;
         }
 
         $this->command?->info("PhET question seeding complete: {$seeded} experiment(s) seeded, {$skipped} skipped (not in database).");
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function discoverDataFiles(): array
+    {
+        $paths = glob(database_path('seeders/data/questions/*.json'));
+
+        if ($paths === false) {
+            throw new RuntimeException('Unable to scan PhET question data directory.');
+        }
+
+        sort($paths, SORT_STRING);
+
+        return $paths;
     }
 
     /**

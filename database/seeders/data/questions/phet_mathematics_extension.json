@@ -1,0 +1,260 @@
+[
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/calculus-grapher/latest/calculus-grapher_en.html",
+        "phet_slug": "calculus-grapher",
+        "question_bank": {
+            "title": "Calculus Grapher — Mathematics Assessment",
+            "description": "TIE Mathematics competences 16.1.1, 16.2.1 (Additional Mathematics extension).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "The derivative at a point represents:",
+                "options": [
+                    "The gradient of the tangent",
+                    "The area under the curve",
+                    "The y-intercept only",
+                    "The average value"
+                ],
+                "correct_answer": "The gradient of the tangent",
+                "explanation": "Derivative is instantaneous rate of change.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Where the derivative is zero, the original function often has:",
+                "options": [
+                    "A turning point",
+                    "Maximum area only",
+                    "Infinite slope",
+                    "No x-values"
+                ],
+                "correct_answer": "A turning point",
+                "explanation": "Zero gradient indicates horizontal tangent.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "A positive derivative means the function is:",
+                "options": [
+                    "Increasing",
+                    "Decreasing",
+                    "Constant",
+                    "Undefined"
+                ],
+                "correct_answer": "Increasing",
+                "explanation": "Positive slope rises left to right.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "The integral curve accumulates:",
+                "options": [
+                    "Area under the original function",
+                    "Charge on plates",
+                    "Decay constant",
+                    "Orbital eccentricity"
+                ],
+                "correct_answer": "Area under the original function",
+                "explanation": "Integration sums infinitesimal areas.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Differentiation and integration are inverse operations.",
+                "correct_answer": "True",
+                "explanation": "This is the Fundamental Theorem of Calculus.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "The derivative of a constant function is always 1.",
+                "correct_answer": "False",
+                "explanation": "Derivative of a constant is zero.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Tracing left to right on the integral curve shows:",
+                "options": [
+                    "Accumulated area growing",
+                    "Mass defect",
+                    "Emission lines",
+                    "Half-life decreasing"
+                ],
+                "correct_answer": "Accumulated area growing",
+                "explanation": "Area builds as x increases.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "For y = x² near x = 0, the derivative is:",
+                "options": [
+                    "Near zero",
+                    "Always negative",
+                    "Undefined",
+                    "Equal to x²"
+                ],
+                "correct_answer": "Near zero",
+                "explanation": "Gradient at the vertex is zero.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "State what a turning point indicates about the derivative.",
+                "correct_answer": "derivative equals zero",
+                "explanation": "Horizontal tangent at maxima or minima.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Name one preset function in Calculus Grapher.",
+                "correct_answer": "sine",
+                "explanation": "Also parabola, step, and custom drawn curves.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/fourier-making-waves/latest/fourier-making-waves_en.html",
+        "phet_slug": "fourier-making-waves",
+        "question_bank": {
+            "title": "Fourier: Making Waves — Mathematics Assessment",
+            "description": "TIE Mathematics competences 16.1.1, 16.2.1 (Additional Mathematics extension).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "A complex periodic wave can be built from:",
+                "options": [
+                    "Sinusoidal harmonics",
+                    "Only square pulses",
+                    "Random noise only",
+                    "Static charges only"
+                ],
+                "correct_answer": "Sinusoidal harmonics",
+                "explanation": "Fourier synthesis sums sine/cosine terms.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Increasing the amplitude of a harmonic changes:",
+                "options": [
+                    "Its contribution to the resultant wave",
+                    "The speed of light",
+                    "Atomic number",
+                    "Capacitance only"
+                ],
+                "correct_answer": "Its contribution to the resultant wave",
+                "explanation": "Larger amplitude means stronger harmonic presence.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "A square wave contains:",
+                "options": [
+                    "Many odd harmonics",
+                    "No harmonics",
+                    "Only DC component",
+                    "Only gamma rays"
+                ],
+                "correct_answer": "Many odd harmonics",
+                "explanation": "Sharp edges require high-frequency components.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Harmonic content relates to:",
+                "options": [
+                    "Timbre of musical sounds",
+                    "Nuclear binding energy",
+                    "pH of solution",
+                    "Cell membrane thickness only"
+                ],
+                "correct_answer": "Timbre of musical sounds",
+                "explanation": "Different instruments have different harmonic mixes.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Any periodic waveform can be decomposed into sinusoids.",
+                "correct_answer": "True",
+                "explanation": "This is the core idea of Fourier series.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Adding harmonics always makes a wave perfectly sinusoidal.",
+                "correct_answer": "False",
+                "explanation": "More harmonics can approximate complex shapes.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "In Wave Game you match a target by:",
+                "options": [
+                    "Choosing harmonic amplitudes",
+                    "Balancing chemical equations",
+                    "Setting slit width",
+                    "Adjusting pH"
+                ],
+                "correct_answer": "Choosing harmonic amplitudes",
+                "explanation": "Select components to reproduce the target shape.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Higher-frequency harmonics affect:",
+                "options": [
+                    "Fine detail and sharp features",
+                    "Gravitational mass only",
+                    "Half-life only",
+                    "Plate separation only"
+                ],
+                "correct_answer": "Fine detail and sharp features",
+                "explanation": "High frequencies capture rapid changes.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "What is a Fourier series a sum of?",
+                "correct_answer": "sinusoids",
+                "explanation": "Sines and cosines at harmonic frequencies.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Name one waveform you can approximate in the sim.",
+                "correct_answer": "square wave",
+                "explanation": "Also sawtooth and triangle waves.",
+                "points": 1
+            }
+        ]
+    }
+]

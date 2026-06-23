@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/friction/latest/friction_en.html",
+    "phet_slug": "friction",
+    "question_bank": {
+      "title": "Friction — Physics Assessment",
+      "description": "TIE Physics competences 13.1.1, 13.1.3 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Friction force opposes:",
+        "options": [
+          "Relative motion between surfaces",
+          "Gravity only",
+          "Mass increase",
+          "Temperature decrease"
+        ],
+        "correct_answer": "Relative motion between surfaces",
+        "explanation": "Friction acts to resist sliding or attempted sliding.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The friction formula is:",
+        "options": [
+          "F = μN",
+          "F = ma only",
+          "F = mg only",
+          "F = V/I"
+        ],
+        "correct_answer": "F = μN",
+        "explanation": "Friction equals coefficient times normal force.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Static friction is the friction when an object is:",
+        "options": [
+          "Not yet sliding",
+          "Already sliding fast",
+          "In free fall",
+          "Floating"
+        ],
+        "correct_answer": "Not yet sliding",
+        "explanation": "Static friction prevents motion until a threshold is exceeded.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Increasing the mass of an object on a horizontal surface increases:",
+        "options": [
+          "Normal force",
+          "Coefficient of friction directly",
+          "Gravitational constant",
+          "Speed automatically"
+        ],
+        "correct_answer": "Normal force",
+        "explanation": "On a level surface, N ≈ mg increases with mass.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Friction enables walking by providing a forward push from the ground.",
+        "correct_answer": "True",
+        "explanation": "Without friction, feet would slip backward.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "A rougher surface generally has:",
+        "options": [
+          "A higher coefficient of friction",
+          "Zero friction",
+          "Lower normal force",
+          "No effect on friction"
+        ],
+        "correct_answer": "A higher coefficient of friction",
+        "explanation": "Roughness increases μ for many material pairs.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Kinetic friction acts when:",
+        "options": [
+          "Surfaces slide relative to each other",
+          "Object is at rest on a slope below threshold",
+          "No contact exists",
+          "Object is in orbit"
+        ],
+        "correct_answer": "Surfaces slide relative to each other",
+        "explanation": "Kinetic friction applies during sliding motion.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Friction always converts some mechanical energy to thermal energy.",
+        "correct_answer": "True",
+        "explanation": "Sliding friction dissipates energy as heat.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the two types of friction discussed in the simulation.",
+        "correct_answer": "static and kinetic",
+        "explanation": "Static friction before sliding; kinetic during sliding.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What symbol represents the coefficient of friction?",
+        "correct_answer": "μ",
+        "explanation": "Mu (μ) is the coefficient of friction.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/pendulum-lab/latest/pendulum-lab_en.html",
+    "phet_slug": "pendulum-lab",
+    "question_bank": {
+      "title": "Pendulum Lab — Physics Assessment",
+      "description": "TIE Physics competences 13.2.2, 13.2.3 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The period of a simple pendulum depends mainly on:",
+        "options": [
+          "Length and gravitational field strength",
+          "Bob colour",
+          "Room temperature only",
+          "Amplitude for all angles"
+        ],
+        "correct_answer": "Length and gravitational field strength",
+        "explanation": "T = 2π√(L/g) for small angles.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Increasing pendulum length while g is constant:",
+        "options": [
+          "Increases period",
+          "Decreases period",
+          "Has no effect",
+          "Stops motion"
+        ],
+        "correct_answer": "Increases period",
+        "explanation": "Longer L gives longer period.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "On the Moon (weaker g), the same pendulum has:",
+        "options": [
+          "A longer period",
+          "A shorter period",
+          "Zero period",
+          "The same period as Earth"
+        ],
+        "correct_answer": "A longer period",
+        "explanation": "Smaller g increases T = 2π√(L/g).",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "For small angles, changing bob mass:",
+        "options": [
+          "Changes period significantly",
+          "Does not significantly change period",
+          "Doubles frequency always",
+          "Removes gravity"
+        ],
+        "correct_answer": "Does not significantly change period",
+        "explanation": "Ideal pendulum period is independent of mass.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A pendulum converts energy between gravitational PE and KE.",
+        "correct_answer": "True",
+        "explanation": "Energy oscillates between potential and kinetic forms.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Measuring 10 complete oscillations and dividing by 10 gives:",
+        "options": [
+          "Average period",
+          "Frequency squared",
+          "Amplitude",
+          "Only length"
+        ],
+        "correct_answer": "Average period",
+        "explanation": "Timing multiple oscillations improves period accuracy.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Frequency is related to period by:",
+        "options": [
+          "f = 1/T",
+          "f = T²",
+          "f = mg",
+          "f = L/g"
+        ],
+        "correct_answer": "f = 1/T",
+        "explanation": "Frequency is the reciprocal of period.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Very large release angles violate the small-angle approximation for period.",
+        "correct_answer": "True",
+        "explanation": "Large angles make actual period longer than 2π√(L/g) predicts.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the formula for period of a simple pendulum.",
+        "correct_answer": "T = 2π√(L/g)",
+        "explanation": "Period depends on length and gravitational field strength.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one variable you can change in the Pendulum Lab simulation.",
+        "correct_answer": "length",
+        "explanation": "Length, mass, gravity, and initial angle can be adjusted.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/collision-lab/latest/collision-lab_en.html",
+    "phet_slug": "collision-lab",
+    "question_bank": {
+      "title": "Collision Lab — Physics Assessment",
+      "description": "TIE Physics competences 13.2.1, 13.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Momentum is defined as:",
+        "options": [
+          "Mass times velocity",
+          "Force times time only",
+          "Mass times acceleration only",
+          "Energy divided by speed"
+        ],
+        "correct_answer": "Mass times velocity",
+        "explanation": "p = mv defines linear momentum.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The Law of Conservation of Momentum states that total momentum in a closed system:",
+        "options": [
+          "Is conserved in collisions",
+          "Always increases",
+          "Is always zero",
+          "Depends only on colour"
+        ],
+        "correct_answer": "Is conserved in collisions",
+        "explanation": "Total momentum before equals total after if no external impulse.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "In an elastic collision:",
+        "options": [
+          "Kinetic energy is conserved",
+          "No momentum is conserved",
+          "Objects always stick together",
+          "Mass becomes zero"
+        ],
+        "correct_answer": "Kinetic energy is conserved",
+        "explanation": "Elastic collisions conserve both momentum and KE.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "In a perfectly inelastic collision, objects:",
+        "options": [
+          "Stick together and move as one",
+          "Bounce with full KE",
+          "Disappear",
+          "Stop all motion always"
+        ],
+        "correct_answer": "Stick together and move as one",
+        "explanation": "Inelastic collisions often combine objects after impact.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Momentum is a vector quantity.",
+        "correct_answer": "True",
+        "explanation": "Momentum has both magnitude and direction.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Doubling the velocity of a puck quadruples its:",
+        "options": [
+          "Momentum",
+          "Kinetic energy",
+          "Mass",
+          "Both momentum and KE as stated"
+        ],
+        "correct_answer": "Kinetic energy",
+        "explanation": "KE = ½mv² scales with v²; momentum p = mv scales linearly with v.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "If two identical pucks approach with equal speed and opposite direction, total momentum before collision is:",
+        "options": [
+          "Zero",
+          "Maximum",
+          "Equal to KE",
+          "Equal to mass only"
+        ],
+        "correct_answer": "Zero",
+        "explanation": "Equal and opposite momenta cancel.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Kinetic energy is always conserved in every collision.",
+        "correct_answer": "False",
+        "explanation": "Only elastic collisions conserve kinetic energy.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the formula for momentum.",
+        "correct_answer": "p = mv",
+        "explanation": "Momentum equals mass times velocity.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one collision mode available in the simulation.",
+        "correct_answer": "elastic",
+        "explanation": "Elastic and inelastic modes can be selected.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/magnets-and-electromagnets/latest/magnets-and-electromagnets_en.html",
+    "phet_slug": "magnets-and-electromagnets",
+    "question_bank": {
+      "title": "Magnets and Electromagnets — Physics Assessment",
+      "description": "TIE Physics competences 13.5.3, 13.5.4 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Magnetic field lines around a bar magnet run from:",
+        "options": [
+          "North to south outside the magnet",
+          "South to north outside",
+          "East to west only",
+          "Centre to edge only"
+        ],
+        "correct_answer": "North to south outside the magnet",
+        "explanation": "Field lines emerge from north and enter south externally.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "A current-carrying coil produces:",
+        "options": [
+          "A magnetic field",
+          "Only electric fields",
+          "No field",
+          "Only gravity"
+        ],
+        "correct_answer": "A magnetic field",
+        "explanation": "Moving charges in a coil create a magnetic field.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Reversing the current in an electromagnet:",
+        "options": [
+          "Reverses the magnetic poles",
+          "Doubles mass",
+          "Removes all magnetism permanently",
+          "Changes resistance only"
+        ],
+        "correct_answer": "Reverses the magnetic poles",
+        "explanation": "Current direction determines field direction.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Increasing the number of coil turns:",
+        "options": [
+          "Strengthens the electromagnet",
+          "Weakens the field",
+          "Has no effect",
+          "Stops current"
+        ],
+        "correct_answer": "Strengthens the electromagnet",
+        "explanation": "More turns increase the magnetic field for the same current.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A compass needle aligns with the local magnetic field direction.",
+        "correct_answer": "True",
+        "explanation": "The needle is a small magnet aligning with external fields.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Electromagnets are used in devices such as:",
+        "options": [
+          "Motors and relays",
+          "Only permanent magnets",
+          "Only insulators",
+          "Only lenses"
+        ],
+        "correct_answer": "Motors and relays",
+        "explanation": "Electromagnets allow switchable magnetic fields.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "The right-hand rule helps determine:",
+        "options": [
+          "Direction of magnetic field around a current",
+          "Colour of wire",
+          "Mass of coil",
+          "Speed of light"
+        ],
+        "correct_answer": "Direction of magnetic field around a current",
+        "explanation": "Thumb along current, fingers curl in field direction.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Increasing current through the coil strengthens the electromagnet.",
+        "correct_answer": "True",
+        "explanation": "Stronger current produces a stronger magnetic field.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the two poles of a bar magnet.",
+        "correct_answer": "north and south",
+        "explanation": "Magnets have north and south poles.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What tool in the simulation shows field direction near a magnet?",
+        "correct_answer": "compass",
+        "explanation": "A compass needle deflects in magnetic fields.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/density/latest/density_en.html",
+    "phet_slug": "density",
+    "question_bank": {
+      "title": "Density — Physics Assessment",
+      "description": "TIE Physics competences 13.2.4, 13.2.5 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Density is defined as:",
+        "options": [
+          "Mass per unit volume",
+          "Volume per unit mass",
+          "Force per area",
+          "Distance per time"
+        ],
+        "correct_answer": "Mass per unit volume",
+        "explanation": "ρ = m/V.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "An object floats in water if its density is:",
+        "options": [
+          "Less than water's density",
+          "Greater than water's density",
+          "Exactly twice water's density",
+          "Zero"
+        ],
+        "correct_answer": "Less than water's density",
+        "explanation": "Less dense objects displace enough fluid to support their weight.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "If mass doubles while volume stays the same, density:",
+        "options": [
+          "Doubles",
+          "Halves",
+          "Stays the same",
+          "Becomes zero"
+        ],
+        "correct_answer": "Doubles",
+        "explanation": "ρ = m/V, so density is proportional to mass at fixed volume.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The SI unit of density is:",
+        "options": [
+          "kg/m³",
+          "N/m",
+          "J/s",
+          "m/s²"
+        ],
+        "correct_answer": "kg/m³",
+        "explanation": "Density is mass divided by volume.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Objects with density greater than water sink.",
+        "correct_answer": "True",
+        "explanation": "Average density greater than the fluid leads to sinking.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "In Mystery Blocks mode, density helps:",
+        "options": [
+          "Identify unknown materials",
+          "Change gravity",
+          "Measure temperature",
+          "Create light"
+        ],
+        "correct_answer": "Identify unknown materials",
+        "explanation": "Measured density can be compared to reference values.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Two blocks of the same material have:",
+        "options": [
+          "The same density regardless of size",
+          "Different densities if sizes differ",
+          "Zero density",
+          "Density depending on colour"
+        ],
+        "correct_answer": "The same density regardless of size",
+        "explanation": "Density is a material property at constant temperature.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Density describes how tightly matter is packed in a substance.",
+        "correct_answer": "True",
+        "explanation": "Higher density means more mass in the same volume.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the formula for density.",
+        "correct_answer": "ρ = m/V",
+        "explanation": "Density equals mass divided by volume.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Will a block less dense than water float or sink?",
+        "correct_answer": "float",
+        "explanation": "Lower density than the fluid gives buoyant support for floating.",
+        "points": 1
+      }
+    ]
+  }
+]

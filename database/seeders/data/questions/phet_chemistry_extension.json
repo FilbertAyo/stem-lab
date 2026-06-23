@@ -1,0 +1,260 @@
+[
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/atomic-spectroscopy/latest/atomic-spectroscopy_en.html",
+        "phet_slug": "atomic-spectroscopy",
+        "question_bank": {
+            "title": "Atomic Spectroscopy — Chemistry Assessment",
+            "description": "TIE Chemistry competences 12.1.1, 12.2.1 (Forms IV extension).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Each element's emission spectrum is:",
+                "options": [
+                    "Unique like a fingerprint",
+                    "Identical for all elements",
+                    "Always continuous",
+                    "Unrelated to electrons"
+                ],
+                "correct_answer": "Unique like a fingerprint",
+                "explanation": "Line positions identify elements.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "A spectral line wavelength relates to:",
+                "options": [
+                    "Energy difference between levels",
+                    "Nuclear mass only",
+                    "Orbital period",
+                    "Plate separation"
+                ],
+                "correct_answer": "Energy difference between levels",
+                "explanation": "ΔE = hf connects transition energy to photon.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Emission spectra are produced when electrons:",
+                "options": [
+                    "Fall to lower energy levels",
+                    "Always absorb photons",
+                    "Leave nucleus",
+                    "Stop moving"
+                ],
+                "correct_answer": "Fall to lower energy levels",
+                "explanation": "De-excitation releases photons.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Absorption spectra show:",
+                "options": [
+                    "Dark lines where light was absorbed",
+                    "Only continuous colour",
+                    "No relation to emission",
+                    "Alpha particles"
+                ],
+                "correct_answer": "Dark lines where light was absorbed",
+                "explanation": "Missing wavelengths match emission lines.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Astronomers use spectra to identify elements in stars.",
+                "correct_answer": "True",
+                "explanation": "Stellar spectra reveal chemical composition.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "All spectral lines of hydrogen have the same energy.",
+                "correct_answer": "False",
+                "explanation": "Different transitions have different energies.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "The spectrometer separates light by:",
+                "options": [
+                    "Wavelength",
+                    "Mass only",
+                    "Charge only",
+                    "Half-life"
+                ],
+                "correct_answer": "Wavelength",
+                "explanation": "Dispersion maps wavelength to position.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Photon energy increases when wavelength:",
+                "options": [
+                    "Decreases",
+                    "Increases",
+                    "Stays same",
+                    "Doubles"
+                ],
+                "correct_answer": "Decreases",
+                "explanation": "E = hc/λ: shorter λ means higher energy.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Name one element selectable in Atomic Spectroscopy.",
+                "correct_answer": "hydrogen",
+                "explanation": "Also helium, mercury, etc.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "What instrument records spectral line wavelengths?",
+                "correct_answer": "spectrometer",
+                "explanation": "Spectrometer disperses and measures λ.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/beers-law-lab/latest/beers-law-lab_en.html",
+        "phet_slug": "beers-law-lab",
+        "question_bank": {
+            "title": "Beer's Law Lab — Chemistry Assessment",
+            "description": "TIE Chemistry competences 12.1.1, 12.2.1 (Forms IV extension).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Beer-Lambert Law states absorbance is proportional to:",
+                "options": [
+                    "Concentration",
+                    "Temperature only",
+                    "Mass of nucleus",
+                    "Orbital speed"
+                ],
+                "correct_answer": "Concentration",
+                "explanation": "A ∝ c for fixed path length and wavelength.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Higher concentration generally gives:",
+                "options": [
+                    "Higher absorbance",
+                    "Lower absorbance",
+                    "No change",
+                    "Zero transmittance always"
+                ],
+                "correct_answer": "Higher absorbance",
+                "explanation": "More solute absorbs more light.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Transmittance is the fraction of light that:",
+                "options": [
+                    "Passes through the sample",
+                    "Is absorbed only",
+                    "Causes fission",
+                    "Creates interference"
+                ],
+                "correct_answer": "Passes through the sample",
+                "explanation": "Complement of absorbed/transmitted fraction.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "A calibration curve plots absorbance against:",
+                "options": [
+                    "Known concentrations",
+                    "Time only",
+                    "Orbital radius",
+                    "Atomic number"
+                ],
+                "correct_answer": "Known concentrations",
+                "explanation": "Used to find unknown concentration.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "A spectrophotometer measures light absorption by a solution.",
+                "correct_answer": "True",
+                "explanation": "Detector compares incident and transmitted intensity.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Solution colour is unrelated to wavelengths absorbed.",
+                "correct_answer": "False",
+                "explanation": "Complementary colour is what is transmitted.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Changing wavelength affects absorbance because:",
+                "options": [
+                    "Different wavelengths are absorbed differently",
+                    "Concentration changes",
+                    "Cuvette vanishes",
+                    "Law no longer applies"
+                ],
+                "correct_answer": "Different wavelengths are absorbed differently",
+                "explanation": "Absorption spectrum is wavelength-dependent.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "To find unknown concentration you use:",
+                "options": [
+                    "The calibration curve",
+                    "Kepler's laws",
+                    "Alpha decay data",
+                    "Fourier harmonics"
+                ],
+                "correct_answer": "The calibration curve",
+                "explanation": "Interpolate absorbance on best-fit line.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "State the proportionality in Beer-Lambert Law.",
+                "correct_answer": "absorbance proportional to concentration",
+                "explanation": "Also depends on path length and absorptivity.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Name one quantity the sim lets you adjust besides concentration.",
+                "correct_answer": "wavelength",
+                "explanation": "Also cuvette path and solution type.",
+                "points": 1
+            }
+        ]
+    }
+]

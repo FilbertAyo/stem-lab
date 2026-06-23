@@ -1,0 +1,1550 @@
+[
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/alpha-decay/latest/alpha-decay_en.html",
+        "phet_slug": "alpha-decay",
+        "question_bank": {
+            "title": "Alpha Decay — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "An alpha particle consists of:",
+                "options": [
+                    "2 protons and 2 neutrons",
+                    "1 electron",
+                    "1 proton only",
+                    "A photon"
+                ],
+                "correct_answer": "2 protons and 2 neutrons",
+                "explanation": "Alpha particle is a helium-4 nucleus.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "In alpha decay, the mass number decreases by:",
+                "options": [
+                    "4",
+                    "1",
+                    "0",
+                    "2 only"
+                ],
+                "correct_answer": "4",
+                "explanation": "Alpha emission removes four nucleons.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Half-life is the time for:",
+                "options": [
+                    "Half the nuclei to decay",
+                    "All nuclei to decay",
+                    "Alpha speed to double",
+                    "Charge to reverse"
+                ],
+                "correct_answer": "Half the nuclei to decay",
+                "explanation": "Statistical half of a large sample decays in one half-life.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Alpha radiation has:",
+                "options": [
+                    "Low penetrating power",
+                    "Highest penetrating power",
+                    "No charge",
+                    "Infinite range in air"
+                ],
+                "correct_answer": "Low penetrating power",
+                "explanation": "Stopped by paper or skin.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Radioactive decay of a single nucleus is random.",
+                "correct_answer": "True",
+                "explanation": "Individual decay times cannot be predicted.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Alpha decay increases the atomic number by 2.",
+                "correct_answer": "False",
+                "explanation": "Atomic number decreases by 2 when helium nucleus is lost.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Adding more atoms in the sim shows decay is:",
+                "options": [
+                    "Statistical over many nuclei",
+                    "Deterministic per atom",
+                    "Instant for all",
+                    "Unrelated to half-life"
+                ],
+                "correct_answer": "Statistical over many nuclei",
+                "explanation": "Large samples follow predictable averages.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "The daughter nucleus after alpha emission has atomic number reduced by:",
+                "options": [
+                    "2",
+                    "4",
+                    "0",
+                    "1"
+                ],
+                "correct_answer": "2",
+                "explanation": "Two protons are removed with the alpha particle.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Write the symbol for an alpha particle.",
+                "correct_answer": "He-4",
+                "explanation": "Also written as ⁴₂He or α.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Define half-life in one phrase.",
+                "correct_answer": "time for half the nuclei to decay",
+                "explanation": "Characteristic decay time for a radioisotope.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/beta-decay/latest/beta-decay_en.html",
+        "phet_slug": "beta-decay",
+        "question_bank": {
+            "title": "Beta Decay — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "In beta-minus decay, a neutron becomes:",
+                "options": [
+                    "A proton, electron, and antineutrino",
+                    "An alpha particle",
+                    "Two protons",
+                    "A photon only"
+                ],
+                "correct_answer": "A proton, electron, and antineutrino",
+                "explanation": "Charge is conserved via electron emission.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Beta decay changes the atomic number by:",
+                "options": [
+                    "±1",
+                    "±4",
+                    "0 always",
+                    "±2 always"
+                ],
+                "correct_answer": "±1",
+                "explanation": "One proton gained or lost relative to beta type.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "The mass number during beta-minus decay:",
+                "options": [
+                    "Stays the same",
+                    "Decreases by 4",
+                    "Increases by 4",
+                    "Doubles"
+                ],
+                "correct_answer": "Stays the same",
+                "explanation": "Nucleon count is unchanged.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Carbon-14 dating relies on:",
+                "options": [
+                    "Beta decay of carbon-14",
+                    "Alpha decay of uranium",
+                    "Gamma emission only",
+                    "Nuclear fission"
+                ],
+                "correct_answer": "Beta decay of carbon-14",
+                "explanation": "C-14 decays to N-14 with known half-life.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Beta particles are high-speed electrons (or positrons).",
+                "correct_answer": "True",
+                "explanation": "Beta radiation is charged lepton emission.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Beta radiation penetrates less than alpha radiation.",
+                "correct_answer": "False",
+                "explanation": "Beta penetrates further than alpha; gamma penetrates most.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Balanced nuclear equations require conserving:",
+                "options": [
+                    "Nucleon number and charge",
+                    "Colour only",
+                    "Orbital eccentricity",
+                    "Slit width"
+                ],
+                "correct_answer": "Nucleon number and charge",
+                "explanation": "Total protons and nucleons must balance.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Medical tracers may use beta emitters because:",
+                "options": [
+                    "Detectable radiation with useful half-life",
+                    "No radiation is emitted",
+                    "They never decay",
+                    "They only emit visible light"
+                ],
+                "correct_answer": "Detectable radiation with useful half-life",
+                "explanation": "Short-lived isotopes image metabolic processes.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Name the particle emitted in beta-minus decay.",
+                "correct_answer": "electron",
+                "explanation": "Also called a beta particle.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "What happens to the atomic number in beta-minus decay?",
+                "correct_answer": "increases by 1",
+                "explanation": "Neutron converts to proton in the nucleus.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/blackbody-spectrum/latest/blackbody-spectrum_en.html",
+        "phet_slug": "blackbody-spectrum",
+        "question_bank": {
+            "title": "Blackbody Spectrum — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "As temperature increases, the peak wavelength:",
+                "options": [
+                    "Shifts to shorter wavelengths",
+                    "Shifts to longer wavelengths",
+                    "Stays fixed",
+                    "Disappears"
+                ],
+                "correct_answer": "Shifts to shorter wavelengths",
+                "explanation": "Wien's law: hotter peaks at shorter λ.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "A blackbody spectrum shows emission at:",
+                "options": [
+                    "All wavelengths with a characteristic peak",
+                    "One wavelength only",
+                    "No infrared",
+                    "Only radio waves"
+                ],
+                "correct_answer": "All wavelengths with a characteristic peak",
+                "explanation": "Thermal bodies emit a broad continuum.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Hot metal glowing red then white illustrates:",
+                "options": [
+                    "Rising temperature shifting peak emission",
+                    "Alpha decay",
+                    "Beta conversion",
+                    "Capacitor charging"
+                ],
+                "correct_answer": "Rising temperature shifting peak emission",
+                "explanation": "Colour change reflects peak moving through visible band.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Wien's Law relates peak wavelength to:",
+                "options": [
+                    "Temperature",
+                    "Mass only",
+                    "Charge only",
+                    "Half-life"
+                ],
+                "correct_answer": "Temperature",
+                "explanation": "Higher T means shorter peak wavelength.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "All objects above absolute zero emit electromagnetic radiation.",
+                "correct_answer": "True",
+                "explanation": "Thermal radiation is universal.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Cooler stars always peak at shorter wavelengths than hotter stars.",
+                "correct_answer": "False",
+                "explanation": "Hotter stars peak at shorter wavelengths.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "The visible band overlay helps compare:",
+                "options": [
+                    "Which part of spectrum we see",
+                    "Nuclear binding energy",
+                    "Fraction equivalence",
+                    "Orbital period only"
+                ],
+                "correct_answer": "Which part of spectrum we see",
+                "explanation": "Relates thermal peak to perceived colour.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Comparing the Sun to a light bulb shows:",
+                "options": [
+                    "Different peak wavelengths at different temperatures",
+                    "Identical spectra always",
+                    "No infrared emission",
+                    "Only gamma rays"
+                ],
+                "correct_answer": "Different peak wavelengths at different temperatures",
+                "explanation": "Temperature determines spectral shape.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "State how colour of a hot object changes as temperature rises.",
+                "correct_answer": "shifts from red to white",
+                "explanation": "Peak moves through visible spectrum.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "What does the height of the spectrum curve represent?",
+                "correct_answer": "intensity",
+                "explanation": "Power emitted per wavelength interval.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/capacitor-lab-basics/latest/capacitor-lab-basics_en.html",
+        "phet_slug": "capacitor-lab-basics",
+        "question_bank": {
+            "title": "Capacitor Lab: Basics — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Capacitance measures the ability to:",
+                "options": [
+                    "Store charge per volt",
+                    "Create nuclear fusion",
+                    "Emit alpha particles",
+                    "Split atoms"
+                ],
+                "correct_answer": "Store charge per volt",
+                "explanation": "C = Q/V relates charge and potential difference.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Increasing plate separation generally:",
+                "options": [
+                    "Decreases capacitance",
+                    "Increases capacitance",
+                    "Has no effect",
+                    "Stops all charge"
+                ],
+                "correct_answer": "Decreases capacitance",
+                "explanation": "Larger gap reduces stored charge at same voltage.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "A dielectric between plates:",
+                "options": [
+                    "Increases capacitance",
+                    "Removes all field",
+                    "Prevents voltage",
+                    "Eliminates charge"
+                ],
+                "correct_answer": "Increases capacitance",
+                "explanation": "Dielectric polarisation stores more charge.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Energy stored in a capacitor depends on:",
+                "options": [
+                    "Voltage and capacitance",
+                    "Mass only",
+                    "Half-life",
+                    "Orbital radius only"
+                ],
+                "correct_answer": "Voltage and capacitance",
+                "explanation": "E = ½CV² for stored energy.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Capacitors store energy in the electric field between plates.",
+                "correct_answer": "True",
+                "explanation": "Field energy is released when discharged.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Capacitance has units of ohms.",
+                "correct_answer": "False",
+                "explanation": "Capacitance is measured in farads (F).",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Connecting a battery charges the plates with:",
+                "options": [
+                    "Equal and opposite charge",
+                    "Same sign on both plates",
+                    "No field",
+                    "Only neutrons"
+                ],
+                "correct_answer": "Equal and opposite charge",
+                "explanation": "Separation of charge creates potential difference.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Larger plate area typically:",
+                "options": [
+                    "Increases capacitance",
+                    "Decreases capacitance",
+                    "Stops charging",
+                    "Doubles mass"
+                ],
+                "correct_answer": "Increases capacitance",
+                "explanation": "More area allows more charge storage.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Write the symbol for capacitance.",
+                "correct_answer": "C",
+                "explanation": "Measured in farads.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Name one factor you can change in Capacitor Lab: Basics.",
+                "correct_answer": "plate separation",
+                "explanation": "Also plate area and dielectric material.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-ac/latest/circuit-construction-kit-ac_en.html",
+        "phet_slug": "circuit-construction-kit-ac",
+        "question_bank": {
+            "title": "Circuit Construction Kit: AC — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "In AC circuits, current:",
+                "options": [
+                    "Reverses direction periodically",
+                    "Flows one way only",
+                    "Is always zero",
+                    "Equals DC always"
+                ],
+                "correct_answer": "Reverses direction periodically",
+                "explanation": "Alternating current oscillates in direction.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "A capacitor in AC allows:",
+                "options": [
+                    "Current to flow as plates charge/discharge",
+                    "Steady DC with no effect",
+                    "Nuclear decay",
+                    "Alpha emission"
+                ],
+                "correct_answer": "Current to flow as plates charge/discharge",
+                "explanation": "Changing voltage moves charge on/off plates.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "An inductor opposes changes in:",
+                "options": [
+                    "Current",
+                    "Mass",
+                    "Atomic number",
+                    "Half-life"
+                ],
+                "correct_answer": "Current",
+                "explanation": "Induced emf resists ΔI (Lenz law).",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "RMS voltage relates to AC as:",
+                "options": [
+                    "Effective equivalent DC value",
+                    "Peak value always",
+                    "Zero always",
+                    "Frequency only"
+                ],
+                "correct_answer": "Effective equivalent DC value",
+                "explanation": "RMS gives same power as equivalent DC.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Household mains electricity is typically AC.",
+                "correct_answer": "True",
+                "explanation": "AC is used for efficient transmission and transformers.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "AC frequency has no effect on bulb brightness in resistive circuits.",
+                "correct_answer": "False",
+                "explanation": "Reactive components make response frequency-dependent.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Oscilloscope view shows:",
+                "options": [
+                    "Voltage varying with time",
+                    "Orbital paths",
+                    "Emission spectra",
+                    "Fraction bars only"
+                ],
+                "correct_answer": "Voltage varying with time",
+                "explanation": "Waveform displays periodic AC signal.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Adding a capacitor in series with a resistor creates:",
+                "options": [
+                    "Phase shift between voltage and current",
+                    "Permanent magnetism",
+                    "Nuclear fission",
+                    "Alpha particles"
+                ],
+                "correct_answer": "Phase shift between voltage and current",
+                "explanation": "Capacitive reactance causes phase difference.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "What does AC stand for?",
+                "correct_answer": "alternating current",
+                "explanation": "Current direction alternates periodically.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Name one AC component in the kit besides resistors.",
+                "correct_answer": "capacitor",
+                "explanation": "Also inductors and AC voltage source.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/hydrogen-atom/latest/hydrogen-atom_en.html",
+        "phet_slug": "hydrogen-atom",
+        "question_bank": {
+            "title": "Hydrogen Atom — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "In the Bohr model, electrons occupy:",
+                "options": [
+                    "Quantised energy levels",
+                    "Any energy continuously",
+                    "The nucleus",
+                    "Only the ground state forever"
+                ],
+                "correct_answer": "Quantised energy levels",
+                "explanation": "Only certain orbits are allowed.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "A photon is emitted when an electron:",
+                "options": [
+                    "Falls to a lower energy level",
+                    "Rises to higher level",
+                    "Leaves the atom without transition",
+                    "Stops moving"
+                ],
+                "correct_answer": "Falls to a lower energy level",
+                "explanation": "Energy difference is released as photon.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "The Lyman series involves transitions to:",
+                "options": [
+                    "n = 1",
+                    "n = 2",
+                    "n = 3",
+                    "n = ∞ only"
+                ],
+                "correct_answer": "n = 1",
+                "explanation": "Ultraviolet lines end at ground state.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Hydrogen spectral lines are:",
+                "options": [
+                    "Discrete wavelengths",
+                    "A continuous rainbow only",
+                    "Identical for all elements",
+                    "Unrelated to energy levels"
+                ],
+                "correct_answer": "Discrete wavelengths",
+                "explanation": "Each line matches a specific transition.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Absorption occurs when a photon raises an electron to a higher level.",
+                "correct_answer": "True",
+                "explanation": "Matching photon energy excites the electron.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "All elements have the same hydrogen-like spectrum.",
+                "correct_answer": "False",
+                "explanation": "Each element has unique energy level spacings.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Higher n levels in hydrogen are:",
+                "options": [
+                    "Closer in energy (more crowded)",
+                    "Equally spaced always",
+                    "Below ground state",
+                    "Unobservable"
+                ],
+                "correct_answer": "Closer in energy (more crowded)",
+                "explanation": "Energy spacing decreases at large n.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "The visible Balmer series ends at n =:",
+                "options": [
+                    "2",
+                    "1",
+                    "3",
+                    "4"
+                ],
+                "correct_answer": "2",
+                "explanation": "Transitions to n=2 produce visible lines.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Name one hydrogen spectral series.",
+                "correct_answer": "Balmer",
+                "explanation": "Also Lyman, Paschen, etc.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "What is emitted during an electron transition down?",
+                "correct_answer": "photon",
+                "explanation": "Photon energy equals level difference.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/keplers-laws/latest/keplers-laws_en.html",
+        "phet_slug": "keplers-laws",
+        "question_bank": {
+            "title": "Keplers Laws — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Kepler's first law states orbits are:",
+                "options": [
+                    "Ellipses with the Sun at one focus",
+                    "Perfect circles only",
+                    "Straight lines",
+                    "Random curves"
+                ],
+                "correct_answer": "Ellipses with the Sun at one focus",
+                "explanation": "Planets move on elliptical paths.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "A planet moves fastest when it is:",
+                "options": [
+                    "Closest to the Sun (perihelion)",
+                    "Farthest from the Sun",
+                    "At aphelion only",
+                    "Stationary"
+                ],
+                "correct_answer": "Closest to the Sun (perihelion)",
+                "explanation": "Angular momentum conservation speeds near perihelion.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Kepler's third law relates orbital period to:",
+                "options": [
+                    "Semi-major axis",
+                    "Planet colour",
+                    "Atmospheric pressure",
+                    "Nuclear charge"
+                ],
+                "correct_answer": "Semi-major axis",
+                "explanation": "T² ∝ a³ for solar system bodies.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Eccentricity measures:",
+                "options": [
+                    "How stretched an ellipse is",
+                    "Planet mass only",
+                    "Surface temperature",
+                    "Half-life"
+                ],
+                "correct_answer": "How stretched an ellipse is",
+                "explanation": "e=0 is circle; higher e is more elongated.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Planets sweep equal areas in equal times.",
+                "correct_answer": "True",
+                "explanation": "This is Kepler's second law.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "All planetary orbits have the same period.",
+                "correct_answer": "False",
+                "explanation": "Period depends on orbital size.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Increasing semi-major axis generally:",
+                "options": [
+                    "Increases orbital period",
+                    "Decreases period",
+                    "Stops motion",
+                    "Removes gravity"
+                ],
+                "correct_answer": "Increases orbital period",
+                "explanation": "Larger orbits take longer to complete.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "The Sun sits at:",
+                "options": [
+                    "One focus of the ellipse",
+                    "The centre of the circle always",
+                    "Aphelion",
+                    "Outside the orbit"
+                ],
+                "correct_answer": "One focus of the ellipse",
+                "explanation": "Other focus is empty for planetary orbits.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "State Kepler's third law in words.",
+                "correct_answer": "period squared proportional to semi-major axis cubed",
+                "explanation": "T² ∝ a³.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Name the point of closest approach to the Sun.",
+                "correct_answer": "perihelion",
+                "explanation": "Farthest point is aphelion.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/models-of-the-hydrogen-atom/latest/models-of-the-hydrogen-atom_en.html",
+        "phet_slug": "models-of-the-hydrogen-atom",
+        "question_bank": {
+            "title": "Models of the Hydrogen Atom — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "The Bohr model introduced:",
+                "options": [
+                    "Quantised electron orbits",
+                    "Continuous energy only",
+                    "Nuclear fission",
+                    "AC circuits"
+                ],
+                "correct_answer": "Quantised electron orbits",
+                "explanation": "Electrons occupy discrete radii.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "The quantum model describes electrons as:",
+                "options": [
+                    "Probability clouds (orbitals)",
+                    "Fixed planet-like paths only",
+                    "Alpha particles",
+                    "Neutrons in shells"
+                ],
+                "correct_answer": "Probability clouds (orbitals)",
+                "explanation": "Orbitals show likely electron locations.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Classical model failure included:",
+                "options": [
+                    "Orbiting electron should radiate and collapse",
+                    "Too many spectral lines",
+                    "No protons",
+                    "Infinite mass"
+                ],
+                "correct_answer": "Orbiting electron should radiate and collapse",
+                "explanation": "Accelerating charge radiates energy classically.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Spectral lines support:",
+                "options": [
+                    "Quantised energy levels",
+                    "Continuous energy only",
+                    "No photons",
+                    "Random colours only"
+                ],
+                "correct_answer": "Quantised energy levels",
+                "explanation": "Discrete transitions produce line spectra.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Later models improved on Bohr by including wave nature of electrons.",
+                "correct_answer": "True",
+                "explanation": "Quantum mechanics replaced fixed orbits with orbitals.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "All atomic models predict identical spectra.",
+                "correct_answer": "False",
+                "explanation": "Only quantum models match hydrogen spectrum quantitatively.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Switching models in the sim helps compare:",
+                "options": [
+                    "Historical explanations of hydrogen",
+                    "Cooking recipes",
+                    "Fraction equivalence",
+                    "pH curves only"
+                ],
+                "correct_answer": "Historical explanations of hydrogen",
+                "explanation": "Tracks development of atomic theory.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Ground state is the:",
+                "options": [
+                    "Lowest energy level",
+                    "Highest energy level",
+                    "Ionised atom",
+                    "Nucleus only"
+                ],
+                "correct_answer": "Lowest energy level",
+                "explanation": "Electrons normally occupy lowest available level.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Name one historical model shown in the sim.",
+                "correct_answer": "Bohr",
+                "explanation": "Also classical/planetary and quantum models.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "What problem did quantisation solve for hydrogen?",
+                "correct_answer": "stable discrete orbits",
+                "explanation": "Prevented classical spiral into nucleus.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/neon-lights-and-other-discharge-lamps/latest/neon-lights-and-other-discharge-lamps_en.html",
+        "phet_slug": "neon-lights-and-other-discharge-lamps",
+        "question_bank": {
+            "title": "Neon Lights and Other Discharge Lamps — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Discharge lamps produce light when:",
+                "options": [
+                    "Electrons excite gas atoms which then emit photons",
+                    "Metal melts",
+                    "Capacitors discharge only",
+                    "Alpha particles absorb light"
+                ],
+                "correct_answer": "Electrons excite gas atoms which then emit photons",
+                "explanation": "De-excitation releases photons of specific energies.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Emission spectra of gases are:",
+                "options": [
+                    "Discrete lines",
+                    "Continuous rainbows only",
+                    "Identical for all gases",
+                    "Invisible"
+                ],
+                "correct_answer": "Discrete lines",
+                "explanation": "Each transition gives a specific wavelength.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Each element's emission spectrum acts as:",
+                "options": [
+                    "A unique fingerprint",
+                    "A random pattern",
+                    "Always one green line",
+                    "Unrelated to electrons"
+                ],
+                "correct_answer": "A unique fingerprint",
+                "explanation": "Line positions identify the element.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "A photon colour corresponds to:",
+                "options": [
+                    "Energy of the electron transition",
+                    "Nuclear mass only",
+                    "Orbital period",
+                    "Plate area"
+                ],
+                "correct_answer": "Energy of the electron transition",
+                "explanation": "E = hf links photon energy to colour.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Neon signs use gas discharge to produce coloured light.",
+                "correct_answer": "True",
+                "explanation": "Different gases give different colours.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "All spectral lines from one gas have the same wavelength.",
+                "correct_answer": "False",
+                "explanation": "Multiple transitions produce multiple lines.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "The spectrometer in the sim displays:",
+                "options": [
+                    "Wavelengths of emitted lines",
+                    "Gravitational force",
+                    "Fraction numerators",
+                    "Capacitance only"
+                ],
+                "correct_answer": "Wavelengths of emitted lines",
+                "explanation": "Spectrometer disperses light by wavelength.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Colliding electrons in the tube:",
+                "options": [
+                    "Excite atoms to higher energy levels",
+                    "Remove all protons",
+                    "Stop all current",
+                    "Create permanent magnets"
+                ],
+                "correct_answer": "Excite atoms to higher energy levels",
+                "explanation": "Excitation followed by emission produces light.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Name one gas used in the discharge lamp sim.",
+                "correct_answer": "neon",
+                "explanation": "Also hydrogen and other gases.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "What is observed when electrons return to lower levels?",
+                "correct_answer": "photon emission",
+                "explanation": "Light released with energy equal to level gap.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/nuclear-fission/latest/nuclear-fission_en.html",
+        "phet_slug": "nuclear-fission",
+        "question_bank": {
+            "title": "Nuclear Fission — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Nuclear fission splits:",
+                "options": [
+                    "A heavy nucleus into smaller fragments",
+                    "An electron from an atom",
+                    "Light into photons only",
+                    "A capacitor plate"
+                ],
+                "correct_answer": "A heavy nucleus into smaller fragments",
+                "explanation": "Heavy nuclei divide releasing energy.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "A chain reaction requires:",
+                "options": [
+                    "Released neutrons to trigger more fissions",
+                    "Only one neutron total",
+                    "No neutrons",
+                    "Alpha particles only"
+                ],
+                "correct_answer": "Released neutrons to trigger more fissions",
+                "explanation": "Neutrons sustain repeated fission events.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "U-235 is fissile because:",
+                "options": [
+                    "Slow neutrons can cause fission",
+                    "It never absorbs neutrons",
+                    "It is the most abundant isotope",
+                    "It emits only gamma rays"
+                ],
+                "correct_answer": "Slow neutrons can cause fission",
+                "explanation": "Thermal neutrons trigger U-235 splitting.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Energy release in fission comes from:",
+                "options": [
+                    "Mass defect converted to energy",
+                    "Chemical bond breaking",
+                    "Friction only",
+                    "Capacitor discharge"
+                ],
+                "correct_answer": "Mass defect converted to energy",
+                "explanation": "E = mc² relates lost mass to energy.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Moderators slow neutrons to improve fission probability.",
+                "correct_answer": "True",
+                "explanation": "Slow neutrons are more likely to be captured by U-235.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Fission increases total nucleon number.",
+                "correct_answer": "False",
+                "explanation": "Nucleons are redistributed; total conserved.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Control rods in reactors:",
+                "options": [
+                    "Absorb neutrons to regulate reaction rate",
+                    "Speed up all neutrons",
+                    "Create alpha decay",
+                    "Store charge"
+                ],
+                "correct_answer": "Absorb neutrons to regulate reaction rate",
+                "explanation": "Cadmium/boron rods limit chain reaction.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Compared to U-238, U-235:",
+                "options": [
+                    "Sustains chain reactions more readily",
+                    "Never fissions",
+                    "Has fewer protons",
+                    "Is not radioactive"
+                ],
+                "correct_answer": "Sustains chain reactions more readily",
+                "explanation": "U-238 needs fast neutrons for fission.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Name one product of uranium fission besides neutrons.",
+                "correct_answer": "smaller nuclei",
+                "explanation": "Fission fragments are lighter nuclei.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Write Einstein's equation relating mass and energy.",
+                "correct_answer": "E = mc²",
+                "explanation": "Mass defect releases energy in fission.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/quantum-measurement/latest/quantum-measurement_en.html",
+        "phet_slug": "quantum-measurement",
+        "question_bank": {
+            "title": "Quantum Measurement — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Quantum measurement outcomes are:",
+                "options": [
+                    "Probabilistic",
+                    "Always predictable for single trials",
+                    "Identical every time",
+                    "Unrelated to state"
+                ],
+                "correct_answer": "Probabilistic",
+                "explanation": "Born rule gives probabilities, not certainties.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Superposition means a system is:",
+                "options": [
+                    "In a combination of states until measured",
+                    "Always in one definite state",
+                    "Classical only",
+                    "Unmeasurable"
+                ],
+                "correct_answer": "In a combination of states until measured",
+                "explanation": "State is a mix of possibilities before measurement.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Measurement collapses the state to:",
+                "options": [
+                    "A definite eigenstate",
+                    "All states simultaneously",
+                    "Zero energy",
+                    "Classical orbit"
+                ],
+                "correct_answer": "A definite eigenstate",
+                "explanation": "Wave function collapse yields one outcome.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Repeating many measurements reveals:",
+                "options": [
+                    "Statistical distribution of outcomes",
+                    "Exact path of particle",
+                    "No pattern",
+                    "Only classical physics"
+                ],
+                "correct_answer": "Statistical distribution of outcomes",
+                "explanation": "Frequencies match predicted probabilities.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "The Born rule links probability to amplitude squared.",
+                "correct_answer": "True",
+                "explanation": "Probability ∝ |ψ|².",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Quantum measurement is irrelevant to quantum computing.",
+                "correct_answer": "False",
+                "explanation": "Measurement is central to readout in quantum computers.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Changing detector angle in the sim changes:",
+                "options": [
+                    "Measurement probabilities",
+                    "Gravitational constant",
+                    "Half-life",
+                    "Capacitance"
+                ],
+                "correct_answer": "Measurement probabilities",
+                "explanation": "Projection depends on measurement basis.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Spin measurement along different axes:",
+                "options": [
+                    "May not have definite values simultaneously",
+                    "Always gives 0",
+                    "Violates charge conservation",
+                    "Stops all rotation"
+                ],
+                "correct_answer": "May not have definite values simultaneously",
+                "explanation": "Non-commuting observables have uncertainty.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "What happens to superposition after measurement?",
+                "correct_answer": "collapse",
+                "explanation": "System ends in a definite measured state.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Name one quantity measured in the spin experiment.",
+                "correct_answer": "spin",
+                "explanation": "Spin component along chosen axis.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/quantum-wave-interference/latest/quantum-wave-interference_en.html",
+        "phet_slug": "quantum-wave-interference",
+        "question_bank": {
+            "title": "Quantum Wave Interference — Physics Assessment",
+            "description": "TIE Physics competence 13.1.1 (Form IV extension / advanced).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "The double-slit experiment demonstrates:",
+                "options": [
+                    "Wave-particle duality",
+                    "Only particle behaviour",
+                    "Only classical waves in water",
+                    "Nuclear fission"
+                ],
+                "correct_answer": "Wave-particle duality",
+                "explanation": "Single quanta build interference over time.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Closing one slit changes the pattern to:",
+                "options": [
+                    "Single-slit diffraction",
+                    "No pattern at all",
+                    "Alpha decay",
+                    "Emission spectrum"
+                ],
+                "correct_answer": "Single-slit diffraction",
+                "explanation": "One opening produces diffraction not two-source interference.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Which-path detection typically:",
+                "options": [
+                    "Destroys interference",
+                    "Increases fringe contrast",
+                    "Has no effect",
+                    "Doubles wavelength"
+                ],
+                "correct_answer": "Destroys interference",
+                "explanation": "Which-path information collapses superposition.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Fringe spacing depends on:",
+                "options": [
+                    "Wavelength and slit separation",
+                    "Mass of Earth only",
+                    "pH",
+                    "Capacitance only"
+                ],
+                "correct_answer": "Wavelength and slit separation",
+                "explanation": "Longer λ or smaller separation widens fringes.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Interference builds up from many single-particle detections.",
+                "correct_answer": "True",
+                "explanation": "Pattern emerges statistically over time.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Quantum particles always follow a single classical path through both slits.",
+                "correct_answer": "False",
+                "explanation": "Superposition over paths explains interference.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Narrower slits generally produce:",
+                "options": [
+                    "Wider diffraction patterns",
+                    "No diffraction",
+                    "Shorter wavelength",
+                    "Higher atomic number"
+                ],
+                "correct_answer": "Wider diffraction patterns",
+                "explanation": "Diffraction spreads more for smaller apertures.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Observation in quantum mechanics can:",
+                "options": [
+                    "Alter the measured system",
+                    "Never affect outcomes",
+                    "Only affect macro objects",
+                    "Eliminate all photons"
+                ],
+                "correct_answer": "Alter the measured system",
+                "explanation": "Measurement interaction disturbs the state.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Name the pattern from two slits.",
+                "correct_answer": "interference",
+                "explanation": "Alternating bright and dark fringes.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "What concept explains loss of fringes when which-path is known?",
+                "correct_answer": "wave function collapse",
+                "explanation": "Which-path information removes superposition.",
+                "points": 1
+            }
+        ]
+    }
+]

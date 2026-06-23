@@ -1,0 +1,518 @@
+[
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/charges-and-fields/latest/charges-and-fields_en.html",
+        "phet_slug": "charges-and-fields",
+        "question_bank": {
+            "title": "Charges and Fields — Biology Assessment",
+            "description": "TIE Biology competence 11.1.1 (cross-disciplinary).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Electric field lines point:",
+                "options": [
+                    "Away from positive and toward negative",
+                    "Away from negative only",
+                    "Randomly",
+                    "Parallel to equipotentials"
+                ],
+                "correct_answer": "Away from positive and toward negative",
+                "explanation": "Field direction is force on positive test charge.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Like charges placed near each other:",
+                "options": [
+                    "Repel",
+                    "Attract",
+                    "Have no interaction",
+                    "Merge"
+                ],
+                "correct_answer": "Repel",
+                "explanation": "Same sign charges repel.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Equipotential lines cross field lines:",
+                "options": [
+                    "Perpendicularly",
+                    "Parallel always",
+                    "Never relate",
+                    "At random angles only"
+                ],
+                "correct_answer": "Perpendicularly",
+                "explanation": "No work along equipotential; field does work across.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Field line density indicates:",
+                "options": [
+                    "Field strength",
+                    "Mass",
+                    "Half-life",
+                    "Wavelength"
+                ],
+                "correct_answer": "Field strength",
+                "explanation": "Closer lines mean stronger field.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Electric fields can explain ion movement across cell membranes.",
+                "correct_answer": "True",
+                "explanation": "Membrane potentials drive ion flow in biology.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Negative charges create field lines pointing toward the charge.",
+                "correct_answer": "True",
+                "explanation": "Field converges on negative sources.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Superposition means multiple charges:",
+                "options": [
+                    "Combine their fields vectorially",
+                    "Cancel all fields",
+                    "Remove voltage",
+                    "Stop diffusion"
+                ],
+                "correct_answer": "Combine their fields vectorially",
+                "explanation": "Net field is sum of individual contributions.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "A test positive charge moves:",
+                "options": [
+                    "Along field direction",
+                    "Opposite field always",
+                    "Perpendicular only",
+                    "With no force"
+                ],
+                "correct_answer": "Along field direction",
+                "explanation": "Force F = qE aligns with E for positive q.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "What do equipotential lines connect?",
+                "correct_answer": "points of equal voltage",
+                "explanation": "Same potential; no work to move along line.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Name one biological system linked to electric fields in the learning outcomes.",
+                "correct_answer": "nerve cell membranes",
+                "explanation": "Ion gradients and membrane potentials.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/my-solar-system/latest/my-solar-system_en.html",
+        "phet_slug": "my-solar-system",
+        "question_bank": {
+            "title": "My Solar System — Biology Assessment",
+            "description": "TIE Biology competence 11.1.1 (cross-disciplinary).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Orbital shape depends on:",
+                "options": [
+                    "Initial velocity and gravitational pull",
+                    "Colour of planet",
+                    "Chemical formula",
+                    "pH"
+                ],
+                "correct_answer": "Initial velocity and gravitational pull",
+                "explanation": "Energy and angular momentum set orbit type.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "A circular orbit occurs when speed is:",
+                "options": [
+                    "Just right for the gravitational pull",
+                    "Zero",
+                    "Infinite",
+                    "Unrelated to mass"
+                ],
+                "correct_answer": "Just right for the gravitational pull",
+                "explanation": "Balanced centripetal need and gravity.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Increasing central body mass generally:",
+                "options": [
+                    "Increases orbital speed for same radius",
+                    "Stops all motion",
+                    "Removes gravity",
+                    "Decreases pull"
+                ],
+                "correct_answer": "Increases orbital speed for same radius",
+                "explanation": "Stronger gravity requires faster orbit.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Adding a third body can make orbits:",
+                "options": [
+                    "Less stable",
+                    "Always circular",
+                    "Unchanged always",
+                    "Impossible"
+                ],
+                "correct_answer": "Less stable",
+                "explanation": "Three-body problem allows chaotic behaviour.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Gravity governs motion of planets and moons.",
+                "correct_answer": "True",
+                "explanation": "Gravitational attraction provides centripetal force.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "All orbits are perfect circles in real systems.",
+                "correct_answer": "False",
+                "explanation": "Most orbits are elliptical to some degree.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Gravity vectors show force direction:",
+                "options": [
+                    "Toward the other mass",
+                    "Away from mass",
+                    "Tangent to orbit only",
+                    "Random"
+                ],
+                "correct_answer": "Toward the other mass",
+                "explanation": "Attraction acts along line joining centres.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Too little speed for distance results in:",
+                "options": [
+                    "Elliptical or falling orbit",
+                    "Escape always",
+                    "No gravity",
+                    "Square orbit"
+                ],
+                "correct_answer": "Elliptical or falling orbit",
+                "explanation": "Insufficient speed cannot maintain circular path.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Name one preset system in My Solar System.",
+                "correct_answer": "Sun and Earth",
+                "explanation": "Also binary stars and custom setups.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "What real phenomenon relates to orbital motion and seasons?",
+                "correct_answer": "Earth's orbit around the Sun",
+                "explanation": "Tilt and orbit affect seasonal sunlight.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/photoelectric-effect/latest/photoelectric-effect_en.html",
+        "phet_slug": "photoelectric-effect",
+        "question_bank": {
+            "title": "The Photoelectric Effect — Biology Assessment",
+            "description": "TIE Biology competence 11.1.1 (cross-disciplinary).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Photoelectric emission requires light frequency above:",
+                "options": [
+                    "The threshold frequency",
+                    "Any frequency",
+                    "Zero intensity only",
+                    "Infinite wavelength"
+                ],
+                "correct_answer": "The threshold frequency",
+                "explanation": "Photon energy must exceed work function.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Photon energy is given by:",
+                "options": [
+                    "E = hf",
+                    "E = mc² only",
+                    "E = Fd",
+                    "E = ½mv only"
+                ],
+                "correct_answer": "E = hf",
+                "explanation": "Energy proportional to frequency.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Increasing light intensity at fixed frequency above threshold:",
+                "options": [
+                    "Increases photocurrent",
+                    "Increases electron kinetic energy",
+                    "Lowers work function",
+                    "Stops emission"
+                ],
+                "correct_answer": "Increases photocurrent",
+                "explanation": "More photons eject more electrons; energy per electron unchanged.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Work function is:",
+                "options": [
+                    "Minimum energy to eject an electron",
+                    "Maximum kinetic energy",
+                    "Battery voltage",
+                    "Half-life"
+                ],
+                "correct_answer": "Minimum energy to eject an electron",
+                "explanation": "Material-specific binding energy.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Einstein explained photoelectric effect using photons.",
+                "correct_answer": "True",
+                "explanation": "Light quantized in packets explained threshold behaviour.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Below threshold frequency, higher intensity always ejects electrons.",
+                "correct_answer": "False",
+                "explanation": "Individual photon energy matters, not just intensity.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Changing metal target changes:",
+                "options": [
+                    "Work function",
+                    "Speed of light",
+                    "Electron charge",
+                    "Planck constant"
+                ],
+                "correct_answer": "Work function",
+                "explanation": "Different metals have different surface binding.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Solar cells apply photoelectric principles to:",
+                "options": [
+                    "Convert light to electrical energy",
+                    "Split nuclei",
+                    "Measure pH",
+                    "Create interference"
+                ],
+                "correct_answer": "Convert light to electrical energy",
+                "explanation": "Photons liberate charge carriers for current.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Write the equation for photon energy.",
+                "correct_answer": "E = hf",
+                "explanation": "h is Planck constant; f is frequency.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "What particle is ejected in the photoelectric effect?",
+                "correct_answer": "electron",
+                "explanation": "Photons knock out surface electrons.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/wave-interference/latest/wave-interference_en.html",
+        "phet_slug": "wave-interference",
+        "question_bank": {
+            "title": "Wave Interference — Biology Assessment",
+            "description": "TIE Biology competence 11.1.1 (cross-disciplinary).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Constructive interference occurs when waves are:",
+                "options": [
+                    "In phase",
+                    "Out of phase",
+                    "Perpendicular only",
+                    "Absent"
+                ],
+                "correct_answer": "In phase",
+                "explanation": "Crests align to produce larger amplitude.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Destructive interference occurs when waves are:",
+                "options": [
+                    "Out of phase",
+                    "In phase",
+                    "Same amplitude always",
+                    "Stationary only"
+                ],
+                "correct_answer": "Out of phase",
+                "explanation": "Crest meets trough for cancellation.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Diffraction is spreading of waves after passing through:",
+                "options": [
+                    "A gap or slit",
+                    "A vacuum only",
+                    "A capacitor",
+                    "A nucleus"
+                ],
+                "correct_answer": "A gap or slit",
+                "explanation": "Waves bend around edges and through openings.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Fringe spacing in double-slit interference depends on:",
+                "options": [
+                    "Wavelength and slit separation",
+                    "Nuclear charge",
+                    "Concentration",
+                    "Work function"
+                ],
+                "correct_answer": "Wavelength and slit separation",
+                "explanation": "λ and d set angular positions of maxima.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Interference requires coherent wave sources.",
+                "correct_answer": "True",
+                "explanation": "Stable phase relation needed for sustained pattern.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Narrower slits produce narrower diffraction patterns.",
+                "correct_answer": "False",
+                "explanation": "Narrower slits give wider diffraction spread.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Biological echolocation uses wave:",
+                "options": [
+                    "Reflection and interference principles",
+                    "Nuclear decay",
+                    "Beer-Lambert law",
+                    "Alpha emission"
+                ],
+                "correct_answer": "Reflection and interference principles",
+                "explanation": "Bats use reflected sound waves to locate prey.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "Two sources closer together generally produce:",
+                "options": [
+                    "Wider fringe spacing",
+                    "No fringes",
+                    "Shorter wavelength",
+                    "Higher atomic number"
+                ],
+                "correct_answer": "Wider fringe spacing",
+                "explanation": "Smaller d increases fringe separation.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Name one type of interference zone.",
+                "correct_answer": "constructive",
+                "explanation": "Also destructive regions.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "What medical imaging uses wave reflection?",
+                "correct_answer": "ultrasound",
+                "explanation": "Ultrasound uses reflected sound waves.",
+                "points": 1
+            }
+        ]
+    }
+]

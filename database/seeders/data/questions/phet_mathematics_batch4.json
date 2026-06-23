@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/vector-addition/latest/vector-addition_en.html",
+    "phet_slug": "vector-addition",
+    "question_bank": {
+      "title": "Vector Addition — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.2.1, 15.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A vector has both:",
+        "options": [
+          "Magnitude and direction",
+          "Only magnitude",
+          "Only colour",
+          "Only mass"
+        ],
+        "correct_answer": "Magnitude and direction",
+        "explanation": "Vectors are described by size and direction.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The head-to-tail method adds vectors by:",
+        "options": [
+          "Placing the tail of the second at the head of the first",
+          "Subtracting directions only",
+          "Ignoring direction",
+          "Multiplying magnitudes only"
+        ],
+        "correct_answer": "Placing the tail of the second at the head of the first",
+        "explanation": "Tip-to-tail placement gives the resultant.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The resultant of two vectors is:",
+        "options": [
+          "The single vector with the same effect",
+          "Always zero",
+          "Always perpendicular",
+          "Only a scalar"
+        ],
+        "correct_answer": "The single vector with the same effect",
+        "explanation": "Resultant replaces combined vectors.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Component form (x, y) gives:",
+        "options": [
+          "Horizontal and vertical parts of a vector",
+          "Only the angle",
+          "Only the colour",
+          "Mass and volume"
+        ],
+        "correct_answer": "Horizontal and vertical parts of a vector",
+        "explanation": "Components resolve the vector on axes.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Vector addition is commutative: a + b = b + a.",
+        "correct_answer": "True",
+        "explanation": "Order of addition does not change the resultant.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "The magnitude of a vector from components (3, 4) is:",
+        "options": [
+          "5",
+          "7",
+          "1",
+          "12"
+        ],
+        "correct_answer": "5",
+        "explanation": "√(3² + 4²) = 5 by Pythagoras.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "In displacement problems, vectors represent:",
+        "options": [
+          "Directed distances",
+          "Only speed",
+          "Only time",
+          "Temperature"
+        ],
+        "correct_answer": "Directed distances",
+        "explanation": "Displacement includes direction.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Equal vectors have the same magnitude and direction.",
+        "correct_answer": "True",
+        "explanation": "Both properties must match for equality.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the method of placing vectors tip-to-tail.",
+        "correct_answer": "head-to-tail",
+        "explanation": "Head-to-tail graphical addition finds the resultant.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What do we call the combined vector from two added vectors?",
+        "correct_answer": "resultant",
+        "explanation": "The resultant represents the sum.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/vector-addition-equations/latest/vector-addition-equations_en.html",
+    "phet_slug": "vector-addition-equations",
+    "question_bank": {
+      "title": "Vector Addition: Equations — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.2.2, 15.3.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "To add vectors algebraically, add:",
+        "options": [
+          "Corresponding components separately",
+          "Only angles",
+          "Only magnitudes without direction",
+          "Only y-components"
+        ],
+        "correct_answer": "Corresponding components separately",
+        "explanation": "(a,b) + (c,d) = (a+c, b+d).",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Polar form of a vector uses:",
+        "options": [
+          "Magnitude and angle",
+          "Only x",
+          "Only y",
+          "Only area"
+        ],
+        "correct_answer": "Magnitude and angle",
+        "explanation": "Polar form is (r, θ).",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The angle of a vector with components (0, 5) is:",
+        "options": [
+          "90° (straight up)",
+          "0°",
+          "180°",
+          "45° always"
+        ],
+        "correct_answer": "90° (straight up)",
+        "explanation": "Pure vertical vector points along positive y-axis.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Converting from polar to component form uses:",
+        "options": [
+          "Trigonometry (cos and sin)",
+          "Only addition of magnitudes",
+          "Only division",
+          "No math"
+        ],
+        "correct_answer": "Trigonometry (cos and sin)",
+        "explanation": "x = r cos θ, y = r sin θ.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Algebraic and graphical vector addition give the same resultant.",
+        "correct_answer": "True",
+        "explanation": "Both methods represent the same physical sum.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "If vector A = (2, 1) and B = (1, 3), A + B equals:",
+        "options": [
+          "(3, 4)",
+          "(2, 3)",
+          "(1, 1)",
+          "(3, 1)"
+        ],
+        "correct_answer": "(3, 4)",
+        "explanation": "Add components: (2+1, 1+3) = (3, 4).",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "The magnitude of the resultant can be found from components using:",
+        "options": [
+          "Pythagoras' theorem",
+          "Only subtraction",
+          "Area formula for circles",
+          "Factoring only"
+        ],
+        "correct_answer": "Pythagoras' theorem",
+        "explanation": "|R| = √(Rx² + Ry²).",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Changing the angle of a vector changes its components.",
+        "correct_answer": "True",
+        "explanation": "Rotation alters x and y parts.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write component addition: (ax, ay) + (bx, by) = ?",
+        "correct_answer": "(ax+bx, ay+by)",
+        "explanation": "Add x-components and y-components separately.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What trigonometric functions convert magnitude r and angle θ to x-component?",
+        "correct_answer": "cosine",
+        "explanation": "x = r cos θ.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/plinko-probability/latest/plinko-probability_en.html",
+    "phet_slug": "plinko-probability",
+    "question_bank": {
+      "title": "Plinko Probability — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.2.2, 15.3.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Probability is:",
+        "options": [
+          "A measure of likelihood of an event",
+          "Always equal to 1 for any event",
+          "The same as certainty always",
+          "Only for coins"
+        ],
+        "correct_answer": "A measure of likelihood of an event",
+        "explanation": "Probability quantifies chance from 0 to 1.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Experimental probability is based on:",
+        "options": [
+          "Observed results from trials",
+          "Only theory without trials",
+          "Guessing without data",
+          "Geometry only"
+        ],
+        "correct_answer": "Observed results from trials",
+        "explanation": "Relative frequency from experiments estimates probability.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "As more Plinko balls are dropped, the bin distribution often:",
+        "options": [
+          "Approaches the theoretical pattern",
+          "Becomes random with no pattern",
+          "Always stays uniform",
+          "Disappears"
+        ],
+        "correct_answer": "Approaches the theoretical pattern",
+        "explanation": "Law of large numbers: more trials → closer to theory.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The binomial distribution models:",
+        "options": [
+          "Counts of successes in independent trials",
+          "Only continuous measurements",
+          "Only triangle areas",
+          "Only vector sums"
+        ],
+        "correct_answer": "Counts of successes in independent trials",
+        "explanation": "Plinko paths relate to binomial probabilities.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Theoretical probability can be calculated without performing experiments.",
+        "correct_answer": "True",
+        "explanation": "Theory uses sample space and favourable outcomes.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Adjusting left/right deflection probability changes:",
+        "options": [
+          "The shape of the bin distribution",
+          "Only the colour of balls",
+          "The number of bins to zero",
+          "Gravity"
+        ],
+        "correct_answer": "The shape of the bin distribution",
+        "explanation": "Bias in deflection shifts probability mass.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "An event with probability 0:",
+        "options": [
+          "Cannot occur in the ideal model",
+          "Is certain",
+          "Has probability 1",
+          "Is always half"
+        ],
+        "correct_answer": "Cannot occur in the ideal model",
+        "explanation": "Zero probability means impossible in the model.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Increasing sample size generally makes experimental results more reliable.",
+        "correct_answer": "True",
+        "explanation": "More trials reduce random fluctuation.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What is the probability range for any event?",
+        "correct_answer": "0 to 1",
+        "explanation": "Probabilities lie between 0 and 1 inclusive.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name the distribution that often appears in Plinko bin frequencies.",
+        "correct_answer": "binomial",
+        "explanation": "Paths left/right resemble binomial trials.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/proportion-playground/latest/proportion-playground_en.html",
+    "phet_slug": "proportion-playground",
+    "question_bank": {
+      "title": "Proportion Playground — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.2, 15.2.1 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A proportional relationship means:",
+        "options": [
+          "Two quantities vary at a constant ratio",
+          "One quantity is always zero",
+          "No mathematical connection",
+          "Only addition applies"
+        ],
+        "correct_answer": "Two quantities vary at a constant ratio",
+        "explanation": "y/x is constant in direct proportion.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The ratio 2:3 means:",
+        "options": [
+          "2 parts to 3 parts",
+          "2 + 3 = 5 only",
+          "2 − 3 = −1 only",
+          "No comparison"
+        ],
+        "correct_answer": "2 parts to 3 parts",
+        "explanation": "Ratios compare relative amounts.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Equivalent ratios represent:",
+        "options": [
+          "The same proportional relationship",
+          "Different relationships always",
+          "Only fractions above 1",
+          "Only decimals"
+        ],
+        "correct_answer": "The same proportional relationship",
+        "explanation": "2:4 and 1:2 are equivalent.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Unit rate tells:",
+        "options": [
+          "Amount per one unit of another quantity",
+          "Only total sum",
+          "Only difference",
+          "Only product"
+        ],
+        "correct_answer": "Amount per one unit of another quantity",
+        "explanation": "Unit rate is value for one unit.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Mixing paint in a 1:2 ratio means one part colour to two parts base.",
+        "correct_answer": "True",
+        "explanation": "Paint mixing is a classic ratio context.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "If 3 necklaces need 12 beads, 6 necklaces need:",
+        "options": [
+          "24 beads",
+          "12 beads",
+          "6 beads",
+          "36 beads"
+        ],
+        "correct_answer": "24 beads",
+        "explanation": "Double necklaces doubles beads at same ratio.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "A non-proportional situation occurs when:",
+        "options": [
+          "The ratio changes as quantities change",
+          "The ratio stays constant",
+          "Both quantities are zero only",
+          "Units are the same"
+        ],
+        "correct_answer": "The ratio changes as quantities change",
+        "explanation": "Proportion requires constant ratio.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Simplifying a ratio does not change the relationship it represents.",
+        "correct_answer": "True",
+        "explanation": "Equivalent ratios simplify to the same relationship.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Simplify the ratio 4:8.",
+        "correct_answer": "1:2",
+        "explanation": "Divide both parts by 4.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one real-world context in the Proportion Playground.",
+        "correct_answer": "paint mixing",
+        "explanation": "Paint, beads, and billiard balls illustrate ratios.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/area-builder/latest/area-builder_en.html",
+    "phet_slug": "area-builder",
+    "question_bank": {
+      "title": "Area Builder — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.1.2 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Area of a rectangle equals:",
+        "options": [
+          "Length × width",
+          "Length + width",
+          "2 × length only",
+          "Length ÷ width"
+        ],
+        "correct_answer": "Length × width",
+        "explanation": "A = l × w for rectangles.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Perimeter of a shape is:",
+        "options": [
+          "Total distance around the boundary",
+          "Area inside",
+          "Volume",
+          "Mass"
+        ],
+        "correct_answer": "Total distance around the boundary",
+        "explanation": "Perimeter sums side lengths.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Two shapes can have the same area but:",
+        "options": [
+          "Different perimeters",
+          "Always the same perimeter",
+          "No perimeter",
+          "Only circles"
+        ],
+        "correct_answer": "Different perimeters",
+        "explanation": "Area and perimeter are independent measures.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Area is measured in:",
+        "options": [
+          "Square units",
+          "Linear units only",
+          "Cubic units",
+          "Degrees"
+        ],
+        "correct_answer": "Square units",
+        "explanation": "Area counts unit squares (e.g. m²).",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Counting unit squares on the grid gives the area of a shape.",
+        "correct_answer": "True",
+        "explanation": "Area equals the number of unit squares covering the region.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "A 3×4 rectangle has area:",
+        "options": [
+          "12 square units",
+          "7 square units",
+          "14 square units",
+          "1 square unit"
+        ],
+        "correct_answer": "12 square units",
+        "explanation": "3 × 4 = 12.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Increasing perimeter always increases area.",
+        "options": [
+          "True",
+          "False",
+          "Only for circles",
+          "Only for squares"
+        ],
+        "correct_answer": "False",
+        "explanation": "Same perimeter can enclose different areas.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Composite shapes can be built from unit squares on the grid.",
+        "correct_answer": "True",
+        "explanation": "Area Builder uses unit squares to form shapes.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What is the perimeter of a 2×2 square?",
+        "correct_answer": "8",
+        "explanation": "4 sides of 2 units: 2+2+2+2 = 8.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one challenge mode goal in Area Builder.",
+        "correct_answer": "area and perimeter",
+        "explanation": "Game mode targets specific area and perimeter values.",
+        "points": 1
+      }
+    ]
+  }
+]

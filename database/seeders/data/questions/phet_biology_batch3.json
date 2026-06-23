@@ -1,0 +1,260 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/neuron/latest/neuron_en.html",
+    "phet_slug": "neuron",
+    "question_bank": {
+      "title": "Neuron — Biology Assessment",
+      "description": "TIE Biology competences 11.2.1, 11.3.1 (Forms IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The resting membrane potential exists because:",
+        "options": [
+          "Ion concentrations differ inside and outside the cell",
+          "Neurons have no ions",
+          "Only proteins cross the membrane",
+          "Temperature is zero"
+        ],
+        "correct_answer": "Ion concentrations differ inside and outside the cell",
+        "explanation": "Uneven Na⁺ and K⁺ distribution creates potential difference.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "An action potential begins when:",
+        "options": [
+          "Threshold is reached and voltage-gated channels open",
+          "The cell is always depolarised",
+          "No stimulus is applied",
+          "Only K⁺ channels open first always"
+        ],
+        "correct_answer": "Threshold is reached and voltage-gated channels open",
+        "explanation": "Threshold triggers rapid depolarisation.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "During depolarisation, which ions primarily enter the neuron?",
+        "options": [
+          "Sodium (Na⁺)",
+          "Potassium only",
+          "Chloride only",
+          "Calcium only at rest"
+        ],
+        "correct_answer": "Sodium (Na⁺)",
+        "explanation": "Na⁺ influx drives the rising phase of the action potential.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Repolarisation involves:",
+        "options": [
+          "K⁺ leaving the cell",
+          "Na⁺ entering continuously",
+          "Closing all membranes",
+          "Only passive diffusion of proteins"
+        ],
+        "correct_answer": "K⁺ leaving the cell",
+        "explanation": "K⁺ efflux restores negative internal charge.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The refractory period limits how frequently a neuron can fire.",
+        "correct_answer": "True",
+        "explanation": "Channels must reset before another action potential.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "A sub-threshold stimulus:",
+        "options": [
+          "Does not produce a full action potential",
+          "Always produces maximum response",
+          "Destroys the neuron",
+          "Only affects dendrites permanently"
+        ],
+        "correct_answer": "Does not produce a full action potential",
+        "explanation": "All-or-nothing response requires reaching threshold.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Action potentials propagate along the:",
+        "options": [
+          "Axon",
+          "Cell wall of plants",
+          "Nucleus only",
+          "Golgi only"
+        ],
+        "correct_answer": "Axon",
+        "explanation": "Axons carry impulses away from the cell body.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Nerve impulses are electrical signals caused by ion movement across membranes.",
+        "correct_answer": "True",
+        "explanation": "Voltage changes arise from controlled ion channel activity.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the period when the neuron cannot fire another impulse immediately.",
+        "correct_answer": "refractory period",
+        "explanation": "Refractory period follows each action potential.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Which ion's channels open first during the rising phase of an action potential?",
+        "correct_answer": "sodium",
+        "explanation": "Voltage-gated Na⁺ channels open to depolarise the membrane.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/fluid-pressure-and-flow/latest/fluid-pressure-and-flow_en.html",
+    "phet_slug": "fluid-pressure-and-flow",
+    "question_bank": {
+      "title": "Fluid Pressure and Flow — Biology Assessment",
+      "description": "TIE Biology competences 11.1.1, 11.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Blood pressure is highest in:",
+        "options": [
+          "Arteries near the heart",
+          "Capillaries only",
+          "Veins at the feet only",
+          "Lymph nodes only"
+        ],
+        "correct_answer": "Arteries near the heart",
+        "explanation": "Arteries receive blood directly from ventricular contraction.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Narrower vessels for the same flow rate have:",
+        "options": [
+          "Higher fluid speed",
+          "Lower fluid speed",
+          "Zero pressure",
+          "No relationship to flow"
+        ],
+        "correct_answer": "Higher fluid speed",
+        "explanation": "Continuity: A₁v₁ = A₂v₂, so smaller area means higher speed.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Pressure in a fluid increases with:",
+        "options": [
+          "Depth",
+          "Width of container only",
+          "Colour of fluid",
+          "Surface shape only"
+        ],
+        "correct_answer": "Depth",
+        "explanation": "Hydrostatic pressure grows with depth (P = hρg).",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The circulatory system analogy uses fluid flow to explain:",
+        "options": [
+          "How vessel diameter affects flow speed",
+          "Only digestion",
+          "Only photosynthesis",
+          "Only DNA replication"
+        ],
+        "correct_answer": "How vessel diameter affects flow speed",
+        "explanation": "Pipe diameter models blood vessel resistance to flow.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Atherosclerosis narrows vessels and can raise blood pressure.",
+        "correct_answer": "True",
+        "explanation": "Narrowed lumens increase resistance and pressure.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "In the Flow screen, reducing pipe diameter:",
+        "options": [
+          "Increases flow speed in that section",
+          "Stops all flow",
+          "Removes pressure",
+          "Changes blood type"
+        ],
+        "correct_answer": "Increases flow speed in that section",
+        "explanation": "Same volume flow through smaller area means higher velocity.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Denser fluids at the same depth exert:",
+        "options": [
+          "Greater pressure",
+          "Less pressure",
+          "Zero pressure",
+          "Only atmospheric pressure"
+        ],
+        "correct_answer": "Greater pressure",
+        "explanation": "P = hρg depends on density ρ.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Fluid pressure acts equally in all directions at a given depth.",
+        "correct_answer": "True",
+        "explanation": "Fluids transmit pressure uniformly at a level.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the principle stating flow rate is constant in a closed pipe system.",
+        "correct_answer": "continuity",
+        "explanation": "Continuity equation links area and velocity.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What biological system is modelled by fluid pressure and flow in this sim?",
+        "correct_answer": "circulatory system",
+        "explanation": "Blood circulation parallels fluid flow in pipes.",
+        "points": 1
+      }
+    ]
+  }
+]

@@ -1,0 +1,776 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/waves-intro/latest/waves-intro_en.html",
+    "phet_slug": "waves-intro",
+    "question_bank": {
+      "title": "Waves Intro — Physics Assessment",
+      "description": "TIE Physics competences 13.3.1, 13.3.2 (Forms III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The distance between two consecutive crests of a wave is called:",
+        "options": [
+          "Amplitude",
+          "Wavelength",
+          "Frequency",
+          "Period"
+        ],
+        "correct_answer": "Wavelength",
+        "explanation": "Wavelength (λ) is the spatial distance between identical points on adjacent waves.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Increasing the frequency of a wave while speed stays constant:",
+        "options": [
+          "Decreases wavelength",
+          "Increases wavelength",
+          "Has no effect on wavelength",
+          "Stops the wave"
+        ],
+        "correct_answer": "Decreases wavelength",
+        "explanation": "From v = fλ, higher frequency means shorter wavelength at constant speed.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Sound waves are best described as:",
+        "options": [
+          "Transverse waves",
+          "Longitudinal waves",
+          "Electromagnetic waves",
+          "Standing waves only"
+        ],
+        "correct_answer": "Longitudinal waves",
+        "explanation": "Sound involves particle vibrations parallel to the direction of travel.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The height of a wave above the equilibrium position measures:",
+        "options": [
+          "Frequency",
+          "Wavelength",
+          "Amplitude",
+          "Speed"
+        ],
+        "correct_answer": "Amplitude",
+        "explanation": "Amplitude relates to the energy carried by the wave.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Light and sound are both examples of wave phenomena.",
+        "correct_answer": "True",
+        "explanation": "Both transfer energy without transferring matter, though they differ in medium requirements.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "In the Water screen, tapping creates ripples that spread because:",
+        "options": [
+          "Particles move permanently outward",
+          "Energy is transferred through the medium",
+          "Gravity pulls water sideways",
+          "Air pushes the water"
+        ],
+        "correct_answer": "Energy is transferred through the medium",
+        "explanation": "Waves transfer energy; particles oscillate about equilibrium positions.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Which property of a wave is measured in hertz (Hz)?",
+        "options": [
+          "Amplitude",
+          "Wavelength",
+          "Frequency",
+          "Speed"
+        ],
+        "correct_answer": "Frequency",
+        "explanation": "Frequency is the number of cycles per second.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Transverse waves have particle motion perpendicular to the direction of wave travel.",
+        "correct_answer": "True",
+        "explanation": "Water surface ripples and waves on a string are transverse.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "State the wave equation relating speed, frequency, and wavelength.",
+        "correct_answer": "v = fλ",
+        "explanation": "Wave speed equals frequency times wavelength.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one wave property you can adjust using sliders in the simulation.",
+        "correct_answer": "frequency",
+        "explanation": "Students can adjust frequency, amplitude, and compare water, sound, and light screens.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/sound-waves/latest/sound-waves_en.html",
+    "phet_slug": "sound-waves",
+    "question_bank": {
+      "title": "Sound — Physics Assessment",
+      "description": "TIE Physics competences 13.3.1, 13.3.3 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Sound requires a medium to travel because it is:",
+        "options": [
+          "An electromagnetic wave",
+          "A mechanical longitudinal wave",
+          "A transverse wave in vacuum",
+          "A standing wave only"
+        ],
+        "correct_answer": "A mechanical longitudinal wave",
+        "explanation": "Sound needs particles in a medium to transmit compressions and rarefactions.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Increasing the frequency of a sound source changes the:",
+        "options": [
+          "Loudness only",
+          "Pitch",
+          "Speed of sound in air",
+          "Wavelength in vacuum"
+        ],
+        "correct_answer": "Pitch",
+        "explanation": "Higher frequency corresponds to higher pitch.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Amplitude of a sound wave is related to:",
+        "options": [
+          "Pitch",
+          "Loudness",
+          "Speed of sound",
+          "Wavelength only"
+        ],
+        "correct_answer": "Loudness",
+        "explanation": "Greater amplitude means greater loudness (intensity).",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "When two sound sources interfere constructively, the result is:",
+        "options": [
+          "A quieter sound",
+          "A louder sound at that point",
+          "No sound at all",
+          "Faster sound speed"
+        ],
+        "correct_answer": "A louder sound at that point",
+        "explanation": "Constructive interference adds wave amplitudes in phase.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Sound cannot travel through a perfect vacuum.",
+        "correct_answer": "True",
+        "explanation": "Without a medium there are no particles to transmit compressions.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "In the particle view, sound travels as regions of:",
+        "options": [
+          "Compression and rarefaction",
+          "Only transverse displacement",
+          "Constant pressure everywhere",
+          "Magnetic field lines"
+        ],
+        "correct_answer": "Compression and rarefaction",
+        "explanation": "Longitudinal sound waves alternate high- and low-pressure regions.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Destructive interference of sound waves occurs when waves are:",
+        "options": [
+          "In phase",
+          "Out of phase",
+          "At the same amplitude only",
+          "At the same frequency only"
+        ],
+        "correct_answer": "Out of phase",
+        "explanation": "Out-of-phase waves cancel partially or completely.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "The speed of sound in air increases significantly with small temperature rises.",
+        "correct_answer": "True",
+        "explanation": "Warmer air has faster-moving particles, increasing sound speed slightly.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What do we call the high-pressure regions in a longitudinal sound wave?",
+        "correct_answer": "compression",
+        "explanation": "Compressions are where particles are closest together.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name the wave property that determines how 'high' or 'low' a note sounds.",
+        "correct_answer": "frequency",
+        "explanation": "Frequency determines pitch.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/bending-light/latest/bending-light_en.html",
+    "phet_slug": "bending-light",
+    "question_bank": {
+      "title": "Bending Light — Physics Assessment",
+      "description": "TIE Physics competences 13.4.1, 13.4.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Refraction occurs when light:",
+        "options": [
+          "Reflects from a mirror",
+          "Changes speed at a boundary between media",
+          "Is absorbed completely",
+          "Travels in a vacuum only"
+        ],
+        "correct_answer": "Changes speed at a boundary between media",
+        "explanation": "A change in speed at a boundary bends the light ray.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The angle of incidence is measured between the incident ray and the:",
+        "options": [
+          "Surface",
+          "Normal",
+          "Refracted ray",
+          "Mirror"
+        ],
+        "correct_answer": "Normal",
+        "explanation": "Angles in optics are measured from the normal to the surface.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Light bends toward the normal when entering a medium where it travels:",
+        "options": [
+          "Faster",
+          "Slower",
+          "At the same speed",
+          "Backward"
+        ],
+        "correct_answer": "Slower",
+        "explanation": "Entering a denser (slower) medium bends the ray toward the normal.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Total internal reflection can occur when light travels from:",
+        "options": [
+          "Air to glass at any angle",
+          "A denser to a less dense medium beyond the critical angle",
+          "Vacuum to air",
+          "Glass to glass"
+        ],
+        "correct_answer": "A denser to a less dense medium beyond the critical angle",
+        "explanation": "TIR requires going from higher to lower refractive index past the critical angle.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Snell's Law relates the angles of incidence and refraction to the refractive indices.",
+        "correct_answer": "True",
+        "explanation": "n₁ sin θ₁ = n₂ sin θ₂ describes refraction.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "A material with a higher refractive index has light that travels:",
+        "options": [
+          "Faster in the material",
+          "Slower in the material",
+          "At the same speed as in vacuum",
+          "Only as transverse waves"
+        ],
+        "correct_answer": "Slower in the material",
+        "explanation": "Higher refractive index means lower speed in that medium.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "When the angle of incidence equals the critical angle, the refracted ray:",
+        "options": [
+          "Grazes along the boundary",
+          "Returns into the first medium",
+          "Stops completely",
+          "Doubles in intensity"
+        ],
+        "correct_answer": "Grazes along the boundary",
+        "explanation": "At the critical angle the refracted ray travels along the surface.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Changing the material in the simulation changes how much the light ray bends.",
+        "correct_answer": "True",
+        "explanation": "Different refractive indices produce different refraction angles.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What is the name for the bending of light as it passes from one medium to another?",
+        "correct_answer": "refraction",
+        "explanation": "Refraction is the bending due to speed change at a boundary.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one material you can select in the simulation besides air.",
+        "correct_answer": "glass",
+        "explanation": "Water, glass, and mystery materials are available in the sim.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/color-vision/latest/color-vision_en.html",
+    "phet_slug": "color-vision",
+    "question_bank": {
+      "title": "Color Vision — Physics Assessment",
+      "description": "TIE Physics competences 13.4.1, 13.4.3 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "White light can be thought of as:",
+        "options": [
+          "A single wavelength only",
+          "A mixture of many wavelengths",
+          "Only red and blue light",
+          "Light with zero frequency"
+        ],
+        "correct_answer": "A mixture of many wavelengths",
+        "explanation": "White light contains a broad range of visible wavelengths.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "In additive colour mixing with light, red + green + blue gives:",
+        "options": [
+          "Black",
+          "White",
+          "Brown only",
+          "No light"
+        ],
+        "correct_answer": "White",
+        "explanation": "RGB additive mixing produces white when balanced.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "A colour filter works by:",
+        "options": [
+          "Creating new wavelengths",
+          "Absorbing some wavelengths and transmitting others",
+          "Increasing the speed of light",
+          "Reflecting all wavelengths equally"
+        ],
+        "correct_answer": "Absorbing some wavelengths and transmitting others",
+        "explanation": "Filters subtract certain wavelengths from white light.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Mixing red and green light in equal intensity typically produces:",
+        "options": [
+          "Blue light",
+          "Yellow light",
+          "Violet light",
+          "No visible light"
+        ],
+        "correct_answer": "Yellow light",
+        "explanation": "Red and green additively combine to yellow.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The colour an object appears depends on which wavelengths it reflects or transmits.",
+        "correct_answer": "True",
+        "explanation": "We see the wavelengths that reach our eyes after interaction with the object.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Shining white light through a red filter mainly transmits:",
+        "options": [
+          "Blue wavelengths",
+          "Red wavelengths",
+          "All wavelengths equally",
+          "Ultraviolet only"
+        ],
+        "correct_answer": "Red wavelengths",
+        "explanation": "A red filter absorbs other colours and transmits red.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Additive colour mixing applies to:",
+        "options": [
+          "Paints and pigments",
+          "Light sources such as screens",
+          "Only reflected sunlight",
+          "Only laser beams in vacuum"
+        ],
+        "correct_answer": "Light sources such as screens",
+        "explanation": "Additive mixing combines emitted light (RGB).",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "A coloured surface under white light reflects some wavelengths and absorbs others.",
+        "correct_answer": "True",
+        "explanation": "Pigments subtract wavelengths; reflected light determines perceived colour.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the three primary colours of light used in the RGB bulbs screen.",
+        "correct_answer": "red green blue",
+        "explanation": "Red, green, and blue are the additive primaries.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What type of mixing uses filters that absorb wavelengths?",
+        "correct_answer": "subtractive",
+        "explanation": "Filters subtract wavelengths from white light (subtractive mixing).",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/resistance-in-a-wire/latest/resistance-in-a-wire_en.html",
+    "phet_slug": "resistance-in-a-wire",
+    "question_bank": {
+      "title": "Resistance in a Wire — Physics Assessment",
+      "description": "TIE Physics competences 13.5.1, 13.5.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Resistance of a wire increases when its length is:",
+        "options": [
+          "Doubled",
+          "Halved",
+          "Unchanged",
+          "Made zero"
+        ],
+        "correct_answer": "Doubled",
+        "explanation": "R is directly proportional to length: R = ρL/A.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Doubling the cross-sectional area of a wire:",
+        "options": [
+          "Doubles the resistance",
+          "Halves the resistance",
+          "Quadruples the resistance",
+          "Has no effect"
+        ],
+        "correct_answer": "Halves the resistance",
+        "explanation": "Resistance is inversely proportional to cross-sectional area.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Resistivity (ρ) is a property of:",
+        "options": [
+          "The wire length only",
+          "The material",
+          "The voltage applied",
+          "The current only"
+        ],
+        "correct_answer": "The material",
+        "explanation": "Resistivity characterises how strongly a material opposes current.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The formula for resistance of a uniform wire is:",
+        "options": [
+          "R = V/I only",
+          "R = ρL/A",
+          "R = I/V",
+          "R = A/L"
+        ],
+        "correct_answer": "R = ρL/A",
+        "explanation": "Resistance depends on resistivity, length, and area.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A longer wire of the same material and thickness has greater resistance.",
+        "correct_answer": "True",
+        "explanation": "More length means more opposition to electron flow.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "If resistivity increases while length and area stay the same, resistance:",
+        "options": [
+          "Decreases",
+          "Increases",
+          "Becomes zero",
+          "Stays the same"
+        ],
+        "correct_answer": "Increases",
+        "explanation": "R is directly proportional to ρ.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Thicker wires are used in high-current applications because they:",
+        "options": [
+          "Have higher resistance",
+          "Have lower resistance",
+          "Block all current",
+          "Increase resistivity"
+        ],
+        "correct_answer": "Have lower resistance",
+        "explanation": "Larger cross-section reduces resistance for a given material.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Resistance is measured in ohms (Ω).",
+        "correct_answer": "True",
+        "explanation": "The ohm is the SI unit of electrical resistance.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the formula linking resistance, resistivity, length, and area.",
+        "correct_answer": "R = ρL/A",
+        "explanation": "Standard formula for a uniform conductor.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one variable you can adjust in the simulation besides length.",
+        "correct_answer": "resistivity",
+        "explanation": "Resistivity, length, and area can all be adjusted.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/faradays-law/latest/faradays-law_en.html",
+    "phet_slug": "faradays-law",
+    "question_bank": {
+      "title": "Faraday's Law — Physics Assessment",
+      "description": "TIE Physics competences 13.5.3, 13.5.4 (Forms IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "An induced EMF is produced when:",
+        "options": [
+          "Magnetic flux through a coil changes",
+          "A coil is stationary in a uniform field",
+          "No magnet is present",
+          "Current is constant"
+        ],
+        "correct_answer": "Magnetic flux through a coil changes",
+        "explanation": "Faraday's Law: changing magnetic flux induces EMF.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Moving the magnet faster toward the coil generally:",
+        "options": [
+          "Decreases induced voltage",
+          "Increases induced voltage",
+          "Eliminates induced voltage",
+          "Reverses resistivity"
+        ],
+        "correct_answer": "Increases induced voltage",
+        "explanation": "Faster flux change produces greater induced EMF.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Increasing the number of turns in the coil:",
+        "options": [
+          "Decreases induced EMF",
+          "Increases induced EMF",
+          "Has no effect",
+          "Stops induction"
+        ],
+        "correct_answer": "Increases induced EMF",
+        "explanation": "EMF is proportional to the number of coil turns.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Reversing the direction of magnet motion:",
+        "options": [
+          "Leaves voltage unchanged",
+          "Reverses the sign of induced voltage",
+          "Doubles resistance only",
+          "Prevents any induction"
+        ],
+        "correct_answer": "Reverses the sign of induced voltage",
+        "explanation": "Direction of flux change determines EMF polarity (Lenz's Law).",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Lenz's Law states that induced current opposes the change causing it.",
+        "correct_answer": "True",
+        "explanation": "Induced effects oppose the change in magnetic flux.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "A generator converts:",
+        "options": [
+          "Heat to light",
+          "Mechanical energy to electrical energy via induction",
+          "Chemical energy to nuclear energy",
+          "Sound to magnetism"
+        ],
+        "correct_answer": "Mechanical energy to electrical energy via induction",
+        "explanation": "Relative motion between coil and field induces EMF.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Magnetic flux depends on:",
+        "options": [
+          "Field strength, area, and orientation",
+          "Wire colour only",
+          "Room temperature only",
+          "Battery voltage only"
+        ],
+        "correct_answer": "Field strength, area, and orientation",
+        "explanation": "Flux Φ = BA cos θ links field, area, and angle.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "No EMF is induced when the magnet and coil are both stationary.",
+        "correct_answer": "True",
+        "explanation": "A steady flux (no change) produces zero induced EMF.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the law that describes induction of EMF by changing magnetic flux.",
+        "correct_answer": "Faraday's Law",
+        "explanation": "Faraday's Law links rate of flux change to induced EMF.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What device in the simulation measures the induced voltage?",
+        "correct_answer": "voltmeter",
+        "explanation": "The voltmeter deflects when flux through the coil changes.",
+        "points": 1
+      }
+    ]
+  }
+]

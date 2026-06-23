@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/geometric-optics/latest/geometric-optics_en.html",
+    "phet_slug": "geometric-optics",
+    "question_bank": {
+      "title": "Geometric Optics — Physics Assessment",
+      "description": "TIE Physics competences 13.4.2, 13.4.3 (Forms IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A converging lens is thicker at the:",
+        "options": [
+          "Edges",
+          "Centre",
+          "Top only",
+          "Bottom only"
+        ],
+        "correct_answer": "Centre",
+        "explanation": "Converging (convex) lenses are thicker in the middle.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "A real image can be projected onto a screen because:",
+        "options": [
+          "Light rays actually meet at the image point",
+          "Light rays only appear to meet",
+          "The lens absorbs all light",
+          "The image is always virtual"
+        ],
+        "correct_answer": "Light rays actually meet at the image point",
+        "explanation": "Real images form where rays converge.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Increasing the object distance beyond 2f for a converging lens makes the image:",
+        "options": [
+          "Larger than the object",
+          "Smaller than the object",
+          "The same size always",
+          "Disappear"
+        ],
+        "correct_answer": "Smaller than the object",
+        "explanation": "Beyond 2f the image is diminished and real.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The lens formula relates focal length, object distance, and:",
+        "options": [
+          "Image distance",
+          "Lens colour",
+          "Battery voltage",
+          "Wave frequency"
+        ],
+        "correct_answer": "Image distance",
+        "explanation": "1/f = 1/v + 1/u connects f, image distance v, and object distance u.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A diverging lens always forms a virtual, upright, diminished image.",
+        "correct_answer": "True",
+        "explanation": "Diverging lenses spread rays; the image appears on the same side as the object.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Decreasing the radius of curvature of a lens generally:",
+        "options": [
+          "Increases focal length",
+          "Decreases focal length",
+          "Has no effect",
+          "Stops refraction"
+        ],
+        "correct_answer": "Decreases focal length",
+        "explanation": "A more curved surface gives a shorter focal length.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "When the object is placed at the focal point of a converging lens, the image is:",
+        "options": [
+          "At infinity",
+          "At the lens centre",
+          "Same size as object at 2f",
+          "Always virtual and upright"
+        ],
+        "correct_answer": "At infinity",
+        "explanation": "Rays emerge parallel when the object is at F.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Spectacles use lenses to correct vision by refracting light before it enters the eye.",
+        "correct_answer": "True",
+        "explanation": "Lenses adjust where light focuses on the retina.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the type of image that cannot be caught on a screen.",
+        "correct_answer": "virtual",
+        "explanation": "Virtual images are formed where rays appear to diverge from.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Write the lens formula using f, v, and u.",
+        "correct_answer": "1/f = 1/v + 1/u",
+        "explanation": "Standard thin-lens equation.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/gravity-force-lab/latest/gravity-force-lab_en.html",
+    "phet_slug": "gravity-force-lab",
+    "question_bank": {
+      "title": "Gravity Force Lab — Physics Assessment",
+      "description": "TIE Physics competences 13.1.2, 13.2.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Gravitational force between two masses is proportional to:",
+        "options": [
+          "The product of their masses",
+          "The sum of their masses",
+          "Only one mass",
+          "The square root of distance"
+        ],
+        "correct_answer": "The product of their masses",
+        "explanation": "F = Gm₁m₂/r² shows proportionality to m₁m₂.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Doubling the distance between two masses changes the force to:",
+        "options": [
+          "One half",
+          "One quarter",
+          "Twice",
+          "Four times"
+        ],
+        "correct_answer": "One quarter",
+        "explanation": "Force follows an inverse-square law with distance.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "If both masses are doubled while distance stays the same, the force becomes:",
+        "options": [
+          "Doubled",
+          "Quadrupled",
+          "Halved",
+          "Unchanged"
+        ],
+        "correct_answer": "Quadrupled",
+        "explanation": "F ∝ m₁m₂, so (2m)(2m) gives 4× force.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Newton's Law of Universal Gravitation applies to:",
+        "options": [
+          "Only planets",
+          "Any two masses",
+          "Only objects on Earth",
+          "Only charged particles"
+        ],
+        "correct_answer": "Any two masses",
+        "explanation": "Gravity acts between all masses.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Gravitational force is always attractive.",
+        "correct_answer": "True",
+        "explanation": "Masses always attract; there is no repulsive gravity.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Moving masses closer together:",
+        "options": [
+          "Weakens the gravitational force",
+          "Strengthens the gravitational force",
+          "Eliminates gravity",
+          "Reverses mass"
+        ],
+        "correct_answer": "Strengthens the gravitational force",
+        "explanation": "Smaller r gives larger F in F = Gm₁m₂/r².",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "The gravitational force arrow in the simulation shows:",
+        "options": [
+          "Direction and relative magnitude of force",
+          "Only colour of masses",
+          "Electric charge",
+          "Air resistance"
+        ],
+        "correct_answer": "Direction and relative magnitude of force",
+        "explanation": "Force vectors indicate how strongly masses pull each other.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Weight is the gravitational force on an object near a planet.",
+        "correct_answer": "True",
+        "explanation": "Weight W = mg is the gravitational pull on mass m.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write Newton's law of gravitation as F = ...",
+        "correct_answer": "Gm1m2/r^2",
+        "explanation": "Force equals G times masses divided by distance squared.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one quantity you can adjust with sliders in the simulation.",
+        "correct_answer": "mass",
+        "explanation": "Masses and separation distance can be adjusted.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/masses-and-springs/latest/masses-and-springs_en.html",
+    "phet_slug": "masses-and-springs",
+    "question_bank": {
+      "title": "Masses and Springs — Physics Assessment",
+      "description": "TIE Physics competences 13.2.2, 13.2.3 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Hooke's Law states that spring force is proportional to:",
+        "options": [
+          "Extension",
+          "Mass only",
+          "Time",
+          "Frequency squared"
+        ],
+        "correct_answer": "Extension",
+        "explanation": "F = −kx relates force to displacement from equilibrium.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Increasing the hanging mass on a spring generally:",
+        "options": [
+          "Decreases the period",
+          "Increases the period",
+          "Stops oscillation forever",
+          "Removes gravity"
+        ],
+        "correct_answer": "Increases the period",
+        "explanation": "T = 2π√(m/k), so larger mass means longer period.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "A stiffer spring (larger k) with the same mass has:",
+        "options": [
+          "A shorter period",
+          "A longer period",
+          "No oscillation",
+          "Infinite period"
+        ],
+        "correct_answer": "A shorter period",
+        "explanation": "Higher k increases restoring force, increasing frequency.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "During oscillation, energy exchanges between:",
+        "options": [
+          "Kinetic and elastic potential energy",
+          "Only thermal energy",
+          "Nuclear and chemical energy",
+          "Magnetic energy only"
+        ],
+        "correct_answer": "Kinetic and elastic potential energy",
+        "explanation": "Energy shifts between KE and spring PE in SHM.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "For small oscillations, period does not depend on amplitude.",
+        "correct_answer": "True",
+        "explanation": "Ideal SHM period is independent of amplitude.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "At the bottom of the oscillation (maximum stretch), velocity is:",
+        "options": [
+          "Maximum",
+          "Zero",
+          "Negative always",
+          "Equal to acceleration"
+        ],
+        "correct_answer": "Zero",
+        "explanation": "Turning points have zero velocity; energy is stored as PE.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Simple harmonic motion is characterised by:",
+        "options": [
+          "Restoring force proportional to displacement",
+          "Constant velocity",
+          "No restoring force",
+          "Only linear motion without oscillation"
+        ],
+        "correct_answer": "Restoring force proportional to displacement",
+        "explanation": "SHM requires a restoring force ∝ displacement.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Increasing amplitude increases maximum speed in SHM.",
+        "correct_answer": "True",
+        "explanation": "More energy at larger amplitude means higher peak speeds.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "State Hooke's Law as an equation.",
+        "correct_answer": "F = -kx",
+        "explanation": "Force is proportional to extension with negative sign for restoring direction.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name the motion of a mass on a spring after release.",
+        "correct_answer": "simple harmonic motion",
+        "explanation": "Spring-mass systems exhibit SHM for small displacements.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/under-pressure/latest/under-pressure_en.html",
+    "phet_slug": "under-pressure",
+    "question_bank": {
+      "title": "Under Pressure — Physics Assessment",
+      "description": "TIE Physics competences 13.2.4, 13.2.5 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Fluid pressure at a point in a liquid increases with:",
+        "options": [
+          "Depth",
+          "Width of container only",
+          "Colour of liquid",
+          "Surface area only"
+        ],
+        "correct_answer": "Depth",
+        "explanation": "P = hρg shows pressure increases with depth.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The formula for pressure in a fluid column is:",
+        "options": [
+          "P = hρg",
+          "P = m/v only",
+          "P = F × d",
+          "P = V/I"
+        ],
+        "correct_answer": "P = hρg",
+        "explanation": "Pressure equals depth × density × gravitational field strength.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "At the same depth, a denser fluid exerts:",
+        "options": [
+          "Lower pressure",
+          "Higher pressure",
+          "Zero pressure",
+          "The same pressure regardless of density"
+        ],
+        "correct_answer": "Higher pressure",
+        "explanation": "Greater ρ means greater pressure at equal depth.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Pressure in a fluid at rest acts:",
+        "options": [
+          "Only downward",
+          "Equally in all directions at a given depth",
+          "Only upward",
+          "Only sideways"
+        ],
+        "correct_answer": "Equally in all directions at a given depth",
+        "explanation": "Fluids transmit pressure uniformly at a level.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Atmospheric pressure acts on the surface of an open liquid.",
+        "correct_answer": "True",
+        "explanation": "Air pressure adds to the pressure measured in an open container.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Moving the pressure sensor deeper in the same liquid:",
+        "options": [
+          "Decreases reading",
+          "Increases reading",
+          "Gives zero",
+          "Changes density"
+        ],
+        "correct_answer": "Increases reading",
+        "explanation": "Deeper positions have higher hydrostatic pressure.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Switching from water to honey at the same depth typically:",
+        "options": [
+          "Lowers pressure",
+          "Raises pressure",
+          "Has no effect",
+          "Removes gravity"
+        ],
+        "correct_answer": "Raises pressure",
+        "explanation": "Honey has higher density, so P = hρg is larger.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Pressure depends on the shape of the container, not just depth.",
+        "correct_answer": "False",
+        "explanation": "At a given depth in a connected fluid, pressure is the same regardless of container shape.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name one factor in P = hρg besides depth and g.",
+        "correct_answer": "density",
+        "explanation": "Fluid density ρ determines pressure at a given depth.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What instrument in the simulation measures pressure?",
+        "correct_answer": "pressure sensor",
+        "explanation": "The sensor reads pressure at chosen depths.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-dc-virtual-lab/latest/circuit-construction-kit-dc-virtual-lab_en.html",
+    "phet_slug": "circuit-construction-kit-dc-virtual-lab",
+    "question_bank": {
+      "title": "Circuit Construction Kit: DC - Virtual Lab — Physics Assessment",
+      "description": "TIE Physics competences 13.5.1, 13.5.2 (Forms IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "In a series circuit, the current through each component is:",
+        "options": [
+          "The same",
+          "Different in each branch",
+          "Always zero",
+          "Only in the battery"
+        ],
+        "correct_answer": "The same",
+        "explanation": "Series circuits have one path, so current is uniform.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Increasing battery voltage in a simple resistor circuit generally:",
+        "options": [
+          "Decreases current",
+          "Increases current",
+          "Stops all current",
+          "Removes resistance"
+        ],
+        "correct_answer": "Increases current",
+        "explanation": "From Ohm's Law, higher V gives higher I for fixed R.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "An ammeter should be connected:",
+        "options": [
+          "In series with the component",
+          "In parallel only",
+          "Outside the circuit",
+          "Across the battery only"
+        ],
+        "correct_answer": "In series with the component",
+        "explanation": "Ammeters measure current and must be in series.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "A short circuit typically causes:",
+        "options": [
+          "Very high current",
+          "No current at all",
+          "Only increased resistance",
+          "Open circuit"
+        ],
+        "correct_answer": "Very high current",
+        "explanation": "Low-resistance paths allow dangerously large current.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Ohm's Law states V = IR.",
+        "correct_answer": "True",
+        "explanation": "Voltage equals current times resistance.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Adding identical bulbs in series makes each bulb:",
+        "options": [
+          "Brighter",
+          "Dimmer",
+          "The same brightness as one alone",
+          "Impossible to light"
+        ],
+        "correct_answer": "Dimmer",
+        "explanation": "Series adds resistance and shares voltage, reducing brightness.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "A voltmeter measures potential difference and is connected:",
+        "options": [
+          "In parallel across a component",
+          "In series only",
+          "Only at the battery",
+          "In the ground wire"
+        ],
+        "correct_answer": "In parallel across a component",
+        "explanation": "Voltmeters measure voltage difference between two points.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Kirchhoff's current law states that total current entering a junction equals total current leaving.",
+        "correct_answer": "True",
+        "explanation": "Charge is conserved at circuit junctions.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name one measuring tool available in the virtual lab.",
+        "correct_answer": "ammeter",
+        "explanation": "Ammeters and voltmeters are used to measure circuit quantities.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What happens to bulb brightness if resistance in series increases?",
+        "correct_answer": "decreases",
+        "explanation": "Higher total resistance reduces current and power to bulbs.",
+        "points": 1
+      }
+    ]
+  }
+]

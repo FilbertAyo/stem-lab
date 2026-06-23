@@ -1,0 +1,131 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/balloons-and-buoyancy/latest/balloons-and-buoyancy_en.html",
+    "phet_slug": "balloons-and-buoyancy",
+    "question_bank": {
+      "title": "Balloons and Buoyancy — Biology Assessment",
+      "description": "TIE Biology competences 11.2.1, 11.3.1 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Archimedes' Principle applies to:",
+        "correct_answer": "Gases as well as liquids",
+        "explanation": "Buoyancy acts on objects in any fluid, including air.",
+        "points": 1,
+        "options": [
+          "Gases as well as liquids",
+          "Only solids in water",
+          "Only plants",
+          "Only charged particles"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "A helium balloon rises because:",
+        "correct_answer": "The gas inside is less dense than air",
+        "explanation": "Lower density gives upward buoyant force exceeding weight.",
+        "points": 1,
+        "options": [
+          "The gas inside is less dense than air",
+          "Helium is heavier than air",
+          "Gravity is zero",
+          "Balloons create vacuum"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Increasing altitude generally:",
+        "correct_answer": "Decreases atmospheric density",
+        "explanation": "Air is less dense at higher altitude.",
+        "points": 1,
+        "options": [
+          "Decreases atmospheric density",
+          "Increases air pressure at surface level only",
+          "Removes buoyancy",
+          "Doubles balloon mass"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Buoyant force on a balloon equals:",
+        "correct_answer": "Weight of displaced air",
+        "explanation": "Archimedes' Principle for gases.",
+        "points": 1,
+        "options": [
+          "Weight of displaced air",
+          "Mass of helium only",
+          "Zero always",
+          "Only gravitational force"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Fish swim bladders use buoyancy control similar to gas-filled balloons.",
+        "correct_answer": "True",
+        "explanation": "Swim bladders adjust density to control depth.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "An air-filled balloon on the ground stays down because:",
+        "correct_answer": "Average density exceeds surrounding air",
+        "explanation": "Dense filling prevents net upward buoyancy.",
+        "points": 1,
+        "options": [
+          "Average density exceeds surrounding air",
+          "Air has no mass",
+          "Buoyancy does not apply to gases",
+          "Helium is present"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Force diagrams in the sim compare:",
+        "correct_answer": "Buoyant force and weight",
+        "explanation": "Net motion depends on these two forces.",
+        "points": 1,
+        "options": [
+          "Buoyant force and weight",
+          "Only friction",
+          "Only magnetic force",
+          "Only osmotic pressure"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Bacteria with gas vacuoles can regulate buoyancy in water.",
+        "correct_answer": "True",
+        "explanation": "Gas vacuoles help some bacteria float or sink.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name one gas you can put inside the balloon in the sim.",
+        "correct_answer": "helium",
+        "explanation": "Helium, air, and custom gases are available.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What biological structure in fish is related to buoyancy?",
+        "correct_answer": "swim bladder",
+        "explanation": "Swim bladders control buoyancy in fish.",
+        "points": 1
+      }
+    ]
+  }
+]

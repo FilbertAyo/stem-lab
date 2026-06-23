@@ -1,0 +1,647 @@
+[
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/arithmetic/latest/arithmetic_en.html",
+        "phet_slug": "arithmetic",
+        "question_bank": {
+            "title": "Arithmetic — Mathematics Assessment",
+            "description": "TIE Mathematics competence 15.1.1 (Form I remediation).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "In Multiply mode, the missing value you complete is called the:",
+                "options": [
+                    "Factor",
+                    "Sum",
+                    "Quotient",
+                    "Remainder"
+                ],
+                "correct_answer": "Factor",
+                "explanation": "A factor multiplies with another to give a product.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Multiplication and division are:",
+                "options": [
+                    "Inverse operations",
+                    "Unrelated operations",
+                    "Only for decimals",
+                    "Always equal"
+                ],
+                "correct_answer": "Inverse operations",
+                "explanation": "Division undoes multiplication for the same numbers.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "The area model in the sim helps visualise:",
+                "options": [
+                    "Multiplication as rows and columns",
+                    "Chemical bonding",
+                    "Wave speed",
+                    "Orbital motion"
+                ],
+                "correct_answer": "Multiplication as rows and columns",
+                "explanation": "Rectangular grids represent products.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "In Factor mode, you decompose a number into:",
+                "options": [
+                    "Two factors that multiply to the product",
+                    "Prime atoms",
+                    "Wave frequencies",
+                    "Orbital radii"
+                ],
+                "correct_answer": "Two factors that multiply to the product",
+                "explanation": "Factoring finds factor pairs.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Knowing multiplication facts fluently supports mental calculation.",
+                "correct_answer": "True",
+                "explanation": "Fluency reduces effort in multi-step problems.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Division always produces a whole number with no remainder.",
+                "correct_answer": "False",
+                "explanation": "Many divisions leave a remainder or give a decimal.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "A timed challenge in the sim mainly helps improve:",
+                "options": [
+                    "Speed and accuracy",
+                    "Atomic number",
+                    "Wave interference",
+                    "Orbital eccentricity"
+                ],
+                "correct_answer": "Speed and accuracy",
+                "explanation": "Practice builds recall and confidence.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "If 7 × 8 = 56, then 56 ÷ 8 equals:",
+                "options": [
+                    "7",
+                    "8",
+                    "56",
+                    "64"
+                ],
+                "correct_answer": "7",
+                "explanation": "Division reverses multiplication.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Name one mode available in the Arithmetic simulation.",
+                "correct_answer": "multiply",
+                "explanation": "Modes include Multiply, Factor, and Divide.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Write the relationship between dividend, divisor, and quotient.",
+                "correct_answer": "dividend ÷ divisor = quotient",
+                "explanation": "Division partitions a total into equal groups.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/fractions-intro/latest/fractions-intro_en.html",
+        "phet_slug": "fractions-intro",
+        "question_bank": {
+            "title": "Fractions: Intro — Mathematics Assessment",
+            "description": "TIE Mathematics competence 15.1.1 (Form I remediation).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "In a fraction a/b, the top number is the:",
+                "options": [
+                    "Numerator",
+                    "Denominator",
+                    "Product",
+                    "Quotient"
+                ],
+                "correct_answer": "Numerator",
+                "explanation": "The numerator counts parts taken.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "An improper fraction has a numerator that is:",
+                "options": [
+                    "Greater than or equal to the denominator",
+                    "Always zero",
+                    "Always one",
+                    "Smaller than one only"
+                ],
+                "correct_answer": "Greater than or equal to the denominator",
+                "explanation": "Values like 5/4 exceed one whole.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Equivalent fractions represent:",
+                "options": [
+                    "The same quantity",
+                    "Different wholes only",
+                    "Negative values only",
+                    "Prime numbers"
+                ],
+                "correct_answer": "The same quantity",
+                "explanation": "Different numerators/denominators can name one amount.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "On the number line, 1/2 lies:",
+                "options": [
+                    "Halfway between 0 and 1",
+                    "At 2",
+                    "Beyond 2",
+                    "Only at 0"
+                ],
+                "correct_answer": "Halfway between 0 and 1",
+                "explanation": "Unit fractions partition the interval from 0 to 1.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "A mixed number combines a whole number and a proper fraction.",
+                "correct_answer": "True",
+                "explanation": "e.g. 2 1/3 means two wholes plus one third.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "Fractions with different denominators can never be compared.",
+                "correct_answer": "False",
+                "explanation": "Common denominators or visual models allow comparison.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "The Lab screen is useful for:",
+                "options": [
+                    "Comparing two fractions side by side",
+                    "Measuring voltage",
+                    "Counting protons",
+                    "Plotting orbits"
+                ],
+                "correct_answer": "Comparing two fractions side by side",
+                "explanation": "Visual comparison supports ordering.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "3/4 of a whole means:",
+                "options": [
+                    "Three equal parts out of four",
+                    "Four thirds",
+                    "Three wholes",
+                    "One quarter"
+                ],
+                "correct_answer": "Three equal parts out of four",
+                "explanation": "Denominator shows equal parts; numerator shows how many.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Convert 7/4 to a mixed number.",
+                "correct_answer": "1 3/4",
+                "explanation": "7 ÷ 4 = 1 remainder 3.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Name one representation used in Fractions: Intro besides symbols.",
+                "correct_answer": "number line",
+                "explanation": "Also fraction bars and area models.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/fraction-matcher/latest/fraction-matcher_en.html",
+        "phet_slug": "fraction-matcher",
+        "question_bank": {
+            "title": "Fraction Matcher — Mathematics Assessment",
+            "description": "TIE Mathematics competence 15.1.1 (Form I remediation).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Two fractions are equivalent when they:",
+                "options": [
+                    "Represent the same portion of a whole",
+                    "Have identical numerators only",
+                    "Always have denominator 10",
+                    "Sum to 1"
+                ],
+                "correct_answer": "Represent the same portion of a whole",
+                "explanation": "Equivalence is about equal value.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "Simplifying 8/12 gives:",
+                "options": [
+                    "2/3",
+                    "4/6",
+                    "8/12",
+                    "3/2"
+                ],
+                "correct_answer": "2/3",
+                "explanation": "Divide numerator and denominator by 4.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "To compare 2/3 and 3/5, a useful strategy is:",
+                "options": [
+                    "Convert to a common denominator",
+                    "Add denominators",
+                    "Multiply numerators only",
+                    "Ignore denominators"
+                ],
+                "correct_answer": "Convert to a common denominator",
+                "explanation": "Common denominators make sizes comparable.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "The area model helps because it shows:",
+                "options": [
+                    "Fraction size visually",
+                    "Electric field direction",
+                    "Nuclear decay rate",
+                    "Orbital period"
+                ],
+                "correct_answer": "Fraction size visually",
+                "explanation": "Shaded regions reveal relative magnitude.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "1/2 and 2/4 are equivalent fractions.",
+                "correct_answer": "True",
+                "explanation": "Multiply numerator and denominator of 1/2 by 2 to get 2/4.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "A larger denominator always means a larger fraction.",
+                "correct_answer": "False",
+                "explanation": "Value depends on both numerator and denominator.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "Matching pairs correctly in the game requires checking:",
+                "options": [
+                    "Equivalence, not just appearance",
+                    "Atomic mass only",
+                    "Wave phase only",
+                    "Battery polarity only"
+                ],
+                "correct_answer": "Equivalence, not just appearance",
+                "explanation": "Different shapes may show equal fractions.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "6/9 in lowest terms is:",
+                "options": [
+                    "2/3",
+                    "3/2",
+                    "6/9",
+                    "1/9"
+                ],
+                "correct_answer": "2/3",
+                "explanation": "Divide top and bottom by 3.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Give one pair of equivalent fractions for 1/3.",
+                "correct_answer": "2/6",
+                "explanation": "Multiply numerator and denominator by the same number.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "What operation finds a common denominator for 1/4 and 1/3?",
+                "correct_answer": "multiply",
+                "explanation": "Use LCM of denominators or cross-multiply to compare.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/fractions-equality/latest/fractions-equality_en.html",
+        "phet_slug": "fractions-equality",
+        "question_bank": {
+            "title": "Fractions: Equality — Mathematics Assessment",
+            "description": "TIE Mathematics competence 15.1.1 (Form I remediation).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "Multiplying numerator and denominator by the same nonzero number:",
+                "options": [
+                    "Produces an equivalent fraction",
+                    "Changes the value",
+                    "Always gives 1",
+                    "Is undefined"
+                ],
+                "correct_answer": "Produces an equivalent fraction",
+                "explanation": "Scaling both parts preserves value.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "4/6 simplified to lowest terms is:",
+                "options": [
+                    "2/3",
+                    "3/2",
+                    "1/6",
+                    "4/6"
+                ],
+                "correct_answer": "2/3",
+                "explanation": "Divide numerator and denominator by 2.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Equivalent fractions are useful when:",
+                "options": [
+                    "Adding fractions with unlike denominators",
+                    "Measuring capacitance",
+                    "Calculating half-life",
+                    "Finding orbital speed"
+                ],
+                "correct_answer": "Adding fractions with unlike denominators",
+                "explanation": "Common denominators enable addition.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "The bar model shows equality when:",
+                "options": [
+                    "Both bars show the same shaded amount",
+                    "Denominators match only",
+                    "Numerators are both even",
+                    "Bars are different colours"
+                ],
+                "correct_answer": "Both bars show the same shaded amount",
+                "explanation": "Visual equality confirms symbolic equivalence.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Dividing numerator and denominator by the same number simplifies a fraction.",
+                "correct_answer": "True",
+                "explanation": "This preserves value while reducing terms.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "3/4 and 6/8 represent different quantities.",
+                "correct_answer": "False",
+                "explanation": "6/8 simplifies to 3/4.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "In challenge mode with one fraction hidden, you use:",
+                "options": [
+                    "Equivalence reasoning",
+                    "Nuclear equations",
+                    "Kirchhoff laws",
+                    "Beer-Lambert law"
+                ],
+                "correct_answer": "Equivalence reasoning",
+                "explanation": "Deduce the missing equivalent fraction.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "2/5 and 4/10 are:",
+                "options": [
+                    "Equivalent",
+                    "Not comparable",
+                    "Always improper",
+                    "Unit fractions only"
+                ],
+                "correct_answer": "Equivalent",
+                "explanation": "Multiply 2/5 by 2/2 to get 4/10.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Write 3/4 as an equivalent fraction with denominator 12.",
+                "correct_answer": "9/12",
+                "explanation": "Multiply numerator and denominator by 3.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "State what stays the same when forming equivalent fractions.",
+                "correct_answer": "value",
+                "explanation": "The quantity represented does not change.",
+                "points": 1
+            }
+        ]
+    },
+    {
+        "external_url": "https://phet.colorado.edu/sims/html/area-model-introduction/latest/area-model-introduction_en.html",
+        "phet_slug": "area-model-introduction",
+        "question_bank": {
+            "title": "Area Model Introduction — Mathematics Assessment",
+            "description": "TIE Mathematics competence 15.1.1 (Form I remediation).",
+            "time_limit": 15,
+            "passing_score": 60,
+            "is_active": false
+        },
+        "questions": [
+            {
+                "order": 1,
+                "question_type": "mcq",
+                "question_text": "The area of a rectangle equals:",
+                "options": [
+                    "Length × width",
+                    "Length + width",
+                    "Length ÷ width",
+                    "Width − length"
+                ],
+                "correct_answer": "Length × width",
+                "explanation": "Area counts unit squares covering the shape.",
+                "points": 1
+            },
+            {
+                "order": 2,
+                "question_type": "mcq",
+                "question_text": "A partitioned rectangle helps show:",
+                "options": [
+                    "The distributive property",
+                    "Alpha decay",
+                    "Photon energy only",
+                    "Orbital resonance"
+                ],
+                "correct_answer": "The distributive property",
+                "explanation": "Sub-rectangles add to total area.",
+                "points": 1
+            },
+            {
+                "order": 3,
+                "question_type": "mcq",
+                "question_text": "Area is measured in:",
+                "options": [
+                    "Square units",
+                    "Linear units only",
+                    "Cubic units only",
+                    "Newtons"
+                ],
+                "correct_answer": "Square units",
+                "explanation": "Area is two-dimensional measure.",
+                "points": 1
+            },
+            {
+                "order": 4,
+                "question_type": "mcq",
+                "question_text": "Breaking a large multiplication into parts uses:",
+                "options": [
+                    "Partial products",
+                    "Half-life",
+                    "Work function",
+                    "Redshift only"
+                ],
+                "correct_answer": "Partial products",
+                "explanation": "Each sub-area contributes to the product.",
+                "points": 1
+            },
+            {
+                "order": 5,
+                "question_type": "true_false",
+                "question_text": "Multiplication can be interpreted as filling a rectangle with unit squares.",
+                "correct_answer": "True",
+                "explanation": "Rows × columns gives total square count.",
+                "points": 1
+            },
+            {
+                "order": 6,
+                "question_type": "true_false",
+                "question_text": "A rectangle with zero width can have positive area.",
+                "correct_answer": "False",
+                "explanation": "Zero width gives zero area.",
+                "points": 1
+            },
+            {
+                "order": 7,
+                "question_type": "mcq",
+                "question_text": "In Game mode you practise:",
+                "options": [
+                    "Calculating areas of partitioned rectangles",
+                    "Balancing nuclear equations",
+                    "Measuring absorbance",
+                    "Tracing field lines"
+                ],
+                "correct_answer": "Calculating areas of partitioned rectangles",
+                "explanation": "Game mode reinforces area reasoning.",
+                "points": 1
+            },
+            {
+                "order": 8,
+                "question_type": "mcq",
+                "question_text": "A 3 by 4 rectangle has area:",
+                "options": [
+                    "12 square units",
+                    "7 square units",
+                    "1 square unit",
+                    "34 square units"
+                ],
+                "correct_answer": "12 square units",
+                "explanation": "3 × 4 = 12.",
+                "points": 1
+            },
+            {
+                "order": 9,
+                "question_type": "short_answer",
+                "question_text": "Write the formula for the area of a rectangle.",
+                "correct_answer": "A = l × w",
+                "explanation": "Length times width gives area.",
+                "points": 1
+            },
+            {
+                "order": 10,
+                "question_type": "short_answer",
+                "question_text": "Name one way the sim partitions a rectangle.",
+                "correct_answer": "partial products",
+                "explanation": "Splits into smaller rectangles for easier multiplication.",
+                "points": 1
+            }
+        ]
+    }
+]

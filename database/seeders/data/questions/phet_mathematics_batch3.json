@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/number-line-operations/latest/number-line-operations_en.html",
+    "phet_slug": "number-line-operations",
+    "question_bank": {
+      "title": "Number Line: Operations — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.1.2 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "On a number line, adding a positive number moves:",
+        "options": [
+          "To the right",
+          "To the left",
+          "Nowhere",
+          "Only downward"
+        ],
+        "correct_answer": "To the right",
+        "explanation": "Positive addition corresponds to rightward jumps.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Subtracting a negative number is equivalent to:",
+        "options": [
+          "Adding a positive number",
+          "Subtracting a positive number",
+          "Multiplying by zero",
+          "Dividing by zero"
+        ],
+        "correct_answer": "Adding a positive number",
+        "explanation": "a − (−b) = a + b.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The jump arrows on the number line model:",
+        "options": [
+          "Operations as directed movement",
+          "Only multiplication",
+          "Only division",
+          "Angles only"
+        ],
+        "correct_answer": "Operations as directed movement",
+        "explanation": "Addition and subtraction appear as left/right jumps.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Starting at −3 and adding 5 lands at:",
+        "options": [
+          "2",
+          "−8",
+          "8",
+          "−2"
+        ],
+        "correct_answer": "2",
+        "explanation": "−3 + 5 = 2 on the number line.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Subtracting a positive number moves left on the number line.",
+        "correct_answer": "True",
+        "explanation": "Subtraction of positives corresponds to leftward movement.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Chaining two operations means:",
+        "options": [
+          "Applying one operation after another",
+          "Only one jump allowed",
+          "Ignoring the starting point",
+          "Using only fractions"
+        ],
+        "correct_answer": "Applying one operation after another",
+        "explanation": "Sequential jumps model multi-step calculations.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Adding a negative number moves:",
+        "options": [
+          "To the left",
+          "To the right",
+          "Up on a graph only",
+          "Nowhere"
+        ],
+        "correct_answer": "To the left",
+        "explanation": "Adding a negative is equivalent to subtracting a positive.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "The number line helps visualise operations with negative integers.",
+        "correct_answer": "True",
+        "explanation": "Directed jumps clarify integer arithmetic.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What is −4 + 7?",
+        "correct_answer": "3",
+        "explanation": "Move 7 units right from −4 to reach 3.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one operation mode in the simulation.",
+        "correct_answer": "addition",
+        "explanation": "Addition and subtraction modes are available.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/curve-fitting/latest/curve-fitting_en.html",
+    "phet_slug": "curve-fitting",
+    "question_bank": {
+      "title": "Curve Fitting — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.2.2, 15.3.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A line of best fit is used to:",
+        "options": [
+          "Model the trend in scattered data",
+          "Connect points in order only",
+          "Ignore all data",
+          "Only draw circles"
+        ],
+        "correct_answer": "Model the trend in scattered data",
+        "explanation": "Best-fit curves summarise data trends.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "R² (coefficient of determination) close to 1 indicates:",
+        "options": [
+          "A good fit to the data",
+          "No relationship",
+          "Random data only",
+          "Negative slope only"
+        ],
+        "correct_answer": "A good fit to the data",
+        "explanation": "Higher R² means the model explains more variance.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "A quadratic fit is appropriate when data:",
+        "options": [
+          "Follows a curved parabolic trend",
+          "Is perfectly linear only",
+          "Has no pattern",
+          "Is always decreasing linearly"
+        ],
+        "correct_answer": "Follows a curved parabolic trend",
+        "explanation": "Quadratic models capture parabolic patterns.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Extrapolation means:",
+        "options": [
+          "Predicting beyond the data range",
+          "Only interpolating between points",
+          "Deleting outliers only",
+          "Plotting without axes"
+        ],
+        "correct_answer": "Predicting beyond the data range",
+        "explanation": "Extending the model outside observed x-values is extrapolation.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Outliers can affect the fitted curve.",
+        "correct_answer": "True",
+        "explanation": "Unusual points pull best-fit curves.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Linear fitting is best when data points roughly lie on:",
+        "options": [
+          "A straight line",
+          "A circle only",
+          "A vertical line only",
+          "No pattern"
+        ],
+        "correct_answer": "A straight line",
+        "explanation": "Linear regression suits linear trends.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Adding noise to data in the sim makes fitting:",
+        "options": [
+          "More challenging and less perfect",
+          "Always exact",
+          "Impossible to plot",
+          "Unrelated to R²"
+        ],
+        "correct_answer": "More challenging and less perfect",
+        "explanation": "Noise reduces how well a simple model fits.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Higher-degree polynomials can fit more complex curves but may overfit.",
+        "correct_answer": "True",
+        "explanation": "Very flexible models may track noise too closely.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What letter commonly denotes the goodness-of-fit measure near 1 for a strong fit?",
+        "correct_answer": "R",
+        "explanation": "R² reports how well the model matches data.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one curve type you can fit in the simulation.",
+        "correct_answer": "linear",
+        "explanation": "Linear, quadratic, cubic, and quartic fits are available.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/least-squares-regression/latest/least-squares-regression_en.html",
+    "phet_slug": "least-squares-regression",
+    "question_bank": {
+      "title": "Least-Squares Regression — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.3.1, 15.3.2 (Forms IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A residual is:",
+        "options": [
+          "Observed y minus predicted y",
+          "The x-coordinate only",
+          "Always zero",
+          "The slope only"
+        ],
+        "correct_answer": "Observed y minus predicted y",
+        "explanation": "Residuals measure vertical prediction errors.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Least-squares regression minimises:",
+        "options": [
+          "Sum of squared residuals",
+          "Sum of x-values only",
+          "Number of points",
+          "Only the intercept"
+        ],
+        "correct_answer": "Sum of squared residuals",
+        "explanation": "Squaring residuals penalises large errors.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The slope of the regression line indicates:",
+        "options": [
+          "Average change in y per unit x",
+          "Always zero",
+          "Only the y-intercept",
+          "Standard deviation only"
+        ],
+        "correct_answer": "Average change in y per unit x",
+        "explanation": "Slope is the rate of change in the linear model.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "An outlier can:",
+        "options": [
+          "Pull the regression line toward itself",
+          "Never affect the line",
+          "Only change the x-axis",
+          "Remove all data"
+        ],
+        "correct_answer": "Pull the regression line toward itself",
+        "explanation": "Outliers influence least-squares estimates.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The best-fit line minimises total squared vertical error.",
+        "correct_answer": "True",
+        "explanation": "Least squares optimises sum of (y − ŷ)².",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "If residuals are mostly positive on one side, the line may be:",
+        "options": [
+          "A poor fit or mis-specified",
+          "Perfect always",
+          "Vertical",
+          "Unrelated to data"
+        ],
+        "correct_answer": "A poor fit or mis-specified",
+        "explanation": "Systematic residual patterns suggest model problems.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "The y-intercept is the predicted y when x equals:",
+        "options": [
+          "0",
+          "1 always",
+          "The mean of y only",
+          "Infinity"
+        ],
+        "correct_answer": "0",
+        "explanation": "Intercept is ŷ at x = 0 in y = mx + c form.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Linear regression can be used to predict y for new x-values within the data range.",
+        "correct_answer": "True",
+        "explanation": "Interpolation within the observed range is reasonable.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What do vertical lines from data points to the regression line represent?",
+        "correct_answer": "residuals",
+        "explanation": "Residual lines show prediction errors.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name the method that minimises squared residuals.",
+        "correct_answer": "least squares",
+        "explanation": "Least-squares regression finds the optimal line.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/function-builder-basics/latest/function-builder-basics_en.html",
+    "phet_slug": "function-builder-basics",
+    "question_bank": {
+      "title": "Function Builder: Basics — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.2.1 (Forms I).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A function assigns:",
+        "options": [
+          "Exactly one output to each input",
+          "Many outputs to one input always",
+          "No outputs",
+          "Only random outputs"
+        ],
+        "correct_answer": "Exactly one output to each input",
+        "explanation": "Functions are single-valued mappings.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Putting a number through a two-step machine applies:",
+        "options": [
+          "Two operations in sequence",
+          "Only addition once",
+          "Division by zero",
+          "No rule"
+        ],
+        "correct_answer": "Two operations in sequence",
+        "explanation": "Composition applies rules one after another.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "If a machine doubles then adds 3, input 4 gives output:",
+        "options": [
+          "11",
+          "7",
+          "8",
+          "14"
+        ],
+        "correct_answer": "11",
+        "explanation": "4 × 2 + 3 = 11.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Working backwards from output to find input is called:",
+        "options": [
+          "Inverse thinking",
+          "Differentiation",
+          "Integration only",
+          "Factoring only"
+        ],
+        "correct_answer": "Inverse thinking",
+        "explanation": "Reversing operations finds unknown inputs.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The same input always gives the same output for a function.",
+        "correct_answer": "True",
+        "explanation": "Consistency is required for a function rule.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Function machines help represent rules as:",
+        "options": [
+          "Tables of input and output",
+          "Only pictures without numbers",
+          "Only geometry proofs",
+          "Chemical equations"
+        ],
+        "correct_answer": "Tables of input and output",
+        "explanation": "Machines link inputs to outputs systematically.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Chaining ×2 then +1 is different from +1 then ×2 because:",
+        "options": [
+          "Order of operations matters",
+          "Order never matters",
+          "Both give always the same result",
+          "Functions cannot chain"
+        ],
+        "correct_answer": "Order of operations matters",
+        "explanation": "Composition is generally not commutative.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Function builder develops foundations for algebraic thinking.",
+        "correct_answer": "True",
+        "explanation": "Input–output rules lead to formal functions and equations.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What do we call the value fed into a function machine?",
+        "correct_answer": "input",
+        "explanation": "Input values are transformed to outputs.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "If output is 10 after a '×2' machine, what was the input?",
+        "correct_answer": "5",
+        "explanation": "10 ÷ 2 = 5 reverses the doubling.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/equality-explorer-basics/latest/equality-explorer-basics_en.html",
+    "phet_slug": "equality-explorer-basics",
+    "question_bank": {
+      "title": "Equality Explorer: Basics — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.1.2 (Forms I).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "An equation balance model shows equality as:",
+        "options": [
+          "Both sides having the same value",
+          "Left side always heavier",
+          "Right side empty",
+          "No relationship"
+        ],
+        "correct_answer": "Both sides having the same value",
+        "explanation": "Balanced pans represent equal expressions.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Adding the same number to both sides of a balance:",
+        "options": [
+          "Keeps it balanced",
+          "Tips it always left",
+          "Removes all tiles",
+          "Changes equality"
+        ],
+        "correct_answer": "Keeps it balanced",
+        "explanation": "Equal operations on both sides preserve equality.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Removing equal amounts from both sides:",
+        "options": [
+          "Preserves equality",
+          "Always breaks balance",
+          "Only works for multiplication",
+          "Is never allowed"
+        ],
+        "correct_answer": "Preserves equality",
+        "explanation": "Subtraction property of equality.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "If left pan has 5 and right pan has 5, the scale is:",
+        "options": [
+          "Balanced",
+          "Unbalanced",
+          "Empty",
+          "Undefined"
+        ],
+        "correct_answer": "Balanced",
+        "explanation": "Equal values on both sides balance.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The balance model helps before formal algebraic equation solving.",
+        "correct_answer": "True",
+        "explanation": "Concrete balance builds intuition for solving equations.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "To make both sides total 8 using tiles, you could:",
+        "options": [
+          "Add tiles equally to both sides",
+          "Only add to one side",
+          "Remove all tiles",
+          "Ignore one pan"
+        ],
+        "correct_answer": "Add tiles equally to both sides",
+        "explanation": "Same change on both sides maintains balance.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "An equation is like a balance because:",
+        "options": [
+          "Both sides must stay equal",
+          "Only one side matters",
+          "Variables cannot appear",
+          "Numbers are not allowed"
+        ],
+        "correct_answer": "Both sides must stay equal",
+        "explanation": "Equality means both expressions have the same value.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Removing objects from only one side unbalances the scale.",
+        "correct_answer": "True",
+        "explanation": "Unequal changes violate equality.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What must you do to both sides when solving an equation using the balance model?",
+        "correct_answer": "same operation",
+        "explanation": "Perform the same operation on both sides.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What tool represents equality in the simulation?",
+        "correct_answer": "balance scale",
+        "explanation": "The balance scale models equations visually.",
+        "points": 1
+      }
+    ]
+  }
+]

@@ -1,0 +1,776 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/coulombs-law/latest/coulombs-law_en.html",
+    "phet_slug": "coulombs-law",
+    "question_bank": {
+      "title": "Coulomb's Law — Physics Assessment",
+      "description": "TIE Physics competences 13.5.1, 13.5.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Coulomb's Law states that electrostatic force is proportional to:",
+        "correct_answer": "The product of charges divided by distance squared",
+        "explanation": "F = kq₁q₂/r² relates force to charges and distance.",
+        "points": 1,
+        "options": [
+          "The product of charges divided by distance squared",
+          "Mass times acceleration",
+          "Charge times voltage only",
+          "Distance squared only"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Like charges:",
+        "correct_answer": "Repel each other",
+        "explanation": "Charges of the same sign repel.",
+        "points": 1,
+        "options": [
+          "Repel each other",
+          "Attract each other",
+          "Have no interaction",
+          "Cancel mass"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Doubling the distance between two point charges changes the force by a factor of:",
+        "correct_answer": "1/4",
+        "explanation": "Inverse-square law: force ∝ 1/r².",
+        "points": 1,
+        "options": [
+          "1/4",
+          "1/2",
+          "2",
+          "4"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Doubling both charges while distance stays fixed multiplies the force by:",
+        "correct_answer": "4",
+        "explanation": "F ∝ q₁q₂, so 2×2 = 4.",
+        "points": 1,
+        "options": [
+          "4",
+          "2",
+          "1/2",
+          "1/4"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Electrostatic force can be attractive or repulsive.",
+        "correct_answer": "True",
+        "explanation": "Opposite charges attract; like charges repel.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "The constant k in Coulomb's Law accounts for:",
+        "correct_answer": "Medium and unit system",
+        "explanation": "k depends on the permittivity of the medium.",
+        "points": 1,
+        "options": [
+          "Medium and unit system",
+          "Only colour of spheres",
+          "Mass of spheres",
+          "Temperature only"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "At the atomic scale view in the sim, charges are:",
+        "correct_answer": "Separated on two spheres",
+        "explanation": "The sim shows charge distribution on spheres.",
+        "points": 1,
+        "options": [
+          "Separated on two spheres",
+          "Always neutral",
+          "Only positive",
+          "Only gravitational"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Coulomb's Law is analogous in form to Newton's law of gravitation.",
+        "correct_answer": "True",
+        "explanation": "Both follow inverse-square dependence on distance.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write Coulomb's Law formula using F, k, q, and r.",
+        "correct_answer": "F = kq₁q₂/r²",
+        "explanation": "Electrostatic force depends on charges and separation squared.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What happens to force when spheres are moved closer together?",
+        "correct_answer": "increases",
+        "explanation": "Smaller r gives larger force in Coulomb's Law.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/electric-field-hockey/latest/electric-field-hockey_en.html",
+    "phet_slug": "electric-field-hockey",
+    "question_bank": {
+      "title": "Electric Field Hockey — Physics Assessment",
+      "description": "TIE Physics competences 13.5.1, 13.5.3 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Electric field lines show:",
+        "correct_answer": "Direction of force on a positive test charge",
+        "explanation": "Field lines indicate force direction on + charge.",
+        "points": 1,
+        "options": [
+          "Direction of force on a positive test charge",
+          "Only temperature",
+          "Mass direction",
+          "Sound intensity"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "A positive test charge moves in an electric field:",
+        "correct_answer": "Along field lines from + toward −",
+        "explanation": "Positive charges accelerate along field direction.",
+        "points": 1,
+        "options": [
+          "Along field lines from + toward −",
+          "Perpendicular to all fields",
+          "Only in circles",
+          "Against all field lines"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Placing a negative charge near a positive puck will:",
+        "correct_answer": "Attract the puck",
+        "explanation": "Opposite charges attract.",
+        "points": 1,
+        "options": [
+          "Attract the puck",
+          "Always repel the puck",
+          "Have no effect",
+          "Remove gravity"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Superposition means the net field from multiple charges is:",
+        "correct_answer": "The vector sum of individual fields",
+        "explanation": "Fields add as vectors.",
+        "points": 1,
+        "options": [
+          "The vector sum of individual fields",
+          "Always zero",
+          "Only the largest field",
+          "A scalar average"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The puck in Electric Field Hockey represents a positive test charge.",
+        "correct_answer": "True",
+        "explanation": "The puck behaves as a positive charge in the rink.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "To guide the puck into the goal you adjust:",
+        "correct_answer": "Positions of source charges",
+        "explanation": "Charge placement shapes the field.",
+        "points": 1,
+        "options": [
+          "Positions of source charges",
+          "Gravitational constant",
+          "Puck mass only",
+          "Air pressure"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Field lines are closer together where the field is:",
+        "correct_answer": "Stronger",
+        "explanation": "Line density indicates field strength.",
+        "points": 1,
+        "options": [
+          "Stronger",
+          "Weaker",
+          "Zero always",
+          "Unrelated to strength"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Enabling field lines helps predict the puck's path.",
+        "correct_answer": "True",
+        "explanation": "Visualising fields aids prediction of motion.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name one charge type you can place on the rink.",
+        "correct_answer": "positive",
+        "explanation": "Both positive and negative charges can be placed.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What physical quantity does the puck's motion illustrate?",
+        "correct_answer": "electric field",
+        "explanation": "The sim demonstrates motion in electric fields.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/geometric-optics-basics/latest/geometric-optics-basics_en.html",
+    "phet_slug": "geometric-optics-basics",
+    "question_bank": {
+      "title": "Geometric Optics: Basics — Physics Assessment",
+      "description": "TIE Physics competences 13.4.2, 13.4.3 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A concave mirror can form:",
+        "correct_answer": "Real or virtual images",
+        "explanation": "Image type depends on object position.",
+        "points": 1,
+        "options": [
+          "Real or virtual images",
+          "Only virtual images",
+          "Only sound waves",
+          "No images"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "A convex mirror always produces:",
+        "correct_answer": "A virtual, upright, diminished image",
+        "explanation": "Convex mirrors diverge rays.",
+        "points": 1,
+        "options": [
+          "A virtual, upright, diminished image",
+          "A real enlarged image",
+          "No reflection",
+          "Only laser beams"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The mirror formula relates:",
+        "correct_answer": "Focal length, object distance, and image distance",
+        "explanation": "1/f = 1/v + 1/u.",
+        "points": 1,
+        "options": [
+          "Focal length, object distance, and image distance",
+          "Mass and volume",
+          "Charge and current",
+          "Pressure and depth"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Principal rays help:",
+        "correct_answer": "Locate image position graphically",
+        "explanation": "Ray diagrams trace image formation.",
+        "points": 1,
+        "options": [
+          "Locate image position graphically",
+          "Measure temperature",
+          "Calculate density",
+          "Find electric charge"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Real images can be projected onto a screen.",
+        "correct_answer": "True",
+        "explanation": "Real images form where rays actually converge.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Moving the object closer to a concave mirror beyond F can produce:",
+        "correct_answer": "A magnified real image",
+        "explanation": "Object between F and mirror gives virtual; beyond F gives real.",
+        "points": 1,
+        "options": [
+          "A magnified real image",
+          "No image ever",
+          "Only sound",
+          "A diminished virtual image only"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Magnification compares:",
+        "correct_answer": "Image size to object size",
+        "explanation": "m relates image and object dimensions.",
+        "points": 1,
+        "options": [
+          "Image size to object size",
+          "Mass to volume",
+          "Force to area",
+          "Speed to time only"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Car wing mirrors often use convex mirrors for a wider field of view.",
+        "correct_answer": "True",
+        "explanation": "Convex mirrors give wider but smaller images.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the mirror formula using f, u, and v.",
+        "correct_answer": "1/f = 1/v + 1/u",
+        "explanation": "Relates focal length to object and image distances.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one mirror type in the simulation.",
+        "correct_answer": "concave",
+        "explanation": "Concave and convex mirrors are available.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/masses-and-springs-basics/latest/masses-and-springs-basics_en.html",
+    "phet_slug": "masses-and-springs-basics",
+    "question_bank": {
+      "title": "Masses and Springs: Basics — Physics Assessment",
+      "description": "TIE Physics competences 13.2.2, 13.2.3 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Hooke's Law states:",
+        "correct_answer": "F = kx",
+        "explanation": "Restoring force is proportional to extension.",
+        "points": 1,
+        "options": [
+          "F = kx",
+          "F = ma only",
+          "F = mg only",
+          "F = qE"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Increasing the mass on a spring generally:",
+        "correct_answer": "Increases oscillation period",
+        "explanation": "Heavier mass oscillates more slowly.",
+        "points": 1,
+        "options": [
+          "Increases oscillation period",
+          "Decreases period always",
+          "Stops oscillation",
+          "Removes elasticity"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "During oscillation, energy converts between:",
+        "correct_answer": "Kinetic and elastic potential energy",
+        "explanation": "Energy exchanges between KE and spring PE.",
+        "points": 1,
+        "options": [
+          "Kinetic and elastic potential energy",
+          "Only heat",
+          "Only chemical energy",
+          "Only light"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Frequency is related to period by:",
+        "correct_answer": "f = 1/T",
+        "explanation": "Frequency is reciprocal of period.",
+        "points": 1,
+        "options": [
+          "f = 1/T",
+          "f = T²",
+          "f = mg",
+          "f = kx"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A stiffer spring (larger k) oscillates faster for the same mass.",
+        "correct_answer": "True",
+        "explanation": "Greater k increases restoring force and frequency.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "At maximum displacement, the mass has:",
+        "correct_answer": "Maximum potential energy and zero velocity",
+        "explanation": "Turning point has zero speed.",
+        "points": 1,
+        "options": [
+          "Maximum potential energy and zero velocity",
+          "Maximum kinetic energy",
+          "Zero potential energy",
+          "Maximum acceleration only"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Stretching the spring before release stores:",
+        "correct_answer": "Elastic potential energy",
+        "explanation": "Work done stretching stores energy in the spring.",
+        "points": 1,
+        "options": [
+          "Elastic potential energy",
+          "Nuclear energy",
+          "Magnetic flux",
+          "Buoyant force"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Period depends on both mass and spring constant.",
+        "correct_answer": "True",
+        "explanation": "T depends on m and k for a mass-spring system.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write Hooke's Law.",
+        "correct_answer": "F = kx",
+        "explanation": "Force proportional to extension from equilibrium.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one screen in the Masses and Springs: Basics sim.",
+        "correct_answer": "Bounce",
+        "explanation": "Intro and Bounce screens explore spring motion.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/motion-2d/latest/motion-2d_en.html",
+    "phet_slug": "motion-2d",
+    "question_bank": {
+      "title": "Motion in 2D — Physics Assessment",
+      "description": "TIE Physics competences 13.2.1, 13.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Velocity in 2D is a:",
+        "correct_answer": "Vector quantity",
+        "explanation": "Velocity has magnitude and direction.",
+        "points": 1,
+        "options": [
+          "Vector quantity",
+          "Scalar quantity",
+          "Unitless number",
+          "Only mass"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Resolving a 2D vector gives:",
+        "correct_answer": "Horizontal and vertical components",
+        "explanation": "Components along perpendicular axes.",
+        "points": 1,
+        "options": [
+          "Horizontal and vertical components",
+          "Only mass",
+          "Only temperature",
+          "Only charge"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Uniform circular motion has acceleration directed:",
+        "correct_answer": "Toward the centre",
+        "explanation": "Centripetal acceleration points inward.",
+        "points": 1,
+        "options": [
+          "Toward the centre",
+          "Away from centre",
+          "Only upward",
+          "Only tangentially always"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Speed differs from velocity because speed:",
+        "correct_answer": "Has no direction",
+        "explanation": "Speed is scalar; velocity is vector.",
+        "points": 1,
+        "options": [
+          "Has no direction",
+          "Includes direction",
+          "Is always negative",
+          "Is measured in newtons"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The velocity vector is tangent to the path in circular motion.",
+        "correct_answer": "True",
+        "explanation": "Instantaneous velocity is tangent to the trajectory.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Displaying position, velocity, and acceleration vectors helps:",
+        "correct_answer": "Analyse 2D motion",
+        "explanation": "Vectors show how motion changes.",
+        "points": 1,
+        "options": [
+          "Analyse 2D motion",
+          "Measure pH",
+          "Calculate density",
+          "Find atomic number"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Centripetal acceleration in circular motion means:",
+        "correct_answer": "Direction of velocity changes continuously",
+        "explanation": "Speed may be constant but direction changes.",
+        "points": 1,
+        "options": [
+          "Direction of velocity changes continuously",
+          "Speed must increase always",
+          "No force is needed",
+          "Mass becomes zero"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Projectile motion can be analysed using horizontal and vertical components.",
+        "correct_answer": "True",
+        "explanation": "2D kinematics splits motion into components.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name one motion type selectable in the simulation.",
+        "correct_answer": "circular",
+        "explanation": "Circular, simple harmonic, and manual motion are available.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What does the acceleration vector show at each instant?",
+        "correct_answer": "rate of change of velocity",
+        "explanation": "Acceleration is the derivative of velocity.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/torque/latest/torque_en.html",
+    "phet_slug": "torque",
+    "question_bank": {
+      "title": "Torque — Physics Assessment",
+      "description": "TIE Physics competences 13.2.1, 13.2.3 (Form IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Torque is defined as:",
+        "correct_answer": "Force times perpendicular distance from pivot",
+        "explanation": "τ = Fr when F is perpendicular.",
+        "points": 1,
+        "options": [
+          "Force times perpendicular distance from pivot",
+          "Mass times velocity",
+          "Charge times distance squared",
+          "Pressure times area"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Applying force farther from the pivot:",
+        "correct_answer": "Increases torque",
+        "explanation": "Greater lever arm increases turning effect.",
+        "points": 1,
+        "options": [
+          "Increases torque",
+          "Decreases torque always",
+          "Has no effect",
+          "Removes friction"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Newton's second law for rotation is:",
+        "correct_answer": "τ = Iα",
+        "explanation": "Torque equals moment of inertia times angular acceleration.",
+        "points": 1,
+        "options": [
+          "τ = Iα",
+          "F = ma only",
+          "p = mv",
+          "V = IR"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Moment of inertia depends on:",
+        "correct_answer": "Mass distribution relative to the axis",
+        "explanation": "I depends on how mass is spread about rotation.",
+        "points": 1,
+        "options": [
+          "Mass distribution relative to the axis",
+          "Colour of disc",
+          "Room temperature only",
+          "Electric charge"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Torque has units N·m.",
+        "correct_answer": "True",
+        "explanation": "Torque is force times distance.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "A spanner works by:",
+        "correct_answer": "Increasing lever arm to produce greater torque",
+        "explanation": "Longer handle increases τ for same force.",
+        "points": 1,
+        "options": [
+          "Increasing lever arm to produce greater torque",
+          "Reducing mass of bolt",
+          "Creating magnetic fields",
+          "Measuring voltage"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Increasing moment of inertia for the same torque:",
+        "correct_answer": "Reduces angular acceleration",
+        "explanation": "τ = Iα, so larger I gives smaller α.",
+        "points": 1,
+        "options": [
+          "Reduces angular acceleration",
+          "Increases angular acceleration",
+          "Stops rotation permanently",
+          "Doubles linear speed"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Torque depends on the angle between force and lever arm.",
+        "correct_answer": "True",
+        "explanation": "Only the perpendicular component contributes to τ.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the torque equation using τ, F, and r.",
+        "correct_answer": "τ = Fr",
+        "explanation": "Torque equals force times perpendicular distance.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one practical tool that uses torque.",
+        "correct_answer": "spanner",
+        "explanation": "Levers, spanners, and gears apply torque.",
+        "points": 1
+      }
+    ]
+  }
+]

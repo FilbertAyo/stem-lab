@@ -1,203 +1,266 @@
+@php
+    $passed = $attempt->passed;
+    $incorrectCount = $attempt->total_questions - $attempt->correct_answers;
+    $scorePercent = (int) round($attempt->score);
+@endphp
+
 <x-app-layout>
     <div class="col-lg-9">
 
-        {{-- Results Header --}}
-        <div class="card border-0 shadow-none mb-4">
-            <div class="card-body text-center py-5">
-                @if($attempt->passed)
-                    <div class="mb-4">
-                        <i class="bi bi-trophy-fill text-warning" style="font-size: 5rem;"></i>
-                    </div>
-                    <h2 class="text-success mb-2">Congratulations!</h2>
-                    <p class="text-muted fs-5">You passed the quiz!</p>
-                @else
-                    <div class="mb-4">
-                        <i class="bi bi-emoji-frown text-muted" style="font-size: 5rem;"></i>
-                    </div>
-                    <h2 class="text-danger mb-2">Keep Trying!</h2>
-                    <p class="text-muted fs-5">You didn't pass this time, but don't give up!</p>
-                @endif
+        <nav class="small text-muted mb-3" aria-label="Breadcrumb">
+            <a href="{{ route('client.vr-assessments.index') }}" class="text-muted text-decoration-none">
+                <i class="bi bi-arrow-left me-1"></i>VR Quizzes
+            </a>
+            <span class="mx-1">/</span>
+            <a href="{{ route('client.vr-assessments.show', $attempt->questionBank) }}" class="text-muted text-decoration-none">
+                {{ Str::limit($attempt->questionBank->title, 40) }}
+            </a>
+            <span class="mx-1">/</span>
+            <span>Results</span>
+        </nav>
 
-                <div class="row justify-content-center mt-4">
-                    <div class="col-md-6">
-                        <div class="card {{ $attempt->passed ? 'bg-success' : 'bg-danger' }} text-white">
-                            <div class="card-body py-4">
-                                <h1 class="display-3 fw-bold mb-0">{{ number_format($attempt->score, 1) }}%</h1>
-                                <p class="mb-0">Your Score</p>
+        <div class="row g-4">
+            {{-- Results summary --}}
+            <div class="col-lg-8">
+                <div class="quiz-results-hero {{ $passed ? 'is-passed' : 'is-failed' }} mb-4">
+                    <div class="quiz-results-banner {{ $passed ? 'is-passed' : 'is-failed' }}">
+                        @if($passed)
+                            <i class="bi bi-trophy-fill text-warning d-block mb-3" style="font-size: 3rem;"></i>
+                            <h2 class="fw-bold text-success mb-2">Congratulations!</h2>
+                            <p class="text-muted mb-0">You passed this quiz. Great work!</p>
+                        @else
+                            <i class="bi bi-arrow-repeat text-danger d-block mb-3" style="font-size: 3rem;"></i>
+                            <h2 class="fw-bold text-danger mb-2">Keep trying</h2>
+                            <p class="text-muted mb-0">
+                                You scored below {{ $attempt->questionBank->passing_score }}%. Review your answers and try again.
+                            </p>
+                        @endif
+
+                        <div class="quiz-score-ring {{ $passed ? 'is-passed' : 'is-failed' }} mt-4">
+                            <span class="display-6 fw-bold lh-1">{{ number_format($attempt->score, 1) }}%</span>
+                            <small class="text-muted">Your score</small>
+                        </div>
+                    </div>
+
+                    <div class="card-body border-top">
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <div class="quiz-stat-tile">
+                                    <div class="quiz-stat-icon bg-success bg-opacity-10 text-success">
+                                        <i class="bi bi-check-lg"></i>
+                                    </div>
+                                    <h4 class="mb-0 fw-bold text-success">{{ $attempt->correct_answers }}</h4>
+                                    <small class="text-muted">Correct</small>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="quiz-stat-tile">
+                                    <div class="quiz-stat-icon bg-danger bg-opacity-10 text-danger">
+                                        <i class="bi bi-x-lg"></i>
+                                    </div>
+                                    <h4 class="mb-0 fw-bold text-danger">{{ $incorrectCount }}</h4>
+                                    <small class="text-muted">Incorrect</small>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="quiz-stat-tile">
+                                    <div class="quiz-stat-icon bg-primary bg-opacity-10 text-primary">
+                                        <i class="bi bi-list-ol"></i>
+                                    </div>
+                                    <h4 class="mb-0 fw-bold">{{ $attempt->total_questions }}</h4>
+                                    <small class="text-muted">Total</small>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="quiz-stat-tile">
+                                    <div class="quiz-stat-icon bg-warning bg-opacity-10 text-warning">
+                                        <i class="bi bi-bullseye"></i>
+                                    </div>
+                                    <h4 class="mb-0 fw-bold">{{ $attempt->questionBank->passing_score }}%</h4>
+                                    <small class="text-muted">Pass mark</small>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row justify-content-center mt-4 g-3">
-                    <div class="col-6 col-md-3">
-                        <div class="p-3 bg-light rounded">
-                            <h4 class="mb-0 text-success">{{ $attempt->correct_answers }}</h4>
-                            <small class="text-muted">Correct</small>
-                        </div>
+                {{-- Answer review --}}
+                <div class="card border shadow-none">
+                    <div class="card-header bg-light-soft py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-list-check me-1 text-primary"></i>Answer review
+                        </h5>
                     </div>
-                    <div class="col-6 col-md-3">
-                        <div class="p-3 bg-light rounded">
-                            <h4 class="mb-0 text-danger">{{ $attempt->total_questions - $attempt->correct_answers }}</h4>
-                            <small class="text-muted">Incorrect</small>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="p-3 bg-light rounded">
-                            <h4 class="mb-0">{{ $attempt->total_questions }}</h4>
-                            <small class="text-muted">Total</small>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="p-3 bg-light rounded">
-                            <h4 class="mb-0">{{ $attempt->questionBank->passing_score }}%</h4>
-                            <small class="text-muted">Pass Mark</small>
-                        </div>
-                    </div>
-                </div>
+                    <div class="card-body">
+                        @foreach($attempt->questionBank->questions as $index => $question)
+                            @php
+                                $answer = $attempt->answers->where('question_id', $question->id)->first();
+                                $isCorrect = $answer && $answer->is_correct;
+                                $studentAnswer = $answer ? $answer->student_answer : null;
+                            @endphp
+                            <div class="quiz-review-card {{ $isCorrect ? 'is-correct' : 'is-incorrect' }}">
+                                <div class="card-header bg-transparent d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
+                                    <div class="d-flex align-items-center flex-wrap gap-2">
+                                        <span class="badge bg-light text-dark border">
+                                            Question {{ $index + 1 }}
+                                        </span>
+                                        @if($isCorrect)
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle me-1"></i>Correct
+                                            </span>
+                                        @else
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-x-circle me-1"></i>Incorrect
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <span class="badge bg-dark bg-opacity-75">
+                                        {{ $answer ? $answer->points_earned : 0 }}/{{ $question->points }} pts
+                                    </span>
+                                </div>
+                                <div class="card-body pt-0">
+                                    <h6 class="fw-semibold mb-3">{{ $question->question_text }}</h6>
 
-                <div class="mt-4 d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="{{ route('client.vr-assessments.show', $attempt->questionBank) }}" class="btn btn-primary">
-                        <i class="bi bi-arrow-repeat me-1"></i>Try Again
-                    </a>
-                    <a href="{{ route('client.vr-assessments.index') }}" class="btn btn-outline-secondary">
-                        <i class="bi bi-list me-1"></i>All Quizzes
-                    </a>
+                                    @if($question->question_type === 'mcq' && $question->options)
+                                        @foreach($question->options as $optionIndex => $option)
+                                            @php
+                                                $isCorrectOption = $option === $question->correct_answer;
+                                                $isStudentWrong = $option === $studentAnswer && ! $isCorrect;
+                                                $optionClass = $isCorrectOption
+                                                    ? 'is-correct'
+                                                    : ($isStudentWrong ? 'is-wrong' : 'is-neutral');
+                                            @endphp
+                                            <div class="quiz-review-option {{ $optionClass }}">
+                                                @if($isCorrectOption)
+                                                    <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                                @elseif($isStudentWrong)
+                                                    <i class="bi bi-x-circle-fill text-danger me-1"></i>
+                                                @else
+                                                    <i class="bi bi-circle text-muted me-1"></i>
+                                                @endif
+                                                <span class="badge bg-light text-dark border me-2">{{ chr(65 + $optionIndex) }}</span>
+                                                {{ $option }}
+                                                @if($isStudentWrong)
+                                                    <span class="badge bg-danger ms-2">Your answer</span>
+                                                @endif
+                                                @if($isCorrectOption && ! $isCorrect)
+                                                    <span class="badge bg-success ms-2">Correct answer</span>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    @elseif($question->question_type === 'true_false')
+                                        <div class="row g-2 mb-0">
+                                            @foreach(['True', 'False'] as $tfValue)
+                                                @php
+                                                    $isCorrectOption = $tfValue === $question->correct_answer;
+                                                    $isStudentWrong = $tfValue === $studentAnswer && ! $isCorrect;
+                                                    $optionClass = $isCorrectOption
+                                                        ? 'is-correct'
+                                                        : ($isStudentWrong ? 'is-wrong' : 'is-neutral');
+                                                @endphp
+                                                <div class="col-6">
+                                                    <div class="quiz-review-option text-center {{ $optionClass }}">
+                                                        @if($isCorrectOption)
+                                                            <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                                        @elseif($isStudentWrong)
+                                                            <i class="bi bi-x-circle-fill text-danger me-1"></i>
+                                                        @endif
+                                                        {{ $tfValue }}
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <small class="text-muted d-block mb-1">Your answer</small>
+                                                <div class="quiz-review-option {{ $isCorrect ? 'is-correct' : 'is-wrong' }} mb-0">
+                                                    {{ $studentAnswer ?? 'No answer provided' }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <small class="text-muted d-block mb-1">Correct answer</small>
+                                                <div class="quiz-review-option is-correct mb-0">
+                                                    {{ $question->correct_answer }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    @if($question->explanation)
+                                        <div class="alert alert-info border-0 mt-3 mb-0 d-flex align-items-start gap-2">
+                                            <i class="bi bi-lightbulb mt-1"></i>
+                                            <div>
+                                                <strong>Explanation</strong>
+                                                <p class="mb-0 small">{{ $question->explanation }}</p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Quiz Info --}}
-        <div class="card border-0 shadow-none mb-4">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h5 class="fw-bold mb-1">{{ $attempt->questionBank->title }}</h5>
-                        <p class="text-muted mb-0">
+            {{-- Sidebar --}}
+            <div class="col-lg-4">
+                <div class="card border shadow-none sticky-top" style="top: 5.5rem;">
+                    <div class="card-header bg-light-soft py-3">
+                        <h6 class="mb-0 fw-semibold">
+                            <i class="bi bi-clipboard-data me-1 text-primary"></i>Quiz summary
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-1">{{ $attempt->questionBank->title }}</h6>
+                        <p class="text-muted small mb-3">
                             <i class="bi bi-vr me-1"></i>{{ $attempt->questionBank->vrExperiment->name }}
                         </p>
-                    </div>
-                    <div class="col-md-4 text-md-end mt-2 mt-md-0">
-                        <small class="text-muted">
-                            Completed: {{ $attempt->completed_at->format('M d, Y \a\t H:i') }}
-                        </small>
-                        @if($attempt->duration_in_minutes)
-                            <br>
-                            <small class="text-muted">
-                                Duration: {{ $attempt->duration_in_minutes }} minutes
-                            </small>
-                        @endif
+
+                        <ul class="list-unstyled small mb-4">
+                            <li class="d-flex justify-content-between py-2 border-bottom">
+                                <span class="text-muted">Status</span>
+                                <span class="badge {{ $passed ? 'bg-success' : 'bg-danger' }}">
+                                    {{ $passed ? 'Passed' : 'Not passed' }}
+                                </span>
+                            </li>
+                            <li class="d-flex justify-content-between py-2 border-bottom">
+                                <span class="text-muted">Completed</span>
+                                <span>{{ $attempt->completed_at->format('M d, Y') }}</span>
+                            </li>
+                            <li class="d-flex justify-content-between py-2 border-bottom">
+                                <span class="text-muted">Time</span>
+                                <span>{{ $attempt->completed_at->format('H:i') }}</span>
+                            </li>
+                            @if($attempt->duration_in_minutes)
+                                <li class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted">Duration</span>
+                                    <span>{{ $attempt->duration_in_minutes }} min</span>
+                                </li>
+                            @endif
+                            <li class="d-flex justify-content-between py-2">
+                                <span class="text-muted">Accuracy</span>
+                                <span class="fw-semibold">{{ $scorePercent }}%</span>
+                            </li>
+                        </ul>
+
+                        <div class="d-grid gap-2">
+                            <a href="{{ route('client.vr-assessments.show', $attempt->questionBank) }}"
+                               class="btn btn-primary text-white">
+                                <i class="bi bi-arrow-repeat me-1"></i>Try again
+                            </a>
+                            <a href="{{ route('client.vr-experiments.show', $attempt->questionBank->vrExperiment) }}"
+                               class="btn btn-outline-primary">
+                                <i class="bi bi-vr me-1"></i>View experiment
+                            </a>
+                            <a href="{{ route('client.vr-assessments.index') }}"
+                               class="btn btn-outline-secondary">
+                                <i class="bi bi-grid me-1"></i>All quizzes
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        {{-- Answer Review --}}
-        <div class="card border-0 shadow-none">
-            <div class="card-header bg-light">
-                <h5 class="mb-0"><i class="bi bi-list-check me-1"></i>Answer Review</h5>
-            </div>
-            <div class="card-body">
-                @foreach($attempt->questionBank->questions as $index => $question)
-                    @php
-                        $answer = $attempt->answers->where('question_id', $question->id)->first();
-                        $isCorrect = $answer && $answer->is_correct;
-                        $studentAnswer = $answer ? $answer->student_answer : null;
-                    @endphp
-                    <div class="card mb-3 {{ $isCorrect ? 'border-success' : 'border-danger' }}">
-                        <div class="card-header d-flex justify-content-between align-items-center {{ $isCorrect ? 'bg-success-subtle' : 'bg-danger-subtle' }}">
-                            <span>
-                                <strong>Question {{ $index + 1 }}</strong>
-                                @if($isCorrect)
-                                    <span class="badge bg-success ms-2">
-                                        <i class="bi bi-check"></i> Correct
-                                    </span>
-                                @else
-                                    <span class="badge bg-danger ms-2">
-                                        <i class="bi bi-x"></i> Incorrect
-                                    </span>
-                                @endif
-                            </span>
-                            <span class="badge bg-dark">{{ $answer ? $answer->points_earned : 0 }}/{{ $question->points }} pts</span>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="mb-3">{{ $question->question_text }}</h6>
-
-                            @if($question->question_type === 'mcq' && $question->options)
-                                <div class="mb-3">
-                                    @foreach($question->options as $option)
-                                        <div class="p-2 rounded mb-1 
-                                            {{ $option === $question->correct_answer ? 'bg-success-subtle border border-success' : '' }}
-                                            {{ $option === $studentAnswer && !$isCorrect ? 'bg-danger-subtle border border-danger' : '' }}">
-                                            @if($option === $question->correct_answer)
-                                                <i class="bi bi-check-circle-fill text-success me-1"></i>
-                                            @elseif($option === $studentAnswer)
-                                                <i class="bi bi-x-circle-fill text-danger me-1"></i>
-                                            @else
-                                                <i class="bi bi-circle me-1 text-muted"></i>
-                                            @endif
-                                            {{ $option }}
-                                            @if($option === $studentAnswer && $option !== $question->correct_answer)
-                                                <span class="badge bg-danger ms-2">Your answer</span>
-                                            @endif
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @elseif($question->question_type === 'true_false')
-                                <div class="row g-2 mb-3">
-                                    <div class="col-6">
-                                        <div class="p-2 rounded text-center
-                                            {{ 'True' === $question->correct_answer ? 'bg-success-subtle border border-success' : '' }}
-                                            {{ 'True' === $studentAnswer && !$isCorrect ? 'bg-danger-subtle border border-danger' : '' }}">
-                                            @if('True' === $question->correct_answer)
-                                                <i class="bi bi-check-circle-fill text-success me-1"></i>
-                                            @elseif('True' === $studentAnswer)
-                                                <i class="bi bi-x-circle-fill text-danger me-1"></i>
-                                            @endif
-                                            True
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="p-2 rounded text-center
-                                            {{ 'False' === $question->correct_answer ? 'bg-success-subtle border border-success' : '' }}
-                                            {{ 'False' === $studentAnswer && !$isCorrect ? 'bg-danger-subtle border border-danger' : '' }}">
-                                            @if('False' === $question->correct_answer)
-                                                <i class="bi bi-check-circle-fill text-success me-1"></i>
-                                            @elseif('False' === $studentAnswer)
-                                                <i class="bi bi-x-circle-fill text-danger me-1"></i>
-                                            @endif
-                                            False
-                                        </div>
-                                    </div>
-                                </div>
-                            @else
-                                <div class="row g-3 mb-3">
-                                    <div class="col-md-6">
-                                        <small class="text-muted">Your Answer:</small>
-                                        <div class="p-2 rounded {{ $isCorrect ? 'bg-success-subtle' : 'bg-danger-subtle' }}">
-                                            {{ $studentAnswer ?? 'No answer provided' }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <small class="text-muted">Correct Answer:</small>
-                                        <div class="p-2 rounded bg-success-subtle">
-                                            {{ $question->correct_answer }}
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if($question->explanation)
-                                <div class="alert alert-info mb-0">
-                                    <i class="bi bi-lightbulb me-1"></i>
-                                    <strong>Explanation:</strong> {{ $question->explanation }}
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
             </div>
         </div>
     </div>
 </x-app-layout>
-

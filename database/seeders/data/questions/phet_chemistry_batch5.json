@@ -1,0 +1,260 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/salts-and-solubility/latest/salts-and-solubility_en.html",
+    "phet_slug": "salts-and-solubility",
+    "question_bank": {
+      "title": "Salts and Solubility — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.3.1, 12.3.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "When an ionic salt dissolves in water it:",
+        "correct_answer": "Dissociates into ions",
+        "explanation": "Ionic compounds separate into cations and anions.",
+        "points": 1,
+        "options": [
+          "Dissociates into ions",
+          "Remains as neutral molecules only",
+          "Becomes a gas",
+          "Forms a metal"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "A saturated solution contains:",
+        "correct_answer": "The maximum dissolved solute at that temperature",
+        "explanation": "No more solute can dissolve at equilibrium.",
+        "points": 1,
+        "options": [
+          "The maximum dissolved solute at that temperature",
+          "No solute at all",
+          "Only solvent",
+          "Only gases"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Ksp is the:",
+        "correct_answer": "Solubility product constant",
+        "explanation": "Ksp compares solubilities of sparingly soluble salts.",
+        "points": 1,
+        "options": [
+          "Solubility product constant",
+          "Rate constant for combustion",
+          "Ideal gas constant",
+          "Avogadro number"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Increasing temperature may:",
+        "correct_answer": "Increase or decrease solubility depending on the salt",
+        "explanation": "Solubility trends vary by substance.",
+        "points": 1,
+        "options": [
+          "Increase or decrease solubility depending on the salt",
+          "Always decrease solubility",
+          "Always remove ions",
+          "Stop dissociation always"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Ions in solution are free to move through the liquid.",
+        "correct_answer": "True",
+        "explanation": "Dissolved ions move independently in the sim.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Adding more salt beyond saturation leads to:",
+        "correct_answer": "Precipitation of excess solid",
+        "explanation": "Undissolved solid remains.",
+        "points": 1,
+        "options": [
+          "Precipitation of excess solid",
+          "Infinite dissolution",
+          "Only gas formation",
+          "Loss of all ions"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Comparing Ksp values helps predict:",
+        "correct_answer": "Which salt is more soluble",
+        "explanation": "Larger Ksp generally means greater solubility.",
+        "points": 1,
+        "options": [
+          "Which salt is more soluble",
+          "Atomic mass only",
+          "Boiling point of water",
+          "Magnetic field strength"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Solubility is important in qualitative analysis and precipitation reactions.",
+        "correct_answer": "True",
+        "explanation": "Solubility rules guide separation of ions.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What particles form when table salt dissolves in water?",
+        "correct_answer": "ions",
+        "explanation": "Na⁺ and Cl⁻ ions form in solution.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one variable you can adjust in the simulation.",
+        "correct_answer": "temperature",
+        "explanation": "Temperature and salt type affect solubility.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/sugar-and-salt-solutions/latest/sugar-and-salt-solutions_en.html",
+    "phet_slug": "sugar-and-salt-solutions",
+    "question_bank": {
+      "title": "Sugar and Salt Solutions — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.2.1, 12.2.3 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Salt (NaCl) in water dissolves as:",
+        "correct_answer": "Ions",
+        "explanation": "Ionic solutes dissociate into charged particles.",
+        "points": 1,
+        "options": [
+          "Ions",
+          "Neutral molecules only",
+          "Metallic atoms only",
+          "Gases only"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Sugar in water dissolves as:",
+        "correct_answer": "Molecules",
+        "explanation": "Sugar is a molecular covalent solute.",
+        "points": 1,
+        "options": [
+          "Molecules",
+          "Separate Na⁺ and Cl⁻ ions",
+          "Free electrons",
+          "Metal crystals"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "A salt solution conducts electricity because:",
+        "correct_answer": "Free ions carry charge",
+        "explanation": "Mobile ions enable current flow.",
+        "points": 1,
+        "options": [
+          "Free ions carry charge",
+          "Water alone is highly conductive",
+          "Sugar molecules carry charge",
+          "No particles move"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "A sugar solution typically:",
+        "correct_answer": "Does not conduct electricity well",
+        "explanation": "No free ions means poor conductivity.",
+        "points": 1,
+        "options": [
+          "Does not conduct electricity well",
+          "Conducts better than salt",
+          "Contains free electrons",
+          "Is always acidic"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The conductivity probe detects presence of ions in solution.",
+        "correct_answer": "True",
+        "explanation": "Ionic concentration affects conductivity readings.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Zooming to particle view shows:",
+        "correct_answer": "Different dissolution mechanisms for ionic vs molecular solutes",
+        "explanation": "Microscopic models differ for salt and sugar.",
+        "points": 1,
+        "options": [
+          "Different dissolution mechanisms for ionic vs molecular solutes",
+          "Only empty space",
+          "Only metal bonding",
+          "Only nuclear reactions"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Increasing salt concentration generally:",
+        "correct_answer": "Increases conductivity",
+        "explanation": "More ions carry more current.",
+        "points": 1,
+        "options": [
+          "Increases conductivity",
+          "Decreases conductivity always",
+          "Removes all ions",
+          "Turns water into a gas"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Electrolysis requires ions in solution.",
+        "correct_answer": "True",
+        "explanation": "Ionic solutions are needed for electrolytic processes.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Which solute produces ions in water: sugar or salt?",
+        "correct_answer": "salt",
+        "explanation": "Salt dissociates; sugar does not.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name the probe used to test electrical conductivity.",
+        "correct_answer": "conductivity probe",
+        "explanation": "The sim includes a conductivity probe.",
+        "points": 1
+      }
+    ]
+  }
+]

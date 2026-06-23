@@ -1,0 +1,131 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/buoyancy/latest/buoyancy_en.html",
+    "phet_slug": "buoyancy",
+    "question_bank": {
+      "title": "Buoyancy (Engineering) — Engineering Assessment",
+      "description": "TIE Engineering competences 16.1.1, 16.1.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "In vessel design, buoyant force must exceed:",
+        "correct_answer": "Total weight of vessel and cargo",
+        "explanation": "Floating requires net upward force.",
+        "points": 1,
+        "options": [
+          "Total weight of vessel and cargo",
+          "Only hull colour",
+          "Only air temperature",
+          "Only engine power"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Increasing wall thickness of a hull generally:",
+        "correct_answer": "Increases average density of the vessel",
+        "explanation": "More material adds mass for same volume.",
+        "points": 1,
+        "options": [
+          "Increases average density of the vessel",
+          "Removes all weight",
+          "Eliminates displacement",
+          "Stops buoyancy"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Adding cargo to a floating vessel:",
+        "correct_answer": "Lowers the waterline",
+        "explanation": "More weight submerges the hull further.",
+        "points": 1,
+        "options": [
+          "Lowers the waterline",
+          "Raises the vessel out of water",
+          "Removes buoyant force",
+          "Changes gravitational constant"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Maximum cargo load is reached when:",
+        "correct_answer": "Average density equals fluid density",
+        "explanation": "Neutral buoyancy limit is at sinking threshold.",
+        "points": 1,
+        "options": [
+          "Average density equals fluid density",
+          "Cargo is zero",
+          "Hull is empty",
+          "Fluid is removed"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Hull shape affects stability as well as buoyancy.",
+        "correct_answer": "True",
+        "explanation": "Engineering design considers stability and load.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Archimedes' Principle for a vessel means buoyant force equals:",
+        "correct_answer": "Weight of displaced fluid",
+        "explanation": "Displacement determines buoyant support.",
+        "points": 1,
+        "options": [
+          "Weight of displaced fluid",
+          "Weight of cargo only",
+          "Mass of engine",
+          "Air pressure only"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Choosing a less dense hull material helps:",
+        "correct_answer": "Improve flotation for a given geometry",
+        "explanation": "Lower average density increases buoyancy margin.",
+        "points": 1,
+        "options": [
+          "Improve flotation for a given geometry",
+          "Guarantee sinking",
+          "Remove displacement",
+          "Increase cargo mass unlimitedly"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Engineering buoyancy design compares different materials and shapes.",
+        "correct_answer": "True",
+        "explanation": "The sim supports design comparison.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name one hull property you can adjust in the engineering Buoyancy sim.",
+        "correct_answer": "wall thickness",
+        "explanation": "Material, thickness, and cargo can be adjusted.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What principle guides maximum load calculation for a vessel?",
+        "correct_answer": "Archimedes' Principle",
+        "explanation": "Buoyant force balances weight at the load limit.",
+        "points": 1
+      }
+    ]
+  }
+]

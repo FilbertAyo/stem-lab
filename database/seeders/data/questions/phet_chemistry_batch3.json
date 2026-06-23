@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/molecule-shapes/latest/molecule-shapes_en.html",
+    "phet_slug": "molecule-shapes",
+    "question_bank": {
+      "title": "Molecule Shapes — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.2.1, 12.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "VSEPR theory predicts molecular shape from:",
+        "options": [
+          "Electron pair repulsion around a central atom",
+          "Only atomic mass",
+          "Only colour",
+          "Nuclear charge alone"
+        ],
+        "correct_answer": "Electron pair repulsion around a central atom",
+        "explanation": "Bonding and lone pairs repel and determine geometry.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "A molecule with four bonding pairs and no lone pairs is:",
+        "options": [
+          "Tetrahedral",
+          "Linear",
+          "Bent",
+          "Trigonal pyramidal"
+        ],
+        "correct_answer": "Tetrahedral",
+        "explanation": "Four equivalent bonding pairs adopt tetrahedral geometry.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Lone pairs on a central atom:",
+        "options": [
+          "Compress bond angles",
+          "Always widen all angles",
+          "Have no effect on shape",
+          "Remove all bonds"
+        ],
+        "correct_answer": "Compress bond angles",
+        "explanation": "Lone pairs occupy more space and push bonding pairs closer.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Water (H₂O) has a bent shape because oxygen has:",
+        "options": [
+          "Two bonding pairs and two lone pairs",
+          "Four bonding pairs only",
+          "No lone pairs",
+          "Only ionic bonds"
+        ],
+        "correct_answer": "Two bonding pairs and two lone pairs",
+        "explanation": "Two lone pairs bend the H–O–H angle.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Methane (CH₄) has a tetrahedral geometry.",
+        "correct_answer": "True",
+        "explanation": "Carbon forms four single bonds in tetrahedral arrangement.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Trigonal planar geometry has bond angles of about:",
+        "options": [
+          "120°",
+          "109.5°",
+          "180° only",
+          "90° only"
+        ],
+        "correct_answer": "120°",
+        "explanation": "Three bonding pairs in one plane give ~120° angles.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Adding a lone pair to a trigonal planar arrangement typically gives:",
+        "options": [
+          "Trigonal pyramidal or bent geometry",
+          "Linear geometry",
+          "No change",
+          "Metallic bonding"
+        ],
+        "correct_answer": "Trigonal pyramidal or bent geometry",
+        "explanation": "Lone pairs change the electron-pair count and shape.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Molecular shape can influence whether a molecule is polar overall.",
+        "correct_answer": "True",
+        "explanation": "Bond dipoles may or may not cancel depending on geometry.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the theory used to predict molecular shapes in the simulation.",
+        "correct_answer": "VSEPR",
+        "explanation": "Valence Shell Electron Pair Repulsion theory.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What is the shape of ammonia (NH₃)?",
+        "correct_answer": "trigonal pyramidal",
+        "explanation": "NH₃ has three bonds and one lone pair on nitrogen.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/acid-base-solutions/latest/acid-base-solutions_en.html",
+    "phet_slug": "acid-base-solutions",
+    "question_bank": {
+      "title": "Acid-Base Solutions — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.3.1, 12.3.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A strong acid at the same concentration as a weak acid has:",
+        "options": [
+          "A lower pH",
+          "A higher pH",
+          "pH of 14",
+          "pH of 7 always"
+        ],
+        "correct_answer": "A lower pH",
+        "explanation": "Strong acids dissociate more, giving higher [H⁺] and lower pH.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "pH is a measure of:",
+        "options": [
+          "Hydrogen ion concentration",
+          "Mass only",
+          "Colour intensity only",
+          "Boiling point"
+        ],
+        "correct_answer": "Hydrogen ion concentration",
+        "explanation": "pH indicates acidity via H⁺ (or H₃O⁺) concentration.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "A solution with pH 9 is:",
+        "options": [
+          "Basic",
+          "Acidic",
+          "Neutral",
+          "Always a strong acid"
+        ],
+        "correct_answer": "Basic",
+        "explanation": "pH above 7 indicates basic conditions.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Strong acids conduct electricity well because they:",
+        "options": [
+          "Produce many ions in solution",
+          "Contain no water",
+          "Are always solids",
+          "Have no charge"
+        ],
+        "correct_answer": "Produce many ions in solution",
+        "explanation": "High ion concentration carries current.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Weak acids partially dissociate in water.",
+        "correct_answer": "True",
+        "explanation": "Only a fraction of weak acid molecules ionise at equilibrium.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Diluting a strong acid solution:",
+        "options": [
+          "Increases pH toward 7",
+          "Decreases pH further",
+          "Always gives pH 0",
+          "Removes all ions"
+        ],
+        "correct_answer": "Increases pH toward 7",
+        "explanation": "Lower [H⁺] raises pH but solution stays acidic.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "In the Arrhenius model, an acid produces:",
+        "options": [
+          "H⁺ (or H₃O⁺) in water",
+          "Only OH⁻ ions",
+          "Only neutral molecules",
+          "Only metals"
+        ],
+        "correct_answer": "H⁺ (or H₃O⁺) in water",
+        "explanation": "Arrhenius acids increase hydrogen ion concentration.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Conductivity probes can compare ion concentrations in acid solutions.",
+        "correct_answer": "True",
+        "explanation": "More ions mean greater electrical conductivity.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What pH value represents a neutral solution at 25°C?",
+        "correct_answer": "7",
+        "explanation": "Pure water has pH 7 under standard conditions.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one strong acid available in the simulation.",
+        "correct_answer": "HCl",
+        "explanation": "Hydrochloric acid is a common strong acid example.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/reactants-products-and-leftovers/latest/reactants-products-and-leftovers_en.html",
+    "phet_slug": "reactants-products-and-leftovers",
+    "question_bank": {
+      "title": "Reactants, Products and Leftovers — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.4.1, 12.4.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The limiting reagent is:",
+        "options": [
+          "The reactant used up first",
+          "Always the excess reactant",
+          "The product formed last",
+          "The catalyst"
+        ],
+        "correct_answer": "The reactant used up first",
+        "explanation": "The limiting reagent controls maximum product amount.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "After a reaction, excess reagent is:",
+        "options": [
+          "Left over unreacted",
+          "Always converted fully",
+          "The same as limiting reagent",
+          "Always a product"
+        ],
+        "correct_answer": "Left over unreacted",
+        "explanation": "Excess reactant remains when another reactant is used up.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The amount of product formed is determined by:",
+        "options": [
+          "The limiting reagent",
+          "The excess reagent only",
+          "Container colour",
+          "Temperature only"
+        ],
+        "correct_answer": "The limiting reagent",
+        "explanation": "Product yield is capped by the reactant that runs out first.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Balanced equations provide:",
+        "options": [
+          "Mole ratios between reactants and products",
+          "Only colours of substances",
+          "Nuclear masses only",
+          "Only physical states"
+        ],
+        "correct_answer": "Mole ratios between reactants and products",
+        "explanation": "Coefficients give stoichiometric mole ratios.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "In the sandwich analogy, the ingredient that runs out first limits how many sandwiches you make.",
+        "correct_answer": "True",
+        "explanation": "The analogy mirrors limiting reagent concept.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "If you have excess hydrogen in 2H₂ + O₂ → 2H₂O, the limiting reagent is likely:",
+        "options": [
+          "Oxygen",
+          "Hydrogen",
+          "Water",
+          "Nitrogen"
+        ],
+        "correct_answer": "Oxygen",
+        "explanation": "Oxygen is needed in 1:2 ratio; excess H₂ remains.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Theoretical yield is calculated from:",
+        "options": [
+          "Stoichiometry and limiting reagent amount",
+          "Only excess reagent",
+          "Random guess",
+          "Container volume only"
+        ],
+        "correct_answer": "Stoichiometry and limiting reagent amount",
+        "explanation": "Use mole ratios starting from the limiting reagent.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Increasing excess reagent beyond the limiting amount does not increase product.",
+        "correct_answer": "True",
+        "explanation": "Extra excess reactant cannot make more product once limiting reagent is gone.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What do we call the reactant remaining after the reaction?",
+        "correct_answer": "excess reagent",
+        "explanation": "Excess reagent is left over when another reactant limits the reaction.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "In 2H₂ + O₂ → 2H₂O, what is the mole ratio of H₂ to H₂O?",
+        "correct_answer": "1:1",
+        "explanation": "Two moles H₂ produce two moles H₂O, ratio 2:2 = 1:1.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/greenhouse-effect/latest/greenhouse-effect_en.html",
+    "phet_slug": "greenhouse-effect",
+    "question_bank": {
+      "title": "Greenhouse Effect — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.5.1, 12.5.2 (Forms II–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Greenhouse gases absorb:",
+        "options": [
+          "Infrared radiation",
+          "Only visible light",
+          "Only ultraviolet from the Sun directly",
+          "No radiation"
+        ],
+        "correct_answer": "Infrared radiation",
+        "explanation": "GHGs absorb IR emitted by Earth and re-radiate energy.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "A major anthropogenic greenhouse gas is:",
+        "options": [
+          "Carbon dioxide (CO₂)",
+          "Pure nitrogen only",
+          "Argon only",
+          "Helium"
+        ],
+        "correct_answer": "Carbon dioxide (CO₂)",
+        "explanation": "CO₂ from combustion is a key greenhouse gas.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The greenhouse effect helps Earth by:",
+        "options": [
+          "Trapping some heat to keep temperatures habitable",
+          "Blocking all sunlight",
+          "Removing all CO₂",
+          "Stopping all infrared emission"
+        ],
+        "correct_answer": "Trapping some heat to keep temperatures habitable",
+        "explanation": "Natural greenhouse effect warms Earth above frigid equilibrium.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Increasing greenhouse gas concentration generally:",
+        "options": [
+          "Increases Earth's average temperature",
+          "Decreases temperature always",
+          "Has no climate effect",
+          "Removes infrared photons permanently"
+        ],
+        "correct_answer": "Increases Earth's average temperature",
+        "explanation": "More IR trapping raises surface temperature.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Methane (CH₄) is a greenhouse gas.",
+        "correct_answer": "True",
+        "explanation": "CH₄ strongly absorbs infrared radiation.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "In the simulation, infrared photons from Earth are:",
+        "options": [
+          "Absorbed and re-emitted by gas molecules",
+          "Never affected by gases",
+          "Only reflected by clouds of metal",
+          "Converted to protons"
+        ],
+        "correct_answer": "Absorbed and re-emitted by gas molecules",
+        "explanation": "Molecular vibrations interact with IR photons.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Burning fossil fuels increases atmospheric:",
+        "options": [
+          "CO₂",
+          "Only oxygen",
+          "Only noble gases",
+          "Nitrogen only with no effect"
+        ],
+        "correct_answer": "CO₂",
+        "explanation": "Combustion releases CO₂, a greenhouse gas.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Water vapour (H₂O) can act as a greenhouse gas.",
+        "correct_answer": "True",
+        "explanation": "H₂O absorbs infrared and contributes to the effect.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name one greenhouse gas you can add in the simulation.",
+        "correct_answer": "CO2",
+        "explanation": "CO₂, CH₄, and H₂O are among available gases.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What type of radiation does Earth mainly emit to space?",
+        "correct_answer": "infrared",
+        "explanation": "Earth's thermal emission peaks in the infrared.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/states-of-matter/latest/states-of-matter_en.html",
+    "phet_slug": "states-of-matter",
+    "question_bank": {
+      "title": "States of Matter — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.1.3, 12.2.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "In the solid state, particles:",
+        "options": [
+          "Vibrate about fixed positions",
+          "Move freely at high speed throughout",
+          "Are far apart with no forces",
+          "Do not exist"
+        ],
+        "correct_answer": "Vibrate about fixed positions",
+        "explanation": "Solids have ordered, vibrating particles.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Melting occurs when:",
+        "options": [
+          "Solid changes to liquid",
+          "Liquid changes to gas only",
+          "Gas becomes plasma only",
+          "Solid becomes gas directly always"
+        ],
+        "correct_answer": "Solid changes to liquid",
+        "explanation": "Melting is solid → liquid transition.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Boiling happens at:",
+        "options": [
+          "A specific temperature for a pure substance at given pressure",
+          "Any random temperature only",
+          "Only below freezing",
+          "Only in vacuum"
+        ],
+        "correct_answer": "A specific temperature for a pure substance at given pressure",
+        "explanation": "Boiling point is characteristic at fixed pressure.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Stronger intermolecular forces generally give:",
+        "options": [
+          "Higher boiling points",
+          "Lower boiling points",
+          "No effect on boiling",
+          "Faster particle speed only"
+        ],
+        "correct_answer": "Higher boiling points",
+        "explanation": "More energy is needed to separate particles.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A phase diagram shows conditions for solid, liquid, and gas phases.",
+        "correct_answer": "True",
+        "explanation": "Phase diagrams map stability regions vs T and P.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "At the triple point:",
+        "options": [
+          "Solid, liquid, and gas coexist in equilibrium",
+          "Only gas exists",
+          "Only solid exists",
+          "Pressure is always zero"
+        ],
+        "correct_answer": "Solid, liquid, and gas coexist in equilibrium",
+        "explanation": "Triple point is where three phases are in equilibrium.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Increasing temperature increases average:",
+        "options": [
+          "Kinetic energy of particles",
+          "Nuclear mass",
+          "Number of protons",
+          "Gravitational force"
+        ],
+        "correct_answer": "Kinetic energy of particles",
+        "explanation": "Higher T means faster particle motion on average.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Evaporation can occur below the boiling point at the surface of a liquid.",
+        "correct_answer": "True",
+        "explanation": "Surface particles with enough energy can escape.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the phase change from liquid to gas at the surface below boiling point.",
+        "correct_answer": "evaporation",
+        "explanation": "Evaporation occurs at any temperature at an open surface.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What intermolecular force is especially strong in water?",
+        "correct_answer": "hydrogen bonding",
+        "explanation": "Hydrogen bonds raise water's boiling point.",
+        "points": 1
+      }
+    ]
+  }
+]

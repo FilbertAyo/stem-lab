@@ -1,0 +1,389 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/number-play/latest/number-play_en.html",
+    "phet_slug": "number-play",
+    "question_bank": {
+      "title": "Number Play — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.1.2 (Form I).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Number Play helps represent numbers using:",
+        "correct_answer": "Multiple representations",
+        "explanation": "Ten frames, blocks, number line, and words.",
+        "points": 1,
+        "options": [
+          "Multiple representations",
+          "Only calculus",
+          "Only trigonometry",
+          "Only chemical formulas"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Ten frames help students see:",
+        "correct_answer": "Quantity and place value",
+        "explanation": "Visual grouping supports number sense.",
+        "points": 1,
+        "options": [
+          "Quantity and place value",
+          "Magnetic fields",
+          "Atomic mass",
+          "Wave frequency"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Comparing two numbers means deciding:",
+        "correct_answer": "Which is greater or if they are equal",
+        "explanation": "Comparison uses place value and quantity.",
+        "points": 1,
+        "options": [
+          "Which is greater or if they are equal",
+          "Which is heavier only",
+          "Which is a gas",
+          "Which conducts electricity"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The same number can be shown as:",
+        "correct_answer": "Symbol, picture, and on a number line",
+        "explanation": "Equivalent representations describe one quantity.",
+        "points": 1,
+        "options": [
+          "Symbol, picture, and on a number line",
+          "Only Roman numerals",
+          "Only fractions above 1",
+          "Only negative values"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Different representations of the same number are equivalent.",
+        "correct_answer": "True",
+        "explanation": "e.g. 5 blocks equals the numeral 5.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Number sense includes understanding:",
+        "correct_answer": "How quantities relate and compare",
+        "explanation": "Foundation for arithmetic.",
+        "points": 1,
+        "options": [
+          "How quantities relate and compare",
+          "Only integration",
+          "Only chemical bonding",
+          "Only torque"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Reaching a target count quickly builds:",
+        "correct_answer": "Fluency with quantity",
+        "explanation": "Games reinforce recognition and comparison.",
+        "points": 1,
+        "options": [
+          "Fluency with quantity",
+          "Laboratory safety",
+          "Circuit design",
+          "Genetic drift"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Number Play supports foundation skills for later algebra.",
+        "correct_answer": "True",
+        "explanation": "Strong number sense underpins algebra.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name one representation used in Number Play.",
+        "correct_answer": "ten frames",
+        "explanation": "Ten frames, blocks, number line, and words are used.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What skill involves deciding if one number is larger than another?",
+        "correct_answer": "comparing numbers",
+        "explanation": "Comparison is a core number sense skill.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/mean-share-and-balance/latest/mean-share-and-balance_en.html",
+    "phet_slug": "mean-share-and-balance",
+    "question_bank": {
+      "title": "Mean: Share and Balance — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.1.2 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The mean of a data set is:",
+        "correct_answer": "The fair share when total is distributed equally",
+        "explanation": "Mean redistributes total evenly.",
+        "points": 1,
+        "options": [
+          "The fair share when total is distributed equally",
+          "Always the largest value",
+          "Always zero",
+          "The range of data"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "To calculate the mean you:",
+        "correct_answer": "Add all values and divide by the count",
+        "explanation": "Mean = sum ÷ n.",
+        "points": 1,
+        "options": [
+          "Add all values and divide by the count",
+          "Multiply all values",
+          "Subtract the smallest",
+          "Count only even numbers"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "On the number line, the mean appears as:",
+        "correct_answer": "The balance point",
+        "explanation": "Equal stacks level at the mean.",
+        "points": 1,
+        "options": [
+          "The balance point",
+          "Always at zero",
+          "The maximum only",
+          "A random point"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Adding a large value to a data set generally:",
+        "correct_answer": "Increases the mean",
+        "explanation": "Mean shifts toward new values.",
+        "points": 1,
+        "options": [
+          "Increases the mean",
+          "Always decreases the mean",
+          "Leaves mean unchanged always",
+          "Makes mean zero"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The Fair Share screen calculates the mean automatically.",
+        "correct_answer": "True",
+        "explanation": "The sim computes mean from distributed objects.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Mean differs from median because median is:",
+        "correct_answer": "The middle value when ordered",
+        "explanation": "Median is positional; mean uses all values.",
+        "points": 1,
+        "options": [
+          "The middle value when ordered",
+          "Always equal to mean",
+          "The largest value",
+          "The product of values"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Leveling stacks in the sim models:",
+        "correct_answer": "Equalising quantities to find mean",
+        "explanation": "Physical leveling illustrates averaging.",
+        "points": 1,
+        "options": [
+          "Equalising quantities to find mean",
+          "Chemical equilibrium",
+          "Electric resonance",
+          "Photosynthesis"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Mode is another measure of central tendency besides mean.",
+        "correct_answer": "True",
+        "explanation": "Mean, median, and mode summarise data differently.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the formula for the arithmetic mean of n values.",
+        "correct_answer": "mean = sum/n",
+        "explanation": "Sum of values divided by count.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one screen in Mean: Share and Balance.",
+        "correct_answer": "Fair Share",
+        "explanation": "Level and Fair Share screens explore the mean.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/number-line-distance/latest/number-line-distance_en.html",
+    "phet_slug": "number-line-distance",
+    "question_bank": {
+      "title": "Number Line: Distance — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.2.1 (Form I).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Distance on a number line is:",
+        "correct_answer": "Always positive",
+        "explanation": "Distance is magnitude of separation.",
+        "points": 1,
+        "options": [
+          "Always positive",
+          "Always negative",
+          "Always zero",
+          "Undefined for integers"
+        ]
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Distance between two points equals:",
+        "correct_answer": "The absolute difference of their values",
+        "explanation": "|a − b| gives distance.",
+        "points": 1,
+        "options": [
+          "The absolute difference of their values",
+          "Their sum",
+          "Their product",
+          "Their average only"
+        ]
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "If one point is at −3 and another at 2, distance is:",
+        "correct_answer": "5",
+        "explanation": "|2 − (−3)| = 5.",
+        "points": 1,
+        "options": [
+          "5",
+          "1",
+          "−5",
+          "6"
+        ]
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Absolute value represents:",
+        "correct_answer": "Distance from zero",
+        "explanation": "|x| is distance of x from 0.",
+        "points": 1,
+        "options": [
+          "Distance from zero",
+          "Area of a circle",
+          "Slope of a line only",
+          "Chemical concentration"
+        ]
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Moving points to negative values still gives a positive distance.",
+        "correct_answer": "True",
+        "explanation": "Distance ignores direction.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Real-world contexts in the sim include:",
+        "correct_answer": "Temperature change and elevation difference",
+        "explanation": "Distance models magnitude of change.",
+        "points": 1,
+        "options": [
+          "Temperature change and elevation difference",
+          "Nuclear decay only",
+          "Magnetic flux only",
+          "Cell division only"
+        ]
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Number line distance is a foundation for:",
+        "correct_answer": "Coordinate plane distance",
+        "explanation": "1D distance extends to 2D Pythagorean distance.",
+        "points": 1,
+        "options": [
+          "Coordinate plane distance",
+          "Organic nomenclature",
+          "Torque calculation",
+          "pH measurement"
+        ]
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Distance depends on the order in which you subtract the two values.",
+        "correct_answer": "False",
+        "explanation": "Distance uses absolute difference; order does not matter.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write distance between a and b using absolute value.",
+        "correct_answer": "|a − b|",
+        "explanation": "Absolute difference gives distance.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What is the distance from 0 to −4 on the number line?",
+        "correct_answer": "4",
+        "explanation": "|−4 − 0| = 4.",
+        "points": 1
+      }
+    ]
+  }
+]

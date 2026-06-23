@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/molecule-shapes-basics/latest/molecule-shapes-basics_en.html",
+    "phet_slug": "molecule-shapes-basics",
+    "question_bank": {
+      "title": "Molecule Shapes: Basics — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.2.1, 12.2.2 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Electron pairs around a central atom repel because they:",
+        "options": [
+          "Have like negative charges",
+          "Have no charge",
+          "Are always protons",
+          "Cancel gravity"
+        ],
+        "correct_answer": "Have like negative charges",
+        "explanation": "Negative electron domains repel each other.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Two bonding pairs with no lone pairs give:",
+        "options": [
+          "Linear geometry",
+          "Tetrahedral",
+          "Bent",
+          "Octahedral"
+        ],
+        "correct_answer": "Linear geometry",
+        "explanation": "Two domains adopt 180° linear arrangement.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Three bonding pairs and no lone pairs form:",
+        "options": [
+          "Trigonal planar",
+          "Tetrahedral",
+          "Linear",
+          "Pyramidal"
+        ],
+        "correct_answer": "Trigonal planar",
+        "explanation": "Three domains lie in a plane at ~120°.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Adding a lone pair to three bonding pairs typically gives:",
+        "options": [
+          "Trigonal pyramidal shape",
+          "Linear shape",
+          "No geometry change",
+          "Metallic lattice"
+        ],
+        "correct_answer": "Trigonal pyramidal shape",
+        "explanation": "Four domains with one lone pair → pyramidal, e.g. NH₃.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Lone pairs are not visible as atoms but still affect molecular shape.",
+        "correct_answer": "True",
+        "explanation": "Lone pairs count as electron domains in VSEPR.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "The tetrahedral bond angle is approximately:",
+        "options": [
+          "109.5°",
+          "90°",
+          "120°",
+          "180°"
+        ],
+        "correct_answer": "109.5°",
+        "explanation": "Four equivalent domains point to tetrahedron vertices.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Water is bent rather than linear because oxygen has:",
+        "options": [
+          "Lone pairs",
+          "No electrons",
+          "Only ionic bonds",
+          "Metallic bonding"
+        ],
+        "correct_answer": "Lone pairs",
+        "explanation": "Lone pairs reduce the H–O–H angle below 109.5°.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Rotating the 3D model helps identify molecular geometry.",
+        "correct_answer": "True",
+        "explanation": "Viewing from different angles clarifies 3D shape.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What is the shape of CO₂ with two double bonds and no lone pairs on carbon?",
+        "correct_answer": "linear",
+        "explanation": "CO₂ is linear with 180° O=C=O.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name the shape of methane (CH₄).",
+        "correct_answer": "tetrahedral",
+        "explanation": "Four single bonds around carbon give tetrahedral geometry.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/ph-scale-basics/latest/ph-scale-basics_en.html",
+    "phet_slug": "ph-scale-basics",
+    "question_bank": {
+      "title": "pH Scale: Basics — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.3.1, 12.3.2 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A solution with pH 3 is:",
+        "options": [
+          "Acidic",
+          "Basic",
+          "Neutral",
+          "Always pH 7"
+        ],
+        "correct_answer": "Acidic",
+        "explanation": "pH below 7 indicates acidity.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Pure water at 25°C has pH:",
+        "options": [
+          "7",
+          "0",
+          "14",
+          "1"
+        ],
+        "correct_answer": "7",
+        "explanation": "Neutral pH is 7 under standard conditions.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Bleach is typically:",
+        "options": [
+          "Basic (high pH)",
+          "Strongly acidic",
+          "Neutral always",
+          "pH 0"
+        ],
+        "correct_answer": "Basic (high pH)",
+        "explanation": "Household bleach is alkaline.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Lemon juice is:",
+        "options": [
+          "Acidic",
+          "Basic",
+          "Neutral",
+          "pH 14"
+        ],
+        "correct_answer": "Acidic",
+        "explanation": "Citrus juices contain acids and have low pH.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The pH scale is logarithmic.",
+        "correct_answer": "True",
+        "explanation": "Each pH unit represents a tenfold change in H⁺ concentration.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "On the pH scale visual, moving toward the right (higher numbers) means:",
+        "options": [
+          "More basic",
+          "More acidic",
+          "Less ions",
+          "Lower temperature"
+        ],
+        "correct_answer": "More basic",
+        "explanation": "Higher pH corresponds to more basic solutions.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "A pH meter measures:",
+        "options": [
+          "Acidity/basicity",
+          "Mass",
+          "Volume only",
+          "Density"
+        ],
+        "correct_answer": "Acidity/basicity",
+        "explanation": "pH meters report hydrogen ion activity.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Mixing an acid and a base can move pH toward neutral.",
+        "correct_answer": "True",
+        "explanation": "Neutralisation reactions reduce excess H⁺ or OH⁻.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What pH range is considered acidic?",
+        "correct_answer": "below 7",
+        "explanation": "Acids have pH less than 7.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one household solution tested in the simulation.",
+        "correct_answer": "vinegar",
+        "explanation": "Vinegar, milk, bleach, and water are common examples.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/reactions-and-rates/latest/reactions-and-rates_en.html",
+    "phet_slug": "reactions-and-rates",
+    "question_bank": {
+      "title": "Reactions and Rates — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.4.1, 12.4.3 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Reaction rate measures:",
+        "options": [
+          "How fast reactants are consumed or products form",
+          "Only final temperature",
+          "Only colour at the end",
+          "Atomic number change"
+        ],
+        "correct_answer": "How fast reactants are consumed or products form",
+        "explanation": "Rate is change in concentration per unit time.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Increasing temperature generally:",
+        "options": [
+          "Increases reaction rate",
+          "Decreases reaction rate always",
+          "Has no effect",
+          "Stops all collisions"
+        ],
+        "correct_answer": "Increases reaction rate",
+        "explanation": "Higher T gives more frequent, energetic collisions.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Collision theory states reactions occur when particles:",
+        "options": [
+          "Collide with sufficient energy and correct orientation",
+          "Never touch",
+          "Only move slowly",
+          "Are always ions"
+        ],
+        "correct_answer": "Collide with sufficient energy and correct orientation",
+        "explanation": "Effective collisions lead to product formation.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Activation energy is:",
+        "options": [
+          "Minimum energy needed for a reaction to occur",
+          "Energy released only",
+          "Always zero",
+          "The same as kinetic energy always"
+        ],
+        "correct_answer": "Minimum energy needed for a reaction to occur",
+        "explanation": "Reactants must overcome an energy barrier.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A catalyst lowers activation energy without being consumed.",
+        "correct_answer": "True",
+        "explanation": "Catalysts provide alternative pathways with lower Ea.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Increasing reactant concentration typically:",
+        "options": [
+          "Increases collision frequency and rate",
+          "Decreases rate",
+          "Removes activation energy",
+          "Stops the reaction"
+        ],
+        "correct_answer": "Increases collision frequency and rate",
+        "explanation": "More particles per volume mean more collisions.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "On a concentration–time graph, a steeper initial slope means:",
+        "options": [
+          "Faster initial rate",
+          "Slower rate",
+          "No reaction",
+          "Equilibrium only"
+        ],
+        "correct_answer": "Faster initial rate",
+        "explanation": "Steep drop in reactant concentration indicates high rate.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Not every molecular collision produces a reaction.",
+        "correct_answer": "True",
+        "explanation": "Many collisions lack sufficient energy or orientation.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name one factor that affects reaction rate in the simulation.",
+        "correct_answer": "temperature",
+        "explanation": "Temperature, concentration, and surface area affect rates.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What does a catalyst do to activation energy?",
+        "correct_answer": "lowers it",
+        "explanation": "Catalysts reduce the activation energy barrier.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/atomic-interactions/latest/atomic-interactions_en.html",
+    "phet_slug": "atomic-interactions",
+    "question_bank": {
+      "title": "Atomic Interactions — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.2.1, 12.2.3 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "At very short separation, atoms experience:",
+        "options": [
+          "Strong repulsion",
+          "Only attraction",
+          "No forces",
+          "Only gravity"
+        ],
+        "correct_answer": "Strong repulsion",
+        "explanation": "Electron cloud overlap causes repulsive forces.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Bond length is:",
+        "options": [
+          "The equilibrium separation distance",
+          "Always zero",
+          "The longest possible distance",
+          "Only in ionic solids"
+        ],
+        "correct_answer": "The equilibrium separation distance",
+        "explanation": "Bond length is where attractive and repulsive forces balance.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "A deeper potential energy well indicates:",
+        "options": [
+          "Stronger bonding interaction",
+          "Weaker bonding",
+          "No bond",
+          "Only repulsion"
+        ],
+        "correct_answer": "Stronger bonding interaction",
+        "explanation": "More negative minimum energy means stronger bond.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Van der Waals forces are:",
+        "options": [
+          "Weak intermolecular attractions",
+          "Strong covalent bonds only",
+          "Nuclear forces",
+          "Only ionic bonds in metals"
+        ],
+        "correct_answer": "Weak intermolecular attractions",
+        "explanation": "Temporary dipoles create weak attractions between molecules.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Potential energy is lowest at stable bond length.",
+        "correct_answer": "True",
+        "explanation": "Equilibrium bond length corresponds to energy minimum.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Pulling bonded atoms apart requires:",
+        "options": [
+          "Energy input",
+          "No energy",
+          "Only cooling",
+          "Removing protons"
+        ],
+        "correct_answer": "Energy input",
+        "explanation": "Separating atoms climbs the potential energy curve.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Comparing neon–neon vs argon–argon interactions shows:",
+        "options": [
+          "Different interaction strengths due to atom size/polarizability",
+          "Identical forces always",
+          "No interactions ever",
+          "Only ionic bonding"
+        ],
+        "correct_answer": "Different interaction strengths due to atom size/polarizability",
+        "explanation": "Larger atoms often have stronger dispersion forces.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Intermolecular forces are generally weaker than covalent bonds within a molecule.",
+        "correct_answer": "True",
+        "explanation": "Bonds within molecules are stronger than between molecules.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What type of plot shows energy vs separation distance?",
+        "correct_answer": "potential energy graph",
+        "explanation": "The PE curve shows attraction and repulsion regions.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name the weak forces between noble gas atoms at close range.",
+        "correct_answer": "van der Waals",
+        "explanation": "London dispersion forces act between non-polar atoms.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/molecule-polarity/latest/molecule-polarity_en.html",
+    "phet_slug": "molecule-polarity",
+    "question_bank": {
+      "title": "Molecule Polarity — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.2.2, 12.2.3 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Electronegativity measures:",
+        "options": [
+          "An atom's ability to attract electrons in a bond",
+          "Mass of nucleus only",
+          "Number of neutrons",
+          "Boiling point only"
+        ],
+        "correct_answer": "An atom's ability to attract electrons in a bond",
+        "explanation": "Higher electronegativity pulls electrons closer.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "A polar covalent bond has:",
+        "options": [
+          "Unequal sharing of electrons",
+          "Equal sharing always",
+          "No electrons",
+          "Only ionic character"
+        ],
+        "correct_answer": "Unequal sharing of electrons",
+        "explanation": "Different electronegativities create a bond dipole.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "CO₂ is non-polar overall because:",
+        "options": [
+          "Bond dipoles cancel due to linear shape",
+          "It has no bonds",
+          "It is always ionic",
+          "Oxygen is not electronegative"
+        ],
+        "correct_answer": "Bond dipoles cancel due to linear shape",
+        "explanation": "Symmetric linear geometry cancels dipoles.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Water is polar because:",
+        "options": [
+          "Bent shape and O–H bond dipoles do not cancel",
+          "It is linear",
+          "It has no lone pairs",
+          "Hydrogen is more electronegative than oxygen"
+        ],
+        "correct_answer": "Bent shape and O–H bond dipoles do not cancel",
+        "explanation": "Bent geometry leaves a net molecular dipole.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "δ+ and δ− symbols show partial charges in polar bonds.",
+        "correct_answer": "True",
+        "explanation": "Partial charges indicate uneven electron distribution.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "A molecule can have polar bonds but be non-polar overall if:",
+        "options": [
+          "Dipoles cancel symmetrically",
+          "It is always ionic",
+          "It has no shape",
+          "Electronegativity is equal everywhere"
+        ],
+        "correct_answer": "Dipoles cancel symmetrically",
+        "explanation": "Molecular geometry determines net polarity.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Polar molecules tend to have:",
+        "options": [
+          "Higher boiling points than similar non-polar molecules",
+          "Lower boiling points always",
+          "No intermolecular forces",
+          "Only metallic bonding"
+        ],
+        "correct_answer": "Higher boiling points than similar non-polar molecules",
+        "explanation": "Dipole–dipole attractions raise boiling points.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "Electric field lines in the sim show how polar molecules align in a field.",
+        "correct_answer": "True",
+        "explanation": "Polar molecules experience torque in external fields.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Which atom is more electronegative: oxygen or hydrogen?",
+        "correct_answer": "oxygen",
+        "explanation": "Oxygen attracts electrons more strongly than hydrogen.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one polar molecule in the Real Molecules screen.",
+        "correct_answer": "water",
+        "explanation": "Water, ammonia, and others illustrate polarity.",
+        "points": 1
+      }
+    ]
+  }
+]
