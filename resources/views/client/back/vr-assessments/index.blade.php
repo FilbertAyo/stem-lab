@@ -50,15 +50,11 @@
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title fw-bold mb-2">{{ $bank->title }}</h5>
+                                <h5 class="fw-bold mb-2">{{ $bank->title }}</h5>
                                 <p class="text-muted small mb-2">
                                     <i class="bi bi-vr me-1"></i>{{ $bank->vrExperiment->name }}
                                 </p>
-                                
-                                @if($bank->description)
-                                    <p class="text-muted small mb-3">{{ Str::limit($bank->description, 80) }}</p>
-                                @endif
-
+                      
                                 <div class="d-flex flex-wrap gap-2 mb-3">
                                     <span class="badge bg-light text-dark">
                                         <i class="bi bi-question-circle me-1"></i>{{ $bank->questions_count }} Questions
