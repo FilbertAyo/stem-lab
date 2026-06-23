@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/graphing-slope-intercept/latest/graphing-slope-intercept_en.html",
+    "phet_slug": "graphing-slope-intercept",
+    "question_bank": {
+      "title": "Graphing Slope-Intercept — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.1.2 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The slope-intercept form of a straight line is:",
+        "options": [
+          "y = mx + c",
+          "y = x² + c",
+          "x = my + c",
+          "y = mc − x"
+        ],
+        "correct_answer": "y = mx + c",
+        "explanation": "In y = mx + c, m is the gradient and c is the y-intercept.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "In y = 2x + 3, the y-intercept is:",
+        "options": [
+          "2",
+          "3",
+          "5",
+          "−3"
+        ],
+        "correct_answer": "3",
+        "explanation": "The constant term c = 3 is the y-intercept.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "A line with equation y = −x + 4 has gradient:",
+        "options": [
+          "4",
+          "−1",
+          "1",
+          "−4"
+        ],
+        "correct_answer": "−1",
+        "explanation": "The coefficient of x is the gradient m = −1.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "A horizontal line has gradient:",
+        "options": [
+          "Zero",
+          "One",
+          "Undefined",
+          "Negative only"
+        ],
+        "correct_answer": "Zero",
+        "explanation": "A horizontal line has zero gradient (y = c).",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The gradient tells you how steep a line is.",
+        "correct_answer": "True",
+        "explanation": "Gradient (slope) measures the steepness and direction of a line.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Two lines with the same gradient are:",
+        "options": [
+          "Parallel",
+          "Perpendicular",
+          "Always identical",
+          "Always horizontal"
+        ],
+        "correct_answer": "Parallel",
+        "explanation": "Equal gradients mean parallel lines (unless they coincide).",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "The y-intercept is the point where the line crosses the y-axis.",
+        "correct_answer": "True",
+        "explanation": "At the y-intercept, x = 0.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "If gradient is positive, the line slopes:",
+        "options": [
+          "Upward from left to right",
+          "Downward from left to right",
+          "Horizontally",
+          "Vertically"
+        ],
+        "correct_answer": "Upward from left to right",
+        "explanation": "Positive gradient means y increases as x increases.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What is the gradient of the line y = 5x − 1?",
+        "correct_answer": "5",
+        "explanation": "The coefficient of x is the gradient: m = 5.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Write the equation of a line with gradient 3 and y-intercept −2.",
+        "correct_answer": "y = 3x - 2",
+        "explanation": "Substitute m = 3 and c = −2 into y = mx + c.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/function-builder/latest/function-builder_en.html",
+    "phet_slug": "function-builder",
+    "question_bank": {
+      "title": "Function Builder — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.2.1 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A function assigns:",
+        "options": [
+          "Many outputs to each input",
+          "Exactly one output to each input",
+          "No outputs",
+          "Random outputs"
+        ],
+        "correct_answer": "Exactly one output to each input",
+        "explanation": "By definition, each input maps to exactly one output.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "If f(x) = 2x + 1, then f(3) equals:",
+        "options": [
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "correct_answer": "7",
+        "explanation": "f(3) = 2(3) + 1 = 7.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Chaining functions means:",
+        "options": [
+          "Adding two numbers",
+          "Applying one function after another",
+          "Dividing inputs",
+          "Drawing a graph only"
+        ],
+        "correct_answer": "Applying one function after another",
+        "explanation": "Composition applies the output of one function as input to the next.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The input of a function is also called the:",
+        "options": [
+          "Range",
+          "Domain value",
+          "Gradient",
+          "Intercept"
+        ],
+        "correct_answer": "Domain value",
+        "explanation": "Inputs belong to the domain of the function.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A function machine applies the same rule to every input.",
+        "correct_answer": "True",
+        "explanation": "Functions use a consistent rule for all valid inputs.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "If g(x) = x² and h(x) = x + 2, then g(h(1)) equals:",
+        "options": [
+          "3",
+          "9",
+          "1",
+          "5"
+        ],
+        "correct_answer": "9",
+        "explanation": "h(1) = 3, then g(3) = 9.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "Functions can be represented using tables, graphs, and equations.",
+        "correct_answer": "True",
+        "explanation": "Functions have multiple equivalent representations.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "The set of all possible outputs of a function is called the:",
+        "options": [
+          "Domain",
+          "Range",
+          "Gradient",
+          "Origin"
+        ],
+        "correct_answer": "Range",
+        "explanation": "The range is the set of all output values.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "If f(x) = x + 4, find f(0).",
+        "correct_answer": "4",
+        "explanation": "f(0) = 0 + 4 = 4.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What do you call the result produced by a function for a given input?",
+        "correct_answer": "output",
+        "explanation": "The output is the value the function returns for an input.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/area-model-algebra/latest/area-model-algebra_en.html",
+    "phet_slug": "area-model-algebra",
+    "question_bank": {
+      "title": "Area Model Algebra — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.2, 15.2.1 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The area model represents multiplication as:",
+        "options": [
+          "The area of a rectangle",
+          "The volume of a cube only",
+          "A circle's circumference",
+          "A triangle's height"
+        ],
+        "correct_answer": "The area of a rectangle",
+        "explanation": "Length × width gives area, modelling multiplication visually.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Expanding (x + 2)(x + 3) using the area model gives:",
+        "options": [
+          "x² + 5x + 6",
+          "x² + 6x + 5",
+          "2x + 5",
+          "x² + 6"
+        ],
+        "correct_answer": "x² + 5x + 6",
+        "explanation": "Partial products: x² + 3x + 2x + 6 = x² + 5x + 6.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The distributive property states that a(b + c) equals:",
+        "options": [
+          "ab + ac",
+          "abc",
+          "a + b + c",
+          "ab − ac"
+        ],
+        "correct_answer": "ab + ac",
+        "explanation": "Multiplication distributes over addition.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "23 × 15 can be modelled as:",
+        "options": [
+          "(20 + 3)(10 + 5)",
+          "(20 − 3)(10 − 5)",
+          "23 + 15",
+          "23 ÷ 15"
+        ],
+        "correct_answer": "(20 + 3)(10 + 5)",
+        "explanation": "Partition each factor to use the area model for multiplication.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The area model helps visualise the distributive property.",
+        "correct_answer": "True",
+        "explanation": "Rectangular partitions show how products are distributed.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Factorising x² + 7x + 12 gives:",
+        "options": [
+          "(x + 3)(x + 4)",
+          "(x + 2)(x + 6)",
+          "(x + 1)(x + 12)",
+          "x(x + 7)"
+        ],
+        "correct_answer": "(x + 3)(x + 4)",
+        "explanation": "3 and 4 multiply to 12 and add to 7.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "Expanding brackets and factorising are inverse processes.",
+        "correct_answer": "True",
+        "explanation": "Factorising reverses expansion using the area model.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "In the area model for (a + b)(c + d), the total area equals:",
+        "options": [
+          "ac + ad + bc + bd",
+          "ac + bd only",
+          "a + b + c + d",
+          "abcd"
+        ],
+        "correct_answer": "ac + ad + bc + bd",
+        "explanation": "Four partial rectangles sum to the total area.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Expand (x + 1)(x + 5).",
+        "correct_answer": "x^2 + 6x + 5",
+        "explanation": "x² + 5x + x + 5 = x² + 6x + 5.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What property does the area model demonstrate when multiplying (a + b) by c?",
+        "correct_answer": "distributive property",
+        "explanation": "c(a + b) = ca + cb illustrates distribution.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/number-line-integers/latest/number-line-integers_en.html",
+    "phet_slug": "number-line-integers",
+    "question_bank": {
+      "title": "Number Line: Integers — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.1.2 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "On a number line, −3 is:",
+        "options": [
+          "To the right of 0",
+          "To the left of 0",
+          "At 0",
+          "Above 0"
+        ],
+        "correct_answer": "To the left of 0",
+        "explanation": "Negative numbers lie to the left of zero.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Which is greater: −5 or −2?",
+        "options": [
+          "−5",
+          "−2",
+          "They are equal",
+          "Cannot be compared"
+        ],
+        "correct_answer": "−2",
+        "explanation": "−2 is further to the right on the number line.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The absolute value of −7 is:",
+        "options": [
+          "−7",
+          "7",
+          "0",
+          "14"
+        ],
+        "correct_answer": "7",
+        "explanation": "Absolute value is the distance from zero: |−7| = 7.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Adding a positive integer on the number line moves you:",
+        "options": [
+          "To the right",
+          "To the left",
+          "Nowhere",
+          "Downward"
+        ],
+        "correct_answer": "To the right",
+        "explanation": "Adding a positive number increases value, moving right.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Subtracting a negative number is equivalent to adding a positive number.",
+        "correct_answer": "True",
+        "explanation": "a − (−b) = a + b.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "−4 + 9 equals:",
+        "options": [
+          "5",
+          "−5",
+          "13",
+          "−13"
+        ],
+        "correct_answer": "5",
+        "explanation": "Start at −4, move 9 units right to reach 5.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "Zero is neither positive nor negative.",
+        "correct_answer": "True",
+        "explanation": "Zero is the neutral element on the integer number line.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "The distance between −2 and 3 on a number line is:",
+        "options": [
+          "1",
+          "5",
+          "−5",
+          "6"
+        ],
+        "correct_answer": "5",
+        "explanation": "|3 − (−2)| = |5| = 5.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Calculate: −6 + 2.",
+        "correct_answer": "-4",
+        "explanation": "Move 2 units left from −6 to get −4.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What is the absolute value of −10?",
+        "correct_answer": "10",
+        "explanation": "Distance from zero is 10 regardless of sign.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/equality-explorer-two-variables/latest/equality-explorer-two-variables_en.html",
+    "phet_slug": "equality-explorer-two-variables",
+    "question_bank": {
+      "title": "Equality Explorer: Two Variables — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.2.1, 15.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A solution to a system of two equations is:",
+        "options": [
+          "Any value of x",
+          "An ordered pair (x, y) that satisfies both equations",
+          "Only the y-value",
+          "The sum of all coefficients"
+        ],
+        "correct_answer": "An ordered pair (x, y) that satisfies both equations",
+        "explanation": "The solution must make both equations true simultaneously.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Solving x + y = 5 and x − y = 1 by elimination gives x =",
+        "options": [
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "correct_answer": "3",
+        "explanation": "Adding equations: 2x = 6, so x = 3.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "If x = 3 and x + y = 5, then y equals:",
+        "options": [
+          "2",
+          "3",
+          "5",
+          "8"
+        ],
+        "correct_answer": "2",
+        "explanation": "Substitute x = 3: 3 + y = 5, so y = 2.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The balance scale model shows that equations must:",
+        "options": [
+          "Have different operations on each side",
+          "Remain balanced when the same operation is applied to both sides",
+          "Only use addition",
+          "Never include variables"
+        ],
+        "correct_answer": "Remain balanced when the same operation is applied to both sides",
+        "explanation": "Equality is preserved by doing the same to both sides.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A system of two linear equations can have one unique solution.",
+        "correct_answer": "True",
+        "explanation": "Intersecting lines give exactly one solution point.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Substitution method involves:",
+        "options": [
+          "Replacing one variable with an expression from the other equation",
+          "Guessing values randomly",
+          "Adding all coefficients",
+          "Removing both variables"
+        ],
+        "correct_answer": "Replacing one variable with an expression from the other equation",
+        "explanation": "Substitute to reduce the system to one variable.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "Parallel lines represent a system with no solution.",
+        "correct_answer": "True",
+        "explanation": "Parallel lines never intersect, so no (x, y) satisfies both.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "The equations y = 2x and y = 2x + 4 represent lines that are:",
+        "options": [
+          "Parallel",
+          "Perpendicular",
+          "The same line",
+          "Intersecting at the origin"
+        ],
+        "correct_answer": "Parallel",
+        "explanation": "Same gradient (2) but different y-intercepts means parallel.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "If x + y = 7 and x = 4, find y.",
+        "correct_answer": "3",
+        "explanation": "4 + y = 7, so y = 3.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one method for solving simultaneous equations.",
+        "correct_answer": "substitution",
+        "explanation": "Substitution and elimination are standard methods.",
+        "points": 1
+      }
+    ]
+  }
+]

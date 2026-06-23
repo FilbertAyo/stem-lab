@@ -47,6 +47,34 @@ test('phet vr question seeder skips experiments that are not in the database', f
         ->and(VrQuestion::query()->count())->toBe($beforeQuestions);
 });
 
+test('phet vr question seeder attaches chemistry questions for build an atom', function () {
+    $subject = Subject::query()->create([
+        'subject_name' => 'Chemistry '.Str::random(4),
+        'is_active' => true,
+        'display_order' => 1,
+    ]);
+
+    VrExperiment::query()->create([
+        'name' => 'Build an Atom',
+        'description' => 'Explore atomic structure',
+        'external_url' => 'https://phet.colorado.edu/sims/html/build-an-atom/latest/build-an-atom_en.html',
+        'subject_id' => $subject->id,
+        'is_active' => true,
+    ]);
+
+    $this->seed(PhetVrQuestionSeeder::class);
+
+    $bank = VrQuestionBank::query()
+        ->where('title', 'Build an Atom — Chemistry Assessment')
+        ->first();
+
+    expect($bank)->not->toBeNull()
+        ->and($bank->is_active)->toBeFalse()
+        ->and($bank->time_limit)->toBe(15)
+        ->and($bank->passing_score)->toBe(60)
+        ->and($bank->questions()->count())->toBe(10);
+});
+
 test('phet vr question seeder is idempotent for the same experiment', function () {
     $subject = Subject::query()->create([
         'subject_name' => 'Physics '.Str::random(4),

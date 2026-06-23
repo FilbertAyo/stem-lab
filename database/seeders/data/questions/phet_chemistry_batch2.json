@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/isotopes-and-atomic-mass/latest/isotopes-and-atomic-mass_en.html",
+    "phet_slug": "isotopes-and-atomic-mass",
+    "question_bank": {
+      "title": "Isotopes and Atomic Mass — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.1.1, 12.1.2 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Isotopes of an element have the same number of:",
+        "options": [
+          "Neutrons",
+          "Protons",
+          "Electrons in ions only",
+          "Nucleons only"
+        ],
+        "correct_answer": "Protons",
+        "explanation": "Isotopes are atoms of the same element with the same proton number but different neutron numbers.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The mass number of an isotope is the sum of:",
+        "options": [
+          "Protons and electrons",
+          "Protons and neutrons",
+          "Neutrons only",
+          "Electrons and neutrons"
+        ],
+        "correct_answer": "Protons and neutrons",
+        "explanation": "Mass number A = number of protons + number of neutrons.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Average atomic mass on the periodic table is:",
+        "options": [
+          "Always a whole number",
+          "A weighted average of isotope masses",
+          "The mass of the most common isotope only",
+          "Equal to the number of protons"
+        ],
+        "correct_answer": "A weighted average of isotope masses",
+        "explanation": "Average atomic mass accounts for the relative abundance of each isotope.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Carbon-14 and carbon-12 are isotopes because they have:",
+        "options": [
+          "Different numbers of protons",
+          "The same number of protons but different numbers of neutrons",
+          "Different numbers of electrons",
+          "Different elements"
+        ],
+        "correct_answer": "The same number of protons but different numbers of neutrons",
+        "explanation": "Both are carbon (6 protons) but differ in neutron count.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Changing the number of neutrons in an atom creates a different isotope of the same element.",
+        "correct_answer": "True",
+        "explanation": "Neutron number defines the isotope; proton number defines the element.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "An unstable isotope may:",
+        "options": [
+          "Never change",
+          "Undergo radioactive decay",
+          "Gain protons to become stable instantly",
+          "Lose all electrons"
+        ],
+        "correct_answer": "Undergo radioactive decay",
+        "explanation": "Unstable isotopes decay to form more stable nuclei.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "The average atomic mass of chlorine (35.5) is not a whole number because of isotope abundances.",
+        "correct_answer": "True",
+        "explanation": "Weighted averages of isotopes with different masses give non-integer values.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "In the notation ³⁷₁₇Cl, the number 37 represents the:",
+        "options": [
+          "Atomic number",
+          "Mass number",
+          "Number of neutrons only",
+          "Number of electrons"
+        ],
+        "correct_answer": "Mass number",
+        "explanation": "The superscript is the mass number (protons + neutrons).",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Define an isotope.",
+        "correct_answer": "atoms of the same element with different numbers of neutrons",
+        "explanation": "Isotopes share the same atomic number but have different mass numbers.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "How many neutrons are in an atom of carbon-14?",
+        "correct_answer": "8",
+        "explanation": "Carbon has 6 protons; 14 − 6 = 8 neutrons.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/rutherford-scattering/latest/rutherford-scattering_en.html",
+    "phet_slug": "rutherford-scattering",
+    "question_bank": {
+      "title": "Rutherford Scattering — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.1.1, 12.1.2 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "In Rutherford's experiment, most alpha particles:",
+        "options": [
+          "Bounced straight back",
+          "Passed through the foil with little deflection",
+          "Stopped inside the foil",
+          "Became electrons"
+        ],
+        "correct_answer": "Passed through the foil with little deflection",
+        "explanation": "Most alpha particles passed through, showing the atom is mostly empty space.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "A few alpha particles bounced back because they hit:",
+        "options": [
+          "The electron cloud",
+          "A small, dense, positively charged nucleus",
+          "Empty space",
+          "Neutrons only"
+        ],
+        "correct_answer": "A small, dense, positively charged nucleus",
+        "explanation": "Large deflections revealed a concentrated positive nucleus.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The Plum Pudding model predicted that alpha particles would:",
+        "options": [
+          "Mostly pass through with small deflections",
+          "All bounce back",
+          "Never reach the foil",
+          "Become gamma rays"
+        ],
+        "correct_answer": "Mostly pass through with small deflections",
+        "explanation": "Thomson's model spread positive charge throughout the atom.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Rutherford's nuclear model describes the atom as having:",
+        "options": [
+          "Electrons inside the nucleus",
+          "A small dense nucleus surrounded by mostly empty space",
+          "No nucleus",
+          "Equal mass throughout"
+        ],
+        "correct_answer": "A small dense nucleus surrounded by mostly empty space",
+        "explanation": "The nucleus contains most of the atom's mass in a tiny volume.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Rutherford's experiment used alpha particles fired at a thin gold foil.",
+        "correct_answer": "True",
+        "explanation": "Alpha particles from a radioactive source were directed at gold foil.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Increasing the nuclear charge in the simulation causes alpha particles to:",
+        "options": [
+          "Deflect less",
+          "Deflect more",
+          "Stop moving",
+          "Pass through unchanged"
+        ],
+        "correct_answer": "Deflect more",
+        "explanation": "Greater positive charge exerts a stronger repulsive force on alpha particles.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "The Plum Pudding model was rejected because it could not explain large deflections of alpha particles.",
+        "correct_answer": "True",
+        "explanation": "Large-angle scattering required a concentrated nuclear charge.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Alpha particles are:",
+        "options": [
+          "Electrons",
+          "Helium nuclei (2 protons, 2 neutrons)",
+          "Neutrons only",
+          "Hydrogen atoms"
+        ],
+        "correct_answer": "Helium nuclei (2 protons, 2 neutrons)",
+        "explanation": "Alpha particles are positively charged helium-4 nuclei.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What did Rutherford conclude about the size of the nucleus compared to the atom?",
+        "correct_answer": "very small",
+        "explanation": "The nucleus is tiny compared to the overall size of the atom.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Where is most of the mass of an atom located?",
+        "correct_answer": "nucleus",
+        "explanation": "Protons and neutrons in the nucleus contain nearly all the atom's mass.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/gas-properties/latest/gas-properties_en.html",
+    "phet_slug": "gas-properties",
+    "question_bank": {
+      "title": "Gas Properties — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.2.1, 12.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Boyle's Law states that at constant temperature, pressure and volume are:",
+        "options": [
+          "Directly proportional",
+          "Inversely proportional",
+          "Unrelated",
+          "Always equal"
+        ],
+        "correct_answer": "Inversely proportional",
+        "explanation": "P ∝ 1/V at constant temperature (Boyle's Law).",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Gas pressure is caused by:",
+        "options": [
+          "Gravity only",
+          "Particles colliding with the walls of the container",
+          "Magnetic forces",
+          "Chemical bonds breaking"
+        ],
+        "correct_answer": "Particles colliding with the walls of the container",
+        "explanation": "Pressure results from the force of molecular collisions per unit area.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Heating a gas in a sealed container increases the pressure because:",
+        "options": [
+          "Particles move slower",
+          "Particles collide more frequently and with greater force",
+          "The number of particles decreases",
+          "Volume increases"
+        ],
+        "correct_answer": "Particles collide more frequently and with greater force",
+        "explanation": "Higher temperature increases average kinetic energy and collision rate.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Charles' Law relates volume and temperature at constant pressure. As temperature increases, volume:",
+        "options": [
+          "Decreases",
+          "Increases",
+          "Stays the same",
+          "Becomes zero"
+        ],
+        "correct_answer": "Increases",
+        "explanation": "V ∝ T at constant pressure (Charles' Law).",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Lighter gas molecules move faster on average than heavier molecules at the same temperature.",
+        "correct_answer": "True",
+        "explanation": "At the same temperature, lighter molecules have higher average speeds.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Compressing a gas by reducing volume (at constant temperature) causes pressure to:",
+        "options": [
+          "Decrease",
+          "Increase",
+          "Stay constant",
+          "Become zero"
+        ],
+        "correct_answer": "Increase",
+        "explanation": "Smaller volume means more frequent wall collisions, increasing pressure.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "The ideal gas equation is PV = nRT.",
+        "correct_answer": "True",
+        "explanation": "PV = nRT relates pressure, volume, moles, gas constant, and temperature.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "At constant volume, increasing temperature causes gas pressure to:",
+        "options": [
+          "Increase",
+          "Decrease",
+          "Stay the same",
+          "Drop to zero"
+        ],
+        "correct_answer": "Increase",
+        "explanation": "Gay-Lussac's Law: P ∝ T at constant volume.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "State Boyle's Law in words.",
+        "correct_answer": "pressure is inversely proportional to volume at constant temperature",
+        "explanation": "Boyle's Law: P ∝ 1/V when temperature and amount of gas are constant.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What happens to the average kinetic energy of gas particles when temperature increases?",
+        "correct_answer": "increases",
+        "explanation": "Temperature is proportional to the average kinetic energy of particles.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/concentration/latest/concentration_en.html",
+    "phet_slug": "concentration",
+    "question_bank": {
+      "title": "Concentration — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.2.2, 12.3.1 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Concentration is defined as:",
+        "options": [
+          "Amount of solvent per unit volume",
+          "Amount of solute per unit volume of solution",
+          "Total mass of the beaker",
+          "Volume of water only"
+        ],
+        "correct_answer": "Amount of solute per unit volume of solution",
+        "explanation": "Concentration measures how much solute is dissolved in a given volume.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Adding more solute to a solution (without adding solvent) will:",
+        "options": [
+          "Decrease concentration",
+          "Increase concentration",
+          "Not change concentration",
+          "Always cause precipitation"
+        ],
+        "correct_answer": "Increase concentration",
+        "explanation": "More solute in the same volume means higher concentration.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "A saturated solution is one in which:",
+        "options": [
+          "No solute is dissolved",
+          "No more solute can dissolve at that temperature",
+          "Only solvent is present",
+          "Concentration is zero"
+        ],
+        "correct_answer": "No more solute can dissolve at that temperature",
+        "explanation": "At saturation, the solution holds the maximum amount of dissolved solute.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Evaporating water from a solution will:",
+        "options": [
+          "Decrease concentration",
+          "Increase concentration",
+          "Remove all solute",
+          "Have no effect"
+        ],
+        "correct_answer": "Increase concentration",
+        "explanation": "Removing solvent concentrates the remaining solute.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A more concentrated solution often appears darker in colour.",
+        "correct_answer": "True",
+        "explanation": "Higher solute concentration typically gives deeper colour intensity.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Diluting a solution by adding water will:",
+        "options": [
+          "Increase concentration",
+          "Decrease concentration",
+          "Not change the amount of solute",
+          "Both decrease concentration and not change solute amount"
+        ],
+        "correct_answer": "Both decrease concentration and not change solute amount",
+        "explanation": "Dilution adds solvent, lowering concentration while solute amount stays the same.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "Different solutes can have different saturation concentrations in water.",
+        "correct_answer": "True",
+        "explanation": "Solubility varies between substances.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "If you double the volume of water but keep the same amount of solute, concentration:",
+        "options": [
+          "Doubles",
+          "Halves",
+          "Stays the same",
+          "Quadruples"
+        ],
+        "correct_answer": "Halves",
+        "explanation": "Same solute in twice the volume gives half the concentration.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What is the term for a solution that contains the maximum dissolved solute?",
+        "correct_answer": "saturated",
+        "explanation": "A saturated solution cannot dissolve more solute at that temperature.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one way to increase the concentration of a solution in the simulation.",
+        "correct_answer": "add solute",
+        "explanation": "Adding solute or removing solvent (evaporation) increases concentration.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/molarity/latest/molarity_en.html",
+    "phet_slug": "molarity",
+    "question_bank": {
+      "title": "Molarity — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.2.2, 12.3.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Molarity (M) is defined as:",
+        "options": [
+          "Grams of solute per litre",
+          "Moles of solute per litre of solution",
+          "Moles of solvent per litre",
+          "Volume of solute per mole"
+        ],
+        "correct_answer": "Moles of solute per litre of solution",
+        "explanation": "Molarity M = n/V in mol/L.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The formula for molarity is:",
+        "options": [
+          "M = n/V",
+          "M = V/n",
+          "M = m/n",
+          "M = n × V"
+        ],
+        "correct_answer": "M = n/V",
+        "explanation": "Molarity equals moles of solute divided by volume in litres.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "If moles of solute stay constant but solution volume doubles, molarity:",
+        "options": [
+          "Doubles",
+          "Halves",
+          "Stays the same",
+          "Quadruples"
+        ],
+        "correct_answer": "Halves",
+        "explanation": "M = n/V; doubling V halves M when n is constant.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "A 2 mol/L solution contains:",
+        "options": [
+          "2 moles of solute per litre of solution",
+          "2 grams per litre",
+          "2 litres per mole",
+          "2 moles of solvent"
+        ],
+        "correct_answer": "2 moles of solute per litre of solution",
+        "explanation": "2 M means 2 moles of solute dissolved per litre of solution.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Increasing the moles of solute while keeping volume constant increases molarity.",
+        "correct_answer": "True",
+        "explanation": "Molarity is directly proportional to moles when volume is fixed.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "The solute in a solution is:",
+        "options": [
+          "The liquid that does the dissolving",
+          "The substance that is dissolved",
+          "The container",
+          "Always water"
+        ],
+        "correct_answer": "The substance that is dissolved",
+        "explanation": "Solute dissolves in the solvent to form a solution.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "Diluting a solution decreases its molarity.",
+        "correct_answer": "True",
+        "explanation": "Adding solvent increases volume, reducing molarity.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "How many moles of solute are in 0.5 L of a 4 mol/L solution?",
+        "options": [
+          "0.5 mol",
+          "2 mol",
+          "4 mol",
+          "8 mol"
+        ],
+        "correct_answer": "2 mol",
+        "explanation": "n = M × V = 4 × 0.5 = 2 mol.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What are the units of molarity?",
+        "correct_answer": "mol/L",
+        "explanation": "Molarity is expressed in moles per litre (mol/L or M).",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Write the formula used to calculate molarity.",
+        "correct_answer": "M = n/V",
+        "explanation": "Molarity equals moles of solute divided by volume in litres.",
+        "points": 1
+      }
+    ]
+  }
+]

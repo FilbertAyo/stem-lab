@@ -20,6 +20,13 @@ class PhetVrQuestionSeeder extends Seeder
      */
     private array $dataFiles = [
         'questions/phet_physics_pilot.json',
+        'questions/phet_chemistry_pilot.json',
+        'questions/phet_biology_pilot.json',
+        'questions/phet_mathematics_pilot.json',
+        'questions/phet_physics_batch2.json',
+        'questions/phet_chemistry_batch2.json',
+        'questions/phet_biology_batch2.json',
+        'questions/phet_mathematics_batch2.json',
     ];
 
     public function run(): void

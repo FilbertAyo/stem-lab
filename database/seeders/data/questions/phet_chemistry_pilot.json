@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/build-an-atom/latest/build-an-atom_en.html",
+    "phet_slug": "build-an-atom",
+    "question_bank": {
+      "title": "Build an Atom — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.1.1, 12.1.2 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The number of protons in an atom determines its:",
+        "options": [
+          "Mass number only",
+          "Element identity",
+          "Number of neutrons only",
+          "Chemical reactivity only"
+        ],
+        "correct_answer": "Element identity",
+        "explanation": "The atomic number (number of protons) defines which element an atom is.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "In a neutral atom, the number of electrons equals the number of:",
+        "options": [
+          "Neutrons",
+          "Protons",
+          "Nucleons",
+          "Isotopes"
+        ],
+        "correct_answer": "Protons",
+        "explanation": "A neutral atom has equal positive and negative charges, so electrons = protons.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The mass number of an atom is the sum of:",
+        "options": [
+          "Protons and electrons",
+          "Protons and neutrons",
+          "Electrons and neutrons",
+          "Protons only"
+        ],
+        "correct_answer": "Protons and neutrons",
+        "explanation": "Mass number A = number of protons + number of neutrons in the nucleus.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "An atom with more electrons than protons is called:",
+        "options": [
+          "An isotope",
+          "A cation",
+          "An anion",
+          "A molecule"
+        ],
+        "correct_answer": "An anion",
+        "explanation": "Extra electrons give a net negative charge, forming a negative ion (anion).",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Neutrons are found in the nucleus of an atom together with protons.",
+        "correct_answer": "True",
+        "explanation": "The nucleus contains protons and neutrons; electrons orbit outside the nucleus.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "Changing the number of neutrons in an atom changes the element.",
+        "correct_answer": "False",
+        "explanation": "Changing neutrons creates a different isotope of the same element, not a new element.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "In the notation ²³₁₁Na, the number 11 represents the:",
+        "options": [
+          "Mass number",
+          "Number of neutrons",
+          "Atomic number",
+          "Number of electrons in an ion"
+        ],
+        "correct_answer": "Atomic number",
+        "explanation": "The subscript is the atomic number (proton number) of sodium.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Electrons in an atom are located:",
+        "options": [
+          "Inside the nucleus",
+          "In energy levels (shells) around the nucleus",
+          "Between protons and neutrons",
+          "Only in the innermost shell"
+        ],
+        "correct_answer": "In energy levels (shells) around the nucleus",
+        "explanation": "Electrons occupy shells or energy levels outside the positively charged nucleus.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the three subatomic particles found in atoms.",
+        "correct_answer": "protons, neutrons, electrons",
+        "explanation": "Atoms are made of protons and neutrons in the nucleus, and electrons in shells.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What particle has a relative charge of +1?",
+        "correct_answer": "proton",
+        "explanation": "Protons carry a positive charge; electrons are −1 and neutrons are neutral.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/build-a-molecule/latest/build-a-molecule_en.html",
+    "phet_slug": "build-a-molecule",
+    "question_bank": {
+      "title": "Build a Molecule — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.1.2, 12.2.1 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A molecule is formed when:",
+        "options": [
+          "Atoms of the same element only combine",
+          "Two or more atoms bond together",
+          "Electrons are removed from the nucleus",
+          "Neutrons are shared between atoms"
+        ],
+        "correct_answer": "Two or more atoms bond together",
+        "explanation": "A molecule is a group of atoms held together by chemical bonds.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The chemical formula H₂O shows that a water molecule contains:",
+        "options": [
+          "Two hydrogen atoms and one oxygen atom",
+          "One hydrogen atom and two oxygen atoms",
+          "Two hydrogen molecules",
+          "Three oxygen atoms"
+        ],
+        "correct_answer": "Two hydrogen atoms and one oxygen atom",
+        "explanation": "Subscripts indicate the number of each type of atom in the molecule.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Covalent bonding involves:",
+        "options": [
+          "Transfer of electrons only",
+          "Sharing of electron pairs between atoms",
+          "Attraction between ions only",
+          "Sharing of protons"
+        ],
+        "correct_answer": "Sharing of electron pairs between atoms",
+        "explanation": "In covalent bonds, atoms share electrons to achieve stable outer shells.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The molecule CO₂ is an example of:",
+        "options": [
+          "A diatomic element",
+          "A compound with covalent bonds",
+          "An ionic solid",
+          "A mixture of carbon and oxygen"
+        ],
+        "correct_answer": "A compound with covalent bonds",
+        "explanation": "Carbon dioxide is a molecular compound formed by covalent bonding.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "NH₃ (ammonia) is a molecular compound.",
+        "correct_answer": "True",
+        "explanation": "Ammonia consists of nitrogen and hydrogen atoms bonded in a molecule.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "O₂ is a molecule made of two oxygen atoms.",
+        "correct_answer": "True",
+        "explanation": "Oxygen gas exists as diatomic molecules (O₂) in nature.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "How many atoms are in one molecule of methane (CH₄)?",
+        "options": [
+          "4",
+          "5",
+          "1",
+          "16"
+        ],
+        "correct_answer": "5",
+        "explanation": "CH₄ has 1 carbon atom and 4 hydrogen atoms, totalling 5 atoms.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "A compound differs from an element because a compound:",
+        "options": [
+          "Contains only one type of atom",
+          "Contains two or more different elements chemically combined",
+          "Cannot be broken down",
+          "Is always a gas"
+        ],
+        "correct_answer": "Contains two or more different elements chemically combined",
+        "explanation": "Compounds contain atoms of different elements in fixed ratios.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the chemical formula for carbon dioxide.",
+        "correct_answer": "CO2",
+        "explanation": "Carbon dioxide has one carbon atom and two oxygen atoms: CO₂.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name the type of bond formed when atoms share electrons.",
+        "correct_answer": "covalent",
+        "explanation": "Covalent bonds form when atoms share pairs of electrons.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/states-of-matter-basics/latest/states-of-matter-basics_en.html",
+    "phet_slug": "states-of-matter-basics",
+    "question_bank": {
+      "title": "States of Matter: Basics — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.2.1, 12.2.2 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "In the solid state, particles are:",
+        "options": [
+          "Far apart and move freely",
+          "Closely packed and vibrate in fixed positions",
+          "Close together but slide past each other",
+          "Absent"
+        ],
+        "correct_answer": "Closely packed and vibrate in fixed positions",
+        "explanation": "Solid particles have fixed positions and only vibrate about those positions.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "When a solid melts, it changes to a:",
+        "options": [
+          "Gas",
+          "Liquid",
+          "Plasma",
+          "Mixture"
+        ],
+        "correct_answer": "Liquid",
+        "explanation": "Melting is the change of state from solid to liquid.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "In which state of matter do particles have the most kinetic energy?",
+        "options": [
+          "Solid",
+          "Liquid",
+          "Gas",
+          "All states have equal kinetic energy"
+        ],
+        "correct_answer": "Gas",
+        "explanation": "Gas particles move rapidly with high average kinetic energy.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Boiling occurs when a liquid changes to a gas:",
+        "options": [
+          "Only at the surface",
+          "Throughout the liquid at the boiling point",
+          "Without adding heat",
+          "Only below 0°C"
+        ],
+        "correct_answer": "Throughout the liquid at the boiling point",
+        "explanation": "Boiling happens when vapour pressure equals atmospheric pressure throughout the liquid.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Increasing temperature increases the average kinetic energy of particles.",
+        "correct_answer": "True",
+        "explanation": "Temperature is a measure of the average kinetic energy of particles.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "Condensation is the change from gas to liquid.",
+        "correct_answer": "True",
+        "explanation": "When a gas cools, particles lose energy and condense into a liquid.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Which process requires energy to be absorbed?",
+        "options": [
+          "Freezing",
+          "Condensation",
+          "Evaporation",
+          "Deposition"
+        ],
+        "correct_answer": "Evaporation",
+        "explanation": "Evaporation requires energy to overcome intermolecular forces.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "At room temperature, water exists mainly as a:",
+        "options": [
+          "Solid",
+          "Liquid",
+          "Gas only",
+          "Plasma"
+        ],
+        "correct_answer": "Liquid",
+        "explanation": "Water is a liquid at typical room temperature (about 25°C).",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the three common states of matter.",
+        "correct_answer": "solid, liquid, gas",
+        "explanation": "The three classical states are solid, liquid, and gas.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What change of state occurs when steam cools to form water?",
+        "correct_answer": "condensation",
+        "explanation": "Cooling a gas causes it to condense into a liquid.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/balancing-chemical-equations/latest/balancing-chemical-equations_en.html",
+    "phet_slug": "balancing-chemical-equations",
+    "question_bank": {
+      "title": "Balancing Chemical Equations — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.2.2, 12.3.1 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A balanced chemical equation obeys the Law of Conservation of:",
+        "options": [
+          "Energy",
+          "Mass",
+          "Momentum",
+          "Volume"
+        ],
+        "correct_answer": "Mass",
+        "explanation": "Atoms are neither created nor destroyed in a chemical reaction.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "When balancing equations, you may change:",
+        "options": [
+          "Subscripts in formulas",
+          "Coefficients in front of formulas",
+          "The identity of elements",
+          "The products formed"
+        ],
+        "correct_answer": "Coefficients in front of formulas",
+        "explanation": "Only coefficients may be adjusted; changing subscripts changes the substance.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "In the equation 2H₂ + O₂ → 2H₂O, how many oxygen atoms are on the product side?",
+        "options": [
+          "1",
+          "2",
+          "4",
+          "0"
+        ],
+        "correct_answer": "2",
+        "explanation": "Two H₂O molecules each contain 1 oxygen atom: 2 × 1 = 2 oxygen atoms.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The substances written on the left side of an equation are called:",
+        "options": [
+          "Products",
+          "Reactants",
+          "Catalysts",
+          "Isotopes"
+        ],
+        "correct_answer": "Reactants",
+        "explanation": "Reactants are the starting substances; products form on the right.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The equation H₂ + O₂ → H₂O is already balanced.",
+        "correct_answer": "False",
+        "explanation": "There are 2 oxygen atoms on the left but only 1 on the right; it must be balanced.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "A coefficient of 3 in front of CO₂ means three molecules of carbon dioxide.",
+        "correct_answer": "True",
+        "explanation": "Coefficients show the number of molecules (or moles) of each substance.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "What is the correct coefficient for O₂ when balancing: CH₄ + O₂ → CO₂ + H₂O?",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "correct_answer": "2",
+        "explanation": "Balanced: CH₄ + 2O₂ → CO₂ + 2H₂O.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Combustion of a hydrocarbon in oxygen typically produces:",
+        "options": [
+          "CO₂ and H₂O",
+          "NaCl and H₂",
+          "O₂ and N₂",
+          "H₂ and CO only"
+        ],
+        "correct_answer": "CO₂ and H₂O",
+        "explanation": "Complete combustion of hydrocarbons yields carbon dioxide and water.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the balanced equation for: hydrogen + oxygen → water.",
+        "correct_answer": "2H2 + O2 -> 2H2O",
+        "explanation": "Two molecules of H₂ react with one molecule of O₂ to form two molecules of H₂O.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What symbol is placed between reactants and products in a chemical equation?",
+        "correct_answer": "arrow",
+        "explanation": "An arrow (→) separates reactants from products and shows the direction of reaction.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/ph-scale/latest/ph-scale_en.html",
+    "phet_slug": "ph-scale",
+    "question_bank": {
+      "title": "pH Scale — Chemistry Assessment",
+      "description": "TIE Chemistry competences 12.1.1, 12.3.1 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "A solution with pH 3 is:",
+        "options": [
+          "Neutral",
+          "Acidic",
+          "Basic (alkaline)",
+          "A salt solution only"
+        ],
+        "correct_answer": "Acidic",
+        "explanation": "Solutions with pH less than 7 are acidic.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Pure water at 25°C has a pH of:",
+        "options": [
+          "0",
+          "7",
+          "14",
+          "1"
+        ],
+        "correct_answer": "7",
+        "explanation": "Pure water is neutral with equal H⁺ and OH⁻ concentrations, giving pH 7.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The pH scale is:",
+        "options": [
+          "Linear",
+          "Logarithmic",
+          "Exponential only",
+          "Measured in moles per litre directly"
+        ],
+        "correct_answer": "Logarithmic",
+        "explanation": "Each unit change on the pH scale represents a tenfold change in H⁺ concentration.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Which of these is most likely to have a pH above 7?",
+        "options": [
+          "Lemon juice",
+          "Vinegar",
+          "Soap solution",
+          "Hydrochloric acid"
+        ],
+        "correct_answer": "Soap solution",
+        "explanation": "Soap solutions are alkaline (basic) with pH greater than 7.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A lower pH value means a higher concentration of hydrogen ions.",
+        "correct_answer": "True",
+        "explanation": "pH decreases as the concentration of H⁺ (or H₃O⁺) ions increases.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "Diluting an acid increases its pH (makes it less acidic).",
+        "correct_answer": "True",
+        "explanation": "Dilution reduces H⁺ concentration, so pH rises toward 7.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "An alkaline solution has pH:",
+        "options": [
+          "Less than 7",
+          "Equal to 7",
+          "Greater than 7",
+          "Exactly 0"
+        ],
+        "correct_answer": "Greater than 7",
+        "explanation": "Alkaline (basic) solutions have pH values above 7.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Universal indicator turns red in:",
+        "options": [
+          "Strong acid",
+          "Neutral solution",
+          "Strong alkali",
+          "Distilled water only"
+        ],
+        "correct_answer": "Strong acid",
+        "explanation": "In strong acids, universal indicator shows red or orange-red colours.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "What does pH measure?",
+        "correct_answer": "hydrogen ion concentration",
+        "explanation": "pH indicates the acidity or alkalinity based on H⁺ ion concentration.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Give one example of a common acid found in the kitchen.",
+        "correct_answer": "vinegar",
+        "explanation": "Vinegar contains ethanoic (acetic) acid; lemon juice contains citric acid.",
+        "points": 1
+      }
+    ]
+  }
+]

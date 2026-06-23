@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/graphing-lines/latest/graphing-lines_en.html",
+    "phet_slug": "graphing-lines",
+    "question_bank": {
+      "title": "Graphing Lines — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.1.2 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The equation of a straight line in slope-intercept form is:",
+        "options": [
+          "y = mx + c",
+          "y = x² + c",
+          "y = mc + x",
+          "x = my + c"
+        ],
+        "correct_answer": "y = mx + c",
+        "explanation": "In y = mx + c, m is the gradient and c is the y-intercept.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The gradient of the line y = 3x − 2 is:",
+        "options": [
+          "−2",
+          "3",
+          "2",
+          "−3"
+        ],
+        "correct_answer": "3",
+        "explanation": "In y = mx + c, the coefficient of x is the gradient m = 3.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The y-intercept of y = −x + 5 is:",
+        "options": [
+          "−1",
+          "5",
+          "1",
+          "0"
+        ],
+        "correct_answer": "5",
+        "explanation": "The constant term c = 5 is where the line crosses the y-axis.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The gradient between points (1, 2) and (4, 8) is:",
+        "options": [
+          "2",
+          "6",
+          "3",
+          "4"
+        ],
+        "correct_answer": "2",
+        "explanation": "Gradient = (8 − 2)/(4 − 1) = 6/3 = 2.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Two lines with the same gradient are parallel.",
+        "correct_answer": "True",
+        "explanation": "Parallel lines have equal gradients but different y-intercepts.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "A line with gradient 0 is horizontal.",
+        "correct_answer": "True",
+        "explanation": "Zero gradient means no rise as x increases — a horizontal line.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "A negative gradient means the line:",
+        "options": [
+          "Slopes upward left to right",
+          "Slopes downward left to right",
+          "Is vertical",
+          "Passes through the origin only"
+        ],
+        "correct_answer": "Slopes downward left to right",
+        "explanation": "Negative gradient: y decreases as x increases.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "The line y = 2x + 1 crosses the y-axis at:",
+        "options": [
+          "(0, 1)",
+          "(1, 0)",
+          "(0, 2)",
+          "(2, 1)"
+        ],
+        "correct_answer": "(0, 1)",
+        "explanation": "When x = 0, y = 1, so the y-intercept is (0, 1).",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the gradient of the line y = −4x + 7.",
+        "correct_answer": "-4",
+        "explanation": "The coefficient of x is −4.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What does the letter m represent in y = mx + c?",
+        "correct_answer": "gradient",
+        "explanation": "m is the gradient (slope) of the line.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/equality-explorer/latest/equality-explorer_en.html",
+    "phet_slug": "equality-explorer",
+    "question_bank": {
+      "title": "Equality Explorer — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.1.1, 15.2.1 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "To solve x + 5 = 12, you should:",
+        "options": [
+          "Add 5 to both sides",
+          "Subtract 5 from both sides",
+          "Multiply both sides by 5",
+          "Divide both sides by x"
+        ],
+        "correct_answer": "Subtract 5 from both sides",
+        "explanation": "Subtracting 5 isolates x: x = 7.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The solution to 3x = 15 is:",
+        "options": [
+          "x = 5",
+          "x = 12",
+          "x = 45",
+          "x = 3"
+        ],
+        "correct_answer": "x = 5",
+        "explanation": "Divide both sides by 3: x = 15/3 = 5.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "An equation is like a balance scale because:",
+        "options": [
+          "Both sides must remain equal",
+          "Only the left side matters",
+          "You can change one side only",
+          "Variables have no value"
+        ],
+        "correct_answer": "Both sides must remain equal",
+        "explanation": "Whatever operation you do to one side, you must do to the other.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "To solve 2x − 4 = 10, the first step is:",
+        "options": [
+          "Add 4 to both sides",
+          "Subtract 10 from x",
+          "Divide by 2 first",
+          "Multiply by 4"
+        ],
+        "correct_answer": "Add 4 to both sides",
+        "explanation": "Adding 4 gives 2x = 14, then divide by 2 to get x = 7.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Adding the same number to both sides of an equation keeps it balanced.",
+        "correct_answer": "True",
+        "explanation": "Equal operations on both sides preserve equality.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "The solution to an equation is the value of the variable that makes both sides equal.",
+        "correct_answer": "True",
+        "explanation": "A solution satisfies the equation when substituted for the variable.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Solve: x − 7 = 3",
+        "options": [
+          "x = 10",
+          "x = −4",
+          "x = 4",
+          "x = −10"
+        ],
+        "correct_answer": "x = 10",
+        "explanation": "Add 7 to both sides: x = 10.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Which operation is the inverse of multiplication?",
+        "options": [
+          "Addition",
+          "Division",
+          "Subtraction",
+          "Squaring"
+        ],
+        "correct_answer": "Division",
+        "explanation": "Division undoes multiplication when solving equations.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Solve for x: x + 9 = 20",
+        "correct_answer": "11",
+        "explanation": "x = 20 − 9 = 11.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Solve for x: 4x = 28",
+        "correct_answer": "7",
+        "explanation": "x = 28 ÷ 4 = 7.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/ratio-and-proportion/latest/ratio-and-proportion_en.html",
+    "phet_slug": "ratio-and-proportion",
+    "question_bank": {
+      "title": "Ratio and Proportion — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.2.1, 15.2.2 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The ratio 12:8 in simplest form is:",
+        "options": [
+          "6:4",
+          "3:2",
+          "4:3",
+          "2:3"
+        ],
+        "correct_answer": "3:2",
+        "explanation": "Divide both terms by 4: 12:8 = 3:2.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "If 2:5 = x:15, then x equals:",
+        "options": [
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "correct_answer": "6",
+        "explanation": "5 × 3 = 15, so multiply 2 by 3: x = 6.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "A ratio compares:",
+        "options": [
+          "Two quantities of the same kind",
+          "Any two unrelated numbers",
+          "Only areas",
+          "Only angles"
+        ],
+        "correct_answer": "Two quantities of the same kind",
+        "explanation": "Ratios compare like quantities, e.g. boys to girls in a class.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "In a class of 30 students, the ratio of boys to girls is 2:3. How many girls are there?",
+        "options": [
+          "12",
+          "18",
+          "15",
+          "20"
+        ],
+        "correct_answer": "18",
+        "explanation": "Total parts = 5; girls = 3/5 × 30 = 18.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Equivalent ratios represent the same relationship.",
+        "correct_answer": "True",
+        "explanation": "3:2 and 6:4 express the same proportional relationship.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "In a proportion, the product of extremes equals the product of means.",
+        "correct_answer": "True",
+        "explanation": "For a:b = c:d, ad = bc (cross multiplication).",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "If 3 books cost TSh 6,000, how much do 5 books cost at the same rate?",
+        "options": [
+          "TSh 8,000",
+          "TSh 10,000",
+          "TSh 9,000",
+          "TSh 12,000"
+        ],
+        "correct_answer": "TSh 10,000",
+        "explanation": "One book = 2,000; five books = 5 × 2,000 = 10,000.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Speed is an example of a rate because it compares:",
+        "options": [
+          "Distance and time",
+          "Mass and volume only",
+          "Two angles",
+          "Area and perimeter"
+        ],
+        "correct_answer": "Distance and time",
+        "explanation": "Speed = distance ÷ time, a common application of ratio.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Simplify the ratio 15:25.",
+        "correct_answer": "3:5",
+        "explanation": "Divide both terms by 5.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "If 4:x = 8:12, find x.",
+        "correct_answer": "6",
+        "explanation": "Cross multiply: 8x = 48, so x = 6.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/graphing-quadratics/latest/graphing-quadratics_en.html",
+    "phet_slug": "graphing-quadratics",
+    "question_bank": {
+      "title": "Graphing Quadratics — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.2.2, 15.3.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The graph of y = ax² + bx + c is called a:",
+        "options": [
+          "Straight line",
+          "Parabola",
+          "Circle",
+          "Hyperbola"
+        ],
+        "correct_answer": "Parabola",
+        "explanation": "Quadratic functions produce U-shaped (or inverted U-shaped) parabolas.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "If a > 0 in y = ax² + bx + c, the parabola opens:",
+        "options": [
+          "Upward",
+          "Downward",
+          "To the right",
+          "To the left"
+        ],
+        "correct_answer": "Upward",
+        "explanation": "A positive leading coefficient gives a minimum point and upward opening.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The vertex of a parabola is:",
+        "options": [
+          "The highest or lowest point on the curve",
+          "Where the graph crosses the y-axis only",
+          "Always at the origin",
+          "The x-intercept only"
+        ],
+        "correct_answer": "The highest or lowest point on the curve",
+        "explanation": "The vertex is the turning point (maximum or minimum).",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The axis of symmetry of y = x² − 4x + 3 passes through:",
+        "options": [
+          "x = 2",
+          "x = −2",
+          "x = 0",
+          "x = 4"
+        ],
+        "correct_answer": "x = 2",
+        "explanation": "Axis of symmetry: x = −b/(2a) = −(−4)/(2×1) = 2.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "The y-intercept of y = x² + 3x − 5 is −5.",
+        "correct_answer": "True",
+        "explanation": "When x = 0, y = c = −5.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "A larger positive value of |a| makes the parabola narrower.",
+        "correct_answer": "True",
+        "explanation": "Greater |a| stretches the parabola vertically, making it steeper and narrower.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "The roots of a quadratic are found where the graph:",
+        "options": [
+          "Crosses the x-axis",
+          "Crosses the y-axis only",
+          "Has its vertex",
+          "Is steepest"
+        ],
+        "correct_answer": "Crosses the x-axis",
+        "explanation": "Roots (zeros) occur where y = 0.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "y = (x − 3)² + 2 has its vertex at:",
+        "options": [
+          "(3, 2)",
+          "(−3, 2)",
+          "(3, −2)",
+          "(2, 3)"
+        ],
+        "correct_answer": "(3, 2)",
+        "explanation": "Vertex form y = a(x − h)² + k has vertex (h, k) = (3, 2).",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the general form of a quadratic equation.",
+        "correct_answer": "y = ax^2 + bx + c",
+        "explanation": "Standard form is y = ax² + bx + c where a ≠ 0.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What is the y-intercept of y = 2x² − x + 6?",
+        "correct_answer": "6",
+        "explanation": "Substitute x = 0: y = 6.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/trig-tour/latest/trig-tour_en.html",
+    "phet_slug": "trig-tour",
+    "question_bank": {
+      "title": "Trig Tour — Mathematics Assessment",
+      "description": "TIE Mathematics competences 15.2.2, 15.3.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "In a right-angled triangle, sin θ equals:",
+        "options": [
+          "Opposite/Hypotenuse",
+          "Adjacent/Hypotenuse",
+          "Opposite/Adjacent",
+          "Hypotenuse/Opposite"
+        ],
+        "correct_answer": "Opposite/Hypotenuse",
+        "explanation": "SOH: sine = opposite side divided by hypotenuse.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "cos 60° equals:",
+        "options": [
+          "1/2",
+          "√3/2",
+          "1",
+          "0"
+        ],
+        "correct_answer": "1/2",
+        "explanation": "cos 60° = 0.5 = 1/2 (a standard angle value).",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The sine and cosine graphs are:",
+        "options": [
+          "Periodic",
+          "Linear",
+          "Constant",
+          "Never negative"
+        ],
+        "correct_answer": "Periodic",
+        "explanation": "sin θ and cos θ repeat every 360° (or 2π radians).",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "tan θ is defined as:",
+        "options": [
+          "sin θ / cos θ",
+          "cos θ / sin θ",
+          "1 / sin θ",
+          "sin θ × cos θ"
+        ],
+        "correct_answer": "sin θ / cos θ",
+        "explanation": "Tangent is the ratio of sine to cosine.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "sin 90° = 1.",
+        "correct_answer": "True",
+        "explanation": "At 90°, the opposite side equals the hypotenuse on the unit circle.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "The unit circle has a radius of 1.",
+        "correct_answer": "True",
+        "explanation": "On the unit circle, any point (x, y) satisfies x² + y² = 1.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "sin 30° equals:",
+        "options": [
+          "1/2",
+          "√3/2",
+          "1",
+          "√2/2"
+        ],
+        "correct_answer": "1/2",
+        "explanation": "sin 30° = 0.5 = 1/2.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "In radians, 180° equals:",
+        "options": [
+          "π",
+          "2π",
+          "π/2",
+          "π/4"
+        ],
+        "correct_answer": "π",
+        "explanation": "π radians = 180°.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the ratio for cos θ in a right triangle.",
+        "correct_answer": "adjacent/hypotenuse",
+        "explanation": "CAH: cosine = adjacent ÷ hypotenuse.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What is sin 0°?",
+        "correct_answer": "0",
+        "explanation": "At 0°, the opposite side length is zero on the unit circle.",
+        "points": 1
+      }
+    ]
+  }
+]

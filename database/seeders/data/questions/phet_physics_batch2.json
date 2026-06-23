@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/gravity-and-orbits/latest/gravity-and-orbits_en.html",
+    "phet_slug": "gravity-and-orbits",
+    "question_bank": {
+      "title": "Gravity and Orbits — Physics Assessment",
+      "description": "TIE Physics competences 13.1.1, 13.1.2, 13.2.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Gravitational force between two masses:",
+        "options": [
+          "Decreases as distance increases",
+          "Is independent of mass",
+          "Only acts on planets",
+          "Increases with distance"
+        ],
+        "correct_answer": "Decreases as distance increases",
+        "explanation": "Gravitational force decreases as the separation between masses increases.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The force that keeps a planet in orbit around the Sun is:",
+        "options": [
+          "Magnetic force",
+          "Gravitational force",
+          "Friction",
+          "Electrostatic force"
+        ],
+        "correct_answer": "Gravitational force",
+        "explanation": "Gravity provides the centripetal force needed for orbital motion.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "If the mass of the Sun is increased in the simulation, the gravitational pull on Earth:",
+        "options": [
+          "Decreases",
+          "Increases",
+          "Stays the same",
+          "Becomes zero"
+        ],
+        "correct_answer": "Increases",
+        "explanation": "Gravitational force is directly proportional to the product of the masses.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "A satellite in a stable circular orbit must have velocity that is:",
+        "options": [
+          "Perpendicular to the gravitational force",
+          "Parallel to the gravitational force",
+          "Zero",
+          "Constantly increasing"
+        ],
+        "correct_answer": "Perpendicular to the gravitational force",
+        "explanation": "Tangential velocity perpendicular to gravity produces stable orbital motion.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Gravity acts between all objects that have mass.",
+        "correct_answer": "True",
+        "explanation": "Newton's Law of Universal Gravitation applies to all masses.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Doubling the distance between two masses reduces the gravitational force to:",
+        "options": [
+          "One quarter of the original",
+          "One half of the original",
+          "Twice the original",
+          "Four times the original"
+        ],
+        "correct_answer": "One quarter of the original",
+        "explanation": "Gravitational force follows an inverse-square law with distance.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "The Moon orbits Earth because:",
+        "options": [
+          "There is no gravity in space",
+          "Earth's gravity provides the centripetal force",
+          "The Moon pushes itself forward",
+          "Air resistance keeps it in orbit"
+        ],
+        "correct_answer": "Earth's gravity provides the centripetal force",
+        "explanation": "Earth's gravitational attraction continuously changes the Moon's direction of motion.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "If a planet moves too slowly for its distance from the Sun, it will fall toward the Sun.",
+        "correct_answer": "True",
+        "explanation": "Insufficient orbital speed causes the object to spiral inward under gravity.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the force that causes objects to attract each other due to their mass.",
+        "correct_answer": "gravity",
+        "explanation": "Gravity is the attractive force between masses.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What happens to orbital speed when a planet moves closer to the Sun?",
+        "correct_answer": "increases",
+        "explanation": "Planets move faster when closer to the Sun in their orbit.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/energy-skate-park/latest/energy-skate-park_en.html",
+    "phet_slug": "energy-skate-park",
+    "question_bank": {
+      "title": "Energy Skate Park — Physics Assessment",
+      "description": "TIE Physics competences 13.1.1, 13.1.3, 13.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Gravitational potential energy of the skater depends on:",
+        "options": [
+          "Height and mass",
+          "Speed only",
+          "Friction only",
+          "Track colour"
+        ],
+        "correct_answer": "Height and mass",
+        "explanation": "Gravitational PE = mgh, so it depends on mass, gravity, and height.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "At the bottom of a frictionless track, most of the skater's energy is:",
+        "options": [
+          "Gravitational potential energy",
+          "Kinetic energy",
+          "Thermal energy",
+          "Chemical energy"
+        ],
+        "correct_answer": "Kinetic energy",
+        "explanation": "At minimum height, PE is lowest and KE is greatest.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Changing the reference height in the simulation changes:",
+        "options": [
+          "The skater's mass",
+          "The zero level for potential energy",
+          "The force of gravity",
+          "The skater's charge"
+        ],
+        "correct_answer": "The zero level for potential energy",
+        "explanation": "Reference height defines where gravitational PE equals zero.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "When friction is enabled, total mechanical energy:",
+        "options": [
+          "Increases",
+          "Remains constant",
+          "Decreases over time",
+          "Doubles"
+        ],
+        "correct_answer": "Decreases over time",
+        "explanation": "Friction converts mechanical energy into thermal energy.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Without friction, total mechanical energy is conserved as the skater moves along the track.",
+        "correct_answer": "True",
+        "explanation": "Energy transforms between KE and PE but total mechanical energy stays constant.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Doubling the skater's mass (at the same height) doubles the:",
+        "options": [
+          "Gravitational potential energy",
+          "Speed at the bottom only",
+          "Friction force only",
+          "Track length"
+        ],
+        "correct_answer": "Gravitational potential energy",
+        "explanation": "PE = mgh, so doubling mass doubles potential energy.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "The energy bar graph shows that as height decreases:",
+        "options": [
+          "Kinetic energy generally increases",
+          "All energy becomes thermal",
+          "Potential energy increases",
+          "Total energy is created"
+        ],
+        "correct_answer": "Kinetic energy generally increases",
+        "explanation": "PE converts to KE as the skater moves to lower positions.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "true_false",
+        "question_text": "A skater at rest at the top of a ramp has zero total energy.",
+        "correct_answer": "False",
+        "explanation": "The skater has gravitational potential energy even when stationary.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the formula for gravitational potential energy.",
+        "correct_answer": "PE = mgh",
+        "explanation": "Gravitational potential energy equals mass × gravity × height.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What form of energy increases when friction is present?",
+        "correct_answer": "thermal energy",
+        "explanation": "Friction converts mechanical energy into thermal (heat) energy.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html",
+    "phet_slug": "circuit-construction-kit-dc",
+    "question_bank": {
+      "title": "Circuit Construction Kit: DC — Physics Assessment",
+      "description": "TIE Physics competences 13.1.2, 13.1.3, 13.2.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "In a series circuit, the current through each component is:",
+        "options": [
+          "The same everywhere",
+          "Different in each branch",
+          "Zero at the battery",
+          "Always maximum at the bulb"
+        ],
+        "correct_answer": "The same everywhere",
+        "explanation": "In series, there is only one path so current is the same throughout.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Adding more bulbs in series generally causes each bulb to:",
+        "options": [
+          "Glow brighter",
+          "Glow dimmer",
+          "Not change brightness",
+          "Explode"
+        ],
+        "correct_answer": "Glow dimmer",
+        "explanation": "More resistance in series reduces total current and bulb brightness.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The symbol for a resistor in a circuit diagram is:",
+        "options": [
+          "A zigzag line",
+          "A circle with a cross",
+          "Two parallel lines",
+          "A triangle"
+        ],
+        "correct_answer": "A zigzag line",
+        "explanation": "Resistors are represented by a zigzag symbol in circuit diagrams.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "If voltage is doubled and resistance stays constant, the current:",
+        "options": [
+          "Halves",
+          "Doubles",
+          "Stays the same",
+          "Becomes zero"
+        ],
+        "correct_answer": "Doubles",
+        "explanation": "From Ohm's Law (I = V/R), current is directly proportional to voltage.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A switch can be used to open or close a circuit.",
+        "correct_answer": "True",
+        "explanation": "Opening a switch breaks the circuit and stops current flow.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "In a parallel circuit, the voltage across each branch is:",
+        "options": [
+          "The same as the supply voltage",
+          "Always zero",
+          "Half the supply voltage",
+          "Different for each branch"
+        ],
+        "correct_answer": "The same as the supply voltage",
+        "explanation": "In parallel, each branch is connected directly across the supply.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "A short circuit occurs when current takes a very low-resistance path.",
+        "correct_answer": "True",
+        "explanation": "A short circuit bypasses components through a path of very low resistance.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "An ammeter is connected:",
+        "options": [
+          "In series with the component",
+          "In parallel with the component",
+          "Only across the battery",
+          "Outside the circuit"
+        ],
+        "correct_answer": "In series with the component",
+        "explanation": "Ammeters measure current and must be placed in series.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "State Ohm's Law as an equation.",
+        "correct_answer": "V = IR",
+        "explanation": "Voltage equals current multiplied by resistance.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one component that provides electrical energy in a DC circuit.",
+        "correct_answer": "battery",
+        "explanation": "Batteries convert chemical energy to electrical energy in DC circuits.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/wave-on-a-string/latest/wave-on-a-string_en.html",
+    "phet_slug": "wave-on-a-string",
+    "question_bank": {
+      "title": "Wave on a String — Physics Assessment",
+      "description": "TIE Physics competences 13.1.1, 13.2.1, 13.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The maximum displacement of a wave from its rest position is called:",
+        "options": [
+          "Wavelength",
+          "Amplitude",
+          "Frequency",
+          "Period"
+        ],
+        "correct_answer": "Amplitude",
+        "explanation": "Amplitude is the maximum displacement from the equilibrium position.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The distance between two consecutive crests is the:",
+        "options": [
+          "Amplitude",
+          "Wavelength",
+          "Frequency",
+          "Speed"
+        ],
+        "correct_answer": "Wavelength",
+        "explanation": "Wavelength (λ) is the distance between identical points on adjacent waves.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Increasing the frequency of the wave source:",
+        "options": [
+          "Decreases the number of waves per second",
+          "Increases the number of waves per second",
+          "Has no effect on the wave",
+          "Stops the wave"
+        ],
+        "correct_answer": "Increases the number of waves per second",
+        "explanation": "Frequency is the number of complete waves passing a point per second.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "A wave on a string is an example of a:",
+        "options": [
+          "Longitudinal wave",
+          "Transverse wave",
+          "Electromagnetic wave",
+          "Standing sound wave in air"
+        ],
+        "correct_answer": "Transverse wave",
+        "explanation": "String particles vibrate perpendicular to the direction of wave travel.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Wave speed equals frequency multiplied by wavelength.",
+        "correct_answer": "True",
+        "explanation": "The wave equation is v = fλ.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "When a wave pulse reaches a fixed end, it:",
+        "options": [
+          "Passes through unchanged",
+          "Reflects inverted",
+          "Disappears completely",
+          "Doubles in amplitude"
+        ],
+        "correct_answer": "Reflects inverted",
+        "explanation": "Reflection at a fixed end inverts the pulse.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "The period of a wave is the reciprocal of its frequency.",
+        "correct_answer": "True",
+        "explanation": "Period T = 1/f.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Doubling the amplitude of a wave:",
+        "options": [
+          "Doubles the energy carried",
+          "Quadruples the energy carried",
+          "Halves the energy carried",
+          "Has no effect on energy"
+        ],
+        "correct_answer": "Quadruples the energy carried",
+        "explanation": "Wave energy is proportional to the square of amplitude.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Write the wave equation relating speed, frequency, and wavelength.",
+        "correct_answer": "v = fλ",
+        "explanation": "Wave speed equals frequency times wavelength.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What is the SI unit of frequency?",
+        "correct_answer": "hertz",
+        "explanation": "Frequency is measured in hertz (Hz), or per second.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/projectile-motion/latest/projectile-motion_en.html",
+    "phet_slug": "projectile-motion",
+    "question_bank": {
+      "title": "Projectile Motion — Physics Assessment",
+      "description": "TIE Physics competences 13.1.1, 13.1.3, 13.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The path of a projectile (ignoring air resistance) is:",
+        "options": [
+          "A straight line",
+          "A parabola",
+          "A circle",
+          "A horizontal line"
+        ],
+        "correct_answer": "A parabola",
+        "explanation": "Projectile motion produces a parabolic trajectory.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "The horizontal component of velocity during flight (no air resistance):",
+        "options": [
+          "Increases continuously",
+          "Decreases to zero",
+          "Remains constant",
+          "Changes direction every second"
+        ],
+        "correct_answer": "Remains constant",
+        "explanation": "No horizontal force means horizontal velocity stays constant.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "At the highest point of the trajectory, the vertical velocity is:",
+        "options": [
+          "Maximum",
+          "Zero",
+          "Equal to horizontal velocity",
+          "Negative maximum"
+        ],
+        "correct_answer": "Zero",
+        "explanation": "At maximum height, vertical velocity momentarily becomes zero.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "For maximum range on level ground (no air resistance), the ideal launch angle is:",
+        "options": [
+          "30°",
+          "45°",
+          "60°",
+          "90°"
+        ],
+        "correct_answer": "45°",
+        "explanation": "45° gives maximum horizontal range for a given initial speed.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Gravity only affects the vertical motion of a projectile.",
+        "correct_answer": "True",
+        "explanation": "Gravity accelerates the projectile vertically; horizontal motion is unaffected.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Increasing the initial launch speed (same angle) will:",
+        "options": [
+          "Decrease the range",
+          "Increase the range and maximum height",
+          "Not change the trajectory",
+          "Make the projectile fall straight down"
+        ],
+        "correct_answer": "Increase the range and maximum height",
+        "explanation": "Greater initial speed increases both horizontal and vertical components.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "Air resistance reduces the range of a projectile compared to the ideal case.",
+        "correct_answer": "True",
+        "explanation": "Air resistance opposes motion and shortens the trajectory.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "The acceleration of a projectile in flight (ignoring air resistance) is:",
+        "options": [
+          "Zero",
+          "g downward",
+          "g upward",
+          "Changing horizontally"
+        ],
+        "correct_answer": "g downward",
+        "explanation": "The only acceleration is gravitational acceleration downward.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the two independent components used to analyse projectile motion.",
+        "correct_answer": "horizontal and vertical",
+        "explanation": "Projectile motion is analysed as separate horizontal and vertical motions.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What force causes the projectile to accelerate downward?",
+        "correct_answer": "gravity",
+        "explanation": "Gravity acts downward on the projectile throughout its flight.",
+        "points": 1
+      }
+    ]
+  }
+]

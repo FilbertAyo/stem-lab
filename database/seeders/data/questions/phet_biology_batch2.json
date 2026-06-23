@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/gene-expression-essentials/latest/gene-expression-essentials_en.html",
+    "phet_slug": "gene-expression-essentials",
+    "question_bank": {
+      "title": "Gene Expression Essentials — Biology Assessment",
+      "description": "TIE Biology competences 11.1.1, 11.2.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The central dogma of molecular biology is:",
+        "options": [
+          "Protein → DNA → RNA",
+          "DNA → RNA → Protein",
+          "RNA → DNA → Protein",
+          "DNA → Protein → RNA"
+        ],
+        "correct_answer": "DNA → RNA → Protein",
+        "explanation": "Information flows from DNA to RNA (transcription) to protein (translation).",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Transcription is the process of making:",
+        "options": [
+          "DNA from protein",
+          "mRNA from a DNA template",
+          "Protein from DNA directly",
+          "tRNA from mRNA"
+        ],
+        "correct_answer": "mRNA from a DNA template",
+        "explanation": "RNA polymerase synthesises mRNA using DNA as a template.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Translation occurs at the:",
+        "options": [
+          "Nucleus",
+          "Ribosome",
+          "Cell membrane only",
+          "Golgi apparatus"
+        ],
+        "correct_answer": "Ribosome",
+        "explanation": "Ribosomes read mRNA codons and assemble amino acids into proteins.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The enzyme responsible for transcription is:",
+        "options": [
+          "DNA polymerase",
+          "RNA polymerase",
+          "Lipase",
+          "Amylase"
+        ],
+        "correct_answer": "RNA polymerase",
+        "explanation": "RNA polymerase builds mRNA during transcription.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "mRNA carries the genetic code from the nucleus to the ribosome.",
+        "correct_answer": "True",
+        "explanation": "mRNA transports the message for protein synthesis to the cytoplasm.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "tRNA molecules carry:",
+        "options": [
+          "DNA sequences",
+          "Amino acids to the ribosome",
+          "Lipids",
+          "Glucose"
+        ],
+        "correct_answer": "Amino acids to the ribosome",
+        "explanation": "Each tRNA brings a specific amino acid matching an mRNA codon.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "A gene is a section of DNA that codes for a protein or functional RNA.",
+        "correct_answer": "True",
+        "explanation": "Genes contain the instructions for making specific proteins.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "During translation, mRNA is read in groups of three nucleotides called:",
+        "options": [
+          "Introns",
+          "Codons",
+          "Chromosomes",
+          "Enzymes"
+        ],
+        "correct_answer": "Codons",
+        "explanation": "Each codon specifies one amino acid (or a stop signal).",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the process by which mRNA is used to build a protein.",
+        "correct_answer": "translation",
+        "explanation": "Translation converts the mRNA sequence into a polypeptide chain.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Where in the cell does transcription take place?",
+        "correct_answer": "nucleus",
+        "explanation": "Transcription occurs in the nucleus where DNA is located.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/molecules-and-light/latest/molecules-and-light_en.html",
+    "phet_slug": "molecules-and-light",
+    "question_bank": {
+      "title": "Molecules and Light — Biology Assessment",
+      "description": "TIE Biology competences 11.1.1, 11.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "CO₂ and H₂O molecules absorb which type of radiation strongly?",
+        "options": [
+          "Visible light only",
+          "Infrared radiation",
+          "Radio waves only",
+          "X-rays only"
+        ],
+        "correct_answer": "Infrared radiation",
+        "explanation": "Greenhouse gases absorb infrared radiation emitted by Earth.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "O₂ and N₂ in the atmosphere:",
+        "options": [
+          "Strongly absorb infrared radiation",
+          "Do not strongly absorb infrared radiation",
+          "Absorb all ultraviolet light",
+          "Are greenhouse gases"
+        ],
+        "correct_answer": "Do not strongly absorb infrared radiation",
+        "explanation": "Diatomic O₂ and N₂ do not absorb IR effectively.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "When a molecule absorbs infrared light, it typically:",
+        "options": [
+          "Stops moving completely",
+          "Vibrates more",
+          "Breaks into atoms instantly",
+          "Becomes radioactive"
+        ],
+        "correct_answer": "Vibrates more",
+        "explanation": "IR absorption increases molecular vibration.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Ozone (O₃) in the upper atmosphere absorbs:",
+        "options": [
+          "Infrared radiation only",
+          "Ultraviolet radiation",
+          "Radio waves",
+          "Microwaves only"
+        ],
+        "correct_answer": "Ultraviolet radiation",
+        "explanation": "Ozone protects organisms by absorbing harmful UV radiation.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Different molecules absorb different wavelengths of light.",
+        "correct_answer": "True",
+        "explanation": "Molecular structure determines which wavelengths are absorbed.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "The greenhouse effect is linked to gases that absorb:",
+        "options": [
+          "Visible light from the Sun",
+          "Infrared radiation from Earth",
+          "Sound waves",
+          "Gamma rays"
+        ],
+        "correct_answer": "Infrared radiation from Earth",
+        "explanation": "Greenhouse gases trap outgoing IR radiation, warming the atmosphere.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "CH₄ (methane) is a greenhouse gas that absorbs infrared radiation.",
+        "correct_answer": "True",
+        "explanation": "Methane is a potent greenhouse gas.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Photon energy is related to light frequency. Higher frequency means:",
+        "options": [
+          "Lower photon energy",
+          "Higher photon energy",
+          "No photon energy",
+          "Constant energy for all light"
+        ],
+        "correct_answer": "Higher photon energy",
+        "explanation": "E = hf; higher frequency means higher photon energy.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name two greenhouse gases shown in the simulation.",
+        "correct_answer": "CO2",
+        "explanation": "CO₂, H₂O, CH₄, and O₃ are greenhouse gases in the sim.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Why is UV absorption by ozone important for life on Earth?",
+        "correct_answer": "protects from harmful UV",
+        "explanation": "Ozone blocks UV radiation that can damage DNA and cause skin cancer.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/plate-tectonics/latest/plate-tectonics_en.html",
+    "phet_slug": "plate-tectonics",
+    "question_bank": {
+      "title": "Plate Tectonics — Biology Assessment",
+      "description": "TIE Biology competences 11.1.1, 11.2.1 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The three types of plate boundaries are:",
+        "options": [
+          "Convergent, divergent, and transform",
+          "North, south, and east",
+          "Oceanic, atmospheric, and continental",
+          "Active, passive, and neutral"
+        ],
+        "correct_answer": "Convergent, divergent, and transform",
+        "explanation": "Plates meet at convergent, divergent, or transform boundaries.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "At a divergent boundary, plates move:",
+        "options": [
+          "Toward each other",
+          "Apart from each other",
+          "Side by side only",
+          "Not at all"
+        ],
+        "correct_answer": "Apart from each other",
+        "explanation": "Divergent boundaries form where plates separate.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Subduction occurs when:",
+        "options": [
+          "Two continental plates collide",
+          "Dense oceanic crust slides beneath less dense crust",
+          "Plates slide past each other horizontally",
+          "Plates move apart at mid-ocean ridges"
+        ],
+        "correct_answer": "Dense oceanic crust slides beneath less dense crust",
+        "explanation": "Denser oceanic plate subducts under continental or less dense crust.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Mid-ocean ridges form at:",
+        "options": [
+          "Convergent boundaries",
+          "Divergent boundaries",
+          "Transform boundaries only",
+          "The centre of continents only"
+        ],
+        "correct_answer": "Divergent boundaries",
+        "explanation": "New oceanic crust forms as plates pull apart at ridges.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Earthquakes and volcanoes often occur at plate boundaries.",
+        "correct_answer": "True",
+        "explanation": "Tectonic activity concentrates at boundaries where plates interact.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "At a transform boundary, plates move:",
+        "options": [
+          "Toward each other",
+          "Apart from each other",
+          "Horizontally past each other",
+          "Vertically only"
+        ],
+        "correct_answer": "Horizontally past each other",
+        "explanation": "Transform faults involve lateral sliding motion.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "Continental crust is less dense than oceanic crust.",
+        "correct_answer": "True",
+        "explanation": "Oceanic crust is denser and more likely to subduct.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Plate tectonics helps explain:",
+        "options": [
+          "The distribution of fossils and species across continents",
+          "Only weather patterns",
+          "Chemical bonding",
+          "Photosynthesis rates"
+        ],
+        "correct_answer": "The distribution of fossils and species across continents",
+        "explanation": "Continental drift and plate movement explain biogeographic patterns.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name one geological feature formed at a convergent boundary.",
+        "correct_answer": "volcano",
+        "explanation": "Convergent boundaries produce volcanoes, trenches, and mountain ranges.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What type of boundary is found at the San Andreas Fault?",
+        "correct_answer": "transform",
+        "explanation": "The San Andreas Fault is a classic transform plate boundary.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/radioactive-dating-game/latest/radioactive-dating-game_en.html",
+    "phet_slug": "radioactive-dating-game",
+    "question_bank": {
+      "title": "Radioactive Dating Game — Biology Assessment",
+      "description": "TIE Biology competences 11.1.1, 11.2.2 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Half-life is defined as the time taken for:",
+        "options": [
+          "All atoms to decay",
+          "Half of the radioactive atoms to decay",
+          "Twice the atoms to form",
+          "Electrons to leave the atom"
+        ],
+        "correct_answer": "Half of the radioactive atoms to decay",
+        "explanation": "Half-life is the time for 50% of a radioactive sample to decay.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Carbon-14 dating is used for dating:",
+        "options": [
+          "Rocks billions of years old",
+          "Organic and archaeological samples up to about 50,000 years",
+          "Only living organisms in real time",
+          "Metals only"
+        ],
+        "correct_answer": "Organic and archaeological samples up to about 50,000 years",
+        "explanation": "C-14's relatively short half-life suits recent biological material.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "The age of a sample can be estimated from:",
+        "options": [
+          "The colour of the sample",
+          "The ratio of parent to daughter isotopes",
+          "The weight of the container",
+          "The temperature of the sample"
+        ],
+        "correct_answer": "The ratio of parent to daughter isotopes",
+        "explanation": "Decay ratio indicates how much time has passed since formation.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Uranium-238 is used to date:",
+        "options": [
+          "Recent wood samples only",
+          "Very old geological samples",
+          "Living cells",
+          "Air samples"
+        ],
+        "correct_answer": "Very old geological samples",
+        "explanation": "U-238 has a very long half-life suitable for ancient rocks.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Radioactive decay is a random process for individual atoms but predictable for large samples.",
+        "correct_answer": "True",
+        "explanation": "Statistical laws govern decay rates in large populations of atoms.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "After one half-life, what fraction of the parent isotope remains?",
+        "options": [
+          "1/4",
+          "1/2",
+          "3/4",
+          "None"
+        ],
+        "correct_answer": "1/2",
+        "explanation": "One half-life leaves 50% of the original parent isotope.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "Radiometric dating provides evidence supporting the great age of the Earth.",
+        "correct_answer": "True",
+        "explanation": "Radioactive dating of rocks shows Earth is billions of years old.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "After two half-lives, the fraction of parent isotope remaining is:",
+        "options": [
+          "1/2",
+          "1/4",
+          "1/8",
+          "Zero"
+        ],
+        "correct_answer": "1/4",
+        "explanation": "Each half-life halves the remaining amount: 1/2 × 1/2 = 1/4.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Define half-life.",
+        "correct_answer": "time for half of a radioactive sample to decay",
+        "explanation": "Half-life is a constant characteristic of each radioactive isotope.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Which isotope is commonly used to date ancient organic material?",
+        "correct_answer": "carbon-14",
+        "explanation": "Carbon-14 (radiocarbon) dating is used for biological and archaeological samples.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/energy-forms-and-changes/latest/energy-forms-and-changes_en.html",
+    "phet_slug": "energy-forms-and-changes",
+    "question_bank": {
+      "title": "Energy Forms and Changes — Biology Assessment",
+      "description": "TIE Biology competences 11.1.1, 11.2.1 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Energy transfer between objects occurs from:",
+        "options": [
+          "Cooler to hotter",
+          "Hotter to cooler",
+          "Equal temperatures only",
+          "Light to dark only"
+        ],
+        "correct_answer": "Hotter to cooler",
+        "explanation": "Thermal energy flows from higher to lower temperature.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Photosynthesis converts:",
+        "options": [
+          "Chemical energy to light energy",
+          "Light energy to chemical energy",
+          "Thermal energy to kinetic energy",
+          "Nuclear energy to electrical energy"
+        ],
+        "correct_answer": "Light energy to chemical energy",
+        "explanation": "Plants store solar energy as chemical energy in glucose.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Which is a form of energy?",
+        "options": [
+          "Thermal energy",
+          "Mass number",
+          "pH",
+          "Atomic number"
+        ],
+        "correct_answer": "Thermal energy",
+        "explanation": "Thermal, chemical, light, mechanical, and electrical are energy forms.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The Law of Conservation of Energy states that energy:",
+        "options": [
+          "Can be created but not destroyed",
+          "Cannot be created or destroyed, only transformed",
+          "Is always lost as heat",
+          "Only exists in living things"
+        ],
+        "correct_answer": "Cannot be created or destroyed, only transformed",
+        "explanation": "Total energy in an isolated system remains constant.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "When energy transforms in a system, some is often lost as heat.",
+        "correct_answer": "True",
+        "explanation": "Real systems are not 100% efficient; heat is a common energy loss.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "mcq",
+        "question_text": "Placing a cold brick next to a hot iron block causes energy to flow:",
+        "options": [
+          "From iron to brick",
+          "From brick to iron",
+          "In both directions equally",
+          "Not at all"
+        ],
+        "correct_answer": "From iron to brick",
+        "explanation": "Energy transfers from the hotter iron to the cooler brick.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "true_false",
+        "question_text": "Chemical energy in food can be converted to mechanical energy during exercise.",
+        "correct_answer": "True",
+        "explanation": "Cellular respiration releases chemical energy used for muscle movement.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Energy efficiency in a system refers to:",
+        "options": [
+          "How much useful energy output compares to energy input",
+          "The colour of the energy",
+          "The mass of the system",
+          "The pH of the solution"
+        ],
+        "correct_answer": "How much useful energy output compares to energy input",
+        "explanation": "Efficiency measures useful energy output divided by total energy input.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name two forms of energy shown in the simulation.",
+        "correct_answer": "thermal energy",
+        "explanation": "The sim shows thermal, chemical, light, mechanical, and electrical energy.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "In which direction does thermal energy flow between two objects at different temperatures?",
+        "correct_answer": "hot to cold",
+        "explanation": "Heat flows from the hotter object to the cooler one until equilibrium.",
+        "points": 1
+      }
+    ]
+  }
+]

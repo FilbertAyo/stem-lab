@@ -1,0 +1,647 @@
+[
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/diffusion/latest/diffusion_en.html",
+    "phet_slug": "diffusion",
+    "question_bank": {
+      "title": "Diffusion — Biology Assessment",
+      "description": "TIE Biology competences 11.1.1, 11.2.1 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Diffusion is the net movement of particles from:",
+        "options": [
+          "Low to high concentration",
+          "High to low concentration",
+          "One cell to another only",
+          "Outside to inside the cell only"
+        ],
+        "correct_answer": "High to low concentration",
+        "explanation": "Particles spread from regions of higher concentration to lower concentration.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Diffusion occurs because particles:",
+        "options": [
+          "Are pushed by a pump",
+          "Move randomly due to kinetic energy",
+          "Always move in one direction",
+          "Require ATP"
+        ],
+        "correct_answer": "Move randomly due to kinetic energy",
+        "explanation": "Random molecular motion drives the net spread of particles down a concentration gradient.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Increasing temperature generally:",
+        "options": [
+          "Slows diffusion",
+          "Stops diffusion",
+          "Increases the rate of diffusion",
+          "Has no effect on diffusion"
+        ],
+        "correct_answer": "Increases the rate of diffusion",
+        "explanation": "Higher temperature increases particle kinetic energy and diffusion rate.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "In the lungs, oxygen enters the blood by:",
+        "options": [
+          "Active transport",
+          "Diffusion across the alveolar membrane",
+          "Osmosis only",
+          "Phagocytosis"
+        ],
+        "correct_answer": "Diffusion across the alveolar membrane",
+        "explanation": "Oxygen diffuses from the alveoli (high concentration) into the blood (lower concentration).",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Diffusion continues until concentrations are equal on both sides.",
+        "correct_answer": "True",
+        "explanation": "At equilibrium, there is no net movement of particles.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "Larger molecules generally diffuse more slowly than smaller molecules.",
+        "correct_answer": "True",
+        "explanation": "Heavier or larger particles move more slowly, reducing diffusion rate.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Diffusion does NOT require:",
+        "options": [
+          "A concentration gradient",
+          "Random particle motion",
+          "Energy from ATP",
+          "Collisions between particles"
+        ],
+        "correct_answer": "Energy from ATP",
+        "explanation": "Diffusion is a passive process that does not use cellular energy.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "When perfume is sprayed in a room, the smell spreads by:",
+        "options": [
+          "Active transport",
+          "Diffusion",
+          "Osmosis",
+          "Photosynthesis"
+        ],
+        "correct_answer": "Diffusion",
+        "explanation": "Perfume molecules spread through the air from high to low concentration.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Define diffusion.",
+        "correct_answer": "net movement of particles from high to low concentration",
+        "explanation": "Diffusion is passive movement down a concentration gradient until equilibrium.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one factor that affects the rate of diffusion.",
+        "correct_answer": "temperature",
+        "explanation": "Temperature, particle size, and concentration gradient all affect diffusion rate.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/osmosis/latest/osmosis_en.html",
+    "phet_slug": "osmosis",
+    "question_bank": {
+      "title": "Osmosis — Biology Assessment",
+      "description": "TIE Biology competences 11.1.1, 11.3.1 (Forms II–III).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Osmosis is the movement of:",
+        "options": [
+          "Solute through a membrane",
+          "Water through a semi-permeable membrane",
+          "Ions using ATP",
+          "Proteins into cells"
+        ],
+        "correct_answer": "Water through a semi-permeable membrane",
+        "explanation": "Osmosis is specifically the diffusion of water molecules.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Water moves by osmosis from a region of:",
+        "options": [
+          "Higher solute concentration to lower",
+          "Lower water potential to higher water potential",
+          "Higher water potential to lower water potential",
+          "Equal concentration only"
+        ],
+        "correct_answer": "Higher water potential to lower water potential",
+        "explanation": "Water moves toward the solution with lower water potential (higher solute concentration).",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "A plant cell placed in pure water will:",
+        "options": [
+          "Shrink (plasmolyse)",
+          "Become turgid",
+          "Burst immediately like an animal cell",
+          "Stop osmosis"
+        ],
+        "correct_answer": "Become turgid",
+        "explanation": "Water enters the cell by osmosis; the cell wall prevents bursting, causing turgor.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "A red blood cell placed in concentrated salt solution will:",
+        "options": [
+          "Swell and burst",
+          "Shrink (crenate)",
+          "Remain unchanged",
+          "Divide"
+        ],
+        "correct_answer": "Shrink (crenate)",
+        "explanation": "Water leaves the cell by osmosis into the hypertonic solution, causing shrinkage.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Osmosis is a type of passive transport.",
+        "correct_answer": "True",
+        "explanation": "Osmosis does not require energy from the cell.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "A semi-permeable membrane allows all substances to pass through freely.",
+        "correct_answer": "False",
+        "explanation": "A semi-permeable membrane allows some molecules (like water) but not others (like solutes).",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "A solution with higher solute concentration than the cell cytoplasm is:",
+        "options": [
+          "Hypotonic",
+          "Isotonic",
+          "Hypertonic",
+          "Neutral"
+        ],
+        "correct_answer": "Hypertonic",
+        "explanation": "Hypertonic solutions have higher solute concentration outside the cell.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Root hairs absorb water from soil mainly by:",
+        "options": [
+          "Active transport",
+          "Osmosis",
+          "Diffusion of minerals only",
+          "Transpiration pull only"
+        ],
+        "correct_answer": "Osmosis",
+        "explanation": "Soil water enters root hair cells by osmosis across the cell membrane.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Define osmosis.",
+        "correct_answer": "movement of water through a semi-permeable membrane",
+        "explanation": "Osmosis is the passive movement of water from high to low water potential.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What happens to a plant cell in a hypertonic solution?",
+        "correct_answer": "plasmolysis",
+        "explanation": "Water leaves the cell, the cytoplasm shrinks, and the cell membrane pulls away from the wall.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/natural-selection/latest/natural-selection_en.html",
+    "phet_slug": "natural-selection",
+    "question_bank": {
+      "title": "Natural Selection — Biology Assessment",
+      "description": "TIE Biology competences 11.2.1, 11.3.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "Natural selection is the process by which:",
+        "options": [
+          "All organisms survive equally",
+          "Organisms with favourable traits are more likely to survive and reproduce",
+          "Organisms choose their traits",
+          "Mutations are always harmful"
+        ],
+        "correct_answer": "Organisms with favourable traits are more likely to survive and reproduce",
+        "explanation": "Individuals better suited to their environment leave more offspring.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "A mutation introduces:",
+        "options": [
+          "Identical copies of genes",
+          "New heritable variation into a population",
+          "Only harmful changes",
+          "Energy for the cell"
+        ],
+        "correct_answer": "New heritable variation into a population",
+        "explanation": "Mutations are changes in DNA that can create new alleles.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "In an arctic environment, white fur may be advantageous because it:",
+        "options": [
+          "Makes animals heavier",
+          "Provides camouflage",
+          "Increases mutation rate",
+          "Prevents reproduction"
+        ],
+        "correct_answer": "Provides camouflage",
+        "explanation": "Camouflage helps prey avoid predators and predators approach prey.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Over many generations, a helpful trait becomes more common because:",
+        "options": [
+          "All organisms acquire the trait",
+          "Individuals with the trait reproduce more successfully",
+          "The environment creates the trait directly",
+          "Traits are learned and passed on"
+        ],
+        "correct_answer": "Individuals with the trait reproduce more successfully",
+        "explanation": "Natural selection acts on inherited traits that affect survival and reproduction.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Natural selection can lead to adaptation to the environment.",
+        "correct_answer": "True",
+        "explanation": "Populations become better suited to their environment over time.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "A trait that is helpful in one environment is always helpful in every environment.",
+        "correct_answer": "False",
+        "explanation": "Fitness depends on the environment; traits advantageous in one habitat may be harmful in another.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Selection pressure from predators would most likely favour bunnies with:",
+        "options": [
+          "Traits that improve survival",
+          "Slower running speed",
+          "No fur",
+          "Reduced reproduction"
+        ],
+        "correct_answer": "Traits that improve survival",
+        "explanation": "Predators remove individuals less able to escape or hide.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Charles Darwin proposed natural selection as an explanation for:",
+        "options": [
+          "Cell division",
+          "Evolution and diversity of life",
+          "Photosynthesis",
+          "The water cycle"
+        ],
+        "correct_answer": "Evolution and diversity of life",
+        "explanation": "Darwin's theory explains how species change over time through natural selection.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Define adaptation.",
+        "correct_answer": "a trait that helps an organism survive and reproduce",
+        "explanation": "Adaptations are inherited features that increase fitness in a particular environment.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "Name one source of genetic variation in a population.",
+        "correct_answer": "mutation",
+        "explanation": "Mutations, sexual reproduction, and gene flow introduce variation.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/eating-and-exercise/latest/eating-and-exercise_en.html",
+    "phet_slug": "eating-and-exercise",
+    "question_bank": {
+      "title": "Eating and Exercise — Biology Assessment",
+      "description": "TIE Biology competences 11.1.1, 11.2.1 (Forms I–II).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The main source of energy in the human diet is:",
+        "options": [
+          "Vitamins",
+          "Carbohydrates",
+          "Minerals",
+          "Water"
+        ],
+        "correct_answer": "Carbohydrates",
+        "explanation": "Carbohydrates are the body's primary energy source, though fats and proteins also provide energy.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "If calorie intake exceeds calories burned over time, body weight tends to:",
+        "options": [
+          "Decrease",
+          "Increase",
+          "Stay exactly the same always",
+          "Become zero"
+        ],
+        "correct_answer": "Increase",
+        "explanation": "Excess energy is stored, often as fat, leading to weight gain.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Exercise increases energy expenditure because:",
+        "options": [
+          "Muscles use more energy during activity",
+          "Digestion stops",
+          "Metabolism shuts down",
+          "No oxygen is needed"
+        ],
+        "correct_answer": "Muscles use more energy during activity",
+        "explanation": "Physical activity requires ATP for muscle contraction and other processes.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "Proteins in the diet are important for:",
+        "options": [
+          "Growth and repair of body tissues",
+          "Only providing sweetness",
+          "Storing genetic information",
+          "Producing oxygen"
+        ],
+        "correct_answer": "Growth and repair of body tissues",
+        "explanation": "Proteins provide amino acids needed to build and repair cells and tissues.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "A balanced diet includes carbohydrates, proteins, fats, vitamins, and minerals.",
+        "correct_answer": "True",
+        "explanation": "Good nutrition requires a variety of nutrients in appropriate amounts.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "Basal metabolism uses energy even when a person is at rest.",
+        "correct_answer": "True",
+        "explanation": "The body needs energy for breathing, circulation, and cell maintenance at rest.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Fats provide:",
+        "options": [
+          "More energy per gram than carbohydrates",
+          "No energy at all",
+          "Only vitamins",
+          "Energy only during sleep"
+        ],
+        "correct_answer": "More energy per gram than carbohydrates",
+        "explanation": "Fats store about 9 kcal/g compared to about 4 kcal/g for carbohydrates.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Regular exercise helps maintain healthy body composition by:",
+        "options": [
+          "Burning excess calories and building muscle",
+          "Eliminating the need for food",
+          "Stopping all fat storage permanently",
+          "Reducing water intake"
+        ],
+        "correct_answer": "Burning excess calories and building muscle",
+        "explanation": "Exercise increases energy use and can improve muscle mass and fitness.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name two macronutrients that provide energy.",
+        "correct_answer": "carbohydrates and fats",
+        "explanation": "Carbohydrates, fats, and proteins all provide energy; carbohydrates and fats are primary sources.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What is meant by energy balance?",
+        "correct_answer": "calories in equals calories out",
+        "explanation": "Energy balance occurs when food intake matches energy expenditure.",
+        "points": 1
+      }
+    ]
+  },
+  {
+    "external_url": "https://phet.colorado.edu/sims/html/membrane-channels/latest/membrane-channels_en.html",
+    "phet_slug": "membrane-channels",
+    "question_bank": {
+      "title": "Membrane Channels — Biology Assessment",
+      "description": "TIE Biology competences 11.2.1, 11.3.1 (Forms III–IV).",
+      "time_limit": 15,
+      "passing_score": 60,
+      "is_active": false
+    },
+    "questions": [
+      {
+        "order": 1,
+        "question_type": "mcq",
+        "question_text": "The cell membrane is mainly composed of:",
+        "options": [
+          "A phospholipid bilayer",
+          "Cellulose only",
+          "DNA strands",
+          "Ribosomes"
+        ],
+        "correct_answer": "A phospholipid bilayer",
+        "explanation": "The fluid mosaic model describes a bilayer of phospholipids with embedded proteins.",
+        "points": 1
+      },
+      {
+        "order": 2,
+        "question_type": "mcq",
+        "question_text": "Facilitated diffusion uses:",
+        "options": [
+          "Channel or carrier proteins",
+          "ATP energy",
+          "Only the cell wall",
+          "Photosynthesis"
+        ],
+        "correct_answer": "Channel or carrier proteins",
+        "explanation": "Protein channels help specific ions or molecules cross the membrane passively.",
+        "points": 1
+      },
+      {
+        "order": 3,
+        "question_type": "mcq",
+        "question_text": "Active transport differs from passive transport because it:",
+        "options": [
+          "Requires energy (ATP)",
+          "Always moves down a gradient",
+          "Never uses proteins",
+          "Only moves water"
+        ],
+        "correct_answer": "Requires energy (ATP)",
+        "explanation": "Active transport moves substances against their concentration gradient using energy.",
+        "points": 1
+      },
+      {
+        "order": 4,
+        "question_type": "mcq",
+        "question_text": "The sodium-potassium pump moves ions:",
+        "options": [
+          "Against their concentration gradient",
+          "Only by diffusion",
+          "Without using energy",
+          "Only out of the cell"
+        ],
+        "correct_answer": "Against their concentration gradient",
+        "explanation": "This pump actively transports Na⁺ out and K⁺ in, maintaining the resting potential.",
+        "points": 1
+      },
+      {
+        "order": 5,
+        "question_type": "true_false",
+        "question_text": "Small, non-polar molecules can diffuse directly through the phospholipid bilayer.",
+        "correct_answer": "True",
+        "explanation": "Lipid-soluble molecules pass through the hydrophobic interior of the membrane.",
+        "points": 1
+      },
+      {
+        "order": 6,
+        "question_type": "true_false",
+        "question_text": "Channel proteins are specific for certain ions or molecules.",
+        "correct_answer": "True",
+        "explanation": "Different channels allow only particular substances to pass through.",
+        "points": 1
+      },
+      {
+        "order": 7,
+        "question_type": "mcq",
+        "question_text": "Passive transport includes:",
+        "options": [
+          "Diffusion and facilitated diffusion",
+          "Only active transport",
+          "Only endocytosis",
+          "DNA replication"
+        ],
+        "correct_answer": "Diffusion and facilitated diffusion",
+        "explanation": "Passive transport moves substances down a gradient without ATP.",
+        "points": 1
+      },
+      {
+        "order": 8,
+        "question_type": "mcq",
+        "question_text": "Maintaining different ion concentrations inside and outside a nerve cell is important for:",
+        "options": [
+          "Nerve impulse transmission",
+          "Photosynthesis",
+          "Cell wall formation",
+          "Protein synthesis only"
+        ],
+        "correct_answer": "Nerve impulse transmission",
+        "explanation": "Ion gradients across the membrane enable action potentials in neurons.",
+        "points": 1
+      },
+      {
+        "order": 9,
+        "question_type": "short_answer",
+        "question_text": "Name the two main types of membrane transport.",
+        "correct_answer": "passive and active",
+        "explanation": "Passive transport needs no energy; active transport requires ATP.",
+        "points": 1
+      },
+      {
+        "order": 10,
+        "question_type": "short_answer",
+        "question_text": "What ions does the sodium-potassium pump exchange?",
+        "correct_answer": "sodium and potassium",
+        "explanation": "The pump exports 3 Na⁺ and imports 2 K⁺ per cycle.",
+        "points": 1
+      }
+    ]
+  }
+]
