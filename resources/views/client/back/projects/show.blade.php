@@ -46,22 +46,22 @@
 
         <div class="row">
             <div class="col-lg-8 mb-4">
-                @if($project->cover_image || $project->description)
+                @if($project->cover_image)
+                    <div class="card border shadow-none mb-4 overflow-hidden">
+                        <img src="{{ Storage::url($project->cover_image) }}"
+                             alt="{{ $project->name }}"
+                             class="w-100 d-block object-fit-cover"
+                             style="max-height: 22rem;"
+                             loading="eager">
+                    </div>
+                @endif
+
+                @if($project->description)
                     <section class="card border shadow-none mb-4">
-                        @if($project->cover_image)
-                            <div class="ratio ratio-16x10 overflow-hidden bg-light">
-                                <img src="{{ Storage::url($project->cover_image) }}"
-                                     alt="{{ $project->name }}"
-                                     class="object-fit-cover w-100 h-100"
-                                     loading="eager">
-                            </div>
-                        @endif
-                        @if($project->description)
-                            <div class="card-body">
-                                <h5 class="fw-semibold mb-2">Overview</h5>
-                                <p class="text-muted mb-0">{{ $project->description }}</p>
-                            </div>
-                        @endif
+                        <div class="card-body">
+                            <h5 class="fw-semibold mb-2">Overview</h5>
+                            <p class="text-muted mb-0">{{ $project->description }}</p>
+                        </div>
                     </section>
                 @endif
 
@@ -96,7 +96,7 @@
                 @endpush
             </div>
 
-            <aside class="col-lg-4 mb-4 sticky-lg-top">
+            <aside class="col-lg-4 mb-4 dashboard-sticky-below-header">
             @if($project->youtube_url || $project->external_link)
                     <div class="d-flex flex-wrap gap-2 mb-3">
                         @if($project->youtube_url)
