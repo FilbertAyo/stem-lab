@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Client\Concerns\ResolvesStudentClassContext;
 use App\Http\Controllers\Controller;
 use App\Enums\LearningEventType;
-use App\Services\CacheService;
 use App\Services\Learning\StudentLearningEventRecorder;
 use App\Models\VrAssessmentAttempt;
 use App\Models\VrQuestion;
@@ -28,18 +27,23 @@ class VrAssessmentController extends Controller
     /**
      * Display a listing of available quizzes.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         $user = Auth::user();
         $schoolClassId = $this->studentSchoolClassId($user);
-        // Get cached active question banks
-        $questionBanks = CacheService::getActiveQuestionBanks();
 
-        if ($schoolClassId !== null) {
-            $questionBanks = $questionBanks->filter(
-                fn ($bank) => $bank->vrExperiment->isAccessibleToStudentClass($schoolClassId)
-            )->values();
-        }
+        $questionBanks = VrQuestionBank::query()
+            ->where('is_active', true)
+            ->whereHas('vrExperiment', function ($query) use ($schoolClassId) {
+                $query->where('is_active', true)
+                    ->whereHas('subject', fn ($subQuery) => $subQuery->where('is_active', true))
+                    ->visibleToStudentClass($schoolClassId);
+            })
+            ->with(['vrExperiment.schoolClasses', 'vrExperiment.subject'])
+            ->withCount('questions')
+            ->orderBy('created_at', 'desc')
+            ->paginate(12)
+            ->withQueryString();
 
         // Get user's attempts for progress tracking
         $userAttempts = VrAssessmentAttempt::where('user_id', $user->id)

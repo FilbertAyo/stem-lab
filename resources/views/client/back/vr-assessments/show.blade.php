@@ -80,7 +80,7 @@
                         <div class="row g-3 mb-4">
                             <div class="col-6 col-md-3">
                                 <div class="quiz-stat-tile">
-                                    <div class="quiz-stat-icon bg-primary bg-opacity-10 text-primary">
+                                    <div class="quiz-stat-icon bg-primary bg-opacity-10 text-primary p-2">
                                         <i class="bi bi-list-ol"></i>
                                     </div>
                                     <h4 class="mb-0 fw-bold">{{ $questionBank->questions_count }}</h4>
@@ -89,7 +89,7 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="quiz-stat-tile">
-                                    <div class="quiz-stat-icon bg-info bg-opacity-10 text-info">
+                                    <div class="quiz-stat-icon bg-info bg-opacity-10 text-info p-2">
                                         <i class="bi bi-clock"></i>
                                     </div>
                                     <h4 class="mb-0 fw-bold">{{ $questionBank->time_limit ?? '∞' }}</h4>
@@ -98,7 +98,7 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="quiz-stat-tile">
-                                    <div class="quiz-stat-icon bg-warning bg-opacity-10 text-warning">
+                                    <div class="quiz-stat-icon bg-warning bg-opacity-10 text-warning p-2">
                                         <i class="bi bi-bullseye"></i>
                                     </div>
                                     <h4 class="mb-0 fw-bold">{{ $questionBank->passing_score }}%</h4>
@@ -107,7 +107,7 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="quiz-stat-tile">
-                                    <div class="quiz-stat-icon bg-success bg-opacity-10 text-success">
+                                    <div class="quiz-stat-icon bg-success bg-opacity-10 text-success p-2">
                                         <i class="bi bi-arrow-repeat"></i>
                                     </div>
                                     <h4 class="mb-0 fw-bold">{{ $previousAttempts->count() }}</h4>

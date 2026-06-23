@@ -93,11 +93,11 @@
                                         </td>
                                         <td>
                                             @if($attempt->passed)
-                                                <span class="badge bg-light-success text-success border-success fs-6">
+                                                <span class="badge bg-light-success text-success b-success">
                                                     <i class="ti ti-check"></i> Passed
                                                 </span>
                                             @else
-                                                <span class="badge bg-light-danger text-danger border-danger fs-6">
+                                                <span class="badge bg-light-danger text-danger b-danger">
                                                     <i class="ti ti-x"></i> Failed
                                                 </span>
                                             @endif

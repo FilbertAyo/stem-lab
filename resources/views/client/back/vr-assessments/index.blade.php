@@ -8,6 +8,19 @@
         @include('client.back.partials.class-filter-notice')
 
         @if($questionBanks->count() > 0)
+            @if($questionBanks->total() > 0)
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <p class="text-muted mb-0 small">
+                        Showing {{ $questionBanks->firstItem() }}–{{ $questionBanks->lastItem() }} of {{ $questionBanks->total() }} quizzes
+                    </p>
+                    @if($questionBanks->hasPages())
+                        <span class="text-muted small">
+                            Page {{ $questionBanks->currentPage() }} of {{ $questionBanks->lastPage() }}
+                        </span>
+                    @endif
+                </div>
+            @endif
+
             <div class="row">
                 @foreach($questionBanks as $bank)
                     @php
@@ -93,6 +106,14 @@
                     </div>
                 @endforeach
             </div>
+
+            @if($questionBanks->hasPages())
+                <nav class="mt-2" aria-label="Quiz navigation">
+                    <div class="d-flex justify-content-center">
+                        {{ $questionBanks->links('pagination::client-bootstrap-5') }}
+                    </div>
+                </nav>
+            @endif
         @else
             <div class="card border shadow-none">
                 <div class="card-body text-center py-5">
