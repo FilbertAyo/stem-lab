@@ -26,16 +26,16 @@
                     <div class="quiz-results-banner {{ $passed ? 'is-passed' : 'is-failed' }}">
                         @if($passed)
                            <h4 class="fw-bold text-success mb-2">Congratulations!</h4>
-                            <p class="text-muted mb-0">You passed this quiz. Great work!</p>
+                            <p class="text-muted mb-0 small">You passed this quiz. Great work!</p>
                         @else
                            <h4 class="fw-bold text-danger mb-2">Keep trying</h4>
-                            <p class="text-muted mb-0">
+                            <p class="text-muted mb-0 small">
                                 You scored below {{ $attempt->questionBank->passing_score }}%. Review your answers and try again.
                             </p>
                         @endif
 
                         <div class="quiz-score-ring {{ $passed ? 'is-passed' : 'is-failed' }} mt-4">
-                            <span class="fw-bold lh-1 fs-4">{{ number_format($attempt->score, 1) }}%</span>
+                            <span class="fw-bold lh-1 display-4">{{ number_format($attempt->score, 1) }}%</span>
                         </div>
                     </div>
 
