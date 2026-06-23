@@ -25,12 +25,10 @@
                 <div class="quiz-results-hero {{ $passed ? 'is-passed' : 'is-failed' }} mb-4">
                     <div class="quiz-results-banner {{ $passed ? 'is-passed' : 'is-failed' }}">
                         @if($passed)
-                            <i class="bi bi-trophy-fill text-warning d-block mb-3" style="font-size: 3rem;"></i>
-                            <h4 class="fw-bold text-success mb-2">Congratulations!</h4>
+                           <h4 class="fw-bold text-success mb-2">Congratulations!</h4>
                             <p class="text-muted mb-0">You passed this quiz. Great work!</p>
                         @else
-                            <i class="bi bi-arrow-repeat text-danger d-block mb-3" style="font-size: 3rem;"></i>
-                            <h4 class="fw-bold text-danger mb-2">Keep trying</h4>
+                           <h4 class="fw-bold text-danger mb-2">Keep trying</h4>
                             <p class="text-muted mb-0">
                                 You scored below {{ $attempt->questionBank->passing_score }}%. Review your answers and try again.
                             </p>
@@ -46,7 +44,7 @@
                         <div class="row g-3">
                             <div class="col-6 col-md-3">
                                 <div class="quiz-stat-tile">
-                                    <div class="quiz-stat-icon bg-success bg-opacity-10 text-success">
+                                    <div class="quiz-stat-icon bg-success bg-opacity-10 text-success p-2">
                                         <i class="bi bi-check-lg"></i>
                                     </div>
                                     <h4 class="mb-0 fw-bold text-success">{{ $attempt->correct_answers }}</h4>
@@ -55,7 +53,7 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="quiz-stat-tile">
-                                    <div class="quiz-stat-icon bg-danger bg-opacity-10 text-danger">
+                                    <div class="quiz-stat-icon bg-danger bg-opacity-10 text-danger p-2">
                                         <i class="bi bi-x-lg"></i>
                                     </div>
                                     <h4 class="mb-0 fw-bold text-danger">{{ $incorrectCount }}</h4>
@@ -64,7 +62,7 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="quiz-stat-tile">
-                                    <div class="quiz-stat-icon bg-primary bg-opacity-10 text-primary">
+                                    <div class="quiz-stat-icon bg-primary bg-opacity-10 text-primary p-2">
                                         <i class="bi bi-list-ol"></i>
                                     </div>
                                     <h4 class="mb-0 fw-bold">{{ $attempt->total_questions }}</h4>
@@ -73,7 +71,7 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="quiz-stat-tile">
-                                    <div class="quiz-stat-icon bg-warning bg-opacity-10 text-warning">
+                                    <div class="quiz-stat-icon bg-warning bg-opacity-10 text-warning p-2">
                                         <i class="bi bi-bullseye"></i>
                                     </div>
                                     <h4 class="mb-0 fw-bold">{{ $attempt->questionBank->passing_score }}%</h4>
@@ -105,11 +103,11 @@
                                             Question {{ $index + 1 }}
                                         </span>
                                         @if($isCorrect)
-                                            <span class="badge bg-success">
+                                            <span class="badge bg-light-success text-success border-success">
                                                 <i class="bi bi-check-circle me-1"></i>Correct
                                             </span>
                                         @else
-                                            <span class="badge bg-danger">
+                                            <span class="badge bg-light-danger text-danger border-danger">
                                                 <i class="bi bi-x-circle me-1"></i>Incorrect
                                             </span>
                                         @endif
@@ -140,9 +138,7 @@
                                                 @endif
                                                 <span class="badge bg-light text-dark border me-2">{{ chr(65 + $optionIndex) }}</span>
                                                 {{ $option }}
-                                                @if($isStudentWrong)
-                                                    <span class="badge bg-danger ms-2">Your answer</span>
-                                                @endif
+                                              
                                                 @if($isCorrectOption && ! $isCorrect)
                                                     <span class="badge bg-success ms-2">Correct answer</span>
                                                 @endif
