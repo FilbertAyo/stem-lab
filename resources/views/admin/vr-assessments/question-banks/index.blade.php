@@ -9,12 +9,6 @@
                 </a>
             </div>
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
 
             <!-- Search Form -->
             <div class="card mb-3">
@@ -88,9 +82,9 @@
                                         </td>
                                         <td>
                                             @if($bank->is_active)
-                                                <span class="badge bg-success">Active</span>
+                                                <span class="badge bg-light-success text-success border-success">Active</span>
                                             @else
-                                                <span class="badge bg-secondary">Inactive</span>
+                                                <span class="badge bg-light-secondary text-secondary border-secondary">Inactive</span>
                                             @endif
                                         </td>
                                         <td>
