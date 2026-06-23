@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->string('name');
             $table->string('file')->nullable(); // GLB file path
+            $table->text('embed_url')->nullable(); // Embed URL for 3D model
             $table->string('thumbnail')->nullable(); // Thumbnail image path
             $table->text('description')->nullable();
             $table->text('tags')->nullable(); // Comma-separated keywords
