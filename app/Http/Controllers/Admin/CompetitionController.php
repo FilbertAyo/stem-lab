@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Jobs\DispatchCompetitionShortlistNotifications;
 use App\Mail\CompetitionEligibilityReminderMail;
+use App\Services\CompetitionEligibilityPoolService;
 use App\Support\ClientUrl;
 use App\Models\Club;
 use App\Models\Competition;
@@ -823,6 +824,22 @@ class CompetitionController extends Controller
             ->paginate(20)
             ->withQueryString();
 
+        $eligibilityPool = app(CompetitionEligibilityPoolService::class);
+        foreach ($registrations as $registration) {
+            if (
+                $registration->teacherClub
+                && in_array($registration->status, ['draft', 'rejected'], true)
+            ) {
+                $pool = $eligibilityPool->computePool($competition, $registration->teacherClub);
+                $registration->forceFill([
+                    'student_count_snapshot' => $pool['count'],
+                    'girls_count_snapshot' => $pool['girls_count'],
+                    'girls_ratio_snapshot' => $pool['girls_ratio'],
+                    'eligibility_met' => $pool['eligible'],
+                ])->save();
+            }
+        }
+
         return view('admin.competitions.registrations.index', compact('competition', 'registrations'));
     }
 
@@ -844,22 +861,30 @@ class CompetitionController extends Controller
         $competition->loadMissing(['classRequirements.schoolClass']);
 
         $poolStudents = collect();
-        if ($registration->teacherClub) {
-            $allowedClassIds = $competition->classRequirements
-                ->pluck('school_class_id')
-                ->filter()
-                ->unique()
-                ->values()
-                ->all();
+        $poolEligibility = null;
 
-            $poolStudents = $registration->teacherClub->students()
-                ->with('schoolClass')
-                ->when(! empty($allowedClassIds), fn ($q) => $q->whereIn('school_class_id', $allowedClassIds))
-                ->orderBy('name')
-                ->get();
+        if ($registration->teacherClub) {
+            $eligibilityPool = app(CompetitionEligibilityPoolService::class);
+            $poolEligibility = $eligibilityPool->computePool($competition, $registration->teacherClub);
+            $poolStudents = $poolEligibility['students'];
+
+            // Heal stale draft/rejected snapshots after admin (or teacher) CSV uploads.
+            if (in_array($registration->status, ['draft', 'rejected'], true)) {
+                $registration->forceFill([
+                    'student_count_snapshot' => $poolEligibility['count'],
+                    'girls_count_snapshot' => $poolEligibility['girls_count'],
+                    'girls_ratio_snapshot' => $poolEligibility['girls_ratio'],
+                    'eligibility_met' => $poolEligibility['eligible'],
+                ])->save();
+            }
         }
 
-        return view('admin.competitions.registrations.show', compact('competition', 'registration', 'poolStudents'));
+        return view('admin.competitions.registrations.show', compact(
+            'competition',
+            'registration',
+            'poolStudents',
+            'poolEligibility',
+        ));
     }
 
     public function approveRegistration(Competition $competition, CompetitionRegistration $registration): RedirectResponse

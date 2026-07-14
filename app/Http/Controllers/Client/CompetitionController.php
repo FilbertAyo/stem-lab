@@ -13,6 +13,7 @@ use App\Models\CompetitionPhaseEvidenceForm;
 use App\Models\Region;
 use App\Models\SchoolClass;
 use App\Models\TeacherClub;
+use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\StudentCsvBulkImportService;
 use Illuminate\Http\RedirectResponse;
@@ -252,7 +253,7 @@ class CompetitionController extends Controller
 
         return redirect()
             ->route('client.competitions.register', $competition)
-            ->with('status', "Successfully imported {$result['success_count']} student(s). Refresh the eligibility panel if counts look stale.");
+            ->with('status', "Successfully imported {$result['success_count']} student(s).");
     }
 
     public function clearPoolStudents(Competition $competition): RedirectResponse
@@ -281,6 +282,9 @@ class CompetitionController extends Controller
 
         $deleted = (clone $query)->count();
         $query->delete();
+
+        app(CompetitionEligibilityPoolService::class)
+            ->refreshOpenRegistrationSnapshots($teacherClub);
 
         return redirect()
             ->route('client.competitions.register', $competition)
@@ -1033,10 +1037,7 @@ class CompetitionController extends Controller
      */
     private function competitionPoolBounds(Competition $competition): array
     {
-        return [
-            'min' => max(1, (int) $competition->min_members),
-            'max' => $competition->max_members !== null ? (int) $competition->max_members : null,
-        ];
+        return app(CompetitionEligibilityPoolService::class)->poolBounds($competition);
     }
 
     private function competitionPoolEligibilityError(
@@ -1044,18 +1045,8 @@ class CompetitionController extends Controller
         int $poolCount,
         float $poolRatio
     ): ?string {
-        $bounds = $this->competitionPoolBounds($competition);
-        if ($poolCount < $bounds['min']) {
-            return "Eligibility gate failed. You need at least {$bounds['min']} students in the competition class pool (set by the competition Min members field). Upload members via CSV if needed.";
-        }
-        if ($bounds['max'] !== null && $poolCount > $bounds['max']) {
-            return "Eligibility gate failed. The pool may not exceed {$bounds['max']} students (competition Max members).";
-        }
-        if ($poolRatio < 70) {
-            return 'Eligibility gate failed. At least 70% of the pool must be girls.';
-        }
-
-        return null;
+        return app(CompetitionEligibilityPoolService::class)
+            ->eligibilityError($competition, $poolCount, $poolRatio);
     }
 
     private function requiredRepresentativeCount(Competition $competition): int

@@ -129,20 +129,39 @@
 
                 <div class="col-lg-4">
                     <div class="card h-100">
-                        <div class="card-header"><h6 class="mb-0">Eligibility snapshot</h6></div>
+                        <div class="card-header"><h6 class="mb-0">
+                            @if(in_array($registration->status, ['draft', 'rejected'], true))
+                                Eligibility (live pool)
+                            @else
+                                Eligibility snapshot
+                            @endif
+                        </h6></div>
                         <div class="card-body">
-                            <p class="small mb-1"><strong>{{ $registration->student_count_snapshot ?? '—' }}</strong> students</p>
-                            <p class="small mb-1"><strong>{{ $registration->girls_count_snapshot ?? '—' }}</strong> girls</p>
-                            <p class="small mb-1"><strong>{{ $registration->girls_ratio_snapshot ?? '—' }}%</strong> girls</p>
-                            <p class="small mb-0">Pool met rules:
-                                @if($registration->eligibility_met === true)
+                            @php
+                                $eligCount = $poolEligibility['count'] ?? $registration->student_count_snapshot;
+                                $eligGirls = $poolEligibility['girls_count'] ?? $registration->girls_count_snapshot;
+                                $eligRatio = $poolEligibility['girls_ratio'] ?? $registration->girls_ratio_snapshot;
+                                $eligMet = array_key_exists('eligible', $poolEligibility ?? [])
+                                    ? (bool) $poolEligibility['eligible']
+                                    : $registration->eligibility_met;
+                            @endphp
+                            <p class="small mb-1"><strong>{{ $eligCount ?? '—' }}</strong> students</p>
+                            <p class="small mb-1"><strong>{{ $eligGirls ?? '—' }}</strong> girls</p>
+                            <p class="small mb-1"><strong>{{ $eligRatio ?? '—' }}%</strong> girls</p>
+                            <p class="small mb-1">Pool met rules:
+                                @if($eligMet === true)
                                     <span class="text-success">Yes</span>
-                                @elseif($registration->eligibility_met === false)
+                                @elseif($eligMet === false)
                                     <span class="text-danger">No</span>
                                 @else
                                     —
                                 @endif
                             </p>
+                            @if(! empty($poolEligibility['error']))
+                                <p class="small text-danger mb-0">{{ $poolEligibility['error'] }}</p>
+                            @elseif(in_array($registration->status, ['draft', 'rejected'], true))
+                                <p class="small text-muted mb-0">Counted from this teacher&rsquo;s club roster (competition class filter applied).</p>
+                            @endif
                         </div>
                     </div>
                 </div>

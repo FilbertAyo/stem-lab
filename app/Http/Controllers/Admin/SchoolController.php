@@ -9,6 +9,7 @@ use App\Models\School;
 use App\Models\Student;
 use App\Models\TeacherClub;
 use App\Models\User;
+use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\StudentCsvBulkImportService;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -273,16 +274,24 @@ class SchoolController extends Controller
             ->with('status', "Dedicated club day updated for {$teacherName} ({$clubName}).");
     }
 
-    public function removeStudent(School $school, Student $student): RedirectResponse
-    {
+    public function removeStudent(
+        School $school,
+        Student $student,
+        CompetitionEligibilityPoolService $eligibilityPool,
+    ): RedirectResponse {
         $belongsToSchool = (int) $student->teacherClub?->school_id === (int) $school->id;
 
         if (! $belongsToSchool) {
             abort(404);
         }
 
+        $teacherClub = $student->teacherClub;
         $studentName = $student->name;
         $student->delete();
+
+        if ($teacherClub) {
+            $eligibilityPool->refreshOpenRegistrationSnapshots($teacherClub);
+        }
 
         return redirect()
             ->route('admin.schools.show', $school)

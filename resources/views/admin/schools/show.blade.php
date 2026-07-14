@@ -426,6 +426,7 @@
                             CSV columns required:
                             <code>name,date_of_birth,gender,class_name</code>
                             (or <code>name,age,gender,class_name</code>).
+                            Assign students to the <strong>same teacher + club</strong> that holds the competition registration—club pages can show co-teachers&rsquo; students, but eligibility only counts that teacher&rsquo;s roster (and competition class rules).
                         </div>
 
                         <div class="mb-3">

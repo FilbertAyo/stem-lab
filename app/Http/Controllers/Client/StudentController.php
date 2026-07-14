@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Models\TeacherClub;
 use App\Models\User;
+use App\Services\CompetitionEligibilityPoolService;
 use App\Services\StudentCsvBulkImportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -148,6 +149,11 @@ class StudentController extends Controller
             'age' => $age,
         ]);
 
+        if ($student->teacherClub) {
+            app(CompetitionEligibilityPoolService::class)
+                ->refreshOpenRegistrationSnapshots($student->teacherClub);
+        }
+
         return $this->redirectAfterStudentMutation(
             $request,
             $student->teacherClub,
@@ -164,6 +170,11 @@ class StudentController extends Controller
 
         $teacherClub = $student->teacherClub;
         $student->delete();
+
+        if ($teacherClub) {
+            app(CompetitionEligibilityPoolService::class)
+                ->refreshOpenRegistrationSnapshots($teacherClub);
+        }
 
         return $this->redirectAfterStudentMutation(
             $request,
@@ -207,6 +218,14 @@ class StudentController extends Controller
         if ($teacherClub === null && $students->isNotEmpty()) {
             $teacherClub = $students->first()->teacherClub;
         }
+
+        // Refresh each affected membership (bulk can span co-member clubs on shared pages).
+        $students->pluck('teacher_club_id')->unique()->filter()->each(function ($teacherClubId): void {
+            $club = TeacherClub::query()->find($teacherClubId);
+            if ($club) {
+                app(CompetitionEligibilityPoolService::class)->refreshOpenRegistrationSnapshots($club);
+            }
+        });
 
         if ($deleted === 0) {
             return $this->redirectAfterStudentMutation($request, $teacherClub)
@@ -265,6 +284,9 @@ class StudentController extends Controller
             'gender' => $validated['gender'],
             'school_class_id' => $validated['school_class_id'],
         ]);
+
+        app(CompetitionEligibilityPoolService::class)
+            ->refreshOpenRegistrationSnapshots($writableClub);
 
         return $this->redirectAfterStudentMutation($request, $pageClub, 'Student registered successfully!');
     }

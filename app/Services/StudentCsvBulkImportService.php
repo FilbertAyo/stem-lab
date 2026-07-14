@@ -117,7 +117,7 @@ class StudentCsvBulkImportService
 
                 $name = trim((string) ($row[$nameIndex] ?? ''));
                 $age = null;
-                $dob = null;
+                $dob = '';
                 $gender = strtolower(trim((string) ($row[$genderIndex] ?? '')));
                 $className = trim((string) ($row[$classIndex] ?? ''));
 
@@ -237,6 +237,10 @@ class StudentCsvBulkImportService
             }
 
             DB::commit();
+
+            // Keep competition draft eligibility in sync (admin and teacher CSV paths share this importer).
+            app(CompetitionEligibilityPoolService::class)
+                ->refreshOpenRegistrationSnapshots($teacherClub);
 
             return ['success_count' => $successCount, 'errors' => []];
         } catch (\Exception $e) {
