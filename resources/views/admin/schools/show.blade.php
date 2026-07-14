@@ -6,9 +6,21 @@
                     <h5 class="mb-0">{{ $school->name }}</h5>
                     <p class="text-muted mb-0">School Details</p>
                 </div>
-                <a href="{{ route('admin.schools.index') }}" class="text-muted">
-                    <i class="ti ti-arrow-left"></i> Back to Schools
-                </a>
+                <div class="d-flex align-items-center gap-2">
+                    @if($teachers->isEmpty() && $students->isEmpty())
+                        <button
+                            type="button"
+                            class="btn btn-outline-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteSchoolModal"
+                        >
+                            <i class="ti ti-trash"></i> Delete School
+                        </button>
+                    @endif
+                    <a href="{{ route('admin.schools.index') }}" class="text-muted">
+                        <i class="ti ti-arrow-left"></i> Back to Schools
+                    </a>
+                </div>
             </div>
 
             <!-- School Information Card -->
@@ -293,6 +305,30 @@
          
         </div>
     </div>
+
+    @if($teachers->isEmpty() && $students->isEmpty())
+        <div class="modal fade" id="deleteSchoolModal" tabindex="-1" aria-labelledby="deleteSchoolModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteSchoolModalLabel">Delete School</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('admin.schools.destroy', $school) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <div class="modal-body">
+                            <p class="mb-0">Are you sure you want to delete <strong>{{ $school->name }}</strong>? This action cannot be undone.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger">Delete School</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <div class="modal fade" id="addTeacherModal" tabindex="-1" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg mt-5">
