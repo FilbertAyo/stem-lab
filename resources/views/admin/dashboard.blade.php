@@ -184,7 +184,7 @@
 
             <!-- Visitor charts per week (combined) -->
             <div class="row mb-2">
-                <div class="col-lg-12 mb-4">
+                <div class="col-lg-6 mb-4">
                     <div class="card border shadow-none">
                         <div class="card-header bg-transparent border-bottom d-flex align-items-center justify-content-between gap-3">
                             <h6 class="mb-0">Visitors Overview (Weekly)</h6>
@@ -213,51 +213,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            
-
-            <!-- Latest Active Admin & Recent Activities Row -->
-            <div class="row mb-4">
-                <!-- Latest Active Admin -->
-                <div class="col-md-4 mb-4">
-                    <div class="card border shadow-none">
-                        <div class="card-header bg-transparent border-bottom">
-                            <h6 class="mb-0">Latest Active Admin</h6>
-                        </div>
-                        <div class="card-body">
-                            @if($latestActiveAdmin && $latestActiveAdmin['user'])
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <div class="avatar avatar-lg bg-danger text-white rounded-circle">
-                                            <span class="fs-5">{{ substr($latestActiveAdmin['user']->name, 0, 1) }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h6 class="mb-1">{{ $latestActiveAdmin['user']->name }}</h6>
-                                        <p class="text-muted mb-0 small">{{ $latestActiveAdmin['user']->email }}</p>
-                                        @if($latestActiveAdmin['last_activity'])
-                                            <small class="text-muted">
-                                                <i class="ti ti-clock"></i>
-                                                Active {{ $latestActiveAdmin['last_activity']->diffForHumans() }}
-                                            </small>
-                                        @else
-                                            <small class="text-muted">
-                                                <i class="ti ti-user"></i>
-                                                Registered {{ $latestActiveAdmin['user']->created_at->diffForHumans() }}
-                                            </small>
-                                        @endif
-                                    </div>
-                                </div>
-                            @else
-                                <p class="text-muted mb-0 small">No admin activity found</p>
-                            @endif
-                        </div>
-                    </div>
-                </div>
+          
+  
 
                 <!-- Recent Activities -->
-                <div class="col-md-8 mb-4">
+                <div class="col-md-6 mb-4">
                     <div class="card border shadow-none">
                         <div class="card-header bg-transparent border-bottom">
                             <h6 class="mb-0">Recent Activities (Today)</h6>
