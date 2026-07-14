@@ -830,13 +830,11 @@ class CompetitionController extends Controller
                 $registration->teacherClub
                 && in_array($registration->status, ['draft', 'rejected'], true)
             ) {
-                $pool = $eligibilityPool->computePool($competition, $registration->teacherClub);
-                $registration->forceFill([
-                    'student_count_snapshot' => $pool['count'],
-                    'girls_count_snapshot' => $pool['girls_count'],
-                    'girls_ratio_snapshot' => $pool['girls_ratio'],
-                    'eligibility_met' => $pool['eligible'],
-                ])->save();
+                $eligibilityPool->applyPoolToOpenRegistration(
+                    $registration,
+                    $registration->teacherClub,
+                    $eligibilityPool->computePool($competition, $registration->teacherClub),
+                );
             }
         }
 
@@ -868,14 +866,14 @@ class CompetitionController extends Controller
             $poolEligibility = $eligibilityPool->computePool($competition, $registration->teacherClub);
             $poolStudents = $poolEligibility['students'];
 
-            // Heal stale draft/rejected snapshots after admin (or teacher) CSV uploads.
+            // Heal stale draft/rejected snapshots (and promote to pending when pool is met).
             if (in_array($registration->status, ['draft', 'rejected'], true)) {
-                $registration->forceFill([
-                    'student_count_snapshot' => $poolEligibility['count'],
-                    'girls_count_snapshot' => $poolEligibility['girls_count'],
-                    'girls_ratio_snapshot' => $poolEligibility['girls_ratio'],
-                    'eligibility_met' => $poolEligibility['eligible'],
-                ])->save();
+                $eligibilityPool->applyPoolToOpenRegistration(
+                    $registration,
+                    $registration->teacherClub,
+                    $poolEligibility,
+                );
+                $registration->refresh();
             }
         }
 

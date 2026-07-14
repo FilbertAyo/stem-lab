@@ -85,11 +85,9 @@
                                             @if($poolCount > 0)
                                                 <div>{{ $poolCount }} students</div>
                                                 <small class="text-muted">{{ $poolRatio }}% girls</small>
-                                                @if($registration->status === 'draft' || $registration->status === 'rejected')
-                                                    <div class="small {{ $poolMet ? 'text-success' : 'text-danger' }}">
-                                                        {{ $poolMet ? 'Pool met' : 'Pool not met' }}
-                                                    </div>
-                                                @endif
+                                                <div class="small {{ $poolMet ? 'text-success' : 'text-danger' }}">
+                                                    {{ $poolMet ? 'Pool met' : 'Pool not met' }}
+                                                </div>
                                             @elseif($registration->status === 'draft')
                                                 <div class="text-muted">0 students</div>
                                                 <small class="text-muted">Awaiting CSV upload</small>

@@ -61,10 +61,13 @@ class CompetitionEligibilityPoolService
 
     /**
      * Keep draft/rejected registration eligibility fields in sync with the live student pool.
-     * Submitted registrations keep their immutable submission snapshot.
+     * When the pool passes eligibility, promote to pending (same outcome as teacher submit).
+     * Submitted/approved registrations keep their immutable submission snapshot.
      */
     public function refreshOpenRegistrationSnapshots(TeacherClub $teacherClub): void
     {
+        $teacherClub->loadMissing(['user', 'school']);
+
         $registrations = CompetitionRegistration::query()
             ->with('competition.classRequirements')
             ->where('teacher_club_id', $teacherClub->id)
@@ -77,15 +80,60 @@ class CompetitionEligibilityPoolService
                 continue;
             }
 
-            $pool = $this->computePool($competition, $teacherClub);
-
-            $registration->forceFill([
-                'student_count_snapshot' => $pool['count'],
-                'girls_count_snapshot' => $pool['girls_count'],
-                'girls_ratio_snapshot' => $pool['girls_ratio'],
-                'eligibility_met' => $pool['eligible'],
-            ])->save();
+            $this->applyPoolToOpenRegistration(
+                $registration,
+                $teacherClub,
+                $this->computePool($competition, $teacherClub),
+            );
         }
+    }
+
+    /**
+     * @param  array{
+     *     count: int,
+     *     girls_count: int,
+     *     girls_ratio: float,
+     *     eligible: bool
+     * }  $pool
+     */
+    public function applyPoolToOpenRegistration(
+        CompetitionRegistration $registration,
+        TeacherClub $teacherClub,
+        array $pool,
+    ): void {
+        if (! in_array($registration->status, ['draft', 'rejected'], true)) {
+            return;
+        }
+
+        $teacherClub->loadMissing(['user', 'school']);
+
+        $attributes = [
+            'student_count_snapshot' => $pool['count'],
+            'girls_count_snapshot' => $pool['girls_count'],
+            'girls_ratio_snapshot' => $pool['girls_ratio'],
+            'eligibility_met' => $pool['eligible'],
+        ];
+
+        if ($pool['eligible']) {
+            $user = $teacherClub->user;
+            $school = $teacherClub->school;
+
+            $attributes = array_merge($attributes, [
+                'status' => 'pending',
+                'submitted_at' => $registration->submitted_at ?? now(),
+                'rejection_reason' => null,
+                'school_id' => $teacherClub->school_id,
+                'region_id' => $school?->region_id ?? $registration->region_id,
+                'teacher_name' => $user?->name ?: $registration->teacher_name,
+                'teacher_email' => $user?->email ?: $registration->teacher_email,
+                'teacher_phone' => $user?->phone ?: $registration->teacher_phone,
+                'school_name' => $school?->name ?: $registration->school_name,
+                'school_district' => $school?->district ?? $registration->school_district,
+                'school_ward' => $school?->ward ?? $registration->school_ward,
+            ]);
+        }
+
+        $registration->forceFill($attributes)->save();
     }
 
     /**

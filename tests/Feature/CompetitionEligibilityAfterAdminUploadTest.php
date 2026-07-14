@@ -98,7 +98,9 @@ test('admin csv import marks eligibility met when pool rules pass', function () 
     expect($registration->student_count_snapshot)->toBe(3)
         ->and($registration->girls_count_snapshot)->toBe(3)
         ->and((float) $registration->girls_ratio_snapshot)->toBe(100.0)
-        ->and($registration->eligibility_met)->toBeTrue();
+        ->and($registration->eligibility_met)->toBeTrue()
+        ->and($registration->status)->toBe('pending')
+        ->and($registration->submitted_at)->not->toBeNull();
 });
 
 test('eligibility pool ignores students outside competition class requirements', function () {
@@ -168,6 +170,7 @@ test('admin registrations index shows live eligibility for drafts with students'
     $response->assertOk();
     $response->assertSee('2 students');
     $response->assertSee('Pool met');
+    $response->assertSee('Pending');
     $response->assertDontSee('Awaiting CSV upload');
 });
 
@@ -210,12 +213,13 @@ test('admin registration show heals stale draft eligibility snapshots', function
         ->get('http://'.$host.'/competitions/'.$competition->ulid.'/registrations/'.$registration->ulid);
 
     $response->assertOk();
-    $response->assertSee('Eligibility (live pool)');
+    $response->assertSee('Eligibility snapshot');
     $response->assertSee('2</strong> students', false);
     $response->assertSee('Yes');
 
     $registration->refresh();
     expect($registration->student_count_snapshot)->toBe(2)
         ->and($registration->girls_count_snapshot)->toBe(2)
-        ->and($registration->eligibility_met)->toBeTrue();
+        ->and($registration->eligibility_met)->toBeTrue()
+        ->and($registration->status)->toBe('pending');
 });
