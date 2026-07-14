@@ -4,13 +4,14 @@ namespace App\Services;
 
 use App\Models\Competition;
 use App\Models\CompetitionRegistration;
+use App\Models\Student;
 use App\Models\TeacherClub;
 use Illuminate\Support\Collection;
 
 class CompetitionEligibilityPoolService
 {
     /**
-     * Live competition pool for a teacher club membership (same rules as teacher register UI).
+     * Live competition pool for a school club membership (shared co-teacher roster).
      *
      * @return array{
      *     students: Collection<int, \App\Models\Student>,
@@ -34,8 +35,11 @@ class CompetitionEligibilityPoolService
             ->values()
             ->all();
 
-        $students = $teacherClub->students()
+        $teacherClubIds = $this->coMemberTeacherClubIds($teacherClub);
+
+        $students = Student::query()
             ->with('schoolClass')
+            ->whereIn('teacher_club_id', $teacherClubIds)
             ->when(! empty($allowedClassIds), fn ($query) => $query->whereIn('school_class_id', $allowedClassIds))
             ->orderBy('name')
             ->get();
@@ -69,10 +73,16 @@ class CompetitionEligibilityPoolService
         $teacherClub->loadMissing(['user', 'school']);
 
         $registrations = CompetitionRegistration::query()
-            ->with('competition.classRequirements')
-            ->where('teacher_club_id', $teacherClub->id)
+            ->with(['competition.classRequirements', 'teacherClub'])
             ->whereIn('status', ['draft', 'rejected'])
-            ->get();
+            ->where(function ($query) use ($teacherClub): void {
+                $query->where('teacher_club_id', $teacherClub->id);
+                if ($teacherClub->school_id !== null) {
+                    $query->orWhere('school_id', $teacherClub->school_id);
+                }
+            })
+            ->get()
+            ->unique('id');
 
         foreach ($registrations as $registration) {
             $competition = $registration->competition;
@@ -80,9 +90,14 @@ class CompetitionEligibilityPoolService
                 continue;
             }
 
+            // Prefer the registration's primary membership for contact snapshot when promoting.
+            $poolTeacherClub = $registration->teacherClub && (int) $registration->teacherClub->school_id === (int) $teacherClub->school_id
+                ? $registration->teacherClub
+                : $teacherClub;
+
             $this->applyPoolToOpenRegistration(
                 $registration,
-                $teacherClub,
+                $poolTeacherClub,
                 $this->computePool($competition, $teacherClub),
             );
         }
@@ -122,11 +137,13 @@ class CompetitionEligibilityPoolService
                 'status' => 'pending',
                 'submitted_at' => $registration->submitted_at ?? now(),
                 'rejection_reason' => null,
+                'teacher_club_id' => $registration->teacher_club_id ?: $teacherClub->id,
+                'teacher_user_id' => $registration->teacher_user_id ?: $teacherClub->user_id,
                 'school_id' => $teacherClub->school_id,
                 'region_id' => $school?->region_id ?? $registration->region_id,
-                'teacher_name' => $user?->name ?: $registration->teacher_name,
-                'teacher_email' => $user?->email ?: $registration->teacher_email,
-                'teacher_phone' => $user?->phone ?: $registration->teacher_phone,
+                'teacher_name' => $registration->teacher_name ?: ($user?->name ?: ''),
+                'teacher_email' => $registration->teacher_email ?: ($user?->email ?: ''),
+                'teacher_phone' => $registration->teacher_phone ?: $user?->phone,
                 'school_name' => $school?->name ?: $registration->school_name,
                 'school_district' => $school?->district ?? $registration->school_district,
                 'school_ward' => $school?->ward ?? $registration->school_ward,
@@ -134,6 +151,30 @@ class CompetitionEligibilityPoolService
         }
 
         $registration->forceFill($attributes)->save();
+    }
+
+    /**
+     * @return list<int>
+     */
+    public function coMemberTeacherClubIds(TeacherClub $teacherClub): array
+    {
+        $query = TeacherClub::query()
+            ->where('club_id', $teacherClub->club_id)
+            ->approved();
+
+        if ($teacherClub->school_id === null) {
+            $query->whereNull('school_id');
+        } else {
+            $query->where('school_id', $teacherClub->school_id);
+        }
+
+        $ids = $query->pluck('id')->map(fn ($id) => (int) $id)->all();
+
+        if ($ids === []) {
+            return [(int) $teacherClub->id];
+        }
+
+        return $ids;
     }
 
     /**

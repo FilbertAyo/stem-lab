@@ -10,16 +10,136 @@ use Illuminate\Support\Collection;
 class CompetitionParticipantRegistrationService
 {
     /**
-     * Ensure a draft competition registration exists for follow-up / admin participant list.
+     * Ensure a draft competition registration exists for this school + competition.
+     * Co-teachers at the same school share one registration row.
      */
     public function ensureDraftRegistration(TeacherClub $teacherClub, Competition $competition): CompetitionRegistration
     {
+        $teacherClub->loadMissing(['user', 'school']);
+
+        $schoolId = $teacherClub->school_id;
+        if ($schoolId === null) {
+            return $this->createOrRefreshForTeacherClub($teacherClub, $competition);
+        }
+
+        $existing = $this->findForSchool($competition, (int) $schoolId);
+        if ($existing) {
+            return $this->refreshOpenContactSnapshot($existing, $teacherClub);
+        }
+
+        return $this->createOrRefreshForTeacherClub($teacherClub, $competition);
+    }
+
+    public function findForSchool(Competition $competition, int $schoolId): ?CompetitionRegistration
+    {
+        return CompetitionRegistration::query()
+            ->where('competition_id', $competition->id)
+            ->where('school_id', $schoolId)
+            ->first();
+    }
+
+    public function findForTeacherClub(Competition $competition, TeacherClub $teacherClub): ?CompetitionRegistration
+    {
+        if ($teacherClub->school_id !== null) {
+            return $this->findForSchool($competition, (int) $teacherClub->school_id);
+        }
+
+        return CompetitionRegistration::query()
+            ->where('competition_id', $competition->id)
+            ->where('teacher_club_id', $teacherClub->id)
+            ->first();
+    }
+
+    /**
+     * Whether this membership may edit the school registration (draft/rejected only).
+     * Any approved co-teacher at the same school+club may continue an open draft.
+     */
+    public function canEditRegistration(CompetitionRegistration $registration, TeacherClub $teacherClub): bool
+    {
+        if (! in_array($registration->status, ['draft', 'rejected'], true)) {
+            return false;
+        }
+
+        if ((int) $registration->teacher_club_id === (int) $teacherClub->id) {
+            return true;
+        }
+
+        if ($teacherClub->school_id === null || $registration->school_id === null) {
+            return false;
+        }
+
+        if ((int) $teacherClub->school_id !== (int) $registration->school_id) {
+            return false;
+        }
+
+        $registration->loadMissing('teacherClub');
+        $registrationClubId = (int) ($registration->teacherClub?->club_id ?? 0);
+        if ($registrationClubId !== 0 && $registrationClubId !== (int) $teacherClub->club_id) {
+            return false;
+        }
+
+        return $teacherClub->status === 'approved';
+    }
+
+    /**
+     * Registrations visible to this teacher across competitions (school-scoped).
+     *
+     * @return Collection<int, CompetitionRegistration> keyed by competition_id
+     */
+    public function registrationsForTeacher(TeacherClub ...$teacherClubs): Collection
+    {
+        $schoolIds = collect($teacherClubs)
+            ->pluck('school_id')
+            ->filter()
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values()
+            ->all();
+
+        $teacherClubIds = collect($teacherClubs)->pluck('id')->map(fn ($id) => (int) $id)->all();
+
+        if ($schoolIds === [] && $teacherClubIds === []) {
+            return collect();
+        }
+
+        return CompetitionRegistration::query()
+            ->with(['competition', 'idea'])
+            ->where(function ($query) use ($schoolIds, $teacherClubIds): void {
+                if ($schoolIds !== []) {
+                    $query->whereIn('school_id', $schoolIds);
+                }
+                if ($teacherClubIds !== []) {
+                    $query->orWhereIn('teacher_club_id', $teacherClubIds);
+                }
+            })
+            ->get()
+            ->unique('competition_id')
+            ->keyBy('competition_id');
+    }
+
+    /**
+     * @param  Competition|null  $only  When set (e.g. explore signup), ensure only this competition.
+     */
+    public function ensureForClubMembership(TeacherClub $teacherClub, ?Competition $only = null): void
+    {
+        $competitions = $this->competitionsForClub($teacherClub, $only);
+
+        foreach ($competitions as $competition) {
+            $this->ensureDraftRegistration($teacherClub, $competition);
+        }
+    }
+
+    private function createOrRefreshForTeacherClub(
+        TeacherClub $teacherClub,
+        Competition $competition,
+    ): CompetitionRegistration {
         $teacherClub->loadMissing(['user', 'school']);
 
         $user = $teacherClub->user;
         $school = $teacherClub->school;
 
         $attributes = [
+            'teacher_club_id' => $teacherClub->id,
             'teacher_user_id' => $teacherClub->user_id,
             'school_id' => $teacherClub->school_id,
             'region_id' => $school?->region_id,
@@ -37,51 +157,62 @@ class CompetitionParticipantRegistrationService
             'submitted_at' => null,
         ];
 
-        $registration = CompetitionRegistration::query()->firstOrCreate(
+        // Prefer school-scoped create when school_id is present.
+        if ($teacherClub->school_id !== null) {
+            return CompetitionRegistration::query()->firstOrCreate(
+                [
+                    'competition_id' => $competition->id,
+                    'school_id' => $teacherClub->school_id,
+                ],
+                $attributes,
+            );
+        }
+
+        return CompetitionRegistration::query()->firstOrCreate(
             [
                 'competition_id' => $competition->id,
                 'teacher_club_id' => $teacherClub->id,
             ],
             $attributes,
         );
+    }
 
-        if ($registration->wasRecentlyCreated) {
-            return $registration;
-        }
-
+    private function refreshOpenContactSnapshot(
+        CompetitionRegistration $registration,
+        TeacherClub $teacherClub,
+    ): CompetitionRegistration {
         if (! in_array($registration->status, ['draft', 'rejected'], true)) {
             return $registration;
         }
 
-        $registration->fill([
-            'teacher_user_id' => $attributes['teacher_user_id'],
-            'school_id' => $attributes['school_id'],
-            'region_id' => $attributes['region_id'],
-            'teacher_name' => $attributes['teacher_name'],
-            'teacher_email' => $attributes['teacher_email'],
-            'teacher_phone' => $attributes['teacher_phone'],
-            'school_name' => $attributes['school_name'],
-            'school_district' => $attributes['school_district'],
-            'school_ward' => $attributes['school_ward'],
-        ]);
+        // Keep original contact for an established draft; only fill gaps if empty.
+        $teacherClub->loadMissing(['user', 'school']);
+        $user = $teacherClub->user;
+        $school = $teacherClub->school;
+
+        $updates = [
+            'school_id' => $teacherClub->school_id ?? $registration->school_id,
+            'region_id' => $school?->region_id ?? $registration->region_id,
+            'school_name' => $school?->name ?: $registration->school_name,
+            'school_district' => $school?->district ?? $registration->school_district,
+            'school_ward' => $school?->ward ?? $registration->school_ward,
+        ];
+
+        if (! filled($registration->teacher_name) && $user) {
+            $updates['teacher_user_id'] = $teacherClub->user_id;
+            $updates['teacher_club_id'] = $teacherClub->id;
+            $updates['teacher_name'] = $user->name ?? '';
+            $updates['teacher_email'] = $user->email ?? '';
+            $updates['teacher_phone'] = $user->phone;
+        }
+
+        $registration->fill($updates);
 
         if ($registration->isDirty()) {
             $registration->save();
         }
 
         return $registration;
-    }
-
-    /**
-     * @param  Competition|null  $only  When set (e.g. explore signup), ensure only this competition.
-     */
-    public function ensureForClubMembership(TeacherClub $teacherClub, ?Competition $only = null): void
-    {
-        $competitions = $this->competitionsForClub($teacherClub, $only);
-
-        foreach ($competitions as $competition) {
-            $this->ensureDraftRegistration($teacherClub, $competition);
-        }
     }
 
     /**

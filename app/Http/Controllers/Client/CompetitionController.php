@@ -65,11 +65,9 @@ class CompetitionController extends Controller
             }
         }
 
-        $registrations = CompetitionRegistration::query()
-            ->where('teacher_user_id', $user->id)
-            ->with(['competition', 'idea'])
-            ->get()
-            ->keyBy('competition_id');
+        $registrations = $participantRegistrationService->registrationsForTeacher(
+            ...$teacherClubByClubId->values()->all()
+        );
 
         return view('client.back.competitions.index', compact(
             'competitions',
@@ -79,8 +77,11 @@ class CompetitionController extends Controller
         ));
     }
 
-    public function show(Competition $competition): View
-    {
+    public function show(
+        Competition $competition,
+        CompetitionParticipantRegistrationService $participantRegistrationService,
+        CompetitionEligibilityPoolService $eligibilityPool,
+    ): View {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id);
         $registration = null;
@@ -88,16 +89,15 @@ class CompetitionController extends Controller
         $poolStudents = collect();
 
         if ($teacherClub) {
-            $registration = CompetitionRegistration::query()
-                ->where('competition_id', $competition->id)
-                ->where('teacher_club_id', $teacherClub->id)
-                ->with([
+            $registration = $participantRegistrationService->findForTeacherClub($competition, $teacherClub);
+            if ($registration) {
+                $registration->load([
                     'representativeStudents.student.schoolClass',
                     'shortlist',
                     'region',
                     'school.regionModel',
-                ])
-                ->first();
+                ]);
+            }
             $idea = $registration?->idea()->with([
                 'scores',
                 'shortlist',
@@ -132,18 +132,7 @@ class CompetitionController extends Controller
         }
 
         if ($teacherClub) {
-            $allowedClassIds = $competition->classRequirements
-                ->pluck('school_class_id')
-                ->filter()
-                ->unique()
-                ->values()
-                ->all();
-
-            $poolStudents = $teacherClub->students()
-                ->with('schoolClass')
-                ->when(! empty($allowedClassIds), fn ($query) => $query->whereIn('school_class_id', $allowedClassIds))
-                ->orderBy('name')
-                ->get();
+            $poolStudents = $eligibilityPool->computePool($competition, $teacherClub)['students'];
         }
 
         $regions = Region::query()->orderBy('name')->get(['id', 'name']);
@@ -160,8 +149,11 @@ class CompetitionController extends Controller
         ));
     }
 
-    public function register(Competition $competition): View|\Illuminate\Http\RedirectResponse
-    {
+    public function register(
+        Competition $competition,
+        CompetitionParticipantRegistrationService $participantRegistrationService,
+        CompetitionEligibilityPoolService $eligibilityPool,
+    ): View|\Illuminate\Http\RedirectResponse {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
 
@@ -169,15 +161,13 @@ class CompetitionController extends Controller
             abort(403, 'You must join this club first before registering for competitions.');
         }
 
-        $registration = CompetitionRegistration::where('teacher_club_id', $teacherClub->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $registration = $participantRegistrationService->findForTeacherClub($competition, $teacherClub);
 
         if ($registration) {
             if (in_array($registration->status, ['pending', 'approved'], true)) {
                 $message = $registration->status === 'pending'
-                    ? 'Your registration is already submitted and is awaiting admin review.'
-                    : 'Your registration has already been approved.';
+                    ? 'Your school is already registered and is awaiting admin review.'
+                    : 'Your school registration has already been approved.';
 
                 return redirect()->route('client.competitions.show', $competition)
                     ->with('status', $message);
@@ -185,6 +175,10 @@ class CompetitionController extends Controller
             if (! in_array($registration->status, ['draft', 'rejected'], true)) {
                 return redirect()->route('client.competitions.show', $competition)
                     ->with('error', 'You cannot edit registration in its current state.');
+            }
+            if (! $participantRegistrationService->canEditRegistration($registration, $teacherClub)) {
+                return redirect()->route('client.competitions.show', $competition)
+                    ->with('status', 'Your school already has a competition registration. You can view the details here.');
             }
         }
 
@@ -194,12 +188,9 @@ class CompetitionController extends Controller
 
         $competition->loadMissing(['classRequirements.schoolClass']);
 
-        $allowedClassIds = $competition->classRequirements()->pluck('school_class_id')->all();
-        $students = $teacherClub->students()
-            ->with('schoolClass')
-            ->when(! empty($allowedClassIds), fn ($query) => $query->whereIn('school_class_id', $allowedClassIds))
-            ->orderBy('name')
-            ->get();
+        $pool = $eligibilityPool->computePool($competition, $teacherClub);
+        $students = $pool['students'];
+        $allowedClassIds = $pool['allowed_class_ids'];
 
         $classesQuery = SchoolClass::query()->where('is_active', true)->orderBy('name');
         $classes = ! empty($allowedClassIds)
@@ -219,7 +210,8 @@ class CompetitionController extends Controller
     public function bulkImportStudents(
         Request $request,
         Competition $competition,
-        StudentCsvBulkImportService $csvImport
+        StudentCsvBulkImportService $csvImport,
+        CompetitionParticipantRegistrationService $participantRegistrationService,
     ): RedirectResponse {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
@@ -229,16 +221,18 @@ class CompetitionController extends Controller
                 ->with('error', 'You must join this club first.');
         }
 
-        $existingRegistration = CompetitionRegistration::query()
-            ->where('teacher_club_id', $teacherClub->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $existingRegistration = $participantRegistrationService->findForTeacherClub($competition, $teacherClub);
+
+        if ($existingRegistration && ! $participantRegistrationService->canEditRegistration($existingRegistration, $teacherClub)) {
+            return redirect()->route('client.competitions.show', $competition)
+                ->with('status', 'Your school is already registered for this competition.');
+        }
 
         if ($redirect = $this->registrationNotAllowedRedirect($competition, $existingRegistration)) {
             return $redirect;
         }
 
-        $validated = $request->validate([
+        $request->validate([
             'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
         ]);
 
@@ -256,8 +250,11 @@ class CompetitionController extends Controller
             ->with('status', "Successfully imported {$result['success_count']} student(s).");
     }
 
-    public function clearPoolStudents(Competition $competition): RedirectResponse
-    {
+    public function clearPoolStudents(
+        Competition $competition,
+        CompetitionParticipantRegistrationService $participantRegistrationService,
+        CompetitionEligibilityPoolService $eligibilityPool,
+    ): RedirectResponse {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
 
@@ -266,25 +263,25 @@ class CompetitionController extends Controller
                 ->with('error', 'You must join this club first.');
         }
 
-        $existingRegistration = CompetitionRegistration::query()
-            ->where('teacher_club_id', $teacherClub->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $existingRegistration = $participantRegistrationService->findForTeacherClub($competition, $teacherClub);
+
+        if ($existingRegistration && ! $participantRegistrationService->canEditRegistration($existingRegistration, $teacherClub)) {
+            return redirect()->route('client.competitions.show', $competition)
+                ->with('status', 'Your school is already registered for this competition.');
+        }
 
         if ($redirect = $this->registrationNotAllowedRedirect($competition, $existingRegistration)) {
             return $redirect;
         }
 
-        $allowedClassIds = $competition->classRequirements()->pluck('school_class_id')->all();
+        $pool = $eligibilityPool->computePool($competition, $teacherClub);
+        $studentIds = $pool['students']->pluck('id')->all();
+        $deleted = count($studentIds);
+        if ($studentIds !== []) {
+            \App\Models\Student::query()->whereIn('id', $studentIds)->delete();
+        }
 
-        $query = $teacherClub->students()
-            ->when(! empty($allowedClassIds), fn ($builder) => $builder->whereIn('school_class_id', $allowedClassIds));
-
-        $deleted = (clone $query)->count();
-        $query->delete();
-
-        app(CompetitionEligibilityPoolService::class)
-            ->refreshOpenRegistrationSnapshots($teacherClub);
+        $eligibilityPool->refreshOpenRegistrationSnapshots($teacherClub);
 
         return redirect()
             ->route('client.competitions.register', $competition)
@@ -294,8 +291,10 @@ class CompetitionController extends Controller
     /**
      * Download a CSV template with headers and one example row (same format as bulk import).
      */
-    public function downloadRegistrationCsvTemplate(Competition $competition): StreamedResponse|RedirectResponse
-    {
+    public function downloadRegistrationCsvTemplate(
+        Competition $competition,
+        CompetitionParticipantRegistrationService $participantRegistrationService,
+    ): StreamedResponse|RedirectResponse {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
 
@@ -304,10 +303,12 @@ class CompetitionController extends Controller
                 ->with('error', 'You must join this club first.');
         }
 
-        $existingRegistration = CompetitionRegistration::query()
-            ->where('teacher_club_id', $teacherClub->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $existingRegistration = $participantRegistrationService->findForTeacherClub($competition, $teacherClub);
+
+        if ($existingRegistration && ! $participantRegistrationService->canEditRegistration($existingRegistration, $teacherClub)) {
+            return redirect()->route('client.competitions.show', $competition)
+                ->with('status', 'Your school is already registered for this competition.');
+        }
 
         if ($redirect = $this->registrationNotAllowedRedirect($competition, $existingRegistration)) {
             return $redirect;
@@ -329,8 +330,12 @@ class CompetitionController extends Controller
         ]);
     }
 
-    public function storeRegistration(Request $request, Competition $competition): RedirectResponse
-    {
+    public function storeRegistration(
+        Request $request,
+        Competition $competition,
+        CompetitionParticipantRegistrationService $participantRegistrationService,
+        CompetitionEligibilityPoolService $eligibilityPool,
+    ): RedirectResponse {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
 
@@ -339,9 +344,7 @@ class CompetitionController extends Controller
                 ->with('error', 'You must join this club first.');
         }
 
-        $existing = CompetitionRegistration::where('teacher_club_id', $teacherClub->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $existing = $participantRegistrationService->findForTeacherClub($competition, $teacherClub);
 
         if ($redirect = $this->registrationNotAllowedRedirect($competition, $existing)) {
             return $redirect;
@@ -349,7 +352,12 @@ class CompetitionController extends Controller
 
         if ($existing && ! in_array($existing->status, ['draft', 'rejected'], true)) {
             return redirect()->route('client.competitions.show', $competition)
-                ->with('error', 'You have already registered for this competition.');
+                ->with('error', 'Your school has already registered for this competition.');
+        }
+
+        if ($existing && ! $participantRegistrationService->canEditRegistration($existing, $teacherClub)) {
+            return redirect()->route('client.competitions.show', $competition)
+                ->with('status', 'Your school already has a competition registration.');
         }
 
         $validated = $request->validate([
@@ -358,25 +366,23 @@ class CompetitionController extends Controller
             'school_ward' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $allowedClassIds = $competition->classRequirements()->pluck('school_class_id')->all();
-        $poolStudents = $teacherClub->students()
-            ->when(! empty($allowedClassIds), fn ($query) => $query->whereIn('school_class_id', $allowedClassIds))
-            ->get();
+        $pool = $eligibilityPool->computePool($competition, $teacherClub);
+        $poolCount = $pool['count'];
+        $poolGirlsCount = $pool['girls_count'];
+        $poolRatio = $pool['girls_ratio'];
 
-        $poolCount = $poolStudents->count();
-        $poolGirlsCount = $poolStudents->where('gender', 'female')->count();
-        $poolRatio = $poolCount > 0 ? ($poolGirlsCount / $poolCount) * 100 : 0;
-
-        $poolError = $this->competitionPoolEligibilityError($competition, $poolCount, $poolRatio);
+        $poolError = $this->competitionPoolEligibilityError($competition, $poolCount, (float) $poolRatio);
         if ($poolError !== null) {
             return back()->withErrors(['eligibility' => $poolError])->withInput();
         }
 
-        DB::transaction(function () use ($validated, $competition, $teacherClub, $user, $poolCount, $poolGirlsCount, $poolRatio, $existing): void {
+        DB::transaction(function () use ($validated, $competition, $teacherClub, $user, $poolCount, $poolGirlsCount, $poolRatio, $existing, $participantRegistrationService): void {
             if ($existing) {
                 $existing->representativeStudents()->delete();
                 $existing->update([
                     'status' => 'pending',
+                    'teacher_club_id' => $teacherClub->id,
+                    'teacher_user_id' => $user->id,
                     'school_id' => $teacherClub->school_id,
                     'region_id' => $teacherClub->school?->region_id,
                     'teacher_name' => $user->name,
@@ -387,7 +393,7 @@ class CompetitionController extends Controller
                     'school_ward' => $validated['school_ward'] ?? $teacherClub->school?->ward,
                     'student_count_snapshot' => $poolCount,
                     'girls_count_snapshot' => $poolGirlsCount,
-                    'girls_ratio_snapshot' => round($poolRatio, 2),
+                    'girls_ratio_snapshot' => round((float) $poolRatio, 2),
                     'eligibility_met' => true,
                     'submitted_at' => now(),
                     'rejection_reason' => null,
@@ -396,13 +402,14 @@ class CompetitionController extends Controller
                 return;
             }
 
-            CompetitionRegistration::create([
-                'competition_id' => $competition->id,
+            // Ensure school-scoped create path even if ensureDraft was never called.
+            $created = $participantRegistrationService->ensureDraftRegistration($teacherClub, $competition);
+            $created->update([
+                'status' => 'pending',
                 'teacher_club_id' => $teacherClub->id,
                 'teacher_user_id' => $user->id,
                 'school_id' => $teacherClub->school_id,
                 'region_id' => $teacherClub->school?->region_id,
-                'status' => 'pending',
                 'teacher_name' => $user->name,
                 'teacher_email' => $user->email,
                 'teacher_phone' => $user->phone,
@@ -411,9 +418,10 @@ class CompetitionController extends Controller
                 'school_ward' => $validated['school_ward'] ?? $teacherClub->school?->ward,
                 'student_count_snapshot' => $poolCount,
                 'girls_count_snapshot' => $poolGirlsCount,
-                'girls_ratio_snapshot' => round($poolRatio, 2),
+                'girls_ratio_snapshot' => round((float) $poolRatio, 2),
                 'eligibility_met' => true,
                 'submitted_at' => now(),
+                'rejection_reason' => null,
             ]);
         });
 
@@ -422,8 +430,11 @@ class CompetitionController extends Controller
             ->with('status', 'Registration submitted successfully. Wait for Judges to review your registration and you will be notified.');
     }
 
-    public function registerRepresentatives(Competition $competition): View|\Illuminate\Http\RedirectResponse
-    {
+    public function registerRepresentatives(
+        Competition $competition,
+        CompetitionParticipantRegistrationService $participantRegistrationService,
+        CompetitionEligibilityPoolService $eligibilityPool,
+    ): View|\Illuminate\Http\RedirectResponse {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
 
@@ -431,25 +442,25 @@ class CompetitionController extends Controller
             abort(403, 'You must join this club first before registering for competitions.');
         }
 
-        $registration = CompetitionRegistration::where('teacher_club_id', $teacherClub->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $registration = $participantRegistrationService->findForTeacherClub($competition, $teacherClub);
 
         if (! $registration || $registration->status !== 'draft') {
             return redirect()->route('client.competitions.register', $competition)
                 ->with('error', 'Save your participant list and school details first, or your registration is already submitted.');
         }
 
+        if (! $participantRegistrationService->canEditRegistration($registration, $teacherClub)) {
+            return redirect()->route('client.competitions.show', $competition)
+                ->with('status', 'Your school already has a competition registration.');
+        }
+
         if ($redirect = $this->registrationNotAllowedRedirect($competition, $registration)) {
             return $redirect;
         }
 
-        $allowedClassIds = $competition->classRequirements()->pluck('school_class_id')->all();
-        $students = $teacherClub->students()
-            ->with('schoolClass')
-            ->when(! empty($allowedClassIds), fn ($query) => $query->whereIn('school_class_id', $allowedClassIds))
-            ->orderBy('name')
-            ->get();
+        $pool = $eligibilityPool->computePool($competition, $teacherClub);
+        $students = $pool['students'];
+        $allowedClassIds = $pool['allowed_class_ids'];
 
         return view('client.back.competitions.register-representatives', compact(
             'competition',
@@ -460,8 +471,12 @@ class CompetitionController extends Controller
         ));
     }
 
-    public function storeRegistrationRepresentatives(Request $request, Competition $competition): RedirectResponse
-    {
+    public function storeRegistrationRepresentatives(
+        Request $request,
+        Competition $competition,
+        CompetitionParticipantRegistrationService $participantRegistrationService,
+        CompetitionEligibilityPoolService $eligibilityPool,
+    ): RedirectResponse {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
 
@@ -470,9 +485,7 @@ class CompetitionController extends Controller
                 ->with('error', 'You must join this club first.');
         }
 
-        $registration = CompetitionRegistration::where('teacher_club_id', $teacherClub->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $registration = $participantRegistrationService->findForTeacherClub($competition, $teacherClub);
 
         if ($redirect = $this->registrationNotAllowedRedirect($competition, $registration)) {
             return $redirect;
@@ -483,6 +496,11 @@ class CompetitionController extends Controller
                 ->with('error', 'No draft registration found to finalize.');
         }
 
+        if (! $participantRegistrationService->canEditRegistration($registration, $teacherClub)) {
+            return redirect()->route('client.competitions.show', $competition)
+                ->with('status', 'Your school already has a competition registration.');
+        }
+
         $repCount = $this->requiredRepresentativeCount($competition);
 
         $validated = $request->validate([
@@ -491,24 +509,20 @@ class CompetitionController extends Controller
             'student_roles' => ['nullable', 'array'],
         ]);
 
-        $allowedClassIds = $competition->classRequirements()->pluck('school_class_id')->all();
-        $poolStudents = $teacherClub->students()
-            ->when(! empty($allowedClassIds), fn ($query) => $query->whereIn('school_class_id', $allowedClassIds))
-            ->get();
-
-        $poolCount = $poolStudents->count();
-        $poolGirlsCount = $poolStudents->where('gender', 'female')->count();
-        $poolRatio = $poolCount > 0 ? ($poolGirlsCount / $poolCount) * 100 : 0;
+        $pool = $eligibilityPool->computePool($competition, $teacherClub);
+        $poolStudents = $pool['students'];
+        $poolCount = $pool['count'];
+        $poolGirlsCount = $pool['girls_count'];
+        $poolRatio = (float) $pool['girls_ratio'];
 
         $poolError = $this->competitionPoolEligibilityError($competition, $poolCount, $poolRatio);
         if ($poolError !== null) {
             return back()->withErrors(['representative_student_ids' => $poolError])->withInput();
         }
 
-        $representatives = $teacherClub->students()
-            ->when(! empty($allowedClassIds), fn ($query) => $query->whereIn('school_class_id', $allowedClassIds))
+        $representatives = $poolStudents
             ->whereIn('id', $validated['representative_student_ids'])
-            ->get();
+            ->values();
 
         if ($representatives->count() !== $repCount) {
             return back()->withErrors(['representative_student_ids' => "Please select exactly {$repCount} valid representatives."])->withInput();
@@ -521,7 +535,7 @@ class CompetitionController extends Controller
             ])->withInput();
         }
 
-        DB::transaction(function () use ($registration, $representatives, $request, $poolCount, $poolGirlsCount, $poolRatio): void {
+        DB::transaction(function () use ($registration, $representatives, $request, $poolCount, $poolGirlsCount, $poolRatio, $teacherClub, $user): void {
             $registration->representativeStudents()->delete();
 
             foreach ($representatives as $student) {
@@ -535,6 +549,8 @@ class CompetitionController extends Controller
 
             $registration->update([
                 'status' => 'pending',
+                'teacher_club_id' => $teacherClub->id,
+                'teacher_user_id' => $user->id,
                 'student_count_snapshot' => $poolCount,
                 'girls_count_snapshot' => $poolGirlsCount,
                 'girls_ratio_snapshot' => round($poolRatio, 2),
@@ -551,10 +567,7 @@ class CompetitionController extends Controller
     {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
-        $registration = CompetitionRegistration::query()
-            ->where('teacher_club_id', $teacherClub?->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $registration = $this->resolveSchoolRegistration($competition, $teacherClub);
 
         if (! $registration) {
             return redirect()->route('client.competitions.show', $competition)
@@ -585,10 +598,7 @@ class CompetitionController extends Controller
     {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
-        $registration = CompetitionRegistration::query()
-            ->where('teacher_club_id', $teacherClub?->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $registration = $this->resolveSchoolRegistration($competition, $teacherClub);
 
         if (! $registration || $registration->status === 'draft') {
             return redirect()->route('client.competitions.show', $competition)
@@ -657,26 +667,23 @@ class CompetitionController extends Controller
         ]);
 
         if ($request->boolean('submit_final')) {
-            $allowedClassIds = $competition->classRequirements()->pluck('school_class_id')->all();
+            $eligibilityPool = app(CompetitionEligibilityPoolService::class);
+            $pool = $eligibilityPool->computePool($competition, $teacherClub);
             $repCount = $this->requiredRepresentativeCount($competition);
 
-            $poolStudents = $teacherClub->students()
-                ->when(! empty($allowedClassIds), fn ($query) => $query->whereIn('school_class_id', $allowedClassIds))
-                ->get();
-
-            $poolCount = $poolStudents->count();
-            $poolGirlsCount = $poolStudents->where('gender', 'female')->count();
-            $poolRatio = $poolCount > 0 ? ($poolGirlsCount / $poolCount) * 100 : 0;
+            $poolStudents = $pool['students'];
+            $poolCount = $pool['count'];
+            $poolGirlsCount = $pool['girls_count'];
+            $poolRatio = (float) $pool['girls_ratio'];
 
             $poolError = $this->competitionPoolEligibilityError($competition, $poolCount, $poolRatio);
             if ($poolError !== null) {
                 return back()->withErrors(['representative_student_ids' => $poolError])->withInput();
             }
 
-            $representatives = $teacherClub->students()
-                ->when(! empty($allowedClassIds), fn ($query) => $query->whereIn('school_class_id', $allowedClassIds))
+            $representatives = $poolStudents
                 ->whereIn('id', $validated['representative_student_ids'])
-                ->get();
+                ->values();
 
             if ($representatives->count() !== $repCount) {
                 return back()->withErrors([
@@ -716,7 +723,8 @@ class CompetitionController extends Controller
 
         if ($request->input('sync_representatives') === '1') {
             $repCount = $this->requiredRepresentativeCount($competition);
-            $allowedClassIds = $competition->classRequirements()->pluck('school_class_id')->all();
+            $poolStudents = app(CompetitionEligibilityPoolService::class)
+                ->computePool($competition, $teacherClub)['students'];
 
             $ids = array_values(array_unique(array_map(
                 'intval',
@@ -729,10 +737,8 @@ class CompetitionController extends Controller
                 ])->withInput();
             }
 
-            $studentsById = $teacherClub->students()
-                ->when(! empty($allowedClassIds), fn ($query) => $query->whereIn('school_class_id', $allowedClassIds))
+            $studentsById = $poolStudents
                 ->whereIn('id', $ids)
-                ->get()
                 ->keyBy('id');
 
             if ($studentsById->count() !== count($ids)) {
@@ -759,10 +765,7 @@ class CompetitionController extends Controller
     {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
-        $registration = CompetitionRegistration::query()
-            ->where('teacher_club_id', $teacherClub?->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $registration = $this->resolveSchoolRegistration($competition, $teacherClub);
 
         if (! $registration) {
             return redirect()->route('client.competitions.show', $competition)
@@ -811,10 +814,7 @@ class CompetitionController extends Controller
     {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
-        $registration = CompetitionRegistration::query()
-            ->where('teacher_club_id', $teacherClub?->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $registration = $this->resolveSchoolRegistration($competition, $teacherClub);
 
         if (! $registration || $registration->status === 'draft') {
             return redirect()->route('client.competitions.show', $competition)
@@ -914,10 +914,7 @@ class CompetitionController extends Controller
     {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
-        $registration = CompetitionRegistration::query()
-            ->where('teacher_club_id', $teacherClub?->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $registration = $this->resolveSchoolRegistration($competition, $teacherClub);
 
         if (! $registration) {
             return redirect()->route('client.competitions.show', $competition)
@@ -950,10 +947,7 @@ class CompetitionController extends Controller
     {
         $user = Auth::user();
         $teacherClub = $this->resolveTeacherClubForCompetition($user->id, $competition->club_id, true);
-        $registration = CompetitionRegistration::query()
-            ->where('teacher_club_id', $teacherClub?->id)
-            ->where('competition_id', $competition->id)
-            ->first();
+        $registration = $this->resolveSchoolRegistration($competition, $teacherClub);
 
         if (! $registration || $registration->status !== 'approved') {
             return redirect()->route('client.competitions.show', $competition)
@@ -1082,6 +1076,18 @@ class CompetitionController extends Controller
                 'is_representative' => true,
             ]);
         }
+    }
+
+    private function resolveSchoolRegistration(
+        Competition $competition,
+        ?TeacherClub $teacherClub,
+    ): ?CompetitionRegistration {
+        if (! $teacherClub) {
+            return null;
+        }
+
+        return app(CompetitionParticipantRegistrationService::class)
+            ->findForTeacherClub($competition, $teacherClub);
     }
 
     private function registrationNotAllowedRedirect(

@@ -132,11 +132,15 @@ test('store registration promotes draft to pending when eligibility passes', fun
 
 test('backfill command only creates registrations for teacher clubs in date range', function () {
     ['school' => $school, 'competition' => $competition] = createCompetitionFixture();
+    $otherSchool = \App\Models\School::query()->create([
+        'name' => 'Other School '.Str::random(6),
+        'is_active' => true,
+    ]);
 
     $inRange = createTeacherClubForCompetition($competition, $school);
     $inRange->forceFill(['created_at' => '2026-05-12 10:00:00', 'updated_at' => '2026-05-12 10:00:00'])->save();
 
-    $outOfRange = createTeacherClubForCompetition($competition, $school, [
+    $outOfRange = createTeacherClubForCompetition($competition, $otherSchool, [
         'email' => 'old.'.uniqid().'@school.test',
     ]);
     $outOfRange->forceFill(['created_at' => '2026-05-01 10:00:00', 'updated_at' => '2026-05-01 10:00:00'])->save();
@@ -150,14 +154,14 @@ test('backfill command only creates registrations for teacher clubs in date rang
     expect(
         CompetitionRegistration::query()
             ->where('competition_id', $competition->id)
-            ->where('teacher_club_id', $inRange->id)
+            ->where('school_id', $school->id)
             ->exists()
     )->toBeTrue();
 
     expect(
         CompetitionRegistration::query()
             ->where('competition_id', $competition->id)
-            ->where('teacher_club_id', $outOfRange->id)
+            ->where('school_id', $otherSchool->id)
             ->exists()
     )->toBeFalse();
 });
