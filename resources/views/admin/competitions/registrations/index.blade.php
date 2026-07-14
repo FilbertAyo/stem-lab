@@ -77,12 +77,25 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if($registration->status === 'draft')
+                                            @php
+                                                $poolCount = (int) ($registration->student_count_snapshot ?? 0);
+                                                $poolRatio = $registration->girls_ratio_snapshot;
+                                                $poolMet = (bool) $registration->eligibility_met;
+                                            @endphp
+                                            @if($poolCount > 0)
+                                                <div>{{ $poolCount }} students</div>
+                                                <small class="text-muted">{{ $poolRatio }}% girls</small>
+                                                @if($registration->status === 'draft' || $registration->status === 'rejected')
+                                                    <div class="small {{ $poolMet ? 'text-success' : 'text-danger' }}">
+                                                        {{ $poolMet ? 'Pool met' : 'Pool not met' }}
+                                                    </div>
+                                                @endif
+                                            @elseif($registration->status === 'draft')
                                                 <div class="text-muted">0 students</div>
                                                 <small class="text-muted">Awaiting CSV upload</small>
                                             @else
-                                                <div>{{ $registration->student_count_snapshot }} students</div>
-                                                <small class="text-muted">{{ $registration->girls_ratio_snapshot }}% girls</small>
+                                                <div>0 students</div>
+                                                <small class="text-muted">{{ $poolRatio ?? 0 }}% girls</small>
                                             @endif
                                         </td>
                                         <td>

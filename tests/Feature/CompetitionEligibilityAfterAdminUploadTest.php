@@ -135,6 +135,42 @@ test('eligibility pool ignores students outside competition class requirements',
         ->and($pool['eligible'])->toBeFalse(); // needs min 2
 });
 
+test('admin registrations index shows live eligibility for drafts with students', function () {
+    ['school' => $school, 'competition' => $competition] = createCompetitionFixture([
+        'min_members' => 2,
+    ]);
+    $teacherClub = createTeacherClubForCompetition($competition, $school);
+    $class = SchoolClass::query()->create(['name' => 'Form Index '.Str::random(4), 'is_active' => true]);
+
+    app(CompetitionParticipantRegistrationService::class)
+        ->ensureDraftRegistration($teacherClub, $competition);
+
+    $teacherClub->students()->create([
+        'name' => 'Girl One',
+        'gender' => 'female',
+        'age' => 14,
+        'school_class_id' => $class->id,
+    ]);
+    $teacherClub->students()->create([
+        'name' => 'Girl Two',
+        'gender' => 'female',
+        'age' => 15,
+        'school_class_id' => $class->id,
+    ]);
+
+    $admin = User::factory()->create(['role' => 'admin']);
+    $host = adminRequestHost();
+
+    $response = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => $host])
+        ->get('http://'.$host.'/competitions/'.$competition->ulid.'/registrations');
+
+    $response->assertOk();
+    $response->assertSee('2 students');
+    $response->assertSee('Pool met');
+    $response->assertDontSee('Awaiting CSV upload');
+});
+
 test('admin registration show heals stale draft eligibility snapshots', function () {
     ['school' => $school, 'competition' => $competition] = createCompetitionFixture([
         'min_members' => 2,
