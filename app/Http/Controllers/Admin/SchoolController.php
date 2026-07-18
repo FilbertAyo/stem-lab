@@ -92,7 +92,7 @@ class SchoolController extends Controller
 
         // Get unique teachers for this school (using database query is more efficient)
         $teacherIds = $school->teacherClubs()->pluck('user_id')->unique()->toArray();
-        $teachers = !empty($teacherIds) 
+        $teachers = ! empty($teacherIds)
             ? \App\Models\User::whereIn('id', $teacherIds)->get()->unique('id')->values()
             : collect();
 
@@ -129,7 +129,8 @@ class SchoolController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:schools,name'],
-            'address' => ['nullable', 'string', 'max:500'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90', 'required_with:longitude'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:latitude'],
             'phone' => ['nullable', 'string', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],
             'district' => ['nullable', 'string', 'max:255'],
@@ -188,7 +189,8 @@ class SchoolController extends Controller
                 'max:255',
                 Rule::unique('schools', 'name')->ignore($school->id),
             ],
-            'address' => ['nullable', 'string', 'max:500'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90', 'required_with:longitude'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:latitude'],
             'phone' => ['nullable', 'string', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],
             'district' => ['nullable', 'string', 'max:255'],
@@ -406,7 +408,6 @@ class SchoolController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search): void {
                 $q->where('name', 'like', '%'.$search.'%')
-                    ->orWhere('address', 'like', '%'.$search.'%')
                     ->orWhere('district', 'like', '%'.$search.'%')
                     ->orWhere('email', 'like', '%'.$search.'%')
                     ->orWhere('phone', 'like', '%'.$search.'%')

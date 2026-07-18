@@ -54,8 +54,16 @@
                                 <dt class="col-sm-4 text-muted fw-normal">Registration status</dt>
                                 <dd class="col-sm-8 mb-2">{{ $registration ? ucfirst($registration->status) : '—' }}</dd>
                                 @if($school)
-                                    <dt class="col-sm-4 text-muted fw-normal">School address</dt>
-                                    <dd class="col-sm-8 mb-2 text-break">{{ $school->address ?: '—' }}</dd>
+                                    <dt class="col-sm-4 text-muted fw-normal">School location</dt>
+                                    <dd class="col-sm-8 mb-2 text-break">
+                                        @if($school->latitude !== null && $school->longitude !== null)
+                                            <a href="https://www.google.com/maps?q={{ $school->latitude }},{{ $school->longitude }}" target="_blank" rel="noopener noreferrer">
+                                                {{ $school->latitude }}, {{ $school->longitude }}
+                                            </a>
+                                        @else
+                                            —
+                                        @endif
+                                    </dd>
                                     <dt class="col-sm-4 text-muted fw-normal">District / ward</dt>
                                     <dd class="col-sm-8 mb-2">{{ $school->district ?? '—' }} / {{ $school->ward ?? '—' }}</dd>
                                     <dt class="col-sm-4 text-muted fw-normal">School region</dt>

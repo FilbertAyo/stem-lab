@@ -6,7 +6,7 @@
                     <h5 class="mb-0">Clubs</h5>
                     <p class="text-muted mb-0">Manage School Clubs</p>
                 </div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createClubModal">
+                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#createClubModal">
                     <i class="ti ti-plus"></i> Add Club
                 </button>
             </div>
@@ -24,7 +24,6 @@
                                     <th>Description</th>
                                     <th>Image</th>
                                     <th>Status</th>
-                                    <th>Last Updated</th>
                                     <th class="text-center" style="width: 160px;">Actions</th>
                                 </tr>
                             </thead>
@@ -46,8 +45,7 @@
                                                 {{ $club->is_active ? 'Active' : 'Disabled' }}
                                             </span>
                                         </td>
-                                        <td>{{ $club->updated_at?->format('d M Y, H:i') }}</td>
-                                        <td class="text-center">
+                                     <td class="text-center">
                                             <div class="btn-group" role="group">
                                                 <a
                                                     href="{{ route('admin.clubs.show', $club) }}"

@@ -49,9 +49,13 @@
                                             <dt class="col-sm-3 text-muted">District</dt>
                                             <dd class="col-sm-9 mb-2">{{ $districtRegion }}</dd>
                                         @endif
-                                        @if($school->address)
-                                            <dt class="col-sm-3 text-muted">Address</dt>
-                                            <dd class="col-sm-9 mb-2">{{ $school->address }}</dd>
+                                        @if($school->latitude !== null && $school->longitude !== null)
+                                            <dt class="col-sm-3 text-muted">Location</dt>
+                                            <dd class="col-sm-9 mb-2">
+                                                <a href="https://www.google.com/maps?q={{ $school->latitude }},{{ $school->longitude }}" target="_blank" rel="noopener noreferrer">
+                                                    {{ $school->latitude }}, {{ $school->longitude }}
+                                                </a>
+                                            </dd>
                                         @endif
                                     </dl>
                                 @endif

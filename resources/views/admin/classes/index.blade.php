@@ -4,11 +4,10 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h5 class="mb-0">Classes Management</h5>
-                    <p class="text-muted mb-0">Create, edit or disable classes without leaving this page.</p>
-                </div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createClassModal">
+            </div>
+                <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createClassModal">
                     <i class="ti ti-plus"></i> Add Class
-                </button>
+                </button> -->
             </div>
 
            
@@ -23,8 +22,8 @@
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th>Status</th>
-                                    <th>Last Updated</th>
-                                    <th class="text-center" style="width: 160px;">Actions</th>
+                                    <!-- <th>Last Updated</th> -->
+                                    <!-- <th class="text-center" style="width: 160px;">Actions</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -38,8 +37,8 @@
                                                 {{ $class->is_active ? 'Active' : 'Disabled' }}
                                             </span>
                                         </td>
-                                        <td>{{ $class->updated_at?->format('d M Y, H:i') }}</td>
-                                        <td class="text-center">
+                                        <!-- <td>{{ $class->updated_at?->format('d M Y, H:i') }}</td> -->
+                                        <!-- <td class="text-center">
                                             <div class="btn-group" role="group">
                                                 <button
                                                     class="btn btn-sm btn-outline-primary"
@@ -64,7 +63,7 @@
                                                     <i class="ti {{ $class->is_active ? 'ti-ban' : 'ti-check' }}"></i>
                                                 </button>
                                             </div>
-                                        </td>
+                                        </td> -->
                                     </tr>
                                 @empty
                                     <tr>

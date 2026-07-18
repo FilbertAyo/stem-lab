@@ -4,7 +4,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h5 class="mb-0">Schools</h5>
-                    <p class="text-muted mb-0">Manage schools. New teacher registrations appear under Needs review until you acknowledge them.</p>
+                    <p class="text-muted mb-0">Manage schools.</p>
                 </div>
                 <div class="d-flex flex-wrap gap-2">
                     @if($pendingReviewCount > 0)
@@ -16,12 +16,12 @@
                                 @endif
                             @endforeach
                             <input type="hidden" name="review" value="pending">
-                            <button type="submit" class="btn btn-warning" onclick="return confirm('Mark all schools matching the pending-review filter as reviewed?');">
+                            <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('Mark all schools matching the pending-review filter as reviewed?');">
                                 <i class="ti ti-checks"></i> Approve all ({{ $pendingReviewCount }})
                             </button>
                         </form>
                     @endif
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createSchoolModal">
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#createSchoolModal">
                         <i class="ti ti-plus"></i> Add School
                     </button>
                 </div>
@@ -42,7 +42,7 @@
                     <form method="GET" action="{{ route('admin.schools.index') }}" class="row g-3 align-items-end">
                         <div class="col-md-3">
                             <label class="form-label small">Search</label>
-                            <input type="text" name="search" class="form-control" placeholder="Search by name, address, district, ward, region, email, or phone..." value="{{ request('search') }}">
+                            <input type="text" name="search" class="form-control" placeholder="Search by name, district, ward, region, email, or phone..." value="{{ request('search') }}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label small">Status</label>
@@ -52,14 +52,7 @@
                                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
-                            <label class="form-label small">Review</label>
-                            <select name="review" class="form-select">
-                                <option value="">All</option>
-                                <option value="pending" {{ request('review') === 'pending' ? 'selected' : '' }}>Needs review</option>
-                                <option value="reviewed" {{ request('review') === 'reviewed' ? 'selected' : '' }}>Reviewed</option>
-                            </select>
-                        </div>
+
                         <div class="col-md-2">
                             <label class="form-label small">Region</label>
                             <select name="region_id" class="form-select">
@@ -123,7 +116,6 @@
                                     <th>Region</th>
                                     <th>District</th>
                                     <th>Ward</th>
-                                    
                                     <th>Status</th>
                                     <th>Last Updated</th>
                                     <th class="text-center" style="width: 260px;">Actions</th>
@@ -184,6 +176,8 @@
                                                     data-bs-target="#editSchoolModal"
                                                     data-action="{{ route('admin.schools.update', $school) }}"
                                                     data-name="{{ $school->name }}" 
+                                                    data-latitude="{{ $school->latitude }}"
+                                                    data-longitude="{{ $school->longitude }}"
                                                     data-phone="{{ $school->phone }}"
                                                     data-email="{{ $school->email }}"
                                                     data-district="{{ $school->district }}"
@@ -330,12 +324,21 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="schoolAddress" class="form-label">Address</label>
-                            <textarea name="address" id="schoolAddress" rows="2" class="form-control" placeholder="Full address">{{ old('address') }}</textarea>
-                            @error('address')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="schoolLatitude" class="form-label">Latitude</label>
+                                <input type="number" name="latitude" id="schoolLatitude" class="form-control" value="{{ old('latitude') }}" min="-90" max="90" step="0.0000001" placeholder="-6.7923540">
+                                @error('latitude')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="schoolLongitude" class="form-label">Longitude</label>
+                                <input type="number" name="longitude" id="schoolLongitude" class="form-control" value="{{ old('longitude') }}" min="-180" max="180" step="0.0000001" placeholder="39.2083284">
+                                @error('longitude')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -426,12 +429,21 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="editSchoolAddress" class="form-label">Address</label>
-                            <textarea name="address" id="editSchoolAddress" rows="2" class="form-control"></textarea>
-                            @error('address')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editSchoolLatitude" class="form-label">Latitude</label>
+                                <input type="number" name="latitude" id="editSchoolLatitude" class="form-control" min="-90" max="90" step="0.0000001">
+                                @error('latitude')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editSchoolLongitude" class="form-label">Longitude</label>
+                                <input type="number" name="longitude" id="editSchoolLongitude" class="form-control" min="-180" max="180" step="0.0000001">
+                                @error('longitude')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -550,7 +562,8 @@
                 const editModal = document.getElementById('editSchoolModal');
                 const editForm = document.getElementById('editSchoolForm');
                 const editName = document.getElementById('editSchoolName');
-                const editAddress = document.getElementById('editSchoolAddress');
+                const editLatitude = document.getElementById('editSchoolLatitude');
+                const editLongitude = document.getElementById('editSchoolLongitude');
                 const editPhone = document.getElementById('editSchoolPhone');
                 const editEmail = document.getElementById('editSchoolEmail');
                 const editDistrict = document.getElementById('editSchoolDistrict');
@@ -567,7 +580,8 @@
                     const button = event.relatedTarget;
                     const action = button.getAttribute('data-action');
                     const name = button.getAttribute('data-name');
-                    const address = button.getAttribute('data-address') || '';
+                    const latitude = button.getAttribute('data-latitude') || '';
+                    const longitude = button.getAttribute('data-longitude') || '';
                     const phone = button.getAttribute('data-phone') || '';
                     const email = button.getAttribute('data-email') || '';
                     const district = button.getAttribute('data-district') || '';
@@ -577,7 +591,8 @@
 
                     editForm.setAttribute('action', action);
                     editName.value = name;
-                    editAddress.value = address;
+                    editLatitude.value = latitude;
+                    editLongitude.value = longitude;
                     editPhone.value = phone;
                     editEmail.value = email;
                     editRegion.value = regionId;

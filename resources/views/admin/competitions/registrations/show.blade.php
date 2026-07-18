@@ -190,8 +190,16 @@
                                         <dl class="row small mb-0">
                                             <dt class="col-sm-4 text-muted fw-normal">Name</dt>
                                             <dd class="col-sm-8 mb-1">{{ $registration->school->name ?: '—' }}</dd>
-                                            <dt class="col-sm-4 text-muted fw-normal">Address</dt>
-                                            <dd class="col-sm-8 mb-1 text-break">{{ $registration->school->address ?: '—' }}</dd>
+                                            <dt class="col-sm-4 text-muted fw-normal">Location</dt>
+                                            <dd class="col-sm-8 mb-1 text-break">
+                                                @if($registration->school->latitude !== null && $registration->school->longitude !== null)
+                                                    <a href="https://www.google.com/maps?q={{ $registration->school->latitude }},{{ $registration->school->longitude }}" target="_blank" rel="noopener noreferrer">
+                                                        {{ $registration->school->latitude }}, {{ $registration->school->longitude }}
+                                                    </a>
+                                                @else
+                                                    —
+                                                @endif
+                                            </dd>
                                             <dt class="col-sm-4 text-muted fw-normal">Phone</dt>
                                             <dd class="col-sm-8 mb-1">{{ $registration->school->phone ?: '—' }}</dd>
                                             <dt class="col-sm-4 text-muted fw-normal">Email</dt>

@@ -69,8 +69,17 @@
                                 </p>
                             </div>
                             <div class="mb-0">
-                                <label class="text-muted small">Address</label>
-                                <p class="mb-0">{{ $school->address ?? '—' }}</p>
+                                <label class="text-muted small">Coordinates</label>
+                                @if($school->latitude !== null && $school->longitude !== null)
+                                    <p class="mb-0">
+                                        <a href="https://www.google.com/maps?q={{ $school->latitude }},{{ $school->longitude }}" target="_blank" rel="noopener noreferrer">
+                                            {{ $school->latitude }}, {{ $school->longitude }}
+                                            <i class="ti ti-external-link"></i>
+                                        </a>
+                                    </p>
+                                @else
+                                    <p class="mb-0">—</p>
+                                @endif
                             </div>
                         </div>
                     </div>

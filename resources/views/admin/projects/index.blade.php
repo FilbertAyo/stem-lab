@@ -4,9 +4,8 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h5 class="mb-0">Projects</h5>
-                    <p class="text-muted mb-0">Create and manage project guides</p>
-                </div>
-                <a href="{{ route('admin.projects.create') }}" class="btn btn-primary btn-sm">
+              </div>
+                <a href="{{ route('admin.projects.create') }}" class="btn btn-sm btn-primary">
                     <i class="ti ti-plus"></i> Add Project
                 </a>
             </div> 

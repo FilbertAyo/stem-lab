@@ -4,18 +4,12 @@
         <div class="col-md-12 col-xl-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="mb-0">3D Models Management</h5>
-                <a href="{{ route('admin.models.3d.create') }}" class="btn btn-primary">
+                <a href="{{ route('admin.models.3d.create') }}" class="btn btn-sm btn-primary">
                     <i class="ti ti-plus"></i> Add New 3D Model
                 </a>
             </div>
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
+        
             <!-- Search Form -->
             <div class="card mb-3">
                 <div class="card-body py-3">

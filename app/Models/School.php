@@ -17,7 +17,8 @@ class School extends Model
     protected $fillable = [
         'ulid',
         'name',
-        'address',
+        'latitude',
+        'longitude',
         'phone',
         'email',
         'district',
@@ -29,6 +30,8 @@ class School extends Model
     ];
 
     protected $casts = [
+        'latitude' => 'decimal:7',
+        'longitude' => 'decimal:7',
         'is_active' => 'boolean',
         'admin_reviewed_at' => 'datetime',
     ];

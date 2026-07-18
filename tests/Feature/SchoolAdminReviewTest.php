@@ -32,6 +32,8 @@ test('teacher new school join creates active school pending admin review', funct
         'is_new_school' => true,
         'school_name' => 'New School '.Str::random(8),
         'school_district' => 'Test District',
+        'school_latitude' => '-6.7923540',
+        'school_longitude' => '39.2083284',
     ]);
 
     $result = $joinService->join($teacher, $club, $request);
@@ -42,7 +44,9 @@ test('teacher new school join creates active school pending admin review', funct
 
     expect($school)->not->toBeNull()
         ->and($school->is_active)->toBeTrue()
-        ->and($school->admin_reviewed_at)->toBeNull();
+        ->and($school->admin_reviewed_at)->toBeNull()
+        ->and($school->latitude)->toBe('-6.7923540')
+        ->and($school->longitude)->toBe('39.2083284');
 });
 
 test('admin created school is auto reviewed', function () {
@@ -52,6 +56,8 @@ test('admin created school is auto reviewed', function () {
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
         ->post(adminSchoolsUrl(), [
             'name' => 'Admin School '.Str::random(8),
+            'latitude' => '-6.8160837',
+            'longitude' => '39.2803583',
             'is_active' => '1',
         ]);
 
@@ -60,7 +66,24 @@ test('admin created school is auto reviewed', function () {
     $school = School::query()->where('name', 'like', 'Admin School %')->latest('id')->first();
 
     expect($school)->not->toBeNull()
-        ->and($school->admin_reviewed_at)->not->toBeNull();
+        ->and($school->admin_reviewed_at)->not->toBeNull()
+        ->and($school->latitude)->toBe('-6.8160837')
+        ->and($school->longitude)->toBe('39.2803583');
+});
+
+test('admin school coordinates must be valid and supplied together', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+
+    $response = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+        ->post(adminSchoolsUrl(), [
+            'name' => 'Invalid Coordinates '.Str::random(8),
+            'latitude' => '91',
+            'is_active' => '1',
+        ]);
+
+    $response->assertSessionHasErrors(['latitude', 'longitude']);
+    expect(School::query()->where('name', 'like', 'Invalid Coordinates %')->exists())->toBeFalse();
 });
 
 test('admin schools index shows pending review filter', function () {

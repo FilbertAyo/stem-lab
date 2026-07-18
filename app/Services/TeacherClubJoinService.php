@@ -46,7 +46,8 @@ class TeacherClubJoinService
             if ($isNewSchool) {
                 $validated = $request->validate([
                     'school_name' => ['required', 'string', 'max:255', 'unique:schools,name'],
-                    'school_address' => ['nullable', 'string', 'max:500'],
+                    'school_latitude' => ['nullable', 'numeric', 'between:-90,90', 'required_with:school_longitude'],
+                    'school_longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:school_latitude'],
                     'school_phone' => ['nullable', 'string', 'max:50'],
                     'school_email' => ['nullable', 'email', 'max:255'],
                     'school_district' => ['nullable', 'string', 'max:255'],
@@ -56,7 +57,8 @@ class TeacherClubJoinService
 
                 $school = School::create([
                     'name' => $validated['school_name'],
-                    'address' => $validated['school_address'] ?? null,
+                    'latitude' => $validated['school_latitude'] ?? null,
+                    'longitude' => $validated['school_longitude'] ?? null,
                     'phone' => $validated['school_phone'] ?? null,
                     'email' => $validated['school_email'] ?? null,
                     'district' => $validated['school_district'] ?? null,

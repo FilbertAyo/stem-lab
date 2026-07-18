@@ -170,15 +170,37 @@
     </div>
   </div>
 
-  <div class="mb-3">
-    <label for="school_address" class="form-label @if($authInputStyle) small text-muted fw-medium @endif">School address</label>
-    <textarea class="{{ $inputClass }} @error('school_address') is-invalid @enderror"
-              id="school_address"
-              name="school_address"
-              rows="3">{{ old('school_address') }}</textarea>
-    @error('school_address')
-      <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="school_latitude" class="form-label @if($authInputStyle) small text-muted fw-medium @endif">Latitude</label>
+      <input type="number"
+             class="{{ $inputClass }} @error('school_latitude') is-invalid @enderror"
+             id="school_latitude"
+             name="school_latitude"
+             value="{{ old('school_latitude') }}"
+             min="-90"
+             max="90"
+             step="0.0000001"
+             placeholder="-6.7923540">
+      @error('school_latitude')
+        <div class="invalid-feedback">{{ $message }}</div>
+      @enderror
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="school_longitude" class="form-label @if($authInputStyle) small text-muted fw-medium @endif">Longitude</label>
+      <input type="number"
+             class="{{ $inputClass }} @error('school_longitude') is-invalid @enderror"
+             id="school_longitude"
+             name="school_longitude"
+             value="{{ old('school_longitude') }}"
+             min="-180"
+             max="180"
+             step="0.0000001"
+             placeholder="39.2083284">
+      @error('school_longitude')
+        <div class="invalid-feedback">{{ $message }}</div>
+      @enderror
+    </div>
   </div>
 </div>
 
