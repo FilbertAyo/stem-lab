@@ -1,4 +1,4 @@
-<div class="col-lg-3 dashboard-sidebar">
+<div class="col-lg-3 dashboard-sidebar mb-4 mb-lg-0">
     <ul class="category-list">
         @if(Auth::user()->role === 'teacher')
             <li>

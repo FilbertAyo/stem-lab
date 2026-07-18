@@ -1,4 +1,4 @@
-<header class="dashboard-header position-fixed start-0 top-0 w-100 z-3 border">
+<header class="dashboard-header position-fixed start-0 top-0 w-100 border">
     <div class="container">
       <div class="d-flex align-items-center justify-content-between">
         <a href="{{ config('app.url', 'https://adilishastemlabs.com') }}" class="logo-dark">

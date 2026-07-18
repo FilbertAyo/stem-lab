@@ -16,7 +16,7 @@
                     <td class="sn">{{ $index + 1 }}</td>
                     <td>{{ $subject->subject_name }}</td>
                     <td>{{ $subject->description ?: '—' }}</td>
-                    <td>{{ $subject->is_active ? 'Active' : 'Inactive' }}</td>
+                    <td>{{ $subject->is_active ? 'Active' : ' Inactive' }}</td>
                 </tr>
             @empty
                 <tr>

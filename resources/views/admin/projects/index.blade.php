@@ -54,31 +54,23 @@
             <div class="card mb-3">
                 <div class="card-body py-3">
                     <form method="GET" action="{{ route('admin.projects.index') }}" class="row g-3 align-items-end">
-                        <div class="col-md-5">
+                        <div class="col-md-7">
                             <label class="form-label small text-muted mb-1">Search</label>
                             <input type="text" name="search" class="form-control" placeholder="Search by name, category, tags..." value="{{ request('search') }}">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label small text-muted mb-1">Publish status</label>
+                            <label class="form-label small text-muted mb-1">Status</label>
                             <select name="status" class="form-select">
                                 <option value="" {{ request('status') === null || request('status') === '' ? 'selected' : '' }}>All</option>
-                                <option value="published" {{ request('status') === 'published' ? 'selected' : '' }}>Published</option>
-                                <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label small text-muted mb-1">Active</label>
-                            <select name="active" class="form-select">
-                                <option value="" {{ request('active') === null || request('active') === '' ? 'selected' : '' }}>All</option>
-                                <option value="active" {{ request('active') === 'active' ? 'selected' : '' }}>Active</option>
-                                <option value="inactive" {{ request('active') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                             </select>
                         </div>
                         <div class="col-md-2 d-flex gap-2">
                             <button type="submit" class="btn btn-outline-primary w-100">
                                 <i class="ti ti-search"></i> Filter
                             </button>
-                            @if(request('search') || request('status') || request('active'))
+                            @if(request('search') || request('status'))
                                 <a href="{{ route('admin.projects.index') }}" class="btn btn-outline-secondary">
                                     <i class="ti ti-x"></i>
                                 </a>
@@ -89,7 +81,7 @@
                     <hr class="my-3">
 
                     <a
-                        href="{{ route('admin.projects.export', request()->only(['search', 'status', 'active'])) }}"
+                        href="{{ route('admin.projects.export', request()->only(['search', 'status'])) }}"
                         class="btn btn-sm btn-danger"
                     >
                         <i class="ti ti-download"></i> Download PDF
@@ -148,14 +140,9 @@
                                             <span class="badge bg-info">{{ $project->equipment_count }}</span>
                                         </td>
                                         <td>
-                                            <div class="d-flex flex-column gap-1">
-                                                <span class="badge {{ $project->is_published ? 'bg-light-success text-success b-success' : 'bg-light-secondary text-secondary b-secondary' }}">
-                                                    {{ $project->is_published ? 'Published' : 'Draft' }}
-                                                </span>
-                                                <span class="badge {{ $project->is_active ? 'bg-light-success text-success b-success' : 'bg-light-dark text-dark b-dark' }}">
-                                                    {{ $project->is_active ? 'Active' : 'Inactive' }}
-                                                </span>
-                                            </div>
+                                            <span class="badge {{ $project->is_active ? 'bg-light-success text-success b-success' : 'bg-light-dark text-dark b-dark' }}">
+                                                {{ $project->is_active ? 'Active' : 'Inactive' }}
+                                            </span>
                                         </td>
                                         <td>
                                             @include('admin.partials.ownership-meta', ['record' => $project, 'compact' => true, 'class' => ''])

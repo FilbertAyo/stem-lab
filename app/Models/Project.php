@@ -33,15 +33,11 @@ class Project extends Model
         'description',
         'guide',
         'embedded_code',
-        'is_published',
         'is_active',
-        'published_at',
     ];
 
     protected $casts = [
-        'is_published' => 'boolean',
         'is_active' => 'boolean',
-        'published_at' => 'datetime',
     ];
 
     public function category(): BelongsTo
@@ -87,20 +83,15 @@ class Project extends Model
         return $query->where('is_active', true);
     }
 
-    public function scopePublished(Builder $query): Builder
-    {
-        return $query->where('is_published', true);
-    }
-
     public function scopeOrdered(Builder $query): Builder
     {
-        return $query->orderByDesc('published_at')->orderByDesc('id');
+        return $query->orderByDesc('id');
     }
 
     /**
      * Retrieve the project for route model binding.
      * On the admin subdomain: allow any project.
-     * On the client (main) domain: only allow active + published projects.
+     * On the client (main) domain: only allow active projects.
      */
     public function resolveRouteBinding($value, $field = null)
     {
@@ -110,7 +101,6 @@ class Project extends Model
         if (! $isAdminRequest) {
             return $this->where($field ?? $this->getRouteKeyName(), $value)
                 ->where('is_active', true)
-                ->where('is_published', true)
                 ->first();
         }
 

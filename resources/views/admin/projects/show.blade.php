@@ -107,17 +107,9 @@
                             <h6 class="mb-0">Status</h6>
                         </div>
                         <div class="card-body">
-                            <div class="d-flex flex-wrap gap-2">
-                                <span class="badge {{ $project->is_published ? 'bg-light-success text-success b-success' : 'bg-light-secondary text-secondary b-secondary' }}">
-                                    {{ $project->is_published ? 'Published' : 'Draft' }}
-                                </span>
-                                <span class="badge {{ $project->is_active ? 'bg-light-success text-success b-success' : 'bg-light-dark text-dark b-dark' }}">
-                                    {{ $project->is_active ? 'Active' : 'Inactive' }}
-                                </span>
-                            </div>
-                            @if($project->published_at)
-                                <p class="text-muted small mt-2 mb-0">Published {{ $project->published_at->format('M j, Y') }}</p>
-                            @endif
+                            <span class="badge {{ $project->is_active ? 'bg-light-success text-success b-success' : 'bg-light-dark text-dark b-dark' }}">
+                                {{ $project->is_active ? 'Active' : 'Inactive' }}
+                            </span>
                             <div class="mt-3">
                                 @include('admin.partials.ownership-meta', ['record' => $project, 'compact' => true, 'class' => ''])
                             </div>

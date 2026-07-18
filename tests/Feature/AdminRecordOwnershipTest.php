@@ -216,7 +216,6 @@ test('project keeps existing created_by and records updated_by on update', funct
         'name' => 'Owned Project '.Str::random(4),
         'slug' => 'owned-project-'.Str::lower(Str::random(6)),
         'difficulty' => 'beginner',
-        'is_published' => false,
         'is_active' => true,
     ]);
 

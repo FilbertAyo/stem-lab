@@ -10,7 +10,6 @@ use App\Models\ProjectCategory;
 use App\Models\ProjectTag;
 use App\Models\SchoolClass;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,8 +42,7 @@ class ProjectController extends Controller
     {
         $request->validate([
             'search' => ['nullable', 'string', 'max:255'],
-            'status' => ['nullable', 'in:published,draft'],
-            'active' => ['nullable', 'in:active,inactive'],
+            'status' => ['nullable', 'in:active,inactive'],
         ]);
 
         $projects = $this->projectsIndexQuery($request)
@@ -89,18 +87,9 @@ class ProjectController extends Controller
 
         if ($request->filled('status')) {
             $status = $request->input('status');
-            if ($status === 'published') {
-                $query->where('is_published', true);
-            } elseif ($status === 'draft') {
-                $query->where('is_published', false);
-            }
-        }
-
-        if ($request->filled('active')) {
-            $active = $request->input('active');
-            if ($active === 'active') {
+            if ($status === 'active') {
                 $query->where('is_active', true);
-            } elseif ($active === 'inactive') {
+            } elseif ($status === 'inactive') {
                 $query->where('is_active', false);
             }
         }
@@ -117,11 +106,7 @@ class ProjectController extends Controller
         }
 
         if ($request->filled('status')) {
-            $parts[] = 'Publish: '.ucfirst((string) $request->status);
-        }
-
-        if ($request->filled('active')) {
-            $parts[] = 'Active: '.ucfirst((string) $request->active);
+            $parts[] = 'Status: '.ucfirst((string) $request->status);
         }
 
         return $parts === [] ? null : implode(' · ', $parts);
@@ -189,8 +174,6 @@ class ProjectController extends Controller
             'code_description' => ['nullable', 'array'],
             'code_description.*' => ['nullable', 'string', 'max:1000'],
             'is_active' => ['nullable', 'boolean'],
-            'is_published' => ['nullable', 'boolean'],
-            'published_at' => ['nullable', 'date'],
         ]);
 
         return DB::transaction(function () use ($request, $validated) {
@@ -208,10 +191,6 @@ class ProjectController extends Controller
                 'guide' => $validated['guide'] ?? null,
                 'embedded_code' => $validated['embedded_code'] ?? null,
                 'is_active' => $request->boolean('is_active', true),
-                'is_published' => $request->boolean('is_published', false),
-                'published_at' => $request->filled('published_at')
-                    ? Carbon::parse($request->input('published_at'))
-                    : ($request->boolean('is_published', false) ? now() : null),
             ];
 
             if ($request->hasFile('cover_image')) {
@@ -243,7 +222,6 @@ class ProjectController extends Controller
             $this->logProjectActivity('created', $project, [
                 'status' => [
                     'is_active' => $project->is_active,
-                    'is_published' => $project->is_published,
                 ],
             ]);
 
@@ -279,8 +257,6 @@ class ProjectController extends Controller
             'youtube_url',
             'external_link',
             'is_active',
-            'is_published',
-            'published_at',
             'cover_image',
             'circuit_image',
         ]);
@@ -324,8 +300,6 @@ class ProjectController extends Controller
             'code_description' => ['nullable', 'array'],
             'code_description.*' => ['nullable', 'string', 'max:1000'],
             'is_active' => ['nullable', 'boolean'],
-            'is_published' => ['nullable', 'boolean'],
-            'published_at' => ['nullable', 'date'],
             'remove_cover_image' => ['nullable', 'boolean'],
             'remove_circuit_image' => ['nullable', 'boolean'],
         ]);
@@ -343,10 +317,6 @@ class ProjectController extends Controller
                 'guide' => $validated['guide'] ?? null,
                 'embedded_code' => $validated['embedded_code'] ?? null,
                 'is_active' => $request->boolean('is_active', true),
-                'is_published' => $request->boolean('is_published', false),
-                'published_at' => $request->filled('published_at')
-                    ? Carbon::parse($request->input('published_at'))
-                    : ($request->boolean('is_published', false) ? ($project->published_at ?? now()) : null),
             ];
 
             // Update slug if name changed

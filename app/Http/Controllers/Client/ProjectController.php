@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Enums\LearningEventType;
 use App\Http\Controllers\Client\Concerns\ResolvesStudentClassContext;
 use App\Http\Controllers\Controller;
-use App\Enums\LearningEventType;
 use App\Models\Project;
 use App\Models\ProjectCategory;
 use App\Services\Learning\StudentLearningEventRecorder;
@@ -21,7 +21,7 @@ class ProjectController extends Controller
     ) {}
 
     /**
-     * Show list of published projects with category sidebar.
+     * Show active projects with category sidebar.
      */
     public function index(Request $request): View
     {
@@ -31,12 +31,11 @@ class ProjectController extends Controller
         $categories = ProjectCategory::active()
             ->ordered()
             ->withCount(['projects' => function ($q) use ($schoolClassId) {
-                $q->published()->active()->visibleToStudentClass($schoolClassId);
+                $q->active()->visibleToStudentClass($schoolClassId);
             }])
             ->get();
 
-        $projectsQuery = Project::published()
-            ->active()
+        $projectsQuery = Project::active()
             ->visibleToStudentClass($schoolClassId)
             ->with(['category', 'platforms'])
             ->withCount(['codes', 'resources'])
@@ -78,8 +77,8 @@ class ProjectController extends Controller
      */
     public function show(Project $project): View
     {
-        // Only published + active are resolved in model binding for client, but keep this as a safety-net
-        if (!$project->is_active || !$project->is_published) {
+        // Only active projects are resolved in model binding for client; keep this as a safety net.
+        if (! $project->is_active) {
             abort(404);
         }
 
@@ -94,7 +93,7 @@ class ProjectController extends Controller
         $categories = ProjectCategory::active()
             ->ordered()
             ->withCount(['projects' => function ($q) use ($schoolClassId) {
-                $q->published()->active()->visibleToStudentClass($schoolClassId);
+                $q->active()->visibleToStudentClass($schoolClassId);
             }])
             ->get();
 
@@ -117,4 +116,3 @@ class ProjectController extends Controller
         ]);
     }
 }
-

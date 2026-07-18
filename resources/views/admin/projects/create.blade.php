@@ -225,19 +225,7 @@
                                     <input class="form-check-input" type="checkbox" role="switch" id="isActive" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="isActive">Active</label>
                                 </div>
-
-                                <div class="form-check form-switch mb-3">
-                                    <input type="hidden" name="is_published" value="0">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="isPublished" name="is_published" value="1" {{ old('is_published', false) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="isPublished">Published</label>
-                                </div>
-
-                                <div>
-                                    <label class="form-label">Publish date (optional)</label>
-                                    <input type="datetime-local" name="published_at" class="form-control" value="{{ old('published_at') }}">
-                                    @error('published_at') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-                                    <small class="text-muted">If Published is ON and you leave this empty, we’ll set it to now.</small>
-                                </div>
+                                <small class="text-muted">Active projects are visible to clients. Inactive projects are hidden.</small>
                             </div>
                         </div>
 

@@ -66,10 +66,55 @@
   <script src="{{ asset('client/assets/js/custom.js') }}"></script>
   <!-- solar icons -->
   <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+  <div class="dashboard-nav-backdrop" id="dashboardNavBackdrop" aria-hidden="true"></div>
   <script>
-    document.getElementById('navToggle')?.addEventListener('click', function() {
-      document.getElementById('dashboardNav')?.classList.toggle('show');
-    });
+    (function () {
+      var nav = document.getElementById('dashboardNav');
+      var toggle = document.getElementById('navToggle');
+      var backdrop = document.getElementById('dashboardNavBackdrop');
+      if (!nav || !toggle) return;
+
+      function setNavOpen(open) {
+        nav.classList.toggle('show', open);
+        backdrop?.classList.toggle('show', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (backdrop) backdrop.setAttribute('aria-hidden', open ? 'false' : 'true');
+      }
+
+      function isNavOpen() {
+        return nav.classList.contains('show');
+      }
+
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-controls', 'dashboardNav');
+
+      toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setNavOpen(!isNavOpen());
+      });
+
+      backdrop?.addEventListener('click', function () {
+        setNavOpen(false);
+      });
+
+      nav.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          setNavOpen(false);
+        });
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!isNavOpen()) return;
+        if (nav.contains(e.target) || toggle.contains(e.target)) return;
+        setNavOpen(false);
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isNavOpen()) {
+          setNavOpen(false);
+        }
+      });
+    })();
   </script>
   @stack('scripts')
 </body>

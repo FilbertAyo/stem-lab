@@ -71,7 +71,7 @@ test('admin can download filtered models vr experiments and projects pdf lists',
     assertPdfDownload(
         $this->actingAs($admin)
             ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
-            ->get(pdfDownloadAdminUrl('/projects/export?status=published&active=active'))
+            ->get(pdfDownloadAdminUrl('/projects/export?status=active'))
     );
 });
 

@@ -248,6 +248,18 @@
   padding: 8px;
 }
 
+.dashboard-nav-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1025;
+}
+
+.dashboard-nav-backdrop.show {
+  display: block;
+}
+
 @media (max-width: 1199px) {
   .article-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -265,26 +277,43 @@
   .dashboard-nav.show {
     display: flex;
     flex-direction: column;
+    gap: 0.75rem;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
     background: var(--bs-white);
-    padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    padding: 1.25rem 1.5rem 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid rgba(var(--bs-dark-rgb), 0.08);
+    z-index: 1031;
+  }
+  .dashboard-nav.show a {
+    display: block;
+    padding: 0.625rem 0;
   }
   .nav-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
   }
+  .dashboard-sidebar,
+  .dashboard-sticky-below-header,
+  .quiz-toolbar {
+    position: static;
+    z-index: auto;
+    top: auto;
+  }
   .dashboard-sidebar {
     padding-right: 0;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
   .dashboard-sidebar .filter-btn {
     max-width: 200px;
+  }
+  .dashboard-main {
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
   }
   .article-grid {
     grid-template-columns: 1fr;

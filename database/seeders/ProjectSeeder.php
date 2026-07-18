@@ -51,43 +51,39 @@ class ProjectSeeder extends Seeder
                 }
 
                 DB::transaction(function () use ($entry, $slug, &$created, &$updated) {
-                $categoryId = null;
-                if (! empty($entry['category_slug'])) {
-                    $categoryId = ProjectCategory::where('slug', $entry['category_slug'])->value('id');
-                }
+                    $categoryId = null;
+                    if (! empty($entry['category_slug'])) {
+                        $categoryId = ProjectCategory::where('slug', $entry['category_slug'])->value('id');
+                    }
 
-                $schoolClassId = null;
-                if (! empty($entry['school_class'])) {
-                    $schoolClassId = SchoolClass::where('name', $entry['school_class'])->value('id');
-                }
+                    $schoolClassId = null;
+                    if (! empty($entry['school_class'])) {
+                        $schoolClassId = SchoolClass::where('name', $entry['school_class'])->value('id');
+                    }
 
-                $project = Project::firstOrNew(['slug' => $slug]);
-                $isNew = ! $project->exists;
+                    $project = Project::firstOrNew(['slug' => $slug]);
+                    $isNew = ! $project->exists;
 
-                $project->fill([
-                    'project_category_id' => $categoryId,
-                    'school_class_id' => $schoolClassId,
-                    'name' => $entry['name'],
-                    'difficulty' => $entry['difficulty'] ?? 'beginner',
-                    'estimated_time' => $entry['estimated_time'] ?? null,
-                    'youtube_url' => $entry['youtube_url'] ?? null,
-                    'external_link' => $entry['external_link'] ?? null,
-                    'description' => $entry['description'] ?? null,
-                    'guide' => $entry['guide'] ?? null,
-                    'is_active' => $entry['is_active'] ?? true,
-                    'is_published' => $entry['is_published'] ?? false,
-                    'published_at' => ($entry['is_published'] ?? false)
-                        ? ($project->published_at ?? now())
-                        : null,
-                ]);
+                    $project->fill([
+                        'project_category_id' => $categoryId,
+                        'school_class_id' => $schoolClassId,
+                        'name' => $entry['name'],
+                        'difficulty' => $entry['difficulty'] ?? 'beginner',
+                        'estimated_time' => $entry['estimated_time'] ?? null,
+                        'youtube_url' => $entry['youtube_url'] ?? null,
+                        'external_link' => $entry['external_link'] ?? null,
+                        'description' => $entry['description'] ?? null,
+                        'guide' => $entry['guide'] ?? null,
+                        'is_active' => $entry['is_active'] ?? true,
+                    ]);
 
-                $project->save();
+                    $project->save();
 
-                $this->syncPlatforms($project, $entry['platform_slugs'] ?? []);
-                $this->syncTags($project, $entry['tags'] ?? []);
-                $this->syncEquipment($project, $entry['equipment'] ?? []);
-                $this->syncCodes($project, $entry['codes'] ?? []);
-                $this->syncResources($project, $entry['resources'] ?? []);
+                    $this->syncPlatforms($project, $entry['platform_slugs'] ?? []);
+                    $this->syncTags($project, $entry['tags'] ?? []);
+                    $this->syncEquipment($project, $entry['equipment'] ?? []);
+                    $this->syncCodes($project, $entry['codes'] ?? []);
+                    $this->syncResources($project, $entry['resources'] ?? []);
 
                     $isNew ? $created++ : $updated++;
                 });

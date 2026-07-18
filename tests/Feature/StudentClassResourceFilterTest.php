@@ -87,8 +87,6 @@ test('student with a class only sees matching stem resources', function () {
         'difficulty' => 'beginner',
         'school_class_id' => $formTwo->id,
         'is_active' => true,
-        'is_published' => true,
-        'published_at' => now(),
     ]);
 
     Project::query()->create([
@@ -97,8 +95,6 @@ test('student with a class only sees matching stem resources', function () {
         'difficulty' => 'advanced',
         'school_class_id' => $formThree->id,
         'is_active' => true,
-        'is_published' => true,
-        'published_at' => now(),
     ]);
 
     $questionBank = VrQuestionBank::query()->create([
@@ -138,7 +134,7 @@ test('student with a class only sees matching stem resources', function () {
         ->assertDontSee('Physics Quiz');
 });
 
-test('student without a class sees all published stem resources', function () {
+test('student without a class sees all active stem resources', function () {
     $student = User::factory()->create([
         'role' => 'student',
         'gender' => 'male',

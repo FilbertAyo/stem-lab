@@ -22,7 +22,7 @@
             @if($hasActiveCategory)
                 No projects in this category. Try another or view all.
             @else
-                Projects will appear here once they're published.
+                Active projects will appear here.
             @endif
         </p>
     </div>
