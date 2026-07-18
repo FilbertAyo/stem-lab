@@ -6,8 +6,11 @@ use App\Http\Controllers\Admin\Concerns\ValidatesUploads;
 use App\Http\Controllers\Controller;
 use App\Models\SchoolClass;
 use App\Models\VrExperiment;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -60,7 +63,47 @@ class VrExperimentController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = VrExperiment::with(['schoolClasses', 'subject', 'createdBy', 'updatedBy'])->withSubject();
+        $vrExperiments = $this->vrExperimentsIndexQuery($request)
+            ->with(['schoolClasses', 'subject', 'createdBy', 'updatedBy'])
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.vr-experiments.index', compact('vrExperiments'));
+    }
+
+    /**
+     * Download VR experiments list as PDF (current filters).
+     */
+    public function export(Request $request): Response
+    {
+        $request->validate([
+            'search' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $vrExperiments = $this->vrExperimentsIndexQuery($request)
+            ->with(['schoolClasses', 'subject'])
+            ->latest()
+            ->get();
+
+        $filterSummary = $request->filled('search')
+            ? 'Search: '.$request->string('search')
+            : null;
+        $filename = 'vr_experiments_'.($filterSummary ? 'filtered_' : 'all_').now()->format('Y-m-d').'.pdf';
+
+        $pdf = Pdf::loadView('admin.downloads.vr-experiments-list', [
+            'vrExperiments' => $vrExperiments,
+            'title' => 'VR Experiments',
+            'generatedAt' => now(),
+            'filterSummary' => $filterSummary,
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download($filename);
+    }
+
+    private function vrExperimentsIndexQuery(Request $request): Builder
+    {
+        $query = VrExperiment::withSubject();
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -77,9 +120,7 @@ class VrExperimentController extends Controller
             });
         }
 
-        $vrExperiments = $query->latest()->paginate(15)->withQueryString();
-
-        return view('admin.vr-experiments.index', compact('vrExperiments'));
+        return $query;
     }
 
     /**

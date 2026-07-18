@@ -34,8 +34,16 @@
                                 </a>
                             @endif
                         </div>
-                        
                     </form>
+
+                    <hr class="my-3">
+
+                    <a
+                        href="{{ route('admin.models.3d.export', request()->only(['search', 'status'])) }}"
+                        class="btn btn-sm btn-danger"
+                    >
+                        <i class="ti ti-download"></i> Download PDF
+                    </a>
                 </div>
             </div>
 

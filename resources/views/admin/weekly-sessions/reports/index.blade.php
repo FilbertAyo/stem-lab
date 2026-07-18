@@ -9,7 +9,7 @@
                 <div class="d-flex gap-2">
                     <a
                         href="{{ route('admin.weekly-sessions.reports.weekly-pdf', request()->only(['club_id', 'start_date', 'end_date', 'teacher', 'session'])) }}"
-                        class="btn btn-outline-secondary"
+                        class="btn btn-danger"
                     >
                         <i class="ti ti-download"></i> Weekly PDF
                     </a>

@@ -4,7 +4,10 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h5 class="mb-0">Classes Management</h5>
-            </div>
+                </div>
+                <a href="{{ route('admin.classes.export') }}" class="btn btn-sm btn-danger">
+                    <i class="ti ti-download"></i> Download PDF
+                </a>
                 <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createClassModal">
                     <i class="ti ti-plus"></i> Add Class
                 </button> -->

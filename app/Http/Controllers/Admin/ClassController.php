@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SchoolClass;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -16,6 +18,20 @@ class ClassController extends Controller
         $classes = SchoolClass::orderBy('name')->get();
 
         return view('admin.classes.index', compact('classes'));
+    }
+
+    public function export(): Response
+    {
+        $classes = SchoolClass::orderBy('name')->get();
+
+        $pdf = Pdf::loadView('admin.downloads.classes-list', [
+            'classes' => $classes,
+            'title' => 'Classes',
+            'generatedAt' => now(),
+            'filterSummary' => null,
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->download('classes_'.now()->format('Y-m-d').'.pdf');
     }
 
     public function store(Request $request): RedirectResponse

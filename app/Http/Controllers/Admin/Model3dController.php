@@ -8,8 +8,11 @@ use App\Models\Model3d;
 use App\Models\SchoolClass;
 use App\Services\CacheService;
 use App\Support\Model3dEmbed;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -121,9 +124,48 @@ class Model3dController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Model3d::withSubject()
+        $model3ds = $this->modelsIndexQuery($request)
             ->with(['schoolClasses', 'createdBy', 'updatedBy'])
-            ->withCount('questions');
+            ->withCount('questions')
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.models.3d.index', compact('model3ds'));
+    }
+
+    /**
+     * Download 3D models list as PDF (current filters).
+     */
+    public function export(Request $request): Response
+    {
+        $request->validate([
+            'search' => ['nullable', 'string', 'max:255'],
+            'status' => ['nullable', 'in:all,active,inactive'],
+        ]);
+
+        $models = $this->modelsIndexQuery($request)
+            ->with(['schoolClasses', 'subject'])
+            ->withCount('questions')
+            ->latest()
+            ->get();
+
+        $filterSummary = $this->buildModelsExportFilterSummary($request);
+        $filename = 'models_3d_'.($filterSummary ? 'filtered_' : 'all_').now()->format('Y-m-d').'.pdf';
+
+        $pdf = Pdf::loadView('admin.downloads.models-3d-list', [
+            'models' => $models,
+            'title' => '3D Models',
+            'generatedAt' => now(),
+            'filterSummary' => $filterSummary,
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download($filename);
+    }
+
+    private function modelsIndexQuery(Request $request): Builder
+    {
+        $query = Model3d::withSubject();
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -146,9 +188,22 @@ class Model3dController extends Controller
             }
         }
 
-        $model3ds = $query->latest()->paginate(15)->withQueryString();
+        return $query;
+    }
 
-        return view('admin.models.3d.index', compact('model3ds'));
+    private function buildModelsExportFilterSummary(Request $request): ?string
+    {
+        $parts = [];
+
+        if ($request->filled('search')) {
+            $parts[] = 'Search: '.$request->string('search');
+        }
+
+        if ($request->filled('status') && $request->status !== 'all') {
+            $parts[] = 'Status: '.ucfirst((string) $request->status);
+        }
+
+        return $parts === [] ? null : implode(' · ', $parts);
     }
 
     /**

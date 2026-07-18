@@ -71,7 +71,7 @@
                 </select>
             </div>
             <div class="col-md-4 col-lg-auto">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-danger">
                     <i class="ti ti-download"></i> Download PDF
                 </button>
             </div>

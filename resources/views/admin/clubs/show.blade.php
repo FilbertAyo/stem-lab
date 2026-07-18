@@ -137,7 +137,7 @@
                     <div class="card mb-4">
                         <div class="card-body p-0">
                             <div class="d-flex justify-content-end p-3 border-bottom bg-light">
-                                <a href="{{ route('admin.clubs.members.export', $club) }}" class="btn btn-primary btn-sm">
+                                <a href="{{ route('admin.clubs.members.export', $club) }}" class="btn btn-danger btn-sm">
                                     <i class="ti ti-download me-1"></i>
                                     Download List
                                 </a>

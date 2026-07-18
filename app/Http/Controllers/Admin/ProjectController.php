@@ -9,9 +9,12 @@ use App\Models\Project;
 use App\Models\ProjectCategory;
 use App\Models\ProjectTag;
 use App\Models\SchoolClass;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,9 +26,49 @@ class ProjectController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Project::query()
+        $projects = $this->projectsIndexQuery($request)
             ->with(['category', 'createdBy', 'updatedBy', 'author'])
-            ->withCount(['tags', 'equipment']);
+            ->withCount(['tags', 'equipment'])
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.projects.index', compact('projects'));
+    }
+
+    /**
+     * Download projects list as PDF (current filters).
+     */
+    public function export(Request $request): Response
+    {
+        $request->validate([
+            'search' => ['nullable', 'string', 'max:255'],
+            'status' => ['nullable', 'in:published,draft'],
+            'active' => ['nullable', 'in:active,inactive'],
+        ]);
+
+        $projects = $this->projectsIndexQuery($request)
+            ->with('category')
+            ->withCount(['tags', 'equipment'])
+            ->latest()
+            ->get();
+
+        $filterSummary = $this->buildProjectsExportFilterSummary($request);
+        $filename = 'projects_'.($filterSummary ? 'filtered_' : 'all_').now()->format('Y-m-d').'.pdf';
+
+        $pdf = Pdf::loadView('admin.downloads.projects-list', [
+            'projects' => $projects,
+            'title' => 'Projects',
+            'generatedAt' => now(),
+            'filterSummary' => $filterSummary,
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download($filename);
+    }
+
+    private function projectsIndexQuery(Request $request): Builder
+    {
+        $query = Project::query();
 
         if ($request->filled('search')) {
             $search = trim((string) $request->input('search'));
@@ -62,9 +105,26 @@ class ProjectController extends Controller
             }
         }
 
-        $projects = $query->latest()->paginate(15)->withQueryString();
+        return $query;
+    }
 
-        return view('admin.projects.index', compact('projects'));
+    private function buildProjectsExportFilterSummary(Request $request): ?string
+    {
+        $parts = [];
+
+        if ($request->filled('search')) {
+            $parts[] = 'Search: '.$request->string('search');
+        }
+
+        if ($request->filled('status')) {
+            $parts[] = 'Publish: '.ucfirst((string) $request->status);
+        }
+
+        if ($request->filled('active')) {
+            $parts[] = 'Active: '.ucfirst((string) $request->active);
+        }
+
+        return $parts === [] ? null : implode(' · ', $parts);
     }
 
     public function show(Project $project): View

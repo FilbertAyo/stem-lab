@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Subject;
 use App\Services\CacheService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -20,6 +22,23 @@ class SubjectController extends Controller
     {
         $subjects = Subject::orderBy('display_order')->orderBy('id')->get();
         return view('admin.subjects.index', compact('subjects'));
+    }
+
+    /**
+     * Download subjects list as PDF.
+     */
+    public function export(): Response
+    {
+        $subjects = Subject::orderBy('display_order')->orderBy('id')->get();
+
+        $pdf = Pdf::loadView('admin.downloads.subjects-list', [
+            'subjects' => $subjects,
+            'title' => 'Subjects',
+            'generatedAt' => now(),
+            'filterSummary' => null,
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->download('subjects_'.now()->format('Y-m-d').'.pdf');
     }
 
     /**

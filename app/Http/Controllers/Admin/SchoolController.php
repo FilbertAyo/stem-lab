@@ -69,7 +69,7 @@ class SchoolController extends Controller
         $filterSummary = $this->buildSchoolExportFilterSummary($request, $validated['scope']);
         $filename = 'schools_'.$scopeLabel.'_'.now()->format('Y-m-d').'.pdf';
 
-        $pdf = Pdf::loadView('admin.schools.schools-list-pdf', [
+        $pdf = Pdf::loadView('admin.downloads.schools-list', [
             'schools' => $schools,
             'title' => 'Schools',
             'generatedAt' => now(),

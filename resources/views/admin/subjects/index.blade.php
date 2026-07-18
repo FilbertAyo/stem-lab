@@ -5,6 +5,9 @@
         <div class="col-md-12 col-xl-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="mb-0">Subjects Management</h5>
+                <a href="{{ route('subjects.export') }}" class="btn btn-sm btn-danger">
+                    <i class="ti ti-download"></i> Download PDF
+                </a>
                 <!-- <a href="{{ route('subjects.create') }}" class="btn btn-primary">
                     <i class="ti ti-plus"></i> Add New Subject
                 </a> -->

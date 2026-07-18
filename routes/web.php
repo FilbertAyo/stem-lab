@@ -112,6 +112,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
 
         Route::prefix('classes')->name('classes.')->group(function () {
             Route::get('/', [ClassController::class, 'index'])->name('index');
+            Route::get('/export', [ClassController::class, 'export'])->name('export');
             Route::post('/', [ClassController::class, 'store'])->name('store');
             Route::put('/{schoolClass}', [ClassController::class, 'update'])->name('update');
             Route::post('/{schoolClass}/toggle-status', [ClassController::class, 'toggleStatus'])->name('toggle-status');
@@ -136,6 +137,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
         // Projects routes
         Route::prefix('projects')->name('projects.')->group(function () {
             Route::get('/', [AdminProjectController::class, 'index'])->name('index');
+            Route::get('/export', [AdminProjectController::class, 'export'])->name('export');
             Route::get('/create', [AdminProjectController::class, 'create'])->name('create');
             Route::post('/', [AdminProjectController::class, 'store'])->name('store');
             Route::get('/{project}', [AdminProjectController::class, 'show'])->name('show');
@@ -285,6 +287,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
         // 3D Models routes - outer group already has 'admin.' prefix, so use 'models.' here
         Route::prefix('models')->name('models.')->group(function () {
             Route::get('3d', [AdminModel3dController::class, 'index'])->name('3d.index');
+            Route::get('3d/export', [AdminModel3dController::class, 'export'])->name('3d.export');
             Route::get('3d/create', [AdminModel3dController::class, 'create'])->name('3d.create');
             Route::post('3d', [AdminModel3dController::class, 'store'])->name('3d.store');
 
@@ -308,6 +311,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
         // VR Experiments routes - outer group already has 'admin.' prefix
         Route::prefix('vr-experiments')->name('vr-experiments.')->group(function () {
             Route::get('/', [VrExperimentController::class, 'index'])->name('index');
+            Route::get('/export', [VrExperimentController::class, 'export'])->name('export');
             Route::get('/create', [VrExperimentController::class, 'create'])->name('create');
             Route::post('/', [VrExperimentController::class, 'store'])->name('store');
 
@@ -360,6 +364,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
 Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilishastemlabs.com')->group(function () {
     Route::middleware(['auth', 'admin', 'track.admin.activity'])->group(function () {
         Route::get('subjects', [SubjectController::class, 'index'])->name('subjects.index');
+        Route::get('subjects/export', [SubjectController::class, 'export'])->name('subjects.export');
         Route::get('subjects/create', [SubjectController::class, 'create'])->name('subjects.create');
         Route::post('subjects', [SubjectController::class, 'store'])->name('subjects.store');
 
