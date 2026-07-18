@@ -129,12 +129,7 @@
                     </div>
                 </div>
 
-           
-
-            </div>
-
-            <div class="row mb-2">
-                <div class="col-lg-12 mb-4">
+                <div class="col mb-3">
                     <div class="card border shadow-none">
                         <div class="card-header bg-transparent border-bottom d-flex align-items-center justify-content-between">
                             <h6 class="mb-0">Competition Phases & Actions</h6>
@@ -145,7 +140,7 @@
                                 <p class="text-muted mb-0 small">No competitions found.</p>
                             @else
                                 <div class="table-responsive">
-                                    <table class="table table-sm align-middle mb-0">
+                                    <table class="table table-sm table-bordered align-middle mb-0">
                                         <thead>
                                             <tr>
                                                 <th>Competition</th>
@@ -180,7 +175,12 @@
                         </div>
                     </div>
                 </div>
+
+           
+
             </div>
+
+          
 
             <!-- Visitor charts per week (combined) -->
             <div class="row mb-2">

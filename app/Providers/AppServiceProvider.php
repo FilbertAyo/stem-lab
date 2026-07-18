@@ -58,7 +58,7 @@ class AppServiceProvider extends ServiceProvider
         $this->bindUlidWithLegacyId('platform', Platform::class);
         $this->bindUlidWithLegacyId('competition', Competition::class);
         $this->bindUlidWithLegacyId('user', User::class);
-        $this->bindUlidWithLegacyId('model3d', Model3d::class);
+        $this->bindModel3dWithShortAndLegacyIds();
         $this->bindUlidWithLegacyId('weeklySession', WeeklySession::class);
         $this->bindUlidWithLegacyId('report', WeeklySessionReport::class);
         $this->bindUlidWithLegacyId('vrExperiment', VrExperiment::class);
@@ -168,6 +168,31 @@ class AppServiceProvider extends ServiceProvider
                     }
                 })
                 ->firstOrFail();
+        });
+    }
+
+    /**
+     * Resolve Model3d by short public_id, then legacy ULID, then numeric ID.
+     */
+    protected function bindModel3dWithShortAndLegacyIds(): void
+    {
+        Route::bind('model3d', function (string $value) {
+            $byPublicId = Model3d::query()->where('public_id', $value)->first();
+            if ($byPublicId) {
+                return $byPublicId->markResolvedViaLegacyRouteKey(false);
+            }
+
+            $legacy = Model3d::query()
+                ->where(function ($query) use ($value): void {
+                    $query->where('ulid', $value);
+
+                    if (ctype_digit($value)) {
+                        $query->orWhere('id', (int) $value);
+                    }
+                })
+                ->firstOrFail();
+
+            return $legacy->markResolvedViaLegacyRouteKey(true);
         });
     }
 }

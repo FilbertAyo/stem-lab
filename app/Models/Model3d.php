@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPublicShortId;
 use App\Models\Concerns\HasPublicUlid;
 use App\Models\Concerns\ScopedToManySchoolClasses;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,7 +14,12 @@ use Illuminate\Support\Facades\Request;
 
 class Model3d extends Model
 {
-    use HasFactory, HasPublicUlid, ScopedToManySchoolClasses;
+    use HasFactory;
+    use HasPublicUlid;
+    use HasPublicShortId {
+        HasPublicShortId::getRouteKeyName insteadof HasPublicUlid;
+    }
+    use ScopedToManySchoolClasses;
 
     /**
      * The attributes that are mass assignable.

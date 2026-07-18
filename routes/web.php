@@ -209,8 +209,10 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
         // Progress & Tracking routes
         Route::get('progress', [\App\Http\Controllers\Admin\ProgressController::class, 'index'])->name('progress.index');
         Route::get('progress/student/{user}', [\App\Http\Controllers\Admin\ProgressController::class, 'showStudent'])->name('progress.student');
-        Route::get('progress/model/{model3d}', [\App\Http\Controllers\Admin\ProgressController::class, 'showModel'])->name('progress.model');
-        Route::get('progress/student/{user}/model/{model3d}', [\App\Http\Controllers\Admin\ProgressController::class, 'showDetail'])->name('progress.detail');
+        Route::middleware('redirect.legacy.model3d')->group(function () {
+            Route::get('progress/model/{model3d}', [\App\Http\Controllers\Admin\ProgressController::class, 'showModel'])->name('progress.model');
+            Route::get('progress/student/{user}/model/{model3d}', [\App\Http\Controllers\Admin\ProgressController::class, 'showDetail'])->name('progress.detail');
+        });
 
         // User Management routes
         Route::prefix('users')->name('users.')->group(function () {
@@ -278,19 +280,22 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('3d', [AdminModel3dController::class, 'index'])->name('3d.index');
             Route::get('3d/create', [AdminModel3dController::class, 'create'])->name('3d.create');
             Route::post('3d', [AdminModel3dController::class, 'store'])->name('3d.store');
-            Route::get('3d/{model3d}', [AdminModel3dController::class, 'show'])->name('3d.show');
-            Route::get('3d/{model3d}/edit', [AdminModel3dController::class, 'edit'])->name('3d.edit');
-            Route::put('3d/{model3d}', [AdminModel3dController::class, 'update'])->name('3d.update');
-            Route::delete('3d/{model3d}', [AdminModel3dController::class, 'destroy'])->name('3d.destroy');
 
-            // Questions routes
-            Route::get('3d/{model3d}/questions', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'index'])->name('3d.questions.index');
-            Route::get('3d/{model3d}/questions/create', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'create'])->name('3d.questions.create');
-            Route::post('3d/{model3d}/questions', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'store'])->name('3d.questions.store');
-            Route::get('3d/{model3d}/questions/{question}/edit', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'edit'])->name('3d.questions.edit');
-            Route::put('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'update'])->name('3d.questions.update');
-            Route::delete('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'destroy'])->name('3d.questions.destroy');
-            Route::post('3d/{model3d}/questions/order', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'updateOrder'])->name('3d.questions.order');
+            Route::middleware('redirect.legacy.model3d')->group(function () {
+                Route::get('3d/{model3d}', [AdminModel3dController::class, 'show'])->name('3d.show');
+                Route::get('3d/{model3d}/edit', [AdminModel3dController::class, 'edit'])->name('3d.edit');
+                Route::put('3d/{model3d}', [AdminModel3dController::class, 'update'])->name('3d.update');
+                Route::delete('3d/{model3d}', [AdminModel3dController::class, 'destroy'])->name('3d.destroy');
+
+                // Questions routes
+                Route::get('3d/{model3d}/questions', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'index'])->name('3d.questions.index');
+                Route::get('3d/{model3d}/questions/create', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'create'])->name('3d.questions.create');
+                Route::post('3d/{model3d}/questions', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'store'])->name('3d.questions.store');
+                Route::get('3d/{model3d}/questions/{question}/edit', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'edit'])->name('3d.questions.edit');
+                Route::put('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'update'])->name('3d.questions.update');
+                Route::delete('3d/{model3d}/questions/{question}', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'destroy'])->name('3d.questions.destroy');
+                Route::post('3d/{model3d}/questions/order', [\App\Http\Controllers\Admin\ModelQuestionController::class, 'updateOrder'])->name('3d.questions.order');
+            });
         });
 
         // VR Experiments routes - outer group already has 'admin.' prefix
@@ -378,7 +383,7 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
             ->name('client.subscription-packages.select');
 
         Route::middleware('club.linked.for.learning')->group(function () {
-        Route::prefix('models/3d')->name('client.models.3d.')->group(function () {
+        Route::prefix('models/3d')->name('client.models.3d.')->middleware('redirect.legacy.model3d')->group(function () {
             Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
 
             // Question routes (must come before /{model3d} to avoid route conflicts)

@@ -120,9 +120,10 @@
                                     <th>School Name</th>
                                   
                                     <th>Contact</th>
+                                    <th>Region</th>
                                     <th>District</th>
                                     <th>Ward</th>
-                                    <th>Region</th>
+                                    
                                     <th>Status</th>
                                     <th>Last Updated</th>
                                     <th class="text-center" style="width: 260px;">Actions</th>
@@ -147,9 +148,10 @@
                                                 <span class="text-muted">—</span>
                                             @endif
                                         </td>
+                                        <td>{{ $school->regionModel?->name ?? $school->region ?? '—' }}</td>
                                         <td>{{ $school->district ?? '—' }}</td>
                                         <td>{{ $school->ward ?? '—' }}</td>
-                                        <td>{{ $school->regionModel?->name ?? $school->region ?? '—' }}</td>
+                                       
                                         <td>
                                             <span class="badge {{ $school->is_active ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $school->is_active ? 'Active' : 'Disabled' }}
