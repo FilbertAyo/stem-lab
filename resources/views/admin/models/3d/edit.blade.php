@@ -2,8 +2,9 @@
 
     <div class="row">
         <div class="col-md-12 col-xl-12">
-            <h5 class="mb-3">Edit 3D Model</h5>
-            
+            <h5 class="mb-2">Edit 3D Model</h5>
+            @include('admin.partials.ownership-meta', ['record' => $model3d, 'compact' => true, 'class' => 'mb-3'])
+
             <div class="card">
                 <div class="card-body">
                     @if ($errors->has('upload'))

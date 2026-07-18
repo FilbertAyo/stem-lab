@@ -157,11 +157,15 @@
                         <div class="card-body">
                             <div class="mb-2">
                                 <small class="text-muted">Created by:</small>
-                                <div>{{ $weeklySession->creator->name ?? 'System' }}</div>
+                                <div>{{ $weeklySession->createdByName() }}</div>
                             </div>
                             <div class="mb-2">
                                 <small class="text-muted">Created on:</small>
                                 <div>{{ $weeklySession->created_at->format('M d, Y H:i') }}</div>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">Last updated by:</small>
+                                <div>{{ $weeklySession->updatedByName() }}</div>
                             </div>
                             <div class="mb-0">
                                 <small class="text-muted">Last updated:</small>

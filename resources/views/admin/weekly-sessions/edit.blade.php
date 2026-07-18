@@ -5,6 +5,7 @@
                 <div>
                     <h5 class="mb-0">Edit Weekly Session</h5>
                     <p class="text-muted mb-0">Update session details and associations</p>
+                    @include('admin.partials.ownership-meta', ['record' => $weeklySession, 'compact' => true, 'class' => 'mt-2'])
                 </div>
                 <a href="{{ route('admin.weekly-sessions.index') }}" class="btn btn-outline-secondary">
                     <i class="ti ti-arrow-left"></i> Back to List

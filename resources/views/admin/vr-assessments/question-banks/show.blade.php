@@ -10,6 +10,7 @@
                         {{ $questionBank->vrExperiment->schoolClasses->pluck('name')->join(', ') ?: 'All Classes' }} -
                         {{ $questionBank->vrExperiment->subject->subject_name ?? 'N/A' }}
                     </p>
+                    @include('admin.partials.ownership-meta', ['record' => $questionBank, 'compact' => true, 'class' => 'mt-2'])
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{ route('admin.vr-assessments.question-banks.index') }}" class="btn btn-secondary">

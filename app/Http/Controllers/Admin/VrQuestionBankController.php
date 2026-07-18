@@ -16,29 +16,29 @@ class VrQuestionBankController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = VrQuestionBank::with(['vrExperiment.schoolClasses', 'vrExperiment.subject'])
+        $query = VrQuestionBank::with(['vrExperiment.schoolClasses', 'vrExperiment.subject', 'createdBy', 'updatedBy'])
             ->withCount('questions');
 
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%')
-                  ->orWhereHas('vrExperiment', function ($expQuery) use ($search) {
-                      $expQuery->where('name', 'like', '%' . $search . '%')
-                               ->orWhereHas('subject', function ($subjectQuery) use ($search) {
-                                   $subjectQuery->where('subject_name', 'like', '%' . $search . '%');
-                               })
-                               ->orWhereHas('schoolClasses', function ($classQuery) use ($search) {
-                                   $classQuery->where('name', 'like', '%' . $search . '%');
-                               });
-                  });
+                $q->where('title', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%')
+                    ->orWhereHas('vrExperiment', function ($expQuery) use ($search) {
+                        $expQuery->where('name', 'like', '%'.$search.'%')
+                            ->orWhereHas('subject', function ($subjectQuery) use ($search) {
+                                $subjectQuery->where('subject_name', 'like', '%'.$search.'%');
+                            })
+                            ->orWhereHas('schoolClasses', function ($classQuery) use ($search) {
+                                $classQuery->where('name', 'like', '%'.$search.'%');
+                            });
+                    });
             });
         }
 
         $questionBanks = $query->latest()->paginate(10)->withQueryString();
-            
+
         return view('admin.vr-assessments.question-banks.index', compact('questionBanks'));
     }
 
@@ -51,7 +51,7 @@ class VrQuestionBankController extends Controller
             ->where('is_active', true)
             ->orderBy('name')
             ->get();
-            
+
         return view('admin.vr-assessments.question-banks.create', compact('experiments'));
     }
 
@@ -87,9 +87,15 @@ class VrQuestionBankController extends Controller
      */
     public function show(VrQuestionBank $questionBank): View
     {
-        $questionBank->load(['vrExperiment.schoolClasses', 'vrExperiment.subject', 'questions' => function ($query) {
-            $query->orderBy('order');
-        }]);
+        $questionBank->load([
+            'vrExperiment.schoolClasses',
+            'vrExperiment.subject',
+            'createdBy',
+            'updatedBy',
+            'questions' => function ($query) {
+                $query->orderBy('order');
+            },
+        ]);
 
         return view('admin.vr-assessments.question-banks.show', compact('questionBank'));
     }
@@ -99,6 +105,8 @@ class VrQuestionBankController extends Controller
      */
     public function edit(VrQuestionBank $questionBank): View
     {
+        $questionBank->load(['createdBy', 'updatedBy']);
+
         $experiments = VrExperiment::with(['schoolClasses', 'subject'])
             ->where('is_active', true)
             ->orderBy('name')
@@ -146,12 +154,11 @@ class VrQuestionBankController extends Controller
      */
     public function toggleStatus(VrQuestionBank $questionBank): RedirectResponse
     {
-        $questionBank->update(['is_active' => !$questionBank->is_active]);
+        $questionBank->update(['is_active' => ! $questionBank->is_active]);
 
         $status = $questionBank->is_active ? 'activated' : 'deactivated';
-        
+
         return redirect()->back()
             ->with('success', "Question bank {$status} successfully.");
     }
 }
-

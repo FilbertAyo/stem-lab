@@ -45,6 +45,7 @@
                                     <th>Questions</th>
                                     <th>Settings</th>
                                     <th>Status</th>
+                                    <th>Ownership</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -88,6 +89,9 @@
                                             @endif
                                         </td>
                                         <td>
+                                            @include('admin.partials.ownership-meta', ['record' => $bank, 'compact' => true, 'class' => ''])
+                                        </td>
+                                        <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.vr-assessments.question-banks.show', $bank) }}"
                                                    class="btn btn-sm btn-info"
@@ -126,7 +130,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center py-4">
+                                        <td colspan="9" class="text-center py-4">
                                             <i class="ti ti-clipboard-list fs-1 text-muted d-block mb-2"></i>
                                             No question banks found. <a href="{{ route('admin.vr-assessments.question-banks.create') }}">Create one now</a>.
                                         </td>

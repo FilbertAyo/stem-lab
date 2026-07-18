@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksOwnership;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ use Illuminate\Support\Str;
 class School extends Model
 {
     use HasFactory;
+    use TracksOwnership;
 
     protected $fillable = [
         'ulid',
@@ -27,6 +29,8 @@ class School extends Model
         'region',
         'is_active',
         'admin_reviewed_at',
+        'created_by',
+        'updated_by',
     ];
 
     protected $casts = [

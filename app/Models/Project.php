@@ -4,9 +4,10 @@ namespace App\Models;
 
 use App\Models\Concerns\HasPublicUlid;
 use App\Models\Concerns\ScopedToSchoolClass;
+use App\Models\Concerns\TracksOwnership;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,12 +15,13 @@ use Illuminate\Support\Facades\Request;
 
 class Project extends Model
 {
-    use HasFactory, HasPublicUlid, ScopedToSchoolClass;
+    use HasFactory, HasPublicUlid, ScopedToSchoolClass, TracksOwnership;
 
     protected $fillable = [
         'project_category_id',
         'school_class_id',
         'created_by',
+        'updated_by',
         'name',
         'slug',
         'difficulty',
@@ -105,7 +107,7 @@ class Project extends Model
         $adminHost = parse_url(config('app.admin_url', 'https://admin.adilishastemlabs.com'), PHP_URL_HOST);
         $isAdminRequest = $adminHost && Request::getHost() === $adminHost;
 
-        if (!$isAdminRequest) {
+        if (! $isAdminRequest) {
             return $this->where($field ?? $this->getRouteKeyName(), $value)
                 ->where('is_active', true)
                 ->where('is_published', true)
@@ -115,4 +117,3 @@ class Project extends Model
         return $this->where($field ?? $this->getRouteKeyName(), $value)->first();
     }
 }
-

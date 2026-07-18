@@ -68,7 +68,7 @@
                                     </span>
                                 </p>
                             </div>
-                            <div class="mb-0">
+                            <div class="mb-3">
                                 <label class="text-muted small">Coordinates</label>
                                 @if($school->latitude !== null && $school->longitude !== null)
                                     <p class="mb-0">
@@ -80,6 +80,10 @@
                                 @else
                                     <p class="mb-0">—</p>
                                 @endif
+                            </div>
+                            <div class="mb-0">
+                                <label class="text-muted small">Ownership</label>
+                                @include('admin.partials.ownership-meta', ['record' => $school, 'compact' => true, 'class' => 'mt-1'])
                             </div>
                         </div>
                     </div>

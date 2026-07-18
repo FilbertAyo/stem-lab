@@ -21,7 +21,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <p><strong>Name:</strong> {{ $club->name }}</p>
                             <p><strong>Status:</strong>
                                 @if($club->is_active)
@@ -31,7 +31,7 @@
                                 @endif
                             </p>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <p><strong>Description:</strong></p>
                             <p>{{ $club->description ?? 'No description provided.' }}</p>
                         </div>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasPublicShortId;
 use App\Models\Concerns\HasPublicUlid;
+use App\Models\Concerns\TracksOwnership;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,10 +15,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class VrExperiment extends Model
 {
     use HasFactory;
-    use HasPublicUlid;
     use HasPublicShortId {
         HasPublicShortId::getRouteKeyName insteadof HasPublicUlid;
     }
+    use HasPublicUlid;
+    use TracksOwnership;
 
     /**
      * The attributes that are mass assignable.
@@ -31,6 +33,8 @@ class VrExperiment extends Model
         'thumbnail',
         'subject_id',
         'is_active',
+        'created_by',
+        'updated_by',
     ];
 
     /**
@@ -135,7 +139,7 @@ class VrExperiment extends Model
     {
         return $query->where(function ($q) use ($search) {
             $q->where('name', 'like', "%{$search}%")
-              ->orWhere('description', 'like', "%{$search}%");
+                ->orWhere('description', 'like', "%{$search}%");
         });
     }
 

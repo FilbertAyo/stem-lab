@@ -117,7 +117,7 @@
                                     <th>District</th>
                                     <th>Ward</th>
                                     <th>Status</th>
-                                    <th>Last Updated</th>
+                                    <th>Ownership</th>
                                     <th class="text-center" style="width: 260px;">Actions</th>
                                 </tr>
                             </thead>
@@ -152,7 +152,9 @@
                                                 <span class="badge bg-warning text-dark ms-1">New</span>
                                             @endif
                                         </td>
-                                        <td>{{ $school->updated_at?->format('d M Y, H:i') }}</td>
+                                        <td>
+                                            @include('admin.partials.ownership-meta', ['record' => $school, 'compact' => true, 'class' => ''])
+                                        </td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
                                                 @if($school->needs_review)
@@ -184,6 +186,9 @@
                                                     data-region-id="{{ $school->region_id }}"
                                                     data-ward="{{ $school->ward }}"
                                                     data-active="{{ $school->is_active ? '1' : '0' }}"
+                                                    data-created-by="{{ $school->createdByName() }}"
+                                                    data-updated-by="{{ $school->updatedByName() }}"
+                                                    data-updated-at="{{ $school->updated_at?->format('M j, Y g:i A') ?? '—' }}"
                                                     title="Edit"
                                                 >
                                                     <i class="ti ti-edit"></i>
@@ -445,6 +450,11 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="small text-muted border-top pt-3" id="editSchoolOwnershipMeta">
+                            <div>Created by: <span id="editSchoolCreatedBy">Legacy / unavailable</span></div>
+                            <div>Last updated by: <span id="editSchoolUpdatedBy">Legacy / unavailable</span></div>
+                            <div>Last updated: <span id="editSchoolUpdatedAt">—</span></div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
@@ -571,6 +581,9 @@
                 const editWard = document.getElementById('editSchoolWard');
                 const editToggle = document.getElementById('editSchoolActiveToggle');
                 const editStatusInput = document.getElementById('editSchoolIsActive');
+                const editCreatedBy = document.getElementById('editSchoolCreatedBy');
+                const editUpdatedBy = document.getElementById('editSchoolUpdatedBy');
+                const editUpdatedAt = document.getElementById('editSchoolUpdatedAt');
 
                 editRegion?.addEventListener('change', function () {
                     populateDistrictSelect(editDistrict, this.value, null);
@@ -588,6 +601,9 @@
                     const regionId = button.getAttribute('data-region-id') || '';
                     const ward = button.getAttribute('data-ward') || '';
                     const isActive = button.getAttribute('data-active') === '1';
+                    const createdBy = button.getAttribute('data-created-by') || 'Legacy / unavailable';
+                    const updatedBy = button.getAttribute('data-updated-by') || 'Legacy / unavailable';
+                    const updatedAt = button.getAttribute('data-updated-at') || '—';
 
                     editForm.setAttribute('action', action);
                     editName.value = name;
@@ -600,6 +616,9 @@
                     editWard.value = ward;
                     editToggle.checked = isActive;
                     editStatusInput.value = isActive ? '1' : '0';
+                    if (editCreatedBy) editCreatedBy.textContent = createdBy;
+                    if (editUpdatedBy) editUpdatedBy.textContent = updatedBy;
+                    if (editUpdatedAt) editUpdatedAt.textContent = updatedAt;
                 });
 
                 editToggle?.addEventListener('change', function () {

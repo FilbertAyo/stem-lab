@@ -5,21 +5,22 @@ namespace App\Models;
 use App\Models\Concerns\HasPublicShortId;
 use App\Models\Concerns\HasPublicUlid;
 use App\Models\Concerns\ScopedToManySchoolClasses;
+use App\Models\Concerns\TracksOwnership;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Request;
 
 class Model3d extends Model
 {
     use HasFactory;
-    use HasPublicUlid;
     use HasPublicShortId {
         HasPublicShortId::getRouteKeyName insteadof HasPublicUlid;
     }
+    use HasPublicUlid;
     use ScopedToManySchoolClasses;
+    use TracksOwnership;
 
     /**
      * The attributes that are mass assignable.
@@ -35,6 +36,8 @@ class Model3d extends Model
         'description',
         'tags',
         'is_active',
+        'created_by',
+        'updated_by',
     ];
 
     /**
@@ -85,7 +88,7 @@ class Model3d extends Model
     {
         return $query->where(function ($q) use ($search) {
             $q->where('name', 'like', "%{$search}%")
-              ->orWhere('description', 'like', "%{$search}%");
+                ->orWhere('description', 'like', "%{$search}%");
         });
     }
 
@@ -161,7 +164,7 @@ class Model3d extends Model
         // Check if this is an admin route by checking the request path
         $isAdminRoute = Request::is('admin/*');
 
-        if (!$isAdminRoute) {
+        if (! $isAdminRoute) {
             // For client routes, only allow active models
             return $this->where($field ?? $this->getRouteKeyName(), $value)
                 ->where('is_active', true)

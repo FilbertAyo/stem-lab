@@ -53,6 +53,7 @@
                                     <th>Tags</th>
                                     <th>Questions</th>
                                     <th>Status</th>
+                                    <th>Ownership</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -80,6 +81,9 @@
                                             @else
                                                 <span class="badge bg-secondary">Inactive</span>
                                             @endif
+                                        </td>
+                                        <td>
+                                            @include('admin.partials.ownership-meta', ['record' => $model, 'compact' => true, 'class' => ''])
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
@@ -115,7 +119,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="text-center">No 3D models found. <a href="{{ route('admin.models.3d.create') }}">Create one now</a>.</td>
+                                        <td colspan="10" class="text-center">No 3D models found. <a href="{{ route('admin.models.3d.create') }}">Create one now</a>.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

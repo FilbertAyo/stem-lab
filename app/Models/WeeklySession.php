@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPublicUlid;
+use App\Models\Concerns\TracksOwnership;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,13 +12,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class WeeklySession extends Model
 {
-    use HasFactory, HasPublicUlid;
+    use HasFactory, HasPublicUlid, TracksOwnership;
 
     protected $fillable = [
         'club_id',
         'subject_id',
         'vr_experiment_id',
         'created_by',
+        'updated_by',
         'title',
         'description',
         'session_date',

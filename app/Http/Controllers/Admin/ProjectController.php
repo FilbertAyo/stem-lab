@@ -7,16 +7,14 @@ use App\Models\Equipment;
 use App\Models\Platform;
 use App\Models\Project;
 use App\Models\ProjectCategory;
-use App\Models\SchoolClass;
-use App\Models\ProjectCode;
-use App\Models\ProjectResource;
 use App\Models\ProjectTag;
+use App\Models\SchoolClass;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -26,7 +24,7 @@ class ProjectController extends Controller
     public function index(Request $request): View
     {
         $query = Project::query()
-            ->with(['category'])
+            ->with(['category', 'createdBy', 'updatedBy', 'author'])
             ->withCount(['tags', 'equipment']);
 
         if ($request->filled('search')) {
@@ -72,7 +70,7 @@ class ProjectController extends Controller
     public function show(Project $project): View
     {
         $project->load([
-            'category', 'tags', 'equipment', 'author',
+            'category', 'tags', 'equipment', 'author', 'createdBy', 'updatedBy',
             'resources', 'codes', 'platforms',
         ]);
 
@@ -197,7 +195,7 @@ class ProjectController extends Controller
 
     public function edit(Project $project): View
     {
-        $project->load(['tags', 'equipment', 'category', 'resources', 'codes', 'platforms']);
+        $project->load(['tags', 'equipment', 'category', 'resources', 'codes', 'platforms', 'createdBy', 'updatedBy', 'author']);
 
         $categories = ProjectCategory::ordered()->get();
         $tags = ProjectTag::orderBy('name')->get();
@@ -396,7 +394,7 @@ class ProjectController extends Controller
     /**
      * Build a unique slug for a model.
      *
-     * @param class-string<\Illuminate\Database\Eloquent\Model> $modelClass
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelClass
      */
     private function uniqueSlug(string $modelClass, string $baseSlug, string $column = 'slug', ?int $ignoreId = null): string
     {
@@ -408,7 +406,7 @@ class ProjectController extends Controller
             if ($ignoreId) {
                 $query->where('id', '!=', $ignoreId);
             }
-            if (!$query->exists()) {
+            if (! $query->exists()) {
                 return $slug;
             }
             $slug = "{$baseSlug}-{$i}";
@@ -444,7 +442,7 @@ class ProjectController extends Controller
                 ['slug' => $slug]
             );
             // Ensure slug if pre-existed without it (safety)
-            if (!$tag->slug) {
+            if (! $tag->slug) {
                 $tag->slug = $slug;
                 $tag->save();
             }
@@ -560,4 +558,3 @@ class ProjectController extends Controller
             ->log("Admin {$action} project");
     }
 }
-

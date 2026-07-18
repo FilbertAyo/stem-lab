@@ -88,6 +88,8 @@
                                     @endif
                                 </div>
                             </div>
+
+                            @include('admin.partials.ownership-meta', ['record' => $model3d])
                         </div>
                     </div>
                 </div>

@@ -2,12 +2,13 @@
 
     <div class="row">
         <div class="col-md-12 col-xl-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
                 <h5 class="mb-0">Edit Question Bank</h5>
                 <a href="{{ route('admin.vr-assessments.question-banks.index') }}" class="btn btn-secondary">
                     <i class="ti ti-arrow-left"></i> Back to List
                 </a>
             </div>
+            @include('admin.partials.ownership-meta', ['record' => $questionBank, 'compact' => true, 'class' => 'mb-3'])
 
             <div class="card">
                 <div class="card-body">

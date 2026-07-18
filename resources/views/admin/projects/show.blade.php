@@ -118,9 +118,9 @@
                             @if($project->published_at)
                                 <p class="text-muted small mt-2 mb-0">Published {{ $project->published_at->format('M j, Y') }}</p>
                             @endif
-                            @if($project->author)
-                                <p class="text-muted small mt-1 mb-0">By {{ $project->author->name }}</p>
-                            @endif
+                            <div class="mt-3">
+                                @include('admin.partials.ownership-meta', ['record' => $project, 'compact' => true, 'class' => ''])
+                            </div>
                         </div>
                     </div>
 

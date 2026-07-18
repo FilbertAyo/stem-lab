@@ -81,10 +81,10 @@ class SchoolController extends Controller
 
     public function show(School $school): View
     {
-        $school->load('regionModel');
-
-        // Load teachers with their clubs and students
         $school->load([
+            'regionModel',
+            'createdBy',
+            'updatedBy',
             'teacherClubs.user',
             'teacherClubs.club',
             'teacherClubs.students.schoolClass',
@@ -173,7 +173,10 @@ class SchoolController extends Controller
                 ->with('status', 'No schools pending review match your filters.');
         }
 
-        $query->update(['admin_reviewed_at' => now()]);
+        $query->update([
+            'admin_reviewed_at' => now(),
+            'updated_by' => $request->user()?->id,
+        ]);
 
         return redirect()
             ->back()
@@ -401,7 +404,7 @@ class SchoolController extends Controller
     private function schoolsIndexQuery(Request $request): Builder
     {
         $query = School::query()
-            ->with('regionModel')
+            ->with(['regionModel', 'createdBy', 'updatedBy'])
             ->withCount('teacherClubs');
 
         if ($request->filled('search')) {

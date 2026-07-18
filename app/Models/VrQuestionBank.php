@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasPublicShortId;
 use App\Models\Concerns\HasPublicUlid;
+use App\Models\Concerns\TracksOwnership;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,10 +13,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class VrQuestionBank extends Model
 {
     use HasFactory;
-    use HasPublicUlid;
     use HasPublicShortId {
         HasPublicShortId::getRouteKeyName insteadof HasPublicUlid;
     }
+    use HasPublicUlid;
+    use TracksOwnership;
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +32,8 @@ class VrQuestionBank extends Model
         'passing_score',
         'is_active',
         'display_order',
+        'created_by',
+        'updated_by',
     ];
 
     /**
@@ -84,4 +88,3 @@ class VrQuestionBank extends Model
         return $this->questions()->count();
     }
 }
-

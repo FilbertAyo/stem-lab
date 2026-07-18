@@ -2,7 +2,8 @@
 
     <div class="row">
         <div class="col-md-12 col-xl-12">
-            <h5 class="mb-3">Edit VR Experiment</h5>
+            <h5 class="mb-2">Edit VR Experiment</h5>
+            @include('admin.partials.ownership-meta', ['record' => $vrExperiment, 'compact' => true, 'class' => 'mb-3'])
 
             <div class="card">
                 <div class="card-body">

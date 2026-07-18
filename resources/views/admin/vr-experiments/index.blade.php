@@ -45,6 +45,7 @@
                                     <th>Classes</th>
                                     <th>External URL</th>
                                     <th>Status</th>
+                                    <th>Ownership</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -88,6 +89,9 @@
                                             @endif
                                         </td>
                                         <td>
+                                            @include('admin.partials.ownership-meta', ['record' => $experiment, 'compact' => true, 'class' => ''])
+                                        </td>
+                                        <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.vr-experiments.edit', $experiment) }}"
                                                    class="btn btn-sm btn-primary"
@@ -111,7 +115,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center py-4">No VR experiments found. <a href="{{ route('admin.vr-experiments.create') }}">Create one now</a>.</td>
+                                        <td colspan="9" class="text-center py-4">No VR experiments found. <a href="{{ route('admin.vr-experiments.create') }}">Create one now</a>.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

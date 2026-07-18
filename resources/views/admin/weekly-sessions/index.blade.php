@@ -64,6 +64,7 @@
                                     <th>Classes</th>
                                     <th>Date</th>
                                     <th>Status</th>
+                                    <th>Ownership</th>
                                     <th class="text-center" style="width: 180px;">Actions</th>
                                 </tr>
                             </thead>
@@ -115,7 +116,9 @@
                                                 {{ ucfirst($session->status) }}
                                             </span>
                                         </td>
-                                     
+                                        <td>
+                                            @include('admin.partials.ownership-meta', ['record' => $session, 'compact' => true, 'class' => ''])
+                                        </td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.weekly-sessions.show', $session) }}" 
@@ -143,7 +146,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center text-muted py-4">
+                                        <td colspan="9" class="text-center text-muted py-4">
                                             No weekly sessions found. Use the "Create Session" button to create the first one.
                                         </td>
                                     </tr>

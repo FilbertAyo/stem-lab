@@ -101,6 +101,7 @@
                                     <th>Tags</th>
                                     <th>Equipment</th>
                                     <th>Status</th>
+                                    <th>Ownership</th>
                                     <th style="width: 170px;" class="text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -147,6 +148,9 @@
                                                 </span>
                                             </div>
                                         </td>
+                                        <td>
+                                            @include('admin.partials.ownership-meta', ['record' => $project, 'compact' => true, 'class' => ''])
+                                        </td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.projects.show', $project) }}" class="btn btn-sm btn-outline-info" title="View">
@@ -172,7 +176,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center text-muted py-4">
+                                        <td colspan="9" class="text-center text-muted py-4">
                                             No projects yet. <a href="{{ route('admin.projects.create') }}">Create the first project</a>.
                                         </td>
                                     </tr>

@@ -277,7 +277,7 @@
                                     <label class="form-check-label" for="isPublished">Published</label>
                                 </div>
 
-                                <div>
+                                <div class="mb-3">
                                     <label class="form-label">Publish date (optional)</label>
                                     <input
                                         type="datetime-local"
@@ -287,6 +287,8 @@
                                     >
                                     @error('published_at') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                 </div>
+
+                                @include('admin.partials.ownership-meta', ['record' => $project, 'compact' => true, 'class' => ''])
                             </div>
                         </div>
 

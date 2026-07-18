@@ -60,20 +60,20 @@ class VrExperimentController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = VrExperiment::with(['schoolClasses', 'subject'])->withSubject();
+        $query = VrExperiment::with(['schoolClasses', 'subject', 'createdBy', 'updatedBy'])->withSubject();
 
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%'.$search.'%')
-                  ->orWhere('description', 'like', '%'.$search.'%')
-                  ->orWhere('external_url', 'like', '%'.$search.'%')
-                  ->orWhereHas('subject', function ($subjectQuery) use ($search) {
-                      $subjectQuery->where('subject_name', 'like', '%'.$search.'%');
-                  })
-                  ->orWhereHas('schoolClasses', function ($classQuery) use ($search) {
-                      $classQuery->where('name', 'like', '%'.$search.'%');
-                  });
+                    ->orWhere('description', 'like', '%'.$search.'%')
+                    ->orWhere('external_url', 'like', '%'.$search.'%')
+                    ->orWhereHas('subject', function ($subjectQuery) use ($search) {
+                        $subjectQuery->where('subject_name', 'like', '%'.$search.'%');
+                    })
+                    ->orWhereHas('schoolClasses', function ($classQuery) use ($search) {
+                        $classQuery->where('name', 'like', '%'.$search.'%');
+                    });
             });
         }
 
@@ -129,7 +129,7 @@ class VrExperimentController extends Controller
      */
     public function edit(VrExperiment $vrExperiment): View
     {
-        $vrExperiment->load('schoolClasses');
+        $vrExperiment->load(['schoolClasses', 'createdBy', 'updatedBy']);
         $classes = SchoolClass::active()->ordered()->get();
         $subjects = \App\Services\CacheService::getActiveSubjects();
         $uploadLimits = $this->uploadFieldLimits();

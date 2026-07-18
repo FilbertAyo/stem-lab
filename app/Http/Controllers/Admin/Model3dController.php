@@ -121,17 +121,19 @@ class Model3dController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Model3d::withSubject()->with('schoolClasses')->withCount('questions');
+        $query = Model3d::withSubject()
+            ->with(['schoolClasses', 'createdBy', 'updatedBy'])
+            ->withCount('questions');
 
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%'.$search.'%')
-                  ->orWhere('description', 'like', '%'.$search.'%')
-                  ->orWhere('tags', 'like', '%'.$search.'%')
-                  ->orWhereHas('subject', function ($subjectQuery) use ($search) {
-                      $subjectQuery->where('subject_name', 'like', '%'.$search.'%');
-                  });
+                    ->orWhere('description', 'like', '%'.$search.'%')
+                    ->orWhere('tags', 'like', '%'.$search.'%')
+                    ->orWhereHas('subject', function ($subjectQuery) use ($search) {
+                        $subjectQuery->where('subject_name', 'like', '%'.$search.'%');
+                    });
             });
         }
 
@@ -213,7 +215,7 @@ class Model3dController extends Controller
      */
     public function show(Model3d $model3d): View
     {
-        $model3d->load(['subject', 'schoolClasses']);
+        $model3d->load(['subject', 'schoolClasses', 'createdBy', 'updatedBy']);
 
         return view('admin.models.3d.show', compact('model3d'));
     }
@@ -227,7 +229,7 @@ class Model3dController extends Controller
         $classes = SchoolClass::active()->ordered()->get();
         $uploadLimits = $this->uploadFieldLimits();
 
-        $model3d->load('schoolClasses');
+        $model3d->load(['schoolClasses', 'createdBy', 'updatedBy']);
 
         return view('admin.models.3d.edit', compact('model3d', 'subjects', 'classes', 'uploadLimits'));
     }
