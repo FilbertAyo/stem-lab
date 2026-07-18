@@ -3,12 +3,7 @@
         <div class="dashboard-content-header mb-3">
             <h4 class="mb-1">{{ $competition->name }}</h4>
        
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-1">
-                    <li class="breadcrumb-item"><a href="{{ route('client.competitions.index') }}">Competitions</a></li>
-                    <li class="breadcrumb-item active">{{ $competition->name }}</li>
-                </ol>
-            </nav>
+
       
        </div>
 
