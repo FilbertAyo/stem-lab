@@ -42,127 +42,87 @@
         @endif
 
         
-        <section class="row mb-4">
-        @if($isTeacher && $clubStats)
-          <div class="col-6 col-lg-3 col-md-6 mb-3">
-            <div class="card border shadow-none h-100">
-              <div class="card-body">
-                <h6 class="text-muted mb-1 small">Registered students</h6>
-                <h4 class="mb-0 fw-bold">{{ $clubStats['registered'] }}</h4>
-                <small class="text-muted">of {{ $clubStats['total_roster'] }} on roster</small>
-                <a href="{{ route('client.my-students.index') }}" class="btn btn-primary text-white text-decoration-none mt-2">
-                  My Students
+        <section class="row g-2 g-md-3 mb-4">
+          @if($isTeacher && $clubStats)
+            <div class="col-6 col-lg-3">
+              <div class="dashboard-stat-card h-100">
+                <span class="dashboard-stat-label">Registered students</span>
+                <span class="dashboard-stat-value">{{ $clubStats['registered'] }}</span>
+                <span class="dashboard-stat-meta">of {{ $clubStats['total_roster'] }} on roster</span>
+                <a href="{{ route('client.my-students.index') }}" class="dashboard-stat-link">
+                  My Students <iconify-icon icon="lucide:arrow-right"></iconify-icon>
                 </a>
               </div>
             </div>
-          </div>
-          <div class="col-6 col-lg-3 col-md-6 mb-3">
-            <div class="card border shadow-none h-100">
-              <div class="card-body">
-                <h6 class="text-muted mb-1 small">Active this week</h6>
-                <h4 class="mb-0 fw-bold">{{ $clubStats['active'] }}</h4>
-                <a href="{{ route('client.my-students.index', ['activity' => 'active']) }}" class="btn btn-outline-primary text-decoration-none mt-2">
-                  View active
+            <div class="col-6 col-lg-3">
+              <div class="dashboard-stat-card h-100">
+                <span class="dashboard-stat-label">Active this week</span>
+                <span class="dashboard-stat-value">{{ $clubStats['active'] }}</span>
+                <a href="{{ route('client.my-students.index', ['activity' => 'active']) }}" class="dashboard-stat-link">
+                  View active <iconify-icon icon="lucide:arrow-right"></iconify-icon>
                 </a>
               </div>
             </div>
-          </div>
-          <div class="col-6 col-lg-3 col-md-6 mb-3">
-            <div class="card border shadow-none h-100">
-              <div class="card-body">
-                <h6 class="text-muted mb-1 small">Needs attention</h6>
-                <h4 class="mb-0 fw-bold text-danger">{{ $clubStats['needs_attention'] }}</h4>
-                <a href="{{ route('client.my-students.index', ['attention' => 'needs_support']) }}" class="btn btn-outline-danger text-decoration-none mt-2">
-                  Review
+            <div class="col-6 col-lg-3">
+              <div class="dashboard-stat-card h-100">
+                <span class="dashboard-stat-label">Needs attention</span>
+                <span class="dashboard-stat-value text-danger">{{ $clubStats['needs_attention'] }}</span>
+                <a href="{{ route('client.my-students.index', ['attention' => 'needs_support']) }}" class="dashboard-stat-link is-danger">
+                  Review <iconify-icon icon="lucide:arrow-right"></iconify-icon>
                 </a>
               </div>
             </div>
-          </div>
-        @endif
+          @endif
 
-        @if($isTeacher && $stats['total_competitions'] > 0)
-          <div class="col-6 col-lg-3 col-md-6 mb-3">
-            <div class="card border shadow-none h-100">
-              <div class="card-body">
-                <div class="d-flex align-items-center">
-                  <div class="flex-grow-1 ms-3">
-                    <h6 class="text-muted mb-1 small">Competition tasks</h6>
-                    <h4 class="mb-0 fw-bold">{{ $competitionNotificationCount }}</h4>
-                  </div>
-                </div>
-                <a href="{{ route('client.competitions.index') }}" class="btn btn-primary text-white text-decoration-none mt-2">
-                  Open competitions
+          @if($isTeacher && $stats['total_competitions'] > 0)
+            <div class="col-6 col-lg-3">
+              <div class="dashboard-stat-card h-100">
+                <span class="dashboard-stat-label">Competition tasks</span>
+                <span class="dashboard-stat-value">{{ $competitionNotificationCount }}</span>
+                <a href="{{ route('client.competitions.index') }}" class="dashboard-stat-link">
+                  Open competitions <iconify-icon icon="lucide:arrow-right"></iconify-icon>
                 </a>
               </div>
             </div>
-          </div>
-          @foreach(collect($competitionShortcuts)->slice(1, 2) as $shortcut)
-            <div class="col-6 col-lg-3 col-md-6 mb-3">
-              <div class="card border shadow-none h-100">
-                <div class="card-body">
-                  <div class="d-flex align-items-center">
-                    <div class="flex-grow-1 ms-3">
-                      <h6 class="text-muted mb-1 small">{{ $shortcut['label'] }}</h6>
-                      <h4 class="mb-0 fw-bold">{{ $shortcut['value'] }}</h4>
-                    </div>
-                  </div>
-                  <a href="{{ $shortcut['route'] }}" class="btn btn-primary text-white text-decoration-none mt-2">
-                    View
+            @foreach(collect($competitionShortcuts)->slice(1, 2) as $shortcut)
+              <div class="col-6 col-lg-3">
+                <div class="dashboard-stat-card h-100">
+                  <span class="dashboard-stat-label">{{ $shortcut['label'] }}</span>
+                  <span class="dashboard-stat-value">{{ $shortcut['value'] }}</span>
+                  <a href="{{ $shortcut['route'] }}" class="dashboard-stat-link">
+                    View <iconify-icon icon="lucide:arrow-right"></iconify-icon>
                   </a>
                 </div>
               </div>
+            @endforeach
+            <div class="col-6 col-lg-3">
+              <div class="dashboard-stat-card h-100">
+                <span class="dashboard-stat-label">Competitions</span>
+                <span class="dashboard-stat-value">{{ $stats['total_competitions'] }}</span>
+                @if($stats['total_submissions'] > 0)
+                  <span class="dashboard-stat-meta">{{ $stats['total_submissions'] }} submissions</span>
+                @endif
+              </div>
             </div>
-          @endforeach
-        @endif
+          @endif
 
-        @if(! $isTeacher)
-          <div class="col-6 col-lg-3 col-md-6 mb-3">
-                <div class="card border shadow-none h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="text-muted mb-1 small">Models Completed</h6>
-                                <h4 class="mb-0 fw-bold">{{ $stats['models_completed'] }}</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          @if(! $isTeacher)
+            <div class="col-6 col-lg-3">
+              <div class="dashboard-stat-card h-100">
+                <span class="dashboard-stat-label">Models completed</span>
+                <span class="dashboard-stat-value">{{ $stats['models_completed'] }}</span>
+              </div>
             </div>
-
-            <div class="col-6 col-lg-3 col-md-6 mb-3">
-                <div class="card border shadow-none h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="text-muted mb-1 small">VR Assessments</h6>
-                                <h4 class="mb-0 fw-bold">{{ $stats['completed_vr_attempts'] }}</h4>
-                                @if($stats['total_vr_attempts'] > 0)
-                                    <small class="text-muted">{{ $stats['passed_vr_attempts'] }} passed</small>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-6 col-lg-3">
+              <div class="dashboard-stat-card h-100">
+                <span class="dashboard-stat-label">VR assessments</span>
+                <span class="dashboard-stat-value">{{ $stats['completed_vr_attempts'] }}</span>
+                @if($stats['total_vr_attempts'] > 0)
+                  <span class="dashboard-stat-meta">{{ $stats['passed_vr_attempts'] }} passed</span>
+                @endif
+              </div>
             </div>
-        @endif
-
-            @if($isTeacher && $stats['total_competitions'] > 0)
-                <div class="col-6 col-lg-3 col-md-6 mb-3">
-                    <div class="card border shadow-none h-100">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="text-muted mb-1 small">Competitions</h6>
-                                    <h4 class="mb-0 fw-bold">{{ $stats['total_competitions'] }}</h4>
-                                    @if($stats['total_submissions'] > 0)
-                                        <small class="text-muted">{{ $stats['total_submissions'] }} submissions</small>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
+          @endif
         </section>
 
         @include('client.back.partials.package')
