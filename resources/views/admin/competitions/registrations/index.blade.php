@@ -4,8 +4,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h5 class="mb-0">Registrations — {{ $competition->name }}</h5>
-                    <p class="text-muted mb-0">Includes incomplete participants (club join only) for follow-up, plus submitted registrations ready for review.</p>
-                </div>
+              </div>
                 <div class="d-flex gap-2">
                     <a
                         href="{{ route('admin.competitions.registrations.export', [$competition] + request()->only(['search', 'status'])) }}"
@@ -13,7 +12,7 @@
                     >
                         <i class="ti ti-download"></i> Download PDF
                     </a>
-                    <a href="{{ route('admin.competitions.show', $competition) }}" class="btn btn-outline-secondary">Back</a>
+                    <a href="{{ route('admin.competitions.show', $competition) }}" class="btn btn-sm btn-outline-secondary"><i class="ti ti-arrow-left"></i> Back</a>
                 </div>
             </div>
 
