@@ -45,8 +45,8 @@
                                     <th>Questions</th>
                                     <th>Settings</th>
                                     <th>Status</th>
-                                    <th>Ownership</th>
-                                    <th>Actions</th>
+                                    <th>Logs</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>

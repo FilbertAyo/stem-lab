@@ -45,7 +45,7 @@
                                     <th>Classes</th>
                                     <th>External URL</th>
                                     <th>Status</th>
-                                    <th>Ownership</th>
+                                    <th>Logs</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

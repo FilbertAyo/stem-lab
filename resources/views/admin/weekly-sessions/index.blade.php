@@ -64,8 +64,8 @@
                                     <th>Classes</th>
                                     <th>Date</th>
                                     <th>Status</th>
-                                    <th>Ownership</th>
-                                    <th class="text-center" style="width: 180px;">Actions</th>
+                                    <th>Logs</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,7 +119,7 @@
                                         <td>
                                             @include('admin.partials.ownership-meta', ['record' => $session, 'compact' => true, 'class' => ''])
                                         </td>
-                                        <td class="text-center">
+                                        <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.weekly-sessions.show', $session) }}" 
                                                    class="btn btn-sm btn-outline-info" 

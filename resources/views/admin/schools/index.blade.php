@@ -111,14 +111,13 @@
                                 <tr>
                                     <th>#</th>
                                     <th>School Name</th>
-                                  
                                     <th>Contact</th>
                                     <th>Region</th>
                                     <th>District</th>
                                     <th>Ward</th>
                                     <th>Status</th>
-                                    <th>Ownership</th>
-                                    <th class="text-center" style="width: 260px;">Actions</th>
+                                    <th>Logs</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>

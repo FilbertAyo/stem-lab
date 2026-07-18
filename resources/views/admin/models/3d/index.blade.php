@@ -49,12 +49,11 @@
                                     <th>Name</th>
                                     <th>Subject</th>
                                     <th>Classes</th>
-                                    <th>Description</th>
                                     <th>Tags</th>
                                     <th>Questions</th>
                                     <th>Status</th>
-                                    <th>Ownership</th>
-                                    <th>Actions</th>
+                                    <th>Logs</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,7 +69,6 @@
                                                 <span class="text-muted small">All classes</span>
                                             @endforelse
                                         </td>
-                                        <td>{{ Str::limit($model->description ?? 'N/A', 50) }}</td>
                                         <td>{{ Str::limit($model->tags ?? 'N/A', 30) }}</td>
                                         <td>
                                             <span class="badge bg-warning">{{ $model->questions_count }}</span>
