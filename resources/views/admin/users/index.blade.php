@@ -79,6 +79,7 @@
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#editAdminModal"
                                                     data-user-id="{{ $user->id }}"
+                                                    data-user-route-key="{{ $user->getRouteKey() }}"
                                                     data-user-name="{{ $user->name }}"
                                                     data-user-email="{{ $user->email }}"
                                                     title="Edit">
@@ -235,12 +236,12 @@
             if (editModal) {
                 editModal.addEventListener('show.bs.modal', function(event) {
                     const button = event.relatedTarget;
-                    const userId = button.getAttribute('data-user-id');
+                    const userRouteKey = button.getAttribute('data-user-route-key') || button.getAttribute('data-user-id');
                     const userName = button.getAttribute('data-user-name');
                     const userEmail = button.getAttribute('data-user-email');
 
                     const form = document.getElementById('editAdminForm');
-                    form.action = '{{ route("admin.users.update", ":id") }}'.replace(':id', userId);
+                    form.action = '{{ route("admin.users.update", ":id") }}'.replace(':id', userRouteKey);
 
                     document.getElementById('edit_name').value = userName;
                     document.getElementById('edit_email').value = userEmail;

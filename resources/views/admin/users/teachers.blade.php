@@ -57,7 +57,7 @@
                                                 <button type="button" class="btn btn-sm btn-primary"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#editTeacherModal"
-                                                    data-user-ulid="{{ $user->ulid }}"
+                                                    data-user-route-key="{{ $user->getRouteKey() }}"
                                                     data-user-name="{{ $user->name }}"
                                                     data-user-email="{{ $user->email }}"
                                                     data-user-phone="{{ $user->phone ?? '' }}"
@@ -68,7 +68,7 @@
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#viewUserModal"
                                                     data-user-id="{{ $user->id }}"
-                                                    data-user-ulid="{{ $user->ulid }}"
+                                                    data-user-route-key="{{ $user->getRouteKey() }}"
                                                     data-user-name="{{ $user->name }}"
                                                     data-user-email="{{ $user->email }}"
                                                     data-user-phone="{{ $user->phone ?? '—' }}"
@@ -267,14 +267,14 @@
             return confirm('Are you sure you want to delete ' + name + '? This action cannot be undone.');
         }
 
-        function setEditTeacherForm(userUlid, userName, userEmail, userPhone) {
+        function setEditTeacherForm(userRouteKey, userName, userEmail, userPhone) {
             const form = document.getElementById('editTeacherForm');
-            if (!form || !userUlid) {
+            if (!form || !userRouteKey) {
                 return;
             }
 
-            form.action = @json(route('admin.users.update', ['user' => '__ULID__'])).replace('__ULID__', userUlid);
-            document.getElementById('edit_teacher_user_id').value = userUlid;
+            form.action = @json(route('admin.users.update', ['user' => '__ROUTE_KEY__'])).replace('__ROUTE_KEY__', userRouteKey);
+            document.getElementById('edit_teacher_user_id').value = userRouteKey;
             document.getElementById('edit_teacher_name').value = userName || '';
             document.getElementById('edit_teacher_email').value = userEmail || '';
             document.getElementById('edit_teacher_phone').value = userPhone || '';
@@ -300,7 +300,7 @@
                 editModal.addEventListener('show.bs.modal', function(event) {
                     const button = event.relatedTarget;
                     setEditTeacherForm(
-                        button.getAttribute('data-user-ulid'),
+                        button.getAttribute('data-user-route-key'),
                         button.getAttribute('data-user-name'),
                         button.getAttribute('data-user-email'),
                         button.getAttribute('data-user-phone')
@@ -326,12 +326,12 @@
 
                     // Get all data attributes
                     const userId = button.getAttribute('data-user-id');
-                    const userUlid = button.getAttribute('data-user-ulid');
+                    const userRouteKey = button.getAttribute('data-user-route-key');
                     const userName = button.getAttribute('data-user-name');
                     pendingDeleteTeacherName = userName || '';
 
-                    if (deleteForm && userUlid) {
-                        deleteForm.action = destroyUrlTemplate.replace('__ID__', userUlid);
+                    if (deleteForm && userRouteKey) {
+                        deleteForm.action = destroyUrlTemplate.replace('__ID__', userRouteKey);
                     }
                     const userEmail = button.getAttribute('data-user-email');
                     const userPhone = button.getAttribute('data-user-phone');

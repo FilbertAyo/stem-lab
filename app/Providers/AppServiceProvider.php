@@ -50,21 +50,21 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->bindUlidWithLegacyId('school', School::class);
-        $this->bindUlidWithLegacyId('club', Club::class);
+        $this->bindShortIdWithLegacyIds('club', Club::class);
         $this->bindUlidWithLegacyId('schoolClass', SchoolClass::class);
         $this->bindUlidWithLegacyId('teacherClub', TeacherClub::class);
         $this->bindUlidWithLegacyId('project', Project::class);
         $this->bindUlidWithLegacyId('projectCategory', ProjectCategory::class);
         $this->bindUlidWithLegacyId('platform', Platform::class);
         $this->bindUlidWithLegacyId('competition', Competition::class);
-        $this->bindUlidWithLegacyId('user', User::class);
-        $this->bindModel3dWithShortAndLegacyIds();
+        $this->bindShortIdWithLegacyIds('user', User::class);
+        $this->bindShortIdWithLegacyIds('model3d', Model3d::class);
         $this->bindUlidWithLegacyId('weeklySession', WeeklySession::class);
         $this->bindUlidWithLegacyId('report', WeeklySessionReport::class);
-        $this->bindUlidWithLegacyId('vrExperiment', VrExperiment::class);
-        $this->bindUlidWithLegacyId('questionBank', VrQuestionBank::class);
-        $this->bindUlidWithLegacyId('attempt', VrAssessmentAttempt::class);
-        $this->bindUlidWithLegacyId('subject', Subject::class);
+        $this->bindShortIdWithLegacyIds('vrExperiment', VrExperiment::class);
+        $this->bindShortIdWithLegacyIds('questionBank', VrQuestionBank::class);
+        $this->bindShortIdWithLegacyIds('attempt', VrAssessmentAttempt::class);
+        $this->bindShortIdWithLegacyIds('subject', Subject::class);
 
         Event::listen(Registered::class, SendWelcomeEmail::class);
 
@@ -172,17 +172,19 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Resolve Model3d by short public_id, then legacy ULID, then numeric ID.
+     * Resolve by short public_id, then legacy ULID, then numeric ID.
+     *
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelClass
      */
-    protected function bindModel3dWithShortAndLegacyIds(): void
+    protected function bindShortIdWithLegacyIds(string $parameter, string $modelClass): void
     {
-        Route::bind('model3d', function (string $value) {
-            $byPublicId = Model3d::query()->where('public_id', $value)->first();
+        Route::bind($parameter, function (string $value) use ($modelClass) {
+            $byPublicId = $modelClass::query()->where('public_id', $value)->first();
             if ($byPublicId) {
                 return $byPublicId->markResolvedViaLegacyRouteKey(false);
             }
 
-            $legacy = Model3d::query()
+            $legacy = $modelClass::query()
                 ->where(function ($query) use ($value): void {
                     $query->where('ulid', $value);
 

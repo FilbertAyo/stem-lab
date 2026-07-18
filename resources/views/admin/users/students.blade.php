@@ -57,7 +57,7 @@
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#viewUserModal"
                                                 data-user-id="{{ $user->id }}"
-                                                data-user-ulid="{{ $user->ulid }}"
+                                                data-user-route-key="{{ $user->getRouteKey() }}"
                                                 data-user-name="{{ $user->name }}"
                                                 data-user-email="{{ $user->email }}"
                                                 data-user-role="{{ $user->role }}"
@@ -202,12 +202,12 @@
 
                     // Get all data attributes
                     const userId = button.getAttribute('data-user-id');
-                    const userUlid = button.getAttribute('data-user-ulid');
+                    const userRouteKey = button.getAttribute('data-user-route-key');
                     const userName = button.getAttribute('data-user-name');
                     pendingDeleteStudentName = userName || '';
 
-                    if (deleteForm && userUlid) {
-                        deleteForm.action = destroyUrlTemplate.replace('__ID__', userUlid);
+                    if (deleteForm && userRouteKey) {
+                        deleteForm.action = destroyUrlTemplate.replace('__ID__', userRouteKey);
                     }
                     const userEmail = button.getAttribute('data-user-email');
                     const userRole = button.getAttribute('data-user-role');

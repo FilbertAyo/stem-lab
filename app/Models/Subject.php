@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPublicShortId;
 use App\Models\Concerns\HasPublicUlid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model
 {
-    use HasFactory, HasPublicUlid;
+    use HasFactory;
+    use HasPublicUlid;
+    use HasPublicShortId {
+        HasPublicShortId::getRouteKeyName insteadof HasPublicUlid;
+    }
 
     /**
      * The attributes that are mass assignable.

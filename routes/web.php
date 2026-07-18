@@ -120,11 +120,15 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
         Route::prefix('clubs')->name('clubs.')->group(function () {
             Route::get('/', [ClubController::class, 'index'])->name('index');
             Route::post('/', [ClubController::class, 'store'])->name('store');
-            Route::get('/{club}', [ClubController::class, 'show'])->name('show');
-            Route::get('/{club}/members/export', [ClubController::class, 'exportApprovedMembers'])->name('members.export');
-            Route::put('/{club}', [ClubController::class, 'update'])->name('update');
-            Route::post('/{club}/toggle-status', [ClubController::class, 'toggleStatus'])->name('toggle-status');
-            Route::post('/{club}/transfer-leadership', [ClubController::class, 'transferLeadership'])->name('transfer-leadership');
+
+            Route::middleware('redirect.legacy.public-id')->group(function () {
+                Route::get('/{club}', [ClubController::class, 'show'])->name('show');
+                Route::get('/{club}/members/export', [ClubController::class, 'exportApprovedMembers'])->name('members.export');
+                Route::put('/{club}', [ClubController::class, 'update'])->name('update');
+                Route::post('/{club}/toggle-status', [ClubController::class, 'toggleStatus'])->name('toggle-status');
+                Route::post('/{club}/transfer-leadership', [ClubController::class, 'transferLeadership'])->name('transfer-leadership');
+            });
+
             Route::post('/{teacherClub}/approve-request', [ClubController::class, 'approveRequest'])->name('approve-request');
             Route::post('/{teacherClub}/reject-request', [ClubController::class, 'rejectRequest'])->name('reject-request');
         });
@@ -208,8 +212,8 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
 
         // Progress & Tracking routes
         Route::get('progress', [\App\Http\Controllers\Admin\ProgressController::class, 'index'])->name('progress.index');
-        Route::get('progress/student/{user}', [\App\Http\Controllers\Admin\ProgressController::class, 'showStudent'])->name('progress.student');
-        Route::middleware('redirect.legacy.model3d')->group(function () {
+        Route::middleware('redirect.legacy.public-id')->group(function () {
+            Route::get('progress/student/{user}', [\App\Http\Controllers\Admin\ProgressController::class, 'showStudent'])->name('progress.student');
             Route::get('progress/model/{model3d}', [\App\Http\Controllers\Admin\ProgressController::class, 'showModel'])->name('progress.model');
             Route::get('progress/student/{user}/model/{model3d}', [\App\Http\Controllers\Admin\ProgressController::class, 'showDetail'])->name('progress.detail');
         });
@@ -222,9 +226,12 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/teachers', [AdminUserController::class, 'teachers'])->name('teachers');
             Route::get('/teachers/export', [AdminUserController::class, 'exportTeachers'])->name('teachers.export');
             Route::post('/', [AdminUserController::class, 'store'])->name('store');
-            Route::put('/{user}', [AdminUserController::class, 'update'])->name('update');
-            Route::post('/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('toggle-status');
-            Route::delete('/{user}', [AdminUserController::class, 'destroy'])->name('destroy');
+
+            Route::middleware('redirect.legacy.public-id')->group(function () {
+                Route::put('/{user}', [AdminUserController::class, 'update'])->name('update');
+                Route::post('/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('toggle-status');
+                Route::delete('/{user}', [AdminUserController::class, 'destroy'])->name('destroy');
+            });
         });
 
         // Database Backup routes
@@ -281,7 +288,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('3d/create', [AdminModel3dController::class, 'create'])->name('3d.create');
             Route::post('3d', [AdminModel3dController::class, 'store'])->name('3d.store');
 
-            Route::middleware('redirect.legacy.model3d')->group(function () {
+            Route::middleware('redirect.legacy.public-id')->group(function () {
                 Route::get('3d/{model3d}', [AdminModel3dController::class, 'show'])->name('3d.show');
                 Route::get('3d/{model3d}/edit', [AdminModel3dController::class, 'edit'])->name('3d.edit');
                 Route::put('3d/{model3d}', [AdminModel3dController::class, 'update'])->name('3d.update');
@@ -303,9 +310,12 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/', [VrExperimentController::class, 'index'])->name('index');
             Route::get('/create', [VrExperimentController::class, 'create'])->name('create');
             Route::post('/', [VrExperimentController::class, 'store'])->name('store');
-            Route::get('/{vrExperiment}/edit', [VrExperimentController::class, 'edit'])->name('edit');
-            Route::put('/{vrExperiment}', [VrExperimentController::class, 'update'])->name('update');
-            Route::delete('/{vrExperiment}', [VrExperimentController::class, 'destroy'])->name('destroy');
+
+            Route::middleware('redirect.legacy.public-id')->group(function () {
+                Route::get('/{vrExperiment}/edit', [VrExperimentController::class, 'edit'])->name('edit');
+                Route::put('/{vrExperiment}', [VrExperimentController::class, 'update'])->name('update');
+                Route::delete('/{vrExperiment}', [VrExperimentController::class, 'destroy'])->name('destroy');
+            });
         });
 
         // VR Assessment routes - outer group already has 'admin.' prefix
@@ -315,15 +325,18 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
                 Route::get('/', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'index'])->name('index');
                 Route::get('/create', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'create'])->name('create');
                 Route::post('/', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'store'])->name('store');
-                Route::get('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'show'])->name('show');
-                Route::get('/{questionBank}/edit', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'edit'])->name('edit');
-                Route::put('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'update'])->name('update');
-                Route::delete('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'destroy'])->name('destroy');
-                Route::post('/{questionBank}/toggle-status', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'toggleStatus'])->name('toggle-status');
+
+                Route::middleware('redirect.legacy.public-id')->group(function () {
+                    Route::get('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'show'])->name('show');
+                    Route::get('/{questionBank}/edit', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'edit'])->name('edit');
+                    Route::put('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'update'])->name('update');
+                    Route::delete('/{questionBank}', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'destroy'])->name('destroy');
+                    Route::post('/{questionBank}/toggle-status', [\App\Http\Controllers\Admin\VrQuestionBankController::class, 'toggleStatus'])->name('toggle-status');
+                });
             });
 
             // Questions routes (nested under question banks)
-            Route::prefix('question-banks/{questionBank}/questions')->name('questions.')->group(function () {
+            Route::middleware('redirect.legacy.public-id')->prefix('question-banks/{questionBank}/questions')->name('questions.')->group(function () {
                 Route::get('/create', [\App\Http\Controllers\Admin\VrQuestionController::class, 'create'])->name('create');
                 Route::post('/', [\App\Http\Controllers\Admin\VrQuestionController::class, 'store'])->name('store');
                 Route::get('/{question}/edit', [\App\Http\Controllers\Admin\VrQuestionController::class, 'edit'])->name('edit');
@@ -335,7 +348,9 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             // Assessment Results routes
             Route::prefix('results')->name('results.')->group(function () {
                 Route::get('/', [\App\Http\Controllers\Admin\VrAssessmentResultController::class, 'index'])->name('index');
-                Route::get('/{attempt}', [\App\Http\Controllers\Admin\VrAssessmentResultController::class, 'show'])->name('show');
+                Route::middleware('redirect.legacy.public-id')->group(function () {
+                    Route::get('/{attempt}', [\App\Http\Controllers\Admin\VrAssessmentResultController::class, 'show'])->name('show');
+                });
             });
         });
     });
@@ -347,10 +362,13 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
         Route::get('subjects', [SubjectController::class, 'index'])->name('subjects.index');
         Route::get('subjects/create', [SubjectController::class, 'create'])->name('subjects.create');
         Route::post('subjects', [SubjectController::class, 'store'])->name('subjects.store');
-        Route::get('subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
-        Route::get('subjects/{subject}/edit', [SubjectController::class, 'edit'])->name('subjects.edit');
-        Route::put('subjects/{subject}', [SubjectController::class, 'update'])->name('subjects.update');
-        Route::delete('subjects/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
+
+        Route::middleware('redirect.legacy.public-id')->group(function () {
+            Route::get('subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
+            Route::get('subjects/{subject}/edit', [SubjectController::class, 'edit'])->name('subjects.edit');
+            Route::put('subjects/{subject}', [SubjectController::class, 'update'])->name('subjects.update');
+            Route::delete('subjects/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
+        });
     });
 });
 
@@ -383,7 +401,7 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
             ->name('client.subscription-packages.select');
 
         Route::middleware('club.linked.for.learning')->group(function () {
-        Route::prefix('models/3d')->name('client.models.3d.')->middleware('redirect.legacy.model3d')->group(function () {
+        Route::prefix('models/3d')->name('client.models.3d.')->middleware('redirect.legacy.public-id')->group(function () {
             Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
 
             // Question routes (must come before /{model3d} to avoid route conflicts)
@@ -405,18 +423,23 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
             Route::get('/math/practice', [ClientVrExperimentController::class, 'mathPractice'])->name('math.practice');
             Route::get('/math', [ClientVrExperimentController::class, 'math'])->name('math');
             Route::get('/experience/{slug}', [ClientVrExperimentController::class, 'showStatic'])->name('show.static');
-            Route::get('/{vrExperiment}', [ClientVrExperimentController::class, 'show'])->name('show');
+            Route::middleware('redirect.legacy.public-id')->group(function () {
+                Route::get('/{vrExperiment}', [ClientVrExperimentController::class, 'show'])->name('show');
+            });
         });
 
         // VR Assessment/Quiz routes
         Route::prefix('vr-quizzes')->name('client.vr-assessments.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Client\VrAssessmentController::class, 'index'])->name('index');
-            Route::get('/{questionBank}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'show'])->name('show');
-            Route::post('/{questionBank}/start', [\App\Http\Controllers\Client\VrAssessmentController::class, 'start'])->name('start');
-            Route::get('/attempt/{attempt}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'take'])->name('take');
-            Route::post('/attempt/{attempt}/save-answer', [\App\Http\Controllers\Client\VrAssessmentController::class, 'saveAnswer'])->name('save-answer');
-            Route::post('/attempt/{attempt}/submit', [\App\Http\Controllers\Client\VrAssessmentController::class, 'submit'])->name('submit');
-            Route::get('/attempt/{attempt}/results', [\App\Http\Controllers\Client\VrAssessmentController::class, 'results'])->name('results');
+
+            Route::middleware('redirect.legacy.public-id')->group(function () {
+                Route::get('/{questionBank}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'show'])->name('show');
+                Route::post('/{questionBank}/start', [\App\Http\Controllers\Client\VrAssessmentController::class, 'start'])->name('start');
+                Route::get('/attempt/{attempt}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'take'])->name('take');
+                Route::post('/attempt/{attempt}/save-answer', [\App\Http\Controllers\Client\VrAssessmentController::class, 'saveAnswer'])->name('save-answer');
+                Route::post('/attempt/{attempt}/submit', [\App\Http\Controllers\Client\VrAssessmentController::class, 'submit'])->name('submit');
+                Route::get('/attempt/{attempt}/results', [\App\Http\Controllers\Client\VrAssessmentController::class, 'results'])->name('results');
+            });
         });
         });
 
@@ -447,8 +470,12 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
                 Route::get('/', [ClientClubController::class, 'index'])->name('index');
                 Route::post('/transfer-leadership', [ClientClubController::class, 'transferLeadership'])->name('transfer-leadership');
                 Route::get('/pending-requests', [ClientClubController::class, 'pendingRequests'])->name('pending-requests');
-                Route::get('/join/{club}', [ClientClubController::class, 'showJoinForm'])->name('join.form');
-                Route::post('/join/{club}', [ClientClubController::class, 'join'])->name('join');
+
+                Route::middleware('redirect.legacy.public-id')->group(function () {
+                    Route::get('/join/{club}', [ClientClubController::class, 'showJoinForm'])->name('join.form');
+                    Route::post('/join/{club}', [ClientClubController::class, 'join'])->name('join');
+                });
+
                 Route::post('/{teacherClub}/approve', [ClientClubController::class, 'approveRequest'])->name('approve-request');
                 Route::post('/{teacherClub}/reject', [ClientClubController::class, 'rejectRequest'])->name('reject-request');
                 Route::post('/{teacherClub}/students', [ClientStudentController::class, 'store'])->name('students.store');

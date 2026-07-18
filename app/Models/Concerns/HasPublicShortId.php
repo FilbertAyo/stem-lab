@@ -9,6 +9,23 @@ trait HasPublicShortId
 {
     public bool $resolvedViaLegacyRouteKey = false;
 
+    /**
+     * Reserved six-character route segments that must never be assigned as public IDs.
+     *
+     * @var list<string>
+     */
+    protected static array $reservedPublicIds = [
+        'create',
+        'export',
+        'delete',
+        'update',
+        'search',
+        'import',
+        'status',
+        'result',
+        'report',
+    ];
+
     protected static function bootHasPublicShortId(): void
     {
         static::creating(function ($model): void {
@@ -59,7 +76,10 @@ trait HasPublicShortId
     {
         do {
             $candidate = Str::lower(Str::random(6));
-        } while (! preg_match('/[a-z]/', $candidate));
+        } while (
+            ! preg_match('/[a-z]/', $candidate)
+            || in_array($candidate, static::$reservedPublicIds, true)
+        );
 
         return $candidate;
     }
@@ -91,9 +111,9 @@ trait HasPublicShortId
 
     protected function isUniquePublicIdViolation(QueryException $exception): bool
     {
-        $message = $exception->getMessage();
+        $message = strtolower($exception->getMessage());
 
-        return str_contains($message, 'model3ds_public_id_unique')
-            || str_contains($message, 'public_id');
+        return str_contains($message, 'public_id')
+            || str_contains($message, 'unique');
     }
 }

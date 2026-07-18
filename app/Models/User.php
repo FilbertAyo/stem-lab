@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Concerns\HasPublicShortId;
 use App\Models\Concerns\HasPublicUlid;
 use App\Notifications\CustomResetPasswordNotification;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +15,12 @@ use Illuminate\Support\Collection;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasPublicUlid, Notifiable;
+    use HasFactory;
+    use HasPublicUlid;
+    use HasPublicShortId {
+        HasPublicShortId::getRouteKeyName insteadof HasPublicUlid;
+    }
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
