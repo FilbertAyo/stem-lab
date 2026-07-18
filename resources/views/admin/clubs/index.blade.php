@@ -54,7 +54,7 @@
                                                 >
                                                     <i class="ti ti-eye"></i>
                                                 </a>
-                                                <button
+                                                <!-- <button
                                                     class="btn btn-sm btn-outline-primary"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#editClubModal"
@@ -77,7 +77,7 @@
                                                     title="{{ $club->is_active ? 'Disable' : 'Enable' }}"
                                                 >
                                                     <i class="ti {{ $club->is_active ? 'ti-ban' : 'ti-check' }}"></i>
-                                                </button>
+                                                </button> -->
                                             </div>
                                         </td>
                                     </tr>

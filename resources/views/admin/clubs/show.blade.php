@@ -6,25 +6,13 @@
                     <h5 class="mb-0">{{ $club->name }}</h5>
                     <p class="text-muted mb-0">Club Details & Management</p>
                 </div>
-                <a href="{{ route('admin.clubs.index') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('admin.clubs.index') }}" class="btn btn-sm btn-outline-secondary">
                     <i class="ti ti-arrow-left me-1"></i>
-                    Back to Clubs
+                    Back 
                 </a>
             </div>
 
-            @if(session('status'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="ti ti-check me-1"></i> {{ session('status') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="ti ti-alert-circle me-1"></i> {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+    
 
             <!-- Club Information Card -->
             <div class="card mb-4">
@@ -51,37 +39,49 @@
                 </div>
             </div>
 
-            <div class="card mb-3">
-                <div class="card-body">
-            <ul class="nav nav-tabs mb-3" role="navigation" aria-label="Club management sections">
-                <li class="nav-item">
+            <ul class="nav nav-pills mb-3" id="club-tabs" role="tablist" aria-label="Club management sections">
+                <li class="nav-item" role="presentation">
                     <a class="nav-link {{ $activeTab === 'leaders' ? 'active' : '' }}"
-                       href="{{ route('admin.clubs.show', ['club' => $club, 'tab' => 'leaders']) }}">
+                       id="pills-leaders-tab"
+                       data-bs-toggle="pill"
+                       href="#pills-leaders"
+                       role="tab"
+                       aria-controls="pills-leaders"
+                       aria-selected="{{ $activeTab === 'leaders' ? 'true' : 'false' }}">
                         School Leaders
                         <span class="badge bg-light text-dark ms-1">{{ $leaders->total() }}</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" role="presentation">
                     <a class="nav-link {{ $activeTab === 'members' ? 'active' : '' }}"
-                       href="{{ route('admin.clubs.show', ['club' => $club, 'tab' => 'members']) }}">
+                       id="pills-members-tab"
+                       data-bs-toggle="pill"
+                       href="#pills-members"
+                       role="tab"
+                       aria-controls="pills-members"
+                       aria-selected="{{ $activeTab === 'members' ? 'true' : 'false' }}">
                         Approved Members
                         <span class="badge bg-light text-dark ms-1">{{ $approvedMembers->total() }}</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" role="presentation">
                     <a class="nav-link {{ $activeTab === 'requests' ? 'active' : '' }}"
-                       href="{{ route('admin.clubs.show', ['club' => $club, 'tab' => 'requests']) }}">
+                       id="pills-requests-tab"
+                       data-bs-toggle="pill"
+                       href="#pills-requests"
+                       role="tab"
+                       aria-controls="pills-requests"
+                       aria-selected="{{ $activeTab === 'requests' ? 'true' : 'false' }}">
                         Pending Requests
                         <span class="badge bg-light text-dark ms-1">{{ $pendingRequests->total() }}</span>
-                        </a>
-                    </li>
-                </ul>
-                </div>
-            </div>
+                    </a>
+                </li>
+            </ul>
 
-            <div class="card mb-4">
-                <div class="card-body p-0">
-                    @if($activeTab === 'leaders')
+            <div class="tab-content" id="club-tabsContent">
+                <div class="tab-pane fade {{ $activeTab === 'leaders' ? 'show active' : '' }}" id="pills-leaders" role="tabpanel" aria-labelledby="pills-leaders-tab">
+                    <div class="card mb-4">
+                        <div class="card-body p-0">
                             @if($leaders->isEmpty())
                                 <div class="text-center text-muted py-5">
                                     <i class="ti ti-users-off fs-1 d-block mb-2"></i>
@@ -89,7 +89,7 @@
                                 </div>
                             @else
                                 <div class="table-responsive p-3">
-                                    <table class="table table-striped table-bordered table-hover mb-0 align-middle">
+                                    <table class="table table-sm table-bordered table-hover mb-0 align-middle">
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="width: 60px;">#</th>
@@ -129,7 +129,13 @@
                                     </div>
                                 @endif
                             @endif
-                    @elseif($activeTab === 'members')
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade {{ $activeTab === 'members' ? 'show active' : '' }}" id="pills-members" role="tabpanel" aria-labelledby="pills-members-tab">
+                    <div class="card mb-4">
+                        <div class="card-body p-0">
                             <div class="d-flex justify-content-end p-3 border-bottom bg-light">
                                 <a href="{{ route('admin.clubs.members.export', $club) }}" class="btn btn-primary btn-sm">
                                     <i class="ti ti-download me-1"></i>
@@ -144,7 +150,7 @@
                                 </div>
                             @else
                                 <div class="table-responsive p-3">
-                                    <table class="table table-striped table-bordered table-hover mb-0 align-middle">
+                                    <table class="table table-sm table-bordered table-hover mb-0 align-middle">
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="width: 60px;">#</th>
@@ -175,7 +181,13 @@
                                     </div>
                                 @endif
                             @endif
-                    @else
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade {{ $activeTab === 'requests' ? 'show active' : '' }}" id="pills-requests" role="tabpanel" aria-labelledby="pills-requests-tab">
+                    <div class="card mb-4">
+                        <div class="card-body p-0">
                             @if($pendingRequests->isEmpty())
                                 <div class="text-center text-muted py-5">
                                     <i class="ti ti-clock fs-1 d-block mb-2"></i>
@@ -183,7 +195,7 @@
                                 </div>
                             @else
                                 <div class="table-responsive p-3">
-                                    <table class="table table-striped table-bordered table-hover mb-0 align-middle">
+                                    <table class="table table-sm table-bordered table-hover mb-0 align-middle">
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="width: 60px;">#</th>
@@ -231,7 +243,8 @@
                                     </div>
                                 @endif
                             @endif
-                    @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

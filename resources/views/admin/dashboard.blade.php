@@ -217,7 +217,7 @@
                 <p class="text-muted mb-0 small">No competitions found.</p>
             @else
                 <div class="table-responsive">
-                    <table class="table table-sm align-middle mb-0 dash-table">
+                    <table class="table table-sm table-bordered align-middle mb-0 dash-table">
                         <thead>
                             <tr>
                                 <th>Competition</th>
