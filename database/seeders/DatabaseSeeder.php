@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             PlatformSeeder::class,
             SmileyTutorCredentialSeeder::class,
             RegionSeeder::class,
+            DistrictSeeder::class,
             SubscriptionPackageSeeder::class,
             ProjectSeeder::class,
         ]);

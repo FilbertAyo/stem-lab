@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Club;
+use App\Models\District;
 use App\Models\Region;
 use App\Models\School;
 use App\Models\Student;
@@ -36,9 +37,10 @@ class SchoolController extends Controller
 
         $regions = Region::query()->orderBy('name')->get(['id', 'name']);
         $districts = School::whereNotNull('district')->distinct()->orderBy('district')->pluck('district');
+        $districtsByRegion = District::groupedNamesByRegionId();
         $pendingReviewCount = School::query()->needsReview()->count();
 
-        return view('admin.schools.index', compact('schools', 'regions', 'districts', 'pendingReviewCount'));
+        return view('admin.schools.index', compact('schools', 'regions', 'districts', 'districtsByRegion', 'pendingReviewCount'));
     }
 
     /**

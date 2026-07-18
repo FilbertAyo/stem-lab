@@ -184,7 +184,7 @@
 
             <!-- Visitor charts per week (combined) -->
             <div class="row mb-2">
-                <div class="col-lg-6 mb-4">
+                <div class="col-lg-8 mb-4">
                     <div class="card border shadow-none">
                         <div class="card-header bg-transparent border-bottom d-flex align-items-center justify-content-between gap-3">
                             <h6 class="mb-0">Visitors Overview (Weekly)</h6>
@@ -217,7 +217,7 @@
   
 
                 <!-- Recent Activities -->
-                <div class="col-md-6 mb-4">
+                <div class="col-md-4 mb-4">
                     <div class="card border shadow-none">
                         <div class="card-header bg-transparent border-bottom">
                             <h6 class="mb-0">Recent Activities (Today)</h6>

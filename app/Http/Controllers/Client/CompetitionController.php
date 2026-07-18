@@ -10,6 +10,7 @@ use App\Models\CompetitionRegistrationStudent;
 use App\Models\CompetitionPrototypeSubmission;
 use App\Models\CompetitionPrototypeModification;
 use App\Models\CompetitionPhaseEvidenceForm;
+use App\Models\District;
 use App\Models\Region;
 use App\Models\SchoolClass;
 use App\Models\TeacherClub;
@@ -197,6 +198,16 @@ class CompetitionController extends Controller
             ? $classesQuery->whereIn('id', $allowedClassIds)->get()
             : $classesQuery->get();
 
+        $teacherClub->loadMissing('school');
+        $schoolRegionId = $teacherClub->school?->region_id;
+        $regionDistricts = $schoolRegionId
+            ? District::query()
+                ->where('region_id', $schoolRegionId)
+                ->orderBy('name')
+                ->pluck('name')
+                ->all()
+            : [];
+
         return view('client.back.competitions.register', compact(
             'competition',
             'teacherClub',
@@ -204,6 +215,8 @@ class CompetitionController extends Controller
             'allowedClassIds',
             'classes',
             'registration',
+            'regionDistricts',
+            'schoolRegionId',
         ));
     }
 

@@ -35,6 +35,7 @@
                             @include('partials.teacher-club-join-school-fields', [
                                 'schools' => $schools,
                                 'regions' => $regions,
+                                'districtsByRegion' => $districtsByRegion,
                                 'existingSchool' => $existingSchool,
                             ])
 

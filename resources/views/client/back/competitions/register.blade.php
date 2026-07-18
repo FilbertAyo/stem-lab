@@ -177,7 +177,25 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_district">District</label>
-                                    <input type="text" id="school_district" class="form-control" name="school_district" value="{{ old('school_district', $registration->school_district ?? $teacherClub->school?->district) }}">
+                                    @php
+                                        $selectedDistrict = old('school_district', $registration->school_district ?? $teacherClub->school?->district);
+                                        $hasRegionDistricts = ! empty($regionDistricts ?? []);
+                                    @endphp
+                                    @if($hasRegionDistricts)
+                                        <select id="school_district" class="form-select" name="school_district">
+                                            <option value="">-- Select district --</option>
+                                            @foreach($regionDistricts as $districtName)
+                                                <option value="{{ $districtName }}" {{ (string) $selectedDistrict === (string) $districtName ? 'selected' : '' }}>
+                                                    {{ $districtName }}
+                                                </option>
+                                            @endforeach
+                                            @if($selectedDistrict && ! in_array($selectedDistrict, $regionDistricts, true))
+                                                <option value="{{ $selectedDistrict }}" selected>{{ $selectedDistrict }} (current)</option>
+                                            @endif
+                                        </select>
+                                    @else
+                                        <input type="text" id="school_district" class="form-control" name="school_district" value="{{ $selectedDistrict }}">
+                                    @endif
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_ward">Ward</label>

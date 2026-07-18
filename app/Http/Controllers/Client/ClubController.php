@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Club;
+use App\Models\District;
 use App\Models\Region;
 use App\Models\School;
 use App\Models\SchoolClass;
@@ -159,8 +160,9 @@ class ClubController extends Controller
             : School::active()->with('regionModel')->ordered()->get();
 
         $regions = Region::query()->orderBy('name')->get(['id', 'name']);
+        $districtsByRegion = District::groupedNamesByRegionId();
 
-        return view('client.back.clubs.join', compact('club', 'schools', 'existingSchool', 'regions'));
+        return view('client.back.clubs.join', compact('club', 'schools', 'existingSchool', 'regions', 'districtsByRegion'));
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Competition;
 use App\Models\CompetitionRegistration;
+use App\Models\District;
 use App\Models\Region;
 use App\Models\School;
 use App\Models\TeacherClub;
@@ -91,6 +92,7 @@ class PublicCompetitionController extends Controller
 
         $schools = School::active()->with('regionModel')->ordered()->get();
         $regions = Region::query()->orderBy('name')->get(['id', 'name']);
+        $districtsByRegion = District::groupedNamesByRegionId();
 
         $allowPublicTeacherSignup = $competition->allowsPublicTeacherRegistration();
 
@@ -130,6 +132,7 @@ class PublicCompetitionController extends Controller
             'competition',
             'schools',
             'regions',
+            'districtsByRegion',
             'allowPublicTeacherSignup',
             'publicTeacherSignupNotice',
             'teacherClubForCompetition',

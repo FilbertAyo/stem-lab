@@ -294,7 +294,16 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="schoolDistrict" class="form-label">District</label>
-                                <input type="text" name="district" id="schoolDistrict" class="form-control" value="{{ old('district') }}" placeholder="District name">
+                                <select name="district" id="schoolDistrict" class="form-select" data-old-district="{{ old('district') }}" @if(! old('region_id')) disabled @endif>
+                                    <option value="">{{ old('region_id') ? 'Select district' : 'Select region first' }}</option>
+                                    @if(old('region_id') && isset($districtsByRegion[(string) old('region_id')]))
+                                        @foreach($districtsByRegion[(string) old('region_id')] as $districtName)
+                                            <option value="{{ $districtName }}" {{ (string) old('district') === (string) $districtName ? 'selected' : '' }}>
+                                                {{ $districtName }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
                                 @error('district')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
@@ -388,7 +397,9 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="editSchoolDistrict" class="form-label">District</label>
-                                <input type="text" name="district" id="editSchoolDistrict" class="form-control">
+                                <select name="district" id="editSchoolDistrict" class="form-select" disabled>
+                                    <option value="">Select region first</option>
+                                </select>
                                 @error('district')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
@@ -478,6 +489,62 @@
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+                const districtsByRegion = @json($districtsByRegion ?? []);
+
+                function populateDistrictSelect(districtSelect, regionId, selectedDistrict) {
+                    if (!districtSelect) {
+                        return;
+                    }
+
+                    const districts = districtsByRegion[regionId] || [];
+                    districtSelect.innerHTML = '';
+
+                    const placeholder = document.createElement('option');
+                    placeholder.value = '';
+                    placeholder.textContent = regionId ? 'Select district' : 'Select region first';
+                    districtSelect.appendChild(placeholder);
+
+                    let hasSelected = false;
+                    districts.forEach(function (name) {
+                        const option = document.createElement('option');
+                        option.value = name;
+                        option.textContent = name;
+                        if (selectedDistrict && selectedDistrict === name) {
+                            option.selected = true;
+                            hasSelected = true;
+                        }
+                        districtSelect.appendChild(option);
+                    });
+
+                    // Preserve legacy free-text districts not in the seeded list.
+                    if (selectedDistrict && !hasSelected) {
+                        const legacyOption = document.createElement('option');
+                        legacyOption.value = selectedDistrict;
+                        legacyOption.textContent = selectedDistrict + ' (current)';
+                        legacyOption.selected = true;
+                        districtSelect.appendChild(legacyOption);
+                    }
+
+                    if (regionId) {
+                        districtSelect.removeAttribute('disabled');
+                    } else {
+                        districtSelect.setAttribute('disabled', 'disabled');
+                    }
+                }
+
+                const createRegion = document.getElementById('schoolRegion');
+                const createDistrict = document.getElementById('schoolDistrict');
+                createRegion?.addEventListener('change', function () {
+                    populateDistrictSelect(createDistrict, this.value, null);
+                });
+                if (createRegion?.value) {
+                    populateDistrictSelect(
+                        createDistrict,
+                        createRegion.value,
+                        createDistrict?.getAttribute('data-old-district') || ''
+                    );
+                }
+
                 const editModal = document.getElementById('editSchoolModal');
                 const editForm = document.getElementById('editSchoolForm');
                 const editName = document.getElementById('editSchoolName');
@@ -489,6 +556,10 @@
                 const editWard = document.getElementById('editSchoolWard');
                 const editToggle = document.getElementById('editSchoolActiveToggle');
                 const editStatusInput = document.getElementById('editSchoolIsActive');
+
+                editRegion?.addEventListener('change', function () {
+                    populateDistrictSelect(editDistrict, this.value, null);
+                });
 
                 editModal?.addEventListener('show.bs.modal', function (event) {
                     const button = event.relatedTarget;
@@ -507,8 +578,8 @@
                     editAddress.value = address;
                     editPhone.value = phone;
                     editEmail.value = email;
-                    editDistrict.value = district;
                     editRegion.value = regionId;
+                    populateDistrictSelect(editDistrict, regionId, district);
                     editWard.value = ward;
                     editToggle.checked = isActive;
                     editStatusInput.value = isActive ? '1' : '0';
