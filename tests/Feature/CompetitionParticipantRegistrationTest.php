@@ -4,12 +4,12 @@ use App\Models\CompetitionRegistration;
 use App\Models\SchoolClass;
 use App\Models\TeacherClub;
 use App\Models\User;
-use Illuminate\Support\Str;
 use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\TeacherClubJoinService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
@@ -85,6 +85,44 @@ test('admin registrations index includes draft participants', function () {
     $response->assertOk();
     $response->assertSee('Incomplete');
     $response->assertSee($school->name);
+});
+
+test('admin can override failed eligibility and pass a participant registration', function () {
+    ['school' => $school, 'competition' => $competition] = createCompetitionFixture();
+    $teacherClub = createTeacherClubForCompetition($competition, $school);
+
+    $registration = app(CompetitionParticipantRegistrationService::class)
+        ->ensureDraftRegistration($teacherClub, $competition);
+
+    $admin = User::factory()->create(['role' => 'admin']);
+    $host = adminRequestHost();
+
+    $response = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => $host])
+        ->post(
+            'http://'.$host.'/competitions/'.$competition->ulid.'/registrations/'.$registration->ulid.'/override-eligibility',
+            ['override_reason' => 'Approved after manual review of the participant circumstances.'],
+        );
+
+    $response->assertRedirect();
+    $response->assertSessionHas('status');
+
+    $registration->refresh();
+
+    expect($registration->status)->toBe('approved')
+        ->and($registration->eligibility_met)->toBeFalse()
+        ->and($registration->approved_by)->toBe($admin->id)
+        ->and($registration->approved_at)->not->toBeNull()
+        ->and($registration->submitted_at)->not->toBeNull();
+
+    $event = \App\Models\CompetitionStageEvent::query()
+        ->where('competition_id', $competition->id)
+        ->where('event_type', 'registration_eligibility_overridden')
+        ->first();
+
+    expect($event)->not->toBeNull()
+        ->and($event->actor_user_id)->toBe($admin->id)
+        ->and($event->payload['reason'])->toBe('Approved after manual review of the participant circumstances.');
 });
 
 test('store registration promotes draft to pending when eligibility passes', function () {

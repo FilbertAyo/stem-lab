@@ -202,8 +202,10 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
                 ->name('pitch-winner.index');
             Route::delete('/{competition}', [CompetitionController::class, 'destroy'])->name('destroy');
             Route::get('/{competition}/registrations', [CompetitionController::class, 'registrations'])->name('registrations.index');
+            Route::get('/{competition}/registrations/export', [CompetitionController::class, 'exportRegistrations'])->name('registrations.export');
             Route::get('/{competition}/registrations/{registration}', [CompetitionController::class, 'showRegistration'])->name('registrations.show');
             Route::post('/{competition}/registrations/{registration}/approve', [CompetitionController::class, 'approveRegistration'])->name('registrations.approve');
+            Route::post('/{competition}/registrations/{registration}/override-eligibility', [CompetitionController::class, 'overrideRegistrationEligibility'])->name('registrations.override-eligibility');
             Route::post('/{competition}/registrations/{registration}/reject', [CompetitionController::class, 'rejectRegistration'])->name('registrations.reject');
             Route::post('/{competition}/registrations/{registration}/eligibility-reminder', [CompetitionController::class, 'sendEligibilityReminder'])->name('registrations.eligibility-reminder');
             Route::get('/{competition}/ideas', [CompetitionController::class, 'ideas'])->name('ideas.index');
@@ -406,46 +408,46 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
             ->name('client.subscription-packages.select');
 
         Route::middleware('club.linked.for.learning')->group(function () {
-        Route::prefix('models/3d')->name('client.models.3d.')->middleware('redirect.legacy.public-id')->group(function () {
-            Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
+            Route::prefix('models/3d')->name('client.models.3d.')->middleware('redirect.legacy.public-id')->group(function () {
+                Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
 
-            // Question routes (must come before /{model3d} to avoid route conflicts)
-            Route::get('/{model3d}/questions', [\App\Http\Controllers\Client\ModelQuestionController::class, 'getQuestions'])->name('questions.get');
-            Route::post('/{model3d}/questions/submit', [\App\Http\Controllers\Client\ModelQuestionController::class, 'submitAnswers'])->name('questions.submit');
+                // Question routes (must come before /{model3d} to avoid route conflicts)
+                Route::get('/{model3d}/questions', [\App\Http\Controllers\Client\ModelQuestionController::class, 'getQuestions'])->name('questions.get');
+                Route::post('/{model3d}/questions/submit', [\App\Http\Controllers\Client\ModelQuestionController::class, 'submitAnswers'])->name('questions.submit');
 
-            Route::get('/{model3d}', [ClientModel3dController::class, 'show'])->name('show');
-        });
-
-        // Projects routes (client)
-        Route::prefix('projects')->name('client.projects.')->group(function () {
-            Route::get('/', [ClientProjectController::class, 'index'])->name('index');
-            Route::get('/{project}', [ClientProjectController::class, 'show'])->name('show');
-        });
-
-        // VR Experiments routes
-        Route::prefix('vr-experiments')->name('client.vr-experiments.')->group(function () {
-            Route::get('/', [ClientVrExperimentController::class, 'index'])->name('index');
-            Route::get('/math/practice', [ClientVrExperimentController::class, 'mathPractice'])->name('math.practice');
-            Route::get('/math', [ClientVrExperimentController::class, 'math'])->name('math');
-            Route::get('/experience/{slug}', [ClientVrExperimentController::class, 'showStatic'])->name('show.static');
-            Route::middleware('redirect.legacy.public-id')->group(function () {
-                Route::get('/{vrExperiment}', [ClientVrExperimentController::class, 'show'])->name('show');
+                Route::get('/{model3d}', [ClientModel3dController::class, 'show'])->name('show');
             });
-        });
 
-        // VR Assessment/Quiz routes
-        Route::prefix('vr-quizzes')->name('client.vr-assessments.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Client\VrAssessmentController::class, 'index'])->name('index');
-
-            Route::middleware('redirect.legacy.public-id')->group(function () {
-                Route::get('/{questionBank}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'show'])->name('show');
-                Route::post('/{questionBank}/start', [\App\Http\Controllers\Client\VrAssessmentController::class, 'start'])->name('start');
-                Route::get('/attempt/{attempt}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'take'])->name('take');
-                Route::post('/attempt/{attempt}/save-answer', [\App\Http\Controllers\Client\VrAssessmentController::class, 'saveAnswer'])->name('save-answer');
-                Route::post('/attempt/{attempt}/submit', [\App\Http\Controllers\Client\VrAssessmentController::class, 'submit'])->name('submit');
-                Route::get('/attempt/{attempt}/results', [\App\Http\Controllers\Client\VrAssessmentController::class, 'results'])->name('results');
+            // Projects routes (client)
+            Route::prefix('projects')->name('client.projects.')->group(function () {
+                Route::get('/', [ClientProjectController::class, 'index'])->name('index');
+                Route::get('/{project}', [ClientProjectController::class, 'show'])->name('show');
             });
-        });
+
+            // VR Experiments routes
+            Route::prefix('vr-experiments')->name('client.vr-experiments.')->group(function () {
+                Route::get('/', [ClientVrExperimentController::class, 'index'])->name('index');
+                Route::get('/math/practice', [ClientVrExperimentController::class, 'mathPractice'])->name('math.practice');
+                Route::get('/math', [ClientVrExperimentController::class, 'math'])->name('math');
+                Route::get('/experience/{slug}', [ClientVrExperimentController::class, 'showStatic'])->name('show.static');
+                Route::middleware('redirect.legacy.public-id')->group(function () {
+                    Route::get('/{vrExperiment}', [ClientVrExperimentController::class, 'show'])->name('show');
+                });
+            });
+
+            // VR Assessment/Quiz routes
+            Route::prefix('vr-quizzes')->name('client.vr-assessments.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Client\VrAssessmentController::class, 'index'])->name('index');
+
+                Route::middleware('redirect.legacy.public-id')->group(function () {
+                    Route::get('/{questionBank}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'show'])->name('show');
+                    Route::post('/{questionBank}/start', [\App\Http\Controllers\Client\VrAssessmentController::class, 'start'])->name('start');
+                    Route::get('/attempt/{attempt}', [\App\Http\Controllers\Client\VrAssessmentController::class, 'take'])->name('take');
+                    Route::post('/attempt/{attempt}/save-answer', [\App\Http\Controllers\Client\VrAssessmentController::class, 'saveAnswer'])->name('save-answer');
+                    Route::post('/attempt/{attempt}/submit', [\App\Http\Controllers\Client\VrAssessmentController::class, 'submit'])->name('submit');
+                    Route::get('/attempt/{attempt}/results', [\App\Http\Controllers\Client\VrAssessmentController::class, 'results'])->name('results');
+                });
+            });
         });
 
         // Student club linkup (student-only)

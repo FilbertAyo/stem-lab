@@ -5,27 +5,29 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Jobs\DispatchCompetitionShortlistNotifications;
 use App\Mail\CompetitionEligibilityReminderMail;
-use App\Services\CompetitionEligibilityPoolService;
-use App\Support\ClientUrl;
 use App\Models\Club;
 use App\Models\Competition;
 use App\Models\CompetitionClassRequirement;
 use App\Models\CompetitionIdea;
 use App\Models\CompetitionIdeaScore;
-use App\Models\CompetitionPhaseEvidenceForm;
 use App\Models\CompetitionPhase;
-use App\Models\CompetitionRegistration;
-use App\Models\CompetitionShortlist;
-use App\Models\CompetitionStageEvent;
-use App\Models\SchoolClass;
-use App\Models\User;
-use App\Models\CompetitionPrototypeSubmission;
+use App\Models\CompetitionPhaseEvidenceForm;
 use App\Models\CompetitionPrototypeModification;
 use App\Models\CompetitionPrototypeModificationShortlist;
 use App\Models\CompetitionPrototypeShortlist;
 use App\Models\CompetitionPrototypeShortlistMentor;
+use App\Models\CompetitionPrototypeSubmission;
+use App\Models\CompetitionRegistration;
+use App\Models\CompetitionShortlist;
+use App\Models\CompetitionStageEvent;
+use App\Models\SchoolClass;
+use App\Services\CompetitionEligibilityPoolService;
+use App\Support\ClientUrl;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -798,27 +800,8 @@ class CompetitionController extends Controller
 
     public function registrations(Request $request, Competition $competition): View
     {
-        $query = $competition->registrations()
-            ->with(['teacher', 'school.regionModel', 'region', 'representativeStudents.student.schoolClass', 'teacherClub']);
-
-        if ($request->filled('search')) {
-            $search = trim((string) $request->input('search'));
-            $query->where(function ($q) use ($search): void {
-                $like = '%'.$search.'%';
-                $q->where('school_name', 'like', $like)
-                    ->orWhere('teacher_name', 'like', $like)
-                    ->orWhere('teacher_email', 'like', $like)
-                    ->orWhere('teacher_phone', 'like', $like)
-                    ->orWhere('school_district', 'like', $like)
-                    ->orWhere('school_ward', 'like', $like);
-            });
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', (string) $request->input('status'));
-        }
-
-        $registrations = $query
+        $registrations = $this->competitionRegistrationsQuery($request, $competition)
+            ->with(['teacher', 'school.regionModel', 'region', 'representativeStudents.student.schoolClass', 'teacherClub'])
             ->orderByRaw("CASE WHEN status = 'draft' THEN 0 ELSE 1 END")
             ->latest()
             ->paginate(20)
@@ -839,6 +822,40 @@ class CompetitionController extends Controller
         }
 
         return view('admin.competitions.registrations.index', compact('competition', 'registrations'));
+    }
+
+    public function exportRegistrations(Request $request, Competition $competition): Response
+    {
+        $request->validate([
+            'search' => ['nullable', 'string', 'max:255'],
+            'status' => ['nullable', 'in:draft,pending,approved,rejected,ineligible'],
+        ]);
+
+        $registrations = $this->competitionRegistrationsQuery($request, $competition)
+            ->with(['teacher', 'representativeStudents', 'teacherClub'])
+            ->orderByRaw("CASE WHEN status = 'draft' THEN 0 ELSE 1 END")
+            ->latest()
+            ->get();
+
+        $filterParts = [];
+        if ($request->filled('search')) {
+            $filterParts[] = 'Search: '.$request->string('search');
+        }
+        if ($request->filled('status')) {
+            $filterParts[] = 'Status: '.ucfirst((string) $request->status);
+        }
+
+        $pdf = Pdf::loadView('admin.downloads.competition-registrations-list', [
+            'competition' => $competition,
+            'registrations' => $registrations,
+            'title' => $competition->name.' Registrations',
+            'generatedAt' => now(),
+            'filterSummary' => $filterParts === [] ? null : implode(' · ', $filterParts),
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download(
+            'competition_registrations_'.Str::slug($competition->name).'_'.now()->format('Y-m-d').'.pdf'
+        );
     }
 
     public function showRegistration(Competition $competition, CompetitionRegistration $registration): View
@@ -917,6 +934,45 @@ class CompetitionController extends Controller
         );
 
         return back()->with('status', 'Registration approved successfully.');
+    }
+
+    public function overrideRegistrationEligibility(
+        Request $request,
+        Competition $competition,
+        CompetitionRegistration $registration
+    ): RedirectResponse {
+        if ($registration->competition_id !== $competition->id) {
+            abort(404);
+        }
+
+        if ($registration->status !== 'draft') {
+            return back()->with('error', 'Eligibility can only be overridden for incomplete registrations.');
+        }
+
+        $validated = $request->validate([
+            'override_reason' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $registration->update([
+            'status' => 'approved',
+            'submitted_at' => $registration->submitted_at ?? now(),
+            'approved_at' => now(),
+            'approved_by' => $request->user()?->getKey(),
+            'rejection_reason' => null,
+        ]);
+
+        $this->logStageEvent(
+            $competition,
+            'registration_eligibility_overridden',
+            "Eligibility overridden and registration approved for {$registration->school_name}.",
+            [
+                'registration_ulid' => $registration->ulid,
+                'eligibility_met' => $registration->eligibility_met,
+                'reason' => $validated['override_reason'],
+            ]
+        );
+
+        return back()->with('status', 'Participant passed the registration phase by admin decision.');
     }
 
     public function rejectRegistration(
@@ -1015,7 +1071,7 @@ class CompetitionController extends Controller
             ])
             ->latest()
             ->paginate(20);
-        
+
         return view('admin.competitions.ideas.index', compact('competition', 'ideas'));
     }
 
@@ -1037,7 +1093,7 @@ class CompetitionController extends Controller
             'shortlist',
             'reopenedBy',
         ]);
-        
+
         return view('admin.competitions.ideas.show', compact('competition', 'idea'));
     }
 
@@ -1139,6 +1195,30 @@ class CompetitionController extends Controller
         );
 
         return back()->with('status', 'Shortlist status updated.');
+    }
+
+    private function competitionRegistrationsQuery(Request $request, Competition $competition): Builder
+    {
+        $query = $competition->registrations()->getQuery();
+
+        if ($request->filled('search')) {
+            $search = trim((string) $request->input('search'));
+            $query->where(function ($q) use ($search): void {
+                $like = '%'.$search.'%';
+                $q->where('school_name', 'like', $like)
+                    ->orWhere('teacher_name', 'like', $like)
+                    ->orWhere('teacher_email', 'like', $like)
+                    ->orWhere('teacher_phone', 'like', $like)
+                    ->orWhere('school_district', 'like', $like)
+                    ->orWhere('school_ward', 'like', $like);
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', (string) $request->input('status'));
+        }
+
+        return $query;
     }
 
     private function generateUniqueSlug(string $name, ?int $ignoreId = null): string

@@ -6,7 +6,15 @@
                     <h5 class="mb-0">Registrations — {{ $competition->name }}</h5>
                     <p class="text-muted mb-0">Includes incomplete participants (club join only) for follow-up, plus submitted registrations ready for review.</p>
                 </div>
-                <a href="{{ route('admin.competitions.show', $competition) }}" class="btn btn-outline-secondary">Back</a>
+                <div class="d-flex gap-2">
+                    <a
+                        href="{{ route('admin.competitions.registrations.export', [$competition] + request()->only(['search', 'status'])) }}"
+                        class="btn btn-sm btn-danger"
+                    >
+                        <i class="ti ti-download"></i> Download PDF
+                    </a>
+                    <a href="{{ route('admin.competitions.show', $competition) }}" class="btn btn-outline-secondary">Back</a>
+                </div>
             </div>
 
             

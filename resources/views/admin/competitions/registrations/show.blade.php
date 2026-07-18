@@ -46,6 +46,9 @@
                                 Reminder limit reached ({{ $registration->eligibility_reminder_count }}/{{ $maxEligibilityReminders }})
                             </button>
                         @endif
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#overrideEligibilityModal">
+                            Pass phase (admin override)
+                        </button>
                     @endif
                     @if($registration->status === 'pending')
                         <form method="POST" action="{{ route('admin.competitions.registrations.approve', [$competition, $registration]) }}" class="d-inline">
@@ -319,6 +322,44 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-danger">Reject</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if($registration->status === 'draft')
+        <div class="modal fade" id="overrideEligibilityModal" tabindex="-1" aria-labelledby="overrideEligibilityModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="overrideEligibilityModalLabel">Pass registration phase</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="{{ route('admin.competitions.registrations.override-eligibility', [$competition, $registration]) }}">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="alert alert-warning small">
+                                This participant does not meet the automated eligibility rules. Continuing will approve the registration by admin decision, while preserving the failed eligibility result for audit.
+                            </div>
+                            <label class="form-label" for="override_reason">Decision reason <span class="text-danger">*</span></label>
+                            <textarea
+                                class="form-control @error('override_reason') is-invalid @enderror"
+                                name="override_reason"
+                                id="override_reason"
+                                rows="4"
+                                maxlength="1000"
+                                required
+                                placeholder="Explain why this participant should pass the phase."
+                            >{{ old('override_reason') }}</textarea>
+                            @error('override_reason')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success">Confirm and pass phase</button>
                         </div>
                     </form>
                 </div>

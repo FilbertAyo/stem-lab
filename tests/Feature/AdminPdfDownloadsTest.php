@@ -75,6 +75,33 @@ test('admin can download filtered models vr experiments and projects pdf lists',
     );
 });
 
+test('admin can download filtered competition registrations without eligibility or reminder columns', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    ['competition' => $competition] = createCompetitionFixture();
+
+    assertPdfDownload(
+        $this->actingAs($admin)
+            ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+            ->get(pdfDownloadAdminUrl(
+                '/competitions/'.$competition->ulid.'/registrations/export?status=pending'
+            ))
+    );
+
+    $html = view('admin.downloads.competition-registrations-list', [
+        'competition' => $competition,
+        'registrations' => collect(),
+        'title' => $competition->name.' Registrations',
+        'generatedAt' => now(),
+        'filterSummary' => 'Status: Pending',
+    ])->render();
+
+    expect($html)->toContain('S/N')
+        ->and($html)->not->toContain('Eligibility')
+        ->and($html)->not->toContain('Reminder')
+        ->and($html)->not->toContain('Created by')
+        ->and($html)->not->toContain('Updated at');
+});
+
 test('download templates start with sn and omit ownership columns', function () {
     $html = view('admin.downloads.classes-list', [
         'classes' => collect(),
