@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->char('ulid', 26)->nullable()->unique();
+            $table->char('public_id', 6)->nullable()->unique();
             $table->string('subject_name');
             $table->text('description')->nullable();
             $table->string('icon_url')->nullable();

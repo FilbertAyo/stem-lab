@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('vr_question_banks', function (Blueprint $table) {
             $table->id();
             $table->char('ulid', 26)->nullable()->unique();
+            $table->char('public_id', 6)->nullable()->unique();
             $table->foreignId('vr_experiment_id')->constrained('vr_experiments')->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();

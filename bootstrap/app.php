@@ -24,7 +24,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'track.client.activity' => \App\Http\Middleware\TrackClientActivity::class,
             'student.onboarded' => \App\Http\Middleware\EnsureStudentOnboardingComplete::class,
             'club.linked.for.learning' => \App\Http\Middleware\EnsureClubLinkedForLearning::class,
-            'redirect.legacy.model3d' => \App\Http\Middleware\RedirectLegacyModel3dUrls::class,
             'redirect.legacy.public-id' => \App\Http\Middleware\RedirectLegacyPublicIdUrls::class,
         ]);
     })

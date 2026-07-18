@@ -20,6 +20,16 @@ class SyncSquashedMigrations extends Command
             table: 'regions',
         );
 
+        $this->pruneStaleMigrationEntries([
+            '2026_07_18_130000_add_public_id_to_model3ds_table',
+            '2026_07_18_140000_add_public_id_to_vr_experiments_table',
+            '2026_07_18_140100_add_public_id_to_vr_question_banks_table',
+            '2026_07_18_140200_add_public_id_to_vr_assessment_attempts_table',
+            '2026_07_18_140300_add_public_id_to_subjects_table',
+            '2026_07_18_140400_add_public_id_to_clubs_table',
+            '2026_07_18_140500_add_public_id_to_users_table',
+        ]);
+
         return self::SUCCESS;
     }
 
@@ -53,5 +63,21 @@ class SyncSquashedMigrations extends Command
             DB::table('migrations')->where('migration', $old)->delete();
             $this->line("Removed stale entry: {$old}");
         }
+    }
+
+    /**
+     * @param  list<string>  $migrations
+     */
+    private function pruneStaleMigrationEntries(array $migrations): void
+    {
+        $removed = DB::table('migrations')->whereIn('migration', $migrations)->delete();
+
+        if ($removed > 0) {
+            $this->info("Removed {$removed} squashed additive migration entr".($removed === 1 ? 'y' : 'ies').'.');
+
+            return;
+        }
+
+        $this->line('No stale additive public_id migration entries to remove.');
     }
 }

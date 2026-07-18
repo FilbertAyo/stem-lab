@@ -195,7 +195,7 @@ test('backfill command assigns public_ids idempotently and preserves ulids', fun
     $model->forceFill(['public_id' => null])->saveQuietly();
     expect($model->fresh()->public_id)->toBeNull();
 
-    Artisan::call('model3ds:backfill-public-ids');
+    Artisan::call('public-ids:backfill', ['resource' => 'model3ds']);
     $model->refresh();
 
     expect($model->public_id)
@@ -207,7 +207,7 @@ test('backfill command assigns public_ids idempotently and preserves ulids', fun
 
     $firstBackfill = $model->public_id;
 
-    Artisan::call('model3ds:backfill-public-ids', ['--verify' => true]);
+    Artisan::call('public-ids:backfill', ['resource' => 'model3ds', '--verify' => true]);
     $model->refresh();
 
     expect($model->public_id)->toBe($firstBackfill)

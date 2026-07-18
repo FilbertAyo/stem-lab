@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('model3ds', function (Blueprint $table) {
             $table->id();
             $table->char('ulid', 26)->nullable()->unique();
+            $table->char('public_id', 6)->nullable()->unique();
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->string('name');
             $table->string('file')->nullable(); // GLB file path
