@@ -184,34 +184,43 @@
             </ul>
           </li>
 
+          <li class="pc-item pc-hasmenu">
+            <a href="#!" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-users"></i></span>
+              <span class="pc-mtext">Configuration</span>
+              <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
+            </a>
+            <ul class="pc-submenu">
+              <li class="pc-item">
+                <a href="{{ route('admin.settings.index') }}" class="pc-link">
+               
+                  <span class="pc-mtext">System Settings</span>
+                </a>
+              </li>
+              <li class="pc-item">
+            <a href="{{ route('admin.subscription-packages.index') }}" class="pc-link">
+             
+              <span class="pc-mtext">Subscription Packages</span>
+            </a>
+          </li>
           <li class="pc-item">
             <a href="{{ route('admin.database-backup.index') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-database-export"></i></span>
+            
               <span class="pc-mtext">Database Backup</span>
             </a>
           </li>
 
           <li class="pc-item">
-            <a href="{{ route('admin.subscription-packages.index') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-credit-card"></i></span>
-              <span class="pc-mtext">Subscription Packages</span>
-            </a>
-          </li>
-
-          <li class="pc-item">
-            <a href="{{ route('admin.settings.index') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-settings"></i></span>
-              <span class="pc-mtext">System Settings</span>
-            </a>
-          </li>
-
-          <li class="pc-item">
             <a href="{{ route('admin.activity-logs.index') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-history"></i></span>
+            
               <span class="pc-mtext">Audit Logs</span>
             </a>
           </li>
 
+            </ul>
+
+          </li>
+       
 
         </ul>
 

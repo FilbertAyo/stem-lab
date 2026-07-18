@@ -131,10 +131,7 @@
 
                 <div class="col mb-3">
                     <div class="card border shadow-none">
-                        <div class="card-header bg-transparent border-bottom d-flex align-items-center justify-content-between">
-                            <h6 class="mb-0">Competition Phases & Actions</h6>
-                            <small class="text-muted">Open a competition to view phase actions</small>
-                        </div>
+                      
                         <div class="card-body">
                             @if($dashboardCompetitions->isEmpty())
                                 <p class="text-muted mb-0 small">No competitions found.</p>
