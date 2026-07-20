@@ -312,6 +312,47 @@ class SchoolController extends Controller
             ->with('status', "{$studentName} removed successfully.");
     }
 
+    public function bulkRemoveStudents(
+        Request $request,
+        School $school,
+        CompetitionEligibilityPoolService $eligibilityPool,
+    ): RedirectResponse {
+        $validated = $request->validate([
+            'student_ids' => ['required', 'array', 'min:1'],
+            'student_ids.*' => ['integer', 'exists:students,id'],
+        ]);
+
+        $students = Student::query()
+            ->whereIn('id', $validated['student_ids'])
+            ->whereHas('teacherClub', function ($query) use ($school): void {
+                $query->where('school_id', $school->id);
+            })
+            ->with('teacherClub')
+            ->get();
+
+        if ($students->isEmpty()) {
+            return redirect()
+                ->route('admin.schools.show', $school)
+                ->with('error', 'No matching students were found for this school.');
+        }
+
+        $teacherClubIds = $students->pluck('teacher_club_id')->unique()->filter();
+        $deleted = $students->count();
+
+        Student::query()->whereIn('id', $students->pluck('id'))->delete();
+
+        $teacherClubIds->each(function ($teacherClubId) use ($eligibilityPool): void {
+            $teacherClub = TeacherClub::query()->find($teacherClubId);
+            if ($teacherClub) {
+                $eligibilityPool->refreshOpenRegistrationSnapshots($teacherClub);
+            }
+        });
+
+        return redirect()
+            ->route('admin.schools.show', $school)
+            ->with('status', "{$deleted} student(s) removed successfully.");
+    }
+
     public function storeTeacher(
         Request $request,
         School $school,

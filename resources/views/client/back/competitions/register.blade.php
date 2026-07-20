@@ -1,13 +1,15 @@
 <x-app-layout>
     <div class="col-lg-9">
-        @php($girlsInPool = $students->where('gender', 'female')->count())
-        @php($poolCount = $students->count())
-        @php($poolRatio = $poolCount > 0 ? round(($girlsInPool / $poolCount) * 100, 2) : 0)
-        @php($poolMin = max(1, (int) $competition->min_members))
-        @php($poolMax = $competition->max_members !== null ? (int) $competition->max_members : null)
-        @php($repCount = max(1, (int) ($competition->representative_count ?? 10)))
-        @php($poolOk = $poolCount >= $poolMin && $poolRatio >= 70 && ($poolMax === null || $poolCount <= $poolMax))
-        @php($registerReturnPath = route('client.competitions.register', $competition, absolute: false))
+        @php
+            $girlsInPool = $students->where('gender', 'female')->count();
+            $poolCount = $students->count();
+            $poolRatio = $poolCount > 0 ? round(($girlsInPool / $poolCount) * 100, 2) : 0;
+            $poolMin = max(1, (int) $competition->min_members);
+            $poolMax = $competition->max_members !== null ? (int) $competition->max_members : null;
+            $repCount = max(1, (int) ($competition->representative_count ?? 10));
+            $poolOk = $poolCount >= $poolMin && $poolRatio >= 70 && ($poolMax === null || $poolCount <= $poolMax);
+            $registerReturnPath = route('client.competitions.register', $competition, absolute: false);
+        @endphp
 
         
         <div class="dashboard-content-header mb-3">
@@ -173,12 +175,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_name">School name <span class="text-danger">*</span></label>
-                                    <input type="text" id="school_name" class="form-control" name="school_name" value="{{ old('school_name', $registration->school_name ?? $teacherClub->school?->name) }}" required>
+                                    <input type="text" id="school_name" class="form-control" name="school_name" value="{{ old('school_name', $registration?->school_name ?? $teacherClub->school?->name) }}" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_district_id">District</label>
                                     @php
-                                        $selectedDistrictId = old('school_district_id', $registration->district_id ?? $teacherClub->school?->district_id);
+                                        $selectedDistrictId = old('school_district_id', $registration?->district_id ?? $teacherClub->school?->district_id);
                                     @endphp
                                     @if(($regionDistricts ?? collect())->isNotEmpty())
                                         <select id="school_district_id" class="form-select" name="school_district_id">
@@ -190,13 +192,13 @@
                                             @endforeach
                                         </select>
                                     @else
-                                        <input type="text" id="school_district_id" class="form-control bg-light" value="{{ $registration->districtName() ?? $teacherClub->school?->districtName() }}" disabled>
+                                        <input type="text" id="school_district_id" class="form-control bg-light" value="{{ $registration?->districtName() ?? $teacherClub->school?->districtName() }}" disabled>
                                         <small class="text-muted">District is managed from the school profile.</small>
                                     @endif
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_ward">Ward</label>
-                                    <input type="text" id="school_ward" class="form-control" name="school_ward" value="{{ old('school_ward', $registration->school_ward ?? $teacherClub->school?->ward) }}">
+                                    <input type="text" id="school_ward" class="form-control" name="school_ward" value="{{ old('school_ward', $registration?->school_ward ?? $teacherClub->school?->ward) }}">
                                 </div>
                             </div>
 

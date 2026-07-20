@@ -15,6 +15,24 @@ uses(RefreshDatabase::class);
 
 require_once __DIR__.'/../Helpers/CompetitionTestHelper.php';
 
+test('teacher can open register page before a draft registration exists', function () {
+    ['school' => $school, 'competition' => $competition] = createCompetitionFixture();
+    $teacherClub = createTeacherClubForCompetition($competition, $school);
+    $teacher = $teacherClub->user;
+
+    expect(
+        CompetitionRegistration::query()
+            ->where('competition_id', $competition->id)
+            ->where('school_id', $school->id)
+            ->exists()
+    )->toBeFalse();
+
+    $response = $this->actingAs($teacher)->get(route('client.competitions.register', $competition));
+
+    $response->assertOk();
+    $response->assertSee('School &amp; teacher contact', false);
+});
+
 test('explore teacher signup creates draft competition registration', function () {
     ['club' => $club, 'school' => $school, 'competition' => $competition] = createCompetitionFixture();
     $email = 'jane.'.uniqid().'@school.test';

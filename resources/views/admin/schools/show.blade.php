@@ -229,6 +229,16 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h6 class="mb-0"><i class="ti ti-school"></i> Students</h6>
                             <div class="d-flex align-items-center gap-2">
+                                @if($students->isNotEmpty())
+                                    <button
+                                        type="submit"
+                                        form="bulkDeleteStudentsForm"
+                                        class="btn btn-sm btn-outline-danger d-none"
+                                        id="deleteSelectedStudentsBtn"
+                                    >
+                                        <i class="ti ti-trash me-1"></i> Delete selected
+                                    </button>
+                                @endif
                                 <button
                                     type="button"
                                     class="btn btn-sm btn-outline-primary"
@@ -247,68 +257,98 @@
                                     No students registered for this school yet.
                                 </div>
                             @else
-                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                                    <table class="table table-hover table-bordered mb-0">
-                                        <thead class="sticky-top bg-white">
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Admission No.</th>
-                                                <th>Name</th>
-                                                <th>Age</th>
-                                                <th>Gender</th>
-                                                <th>Class</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($students as $student)
+                                <form
+                                    method="POST"
+                                    action="{{ route('admin.schools.students.bulk-destroy', $school) }}"
+                                    id="bulkDeleteStudentsForm"
+                                    class="mb-0"
+                                >
+                                    @csrf
+                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table table-hover table-bordered mb-0">
+                                            <thead class="sticky-top bg-white">
                                                 <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td><code>{{ $student->admission_number }}</code></td>
-                                                    <td class="fw-semibold">{{ $student->name }}</td>
-                                                    <td>{{ $student->age ?? '—' }}</td>
-                                                    <td>
-                                                        @php
-                                                            $gender = strtolower((string) $student->gender);
-                                                            $genderBadgeClass = match ($gender) {
-                                                                'male' => 'bg-info',
-                                                                'female' => 'bg-danger',
-                                                                'other' => 'bg-secondary',
-                                                                default => 'bg-light text-dark border',
-                                                            };
-                                                        @endphp
-                                                        @if($gender !== '')
-                                                            <span class="badge {{ $genderBadgeClass }}">
-                                                                {{ ucfirst($gender) }}
-                                                            </span>
-                                                        @else
-                                                            <span class="text-muted">—</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>{{ $student->schoolClass->name ?? '—' }}</td>
-                                                    <td>
-                                                        <form
-                                                            action="{{ route('admin.schools.remove-student', [$school, $student]) }}"
-                                                            method="POST"
-                                                            class="d-inline"
-                                                            onsubmit="return confirm('Are you sure you want to delete {{ $student->name }}? This action cannot be undone.')"
+                                                    <th class="text-center" style="width: 2.75rem;">
+                                                        <input
+                                                            type="checkbox"
+                                                            class="form-check-input"
+                                                            id="selectAllStudents"
+                                                            title="Select all"
+                                                            aria-label="Select all students"
                                                         >
-                                                            @csrf
-                                                            @method('DELETE')
+                                                    </th>
+                                                    <th>#</th>
+                                                    <th>Admission No.</th>
+                                                    <th>Name</th>
+                                                    <th>Age</th>
+                                                    <th>Gender</th>
+                                                    <th>Class</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($students as $student)
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <input
+                                                                type="checkbox"
+                                                                class="form-check-input student-row-checkbox"
+                                                                name="student_ids[]"
+                                                                value="{{ $student->id }}"
+                                                                aria-label="Select {{ $student->name }}"
+                                                            >
+                                                        </td>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td><code>{{ $student->admission_number }}</code></td>
+                                                        <td class="fw-semibold">{{ $student->name }}</td>
+                                                        <td>{{ $student->age ?? '—' }}</td>
+                                                        <td>
+                                                            @php
+                                                                $gender = strtolower((string) $student->gender);
+                                                                $genderBadgeClass = match ($gender) {
+                                                                    'male' => 'bg-info',
+                                                                    'female' => 'bg-danger',
+                                                                    'other' => 'bg-secondary',
+                                                                    default => 'bg-light text-dark border',
+                                                                };
+                                                            @endphp
+                                                            @if($gender !== '')
+                                                                <span class="badge {{ $genderBadgeClass }}">
+                                                                    {{ ucfirst($gender) }}
+                                                                </span>
+                                                            @else
+                                                                <span class="text-muted">—</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $student->schoolClass->name ?? '—' }}</td>
+                                                        <td>
                                                             <button
                                                                 type="submit"
+                                                                form="delete-student-{{ $student->id }}"
                                                                 class="btn btn-sm btn-outline-danger p-1"
                                                                 title="Delete student"
+                                                                onclick="return confirm('Are you sure you want to delete {{ $student->name }}? This action cannot be undone.')"
                                                             >
                                                                 delete
                                                             </button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </form>
+                                @foreach($students as $student)
+                                    <form
+                                        id="delete-student-{{ $student->id }}"
+                                        action="{{ route('admin.schools.remove-student', [$school, $student]) }}"
+                                        method="POST"
+                                        class="d-none"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                @endforeach
                             @endif
                         </div>
                     </div>
@@ -610,6 +650,66 @@
                 var addTeacherModal = new bootstrap.Modal(addTeacherModalElement);
                 addTeacherModal.show();
             }
+        }
+
+        var bulkDeleteForm = document.getElementById('bulkDeleteStudentsForm');
+        var selectAllStudents = document.getElementById('selectAllStudents');
+        var deleteSelectedBtn = document.getElementById('deleteSelectedStudentsBtn');
+
+        function getStudentRowCheckboxes() {
+            return bulkDeleteForm ? bulkDeleteForm.querySelectorAll('.student-row-checkbox') : [];
+        }
+
+        function syncSelectAllAndDeleteButton() {
+            var boxes = getStudentRowCheckboxes();
+            if (!deleteSelectedBtn) {
+                return;
+            }
+
+            var checked = 0;
+            boxes.forEach(function (cb) {
+                if (cb.checked) {
+                    checked++;
+                }
+            });
+
+            deleteSelectedBtn.classList.toggle('d-none', checked === 0);
+
+            if (selectAllStudents) {
+                selectAllStudents.checked = boxes.length > 0 && checked === boxes.length;
+                selectAllStudents.indeterminate = checked > 0 && checked < boxes.length;
+            }
+        }
+
+        if (bulkDeleteForm && deleteSelectedBtn) {
+            if (selectAllStudents) {
+                selectAllStudents.addEventListener('change', function () {
+                    getStudentRowCheckboxes().forEach(function (cb) {
+                        cb.checked = selectAllStudents.checked;
+                    });
+                    syncSelectAllAndDeleteButton();
+                });
+            }
+
+            bulkDeleteForm.addEventListener('change', function (e) {
+                if (e.target && e.target.classList && e.target.classList.contains('student-row-checkbox')) {
+                    syncSelectAllAndDeleteButton();
+                }
+            });
+
+            bulkDeleteForm.addEventListener('submit', function (e) {
+                var selected = bulkDeleteForm.querySelectorAll('.student-row-checkbox:checked');
+                if (selected.length === 0) {
+                    e.preventDefault();
+                    return;
+                }
+
+                if (!window.confirm('Delete ' + selected.length + ' student(s)? This cannot be undone.')) {
+                    e.preventDefault();
+                }
+            });
+
+            syncSelectAllAndDeleteButton();
         }
     });
 </script>
