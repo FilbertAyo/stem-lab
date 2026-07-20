@@ -22,9 +22,24 @@
             <div class="card-header bg-light-soft d-flex flex-wrap align-items-center justify-content-between gap-2">
                 <div>
                     <h5 class="mb-0 fw-semibold">Idea submission</h5>
-                    <p class="text-muted small mb-0 mt-1">
-                        {{ $competition->description ?: 'Share your school’s problem and proposed STEM solution for this competition phase.' }}
-                    </p>
+                    @php
+                        $ideaPhase = $competition->phases->firstWhere('phase_key', 'idea_submission');
+                        $ideaPhaseDescription = trim((string) ($ideaPhase?->description ?? ''));
+                        $ideaPhaseDescriptionHasContent = $ideaPhaseDescription !== ''
+                            && \Illuminate\Support\Str::of($ideaPhaseDescription)->stripTags()->trim()->isNotEmpty();
+                        $ideaPhaseDescriptionIsHtml = str_contains($ideaPhaseDescription, '<');
+                    @endphp
+                    @if($ideaPhaseDescriptionHasContent)
+                        @if($ideaPhaseDescriptionIsHtml)
+                            <div class="text-muted small mb-0 mt-1 competition-rich-text">{!! $ideaPhaseDescription !!}</div>
+                        @else
+                            <p class="text-muted small mb-0 mt-1">{{ $ideaPhaseDescription }}</p>
+                        @endif
+                    @else
+                        <p class="text-muted small mb-0 mt-1">
+                            Share your school’s problem and proposed STEM solution for this competition phase.
+                        </p>
+                    @endif
                     <p class="text-primary small mb-0 mt-3">
                         Submit one idea for your school. Select exactly <strong>{{ $repCount }}</strong> student representatives from your pool;
                         at least <strong>70%</strong> must be girls.
