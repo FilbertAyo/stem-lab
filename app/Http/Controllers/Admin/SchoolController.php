@@ -450,7 +450,7 @@ class SchoolController extends Controller
     {
         $query = School::query()
             ->with(['regionModel', 'districtModel', 'createdBy', 'updatedBy'])
-            ->withCount('teacherClubs');
+            ->withCount(['teacherClubs', 'students']);
 
         if ($request->filled('search')) {
             $search = $request->search;

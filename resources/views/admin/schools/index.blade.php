@@ -116,7 +116,7 @@
                                     <th>District</th>
                                     <th>Ward</th>
                                     <th>Status</th>
-                                    <th>Logs</th>
+                                    <th class="text-center">Students No.</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -151,8 +151,8 @@
                                                 <span class="badge bg-warning text-dark ms-1">New</span>
                                             @endif
                                         </td>
-                                        <td>
-                                            @include('admin.partials.ownership-meta', ['record' => $school, 'compact' => true, 'class' => ''])
+                                        <td class="text-center">
+                                            <span class="fw-semibold">{{ $school->students_count }}</span>
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
@@ -218,7 +218,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="10" class="text-center text-muted py-4">
+                                        <td colspan="9" class="text-center text-muted py-4">
                                             No schools found. Use the "Add School" button to create the first one.
                                         </td>
                                     </tr>
