@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Competition;
 use App\Models\CompetitionRegistration;
 use App\Models\TeacherClub;
+use App\Support\SchoolLocation;
 use Illuminate\Support\Collection;
 
 class CompetitionParticipantRegistrationService
@@ -138,17 +139,20 @@ class CompetitionParticipantRegistrationService
         $user = $teacherClub->user;
         $school = $teacherClub->school;
 
+        $location = SchoolLocation::registrationSnapshotFromSchool($school);
+
         $attributes = [
             'teacher_club_id' => $teacherClub->id,
             'teacher_user_id' => $teacherClub->user_id,
             'school_id' => $teacherClub->school_id,
-            'region_id' => $school?->region_id,
+            'region_id' => $location['region_id'],
+            'district_id' => $location['district_id'],
             'status' => 'draft',
             'teacher_name' => $user?->name ?? '',
             'teacher_email' => $user?->email ?? '',
             'teacher_phone' => $user?->phone,
             'school_name' => $school?->name ?? 'Unknown school',
-            'school_district' => $school?->district,
+            'school_district' => $location['school_district'],
             'school_ward' => $school?->ward,
             'student_count_snapshot' => 0,
             'girls_count_snapshot' => 0,
@@ -190,11 +194,14 @@ class CompetitionParticipantRegistrationService
         $user = $teacherClub->user;
         $school = $teacherClub->school;
 
+        $location = SchoolLocation::registrationSnapshotFromSchool($school);
+
         $updates = [
             'school_id' => $teacherClub->school_id ?? $registration->school_id,
-            'region_id' => $school?->region_id ?? $registration->region_id,
+            'region_id' => $location['region_id'] ?? $registration->region_id,
+            'district_id' => $location['district_id'] ?? $registration->district_id,
             'school_name' => $school?->name ?: $registration->school_name,
-            'school_district' => $school?->district ?? $registration->school_district,
+            'school_district' => $location['school_district'] ?? $registration->school_district,
             'school_ward' => $school?->ward ?? $registration->school_ward,
         ];
 

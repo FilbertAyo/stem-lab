@@ -24,6 +24,7 @@ class School extends Model
         'phone',
         'email',
         'district',
+        'district_id',
         'ward',
         'region_id',
         'region',
@@ -60,6 +61,16 @@ class School extends Model
     public function regionModel(): BelongsTo
     {
         return $this->belongsTo(Region::class, 'region_id');
+    }
+
+    public function districtModel(): BelongsTo
+    {
+        return $this->belongsTo(District::class, 'district_id');
+    }
+
+    public function districtName(): ?string
+    {
+        return $this->districtModel?->name ?? $this->district;
     }
 
     /**

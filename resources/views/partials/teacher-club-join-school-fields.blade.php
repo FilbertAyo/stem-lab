@@ -1,7 +1,7 @@
 {{--
   Shared school / club join fields (same names as client.clubs.join).
   Expects: $schools (collection), $regions (collection), $existingSchool (School|null)
-  Optional: $districtsByRegion (array regionId => [district names]), $authInputStyle (bool)
+  Optional: $districtsByRegion (array regionId => [{id, name}]), $authInputStyle (bool)
 --}}
 @php
   $authInputStyle = $authInputStyle ?? false;
@@ -16,7 +16,7 @@
     ? 'form-control border-0 border-bottom rounded-0 px-0 bg-transparent shadow-none mb-3'
     : 'form-control border bg-light-soft p-2 mb-2';
   $oldRegionId = old('school_region_id');
-  $oldDistrict = old('school_district');
+  $oldDistrictId = old('school_district_id');
 @endphp
 @if($existingSchool)
   <div class="alert alert-info mb-4">
@@ -24,9 +24,9 @@
       <i class="bi bi-info-circle me-2 fs-5"></i>
       <div>
         <strong>Your school:</strong> {{ $existingSchool->name }}
-        @if($existingSchool->district || $existingSchool->regionModel?->name || $existingSchool->region)
+        @if($existingSchool->districtName() || $existingSchool->regionModel?->name)
           <span class="text-muted">
-            ({{ trim(($existingSchool->district ?? '').($existingSchool->district && ($existingSchool->regionModel?->name || $existingSchool->region) ? ', ' : '').($existingSchool->regionModel?->name ?? $existingSchool->region ?? '')) }})
+            ({{ trim(($existingSchool->districtName() ?? '').($existingSchool->districtName() && $existingSchool->regionModel?->name ? ', ' : '').($existingSchool->regionModel?->name ?? '')) }})
           </span>
         @endif
       </div>
@@ -55,8 +55,8 @@
       @foreach($schools as $school)
         <option value="{{ $school->id }}" {{ old('school_id') == $school->id ? 'selected' : '' }}>
           {{ $school->name }}
-          @if($school->district || $school->regionModel?->name || $school->region)
-            ({{ trim(($school->district ?? '').($school->district && ($school->regionModel?->name || $school->region) ? ', ' : '').($school->regionModel?->name ?? $school->region ?? '')) }})
+          @if($school->districtName() || $school->regionModel?->name)
+            ({{ trim(($school->districtName() ?? '').($school->districtName() && $school->regionModel?->name ? ', ' : '').($school->regionModel?->name ?? '')) }})
           @endif
         </option>
       @endforeach
@@ -137,22 +137,22 @@
     </div>
 
     <div class="col-md-6 mb-3">
-      <label for="school_district" class="form-label @if($authInputStyle) small text-muted fw-medium @endif">District</label>
-      <select class="{{ $selectClass }} @error('school_district') is-invalid @enderror"
-              id="school_district"
-              name="school_district"
-              data-old-district="{{ $oldDistrict }}"
+      <label for="school_district_id" class="form-label @if($authInputStyle) small text-muted fw-medium @endif">District</label>
+      <select class="{{ $selectClass }} @error('school_district_id') is-invalid @enderror"
+              id="school_district_id"
+              name="school_district_id"
+              data-old-district-id="{{ $oldDistrictId }}"
               @if(! $oldRegionId) disabled @endif>
         <option value="">{{ $oldRegionId ? '-- Select district --' : '-- Select region first --' }}</option>
         @if($oldRegionId && isset($districtsByRegion[$oldRegionId]))
-          @foreach($districtsByRegion[$oldRegionId] as $districtName)
-            <option value="{{ $districtName }}" {{ (string) $oldDistrict === (string) $districtName ? 'selected' : '' }}>
-              {{ $districtName }}
+          @foreach($districtsByRegion[$oldRegionId] as $districtOption)
+            <option value="{{ $districtOption['id'] }}" {{ (string) $oldDistrictId === (string) $districtOption['id'] ? 'selected' : '' }}>
+              {{ $districtOption['name'] }}
             </option>
           @endforeach
         @endif
       </select>
-      @error('school_district')
+      @error('school_district_id')
         <div class="invalid-feedback d-block">{{ $message }}</div>
       @enderror
     </div>
@@ -207,14 +207,14 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const regionSelect = document.getElementById('school_region_id');
-    const districtSelect = document.getElementById('school_district');
+    const districtSelect = document.getElementById('school_district_id');
     if (!regionSelect || !districtSelect) {
       return;
     }
 
     const districtsByRegion = @json($districtsByRegion);
 
-    function populateDistricts(regionId, selectedDistrict) {
+    function populateDistricts(regionId, selectedDistrictId) {
       const districts = districtsByRegion[regionId] || [];
       districtSelect.innerHTML = '';
 
@@ -223,11 +223,11 @@
       placeholder.textContent = regionId ? '-- Select district --' : '-- Select region first --';
       districtSelect.appendChild(placeholder);
 
-      districts.forEach(function (name) {
+      districts.forEach(function (district) {
         const option = document.createElement('option');
-        option.value = name;
-        option.textContent = name;
-        if (selectedDistrict && selectedDistrict === name) {
+        option.value = district.id;
+        option.textContent = district.name;
+        if (selectedDistrictId && String(selectedDistrictId) === String(district.id)) {
           option.selected = true;
         }
         districtSelect.appendChild(option);
@@ -245,9 +245,9 @@
     });
 
     const initialRegion = regionSelect.value;
-    const initialDistrict = districtSelect.getAttribute('data-old-district') || '';
+    const initialDistrictId = districtSelect.getAttribute('data-old-district-id') || '';
     if (initialRegion) {
-      populateDistricts(initialRegion, initialDistrict);
+      populateDistricts(initialRegion, initialDistrictId);
     }
   });
 </script>

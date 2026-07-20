@@ -6,7 +6,7 @@ use App\Models\Competition;
 use App\Models\CompetitionRegistration;
 use App\Models\Student;
 use App\Models\TeacherClub;
-use Illuminate\Support\Collection;
+use App\Support\SchoolLocation;
 
 class CompetitionEligibilityPoolService
 {
@@ -133,6 +133,8 @@ class CompetitionEligibilityPoolService
             $user = $teacherClub->user;
             $school = $teacherClub->school;
 
+            $location = SchoolLocation::registrationSnapshotFromSchool($school);
+
             $attributes = array_merge($attributes, [
                 'status' => 'pending',
                 'submitted_at' => $registration->submitted_at ?? now(),
@@ -140,12 +142,13 @@ class CompetitionEligibilityPoolService
                 'teacher_club_id' => $registration->teacher_club_id ?: $teacherClub->id,
                 'teacher_user_id' => $registration->teacher_user_id ?: $teacherClub->user_id,
                 'school_id' => $teacherClub->school_id,
-                'region_id' => $school?->region_id ?? $registration->region_id,
+                'region_id' => $location['region_id'] ?? $registration->region_id,
+                'district_id' => $location['district_id'] ?? $registration->district_id,
                 'teacher_name' => $registration->teacher_name ?: ($user?->name ?: ''),
                 'teacher_email' => $registration->teacher_email ?: ($user?->email ?: ''),
                 'teacher_phone' => $registration->teacher_phone ?: $user?->phone,
                 'school_name' => $school?->name ?: $registration->school_name,
-                'school_district' => $school?->district ?? $registration->school_district,
+                'school_district' => $location['school_district'] ?? $registration->school_district,
                 'school_ward' => $school?->ward ?? $registration->school_ward,
             ]);
         }

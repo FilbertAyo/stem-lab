@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Club;
+use App\Models\Region;
 use App\Models\School;
 use App\Models\User;
 use App\Services\TeacherClubJoinService;
@@ -25,13 +26,16 @@ test('teacher new school join creates active school pending admin review', funct
         'is_active' => true,
     ]);
 
+    ['region' => $region, 'district' => $district] = createRegionAndDistrict('Mara', 'Test District');
+
     $teacher = User::factory()->create(['role' => 'teacher']);
     $joinService = app(TeacherClubJoinService::class);
 
     $request = Request::create('/', 'POST', [
         'is_new_school' => true,
         'school_name' => 'New School '.Str::random(8),
-        'school_district' => 'Test District',
+        'school_region_id' => $region->id,
+        'school_district_id' => $district->id,
         'school_latitude' => '-6.7923540',
         'school_longitude' => '39.2083284',
     ]);
@@ -45,8 +49,8 @@ test('teacher new school join creates active school pending admin review', funct
     expect($school)->not->toBeNull()
         ->and($school->is_active)->toBeTrue()
         ->and($school->admin_reviewed_at)->toBeNull()
-        ->and($school->latitude)->toBe('-6.7923540')
-        ->and($school->longitude)->toBe('39.2083284');
+        ->and($school->district_id)->toBe($district->id)
+        ->and($school->region_id)->toBe($region->id);
 });
 
 test('admin created school is auto reviewed', function () {
@@ -210,24 +214,33 @@ test('admin cannot assign teacher who already belongs to a school', function () 
 });
 
 test('mark all reviewed bulk approves pending schools matching filters', function () {
+    ['region' => $region, 'district' => $maraDistrict] = createRegionAndDistrict('Mara', 'Musoma');
+    ['district' => $mwanzaDistrict] = createRegionAndDistrict('Mwanza', 'Ilemela');
+
     $pendingOne = School::query()->create([
         'name' => 'Bulk A '.Str::random(6),
         'is_active' => true,
-        'district' => 'Mara',
+        'region_id' => $region->id,
+        'district_id' => $maraDistrict->id,
+        'district' => $maraDistrict->name,
         'admin_reviewed_at' => null,
     ]);
 
     $pendingTwo = School::query()->create([
         'name' => 'Bulk B '.Str::random(6),
         'is_active' => true,
-        'district' => 'Mara',
+        'region_id' => $region->id,
+        'district_id' => $maraDistrict->id,
+        'district' => $maraDistrict->name,
         'admin_reviewed_at' => null,
     ]);
 
     School::query()->create([
         'name' => 'Other District '.Str::random(6),
         'is_active' => true,
-        'district' => 'Mwanza',
+        'region_id' => $mwanzaDistrict->region_id,
+        'district_id' => $mwanzaDistrict->id,
+        'district' => $mwanzaDistrict->name,
         'admin_reviewed_at' => null,
     ]);
 
@@ -237,7 +250,7 @@ test('mark all reviewed bulk approves pending schools matching filters', functio
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
         ->post(adminSchoolsUrl('/mark-all-reviewed'), [
             'review' => 'pending',
-            'district' => 'Mara',
+            'district_id' => $maraDistrict->id,
         ]);
 
     $response->assertRedirect();
@@ -249,6 +262,6 @@ test('mark all reviewed bulk approves pending schools matching filters', functio
         ->and($pendingTwo->admin_reviewed_at)->not->toBeNull();
 
     expect(
-        School::query()->needsReview()->where('district', 'Mwanza')->exists()
+        School::query()->needsReview()->where('district_id', $mwanzaDistrict->id)->exists()
     )->toBeTrue();
 });

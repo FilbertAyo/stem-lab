@@ -6,6 +6,7 @@
             <tr>
                 <th class="sn">S/N</th>
                 <th>School</th>
+                <th>Region</th>
                 <th>District</th>
                 <th>Ward</th>
                 <th>Teacher</th>
@@ -21,7 +22,8 @@
                 <tr>
                     <td class="sn">{{ $index + 1 }}</td>
                     <td>{{ $registration->school_name ?: '—' }}</td>
-                    <td>{{ $registration->school_district ?: '—' }}</td>
+                    <td>{{ $registration->region?->name ?: '—' }}</td>
+                    <td>{{ $registration->districtName() ?: '—' }}</td>
                     <td>{{ $registration->school_ward ?: '—' }}</td>
                     <td>{{ $registration->resolvedTeacherName() ?: '—' }}</td>
                     <td>{{ $registration->resolvedTeacherEmail() ?: '—' }}</td>
@@ -34,7 +36,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="10" class="empty">No registrations match the selected filters.</td>
+                    <td colspan="11" class="empty">No registrations match the selected filters.</td>
                 </tr>
             @endforelse
         </tbody>

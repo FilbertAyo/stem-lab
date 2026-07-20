@@ -76,7 +76,7 @@ test('co-teacher cannot store registration when school already pending', functio
         route('client.competitions.register.store', $competition),
         [
             'school_name' => $school->name,
-            'school_district' => $school->district,
+            'school_district_id' => $school->district_id,
             'school_ward' => null,
         ],
     );

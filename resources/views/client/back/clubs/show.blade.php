@@ -43,7 +43,7 @@
                                         <dd class="col-sm-9 mb-2">{{ $school->name }}</dd>
                                         @php
                                             $regionName = $school->regionModel?->name ?? $school->region;
-                                            $districtRegion = collect([$school->district, $regionName])->filter()->implode(', ');
+                                            $districtRegion = collect([$school->districtName(), $regionName])->filter()->implode(', ');
                                         @endphp
                                         @if($districtRegion !== '')
                                             <dt class="col-sm-3 text-muted">District</dt>

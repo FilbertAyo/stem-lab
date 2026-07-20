@@ -51,19 +51,21 @@ test('authenticated admin create and update set ownership on schools', function 
         ->and($school->created_by)->toBe($creator->id)
         ->and($school->updated_by)->toBe($creator->id);
 
+    $updatedName = $school->name.' Updated';
+
     $this->actingAs($updater)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
         ->put(ownershipAdminUrl('/schools/'.$school->ulid), [
-            'name' => $school->name,
+            'name' => $updatedName,
             'is_active' => '1',
-            'district' => 'Updated District',
         ])
         ->assertRedirect();
 
     $school->refresh();
 
     expect($school->created_by)->toBe($creator->id)
-        ->and($school->updated_by)->toBe($updater->id);
+        ->and($school->updated_by)->toBe($updater->id)
+        ->and($school->name)->toBe($updatedName);
 });
 
 test('legacy ownership remains null and displays fallback label', function () {
@@ -118,11 +120,14 @@ test('deleted owner user falls back to legacy unavailable label', function () {
 
 test('bulk mark reviewed sets updated_by for matching schools', function () {
     $admin = User::factory()->create(['role' => 'admin', 'name' => 'Bulk Reviewer']);
+    ['region' => $region, 'district' => $district] = createRegionAndDistrict('Mara', 'Musoma');
 
     $pending = School::query()->create([
         'name' => 'Bulk Pending '.Str::random(6),
         'is_active' => true,
-        'district' => 'Mara',
+        'region_id' => $region->id,
+        'district_id' => $district->id,
+        'district' => $district->name,
         'admin_reviewed_at' => null,
         'created_by' => null,
         'updated_by' => null,
@@ -132,7 +137,7 @@ test('bulk mark reviewed sets updated_by for matching schools', function () {
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
         ->post(ownershipAdminUrl('/schools/mark-all-reviewed'), [
             'review' => 'pending',
-            'district' => 'Mara',
+            'district_id' => $district->id,
         ])
         ->assertRedirect();
 

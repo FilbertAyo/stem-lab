@@ -4,7 +4,7 @@
 ])
 
 <form method="GET" action="{{ route($exportRoute) }}" class="row g-3 align-items-end">
-    @foreach(request()->only(['search', 'status', 'review', 'region_id', 'district']) as $key => $value)
+    @foreach(request()->only(['search', 'status', 'review', 'region_id', 'district_id']) as $key => $value)
         @if($value !== null && $value !== '')
             <input type="hidden" name="{{ $key }}" value="{{ $value }}">
         @endif

@@ -10,7 +10,7 @@
                     @if($pendingReviewCount > 0)
                         <form method="POST" action="{{ route('admin.schools.mark-all-reviewed') }}" class="d-inline">
                             @csrf
-                            @foreach(request()->only(['search', 'status', 'review', 'region_id', 'district', 'per_page']) as $key => $value)
+                            @foreach(request()->only(['search', 'status', 'review', 'region_id', 'district_id', 'per_page']) as $key => $value)
                                 @if($value !== null && $value !== '')
                                     <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                                 @endif
@@ -66,11 +66,11 @@
                         </div>
                         <div class="col-md-2">
                             <label class="form-label small">District</label>
-                            <select name="district" class="form-select">
+                            <select name="district_id" id="filterDistrict" class="form-select">
                                 <option value="">All Districts</option>
                                 @foreach($districts as $district)
-                                    <option value="{{ $district }}" {{ request('district') === $district ? 'selected' : '' }}>
-                                        {{ $district }}
+                                    <option value="{{ $district->id }}" {{ (string) request('district_id') === (string) $district->id ? 'selected' : '' }}>
+                                        {{ $district->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -89,7 +89,7 @@
                             <button type="submit" class="btn btn-outline-primary me-2">
                                 <i class="ti ti-filter"></i> Filter
                             </button>
-                            @if(request('search') || request('status') || request('review') || request('region_id') || request('district') || request('per_page'))
+                            @if(request('search') || request('status') || request('review') || request('region_id') || request('district_id') || request('per_page'))
                                 <a href="{{ route('admin.schools.index') }}" class="btn btn-outline-secondary">
                                     <i class="ti ti-x"></i> Clear
                                 </a>
@@ -139,8 +139,8 @@
                                                 <span class="text-muted">—</span>
                                             @endif
                                         </td>
-                                        <td>{{ $school->regionModel?->name ?? $school->region ?? '—' }}</td>
-                                        <td>{{ $school->district ?? '—' }}</td>
+                                        <td>{{ $school->regionModel?->name ?? '—' }}</td>
+                                        <td>{{ $school->districtName() ?? '—' }}</td>
                                         <td>{{ $school->ward ?? '—' }}</td>
                                        
                                         <td>
@@ -181,7 +181,7 @@
                                                     data-longitude="{{ $school->longitude }}"
                                                     data-phone="{{ $school->phone }}"
                                                     data-email="{{ $school->email }}"
-                                                    data-district="{{ $school->district }}"
+                                                    data-district-id="{{ $school->district_id }}"
                                                     data-region-id="{{ $school->region_id }}"
                                                     data-ward="{{ $school->ward }}"
                                                     data-active="{{ $school->is_active ? '1' : '0' }}"
@@ -294,17 +294,17 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="schoolDistrict" class="form-label">District</label>
-                                <select name="district" id="schoolDistrict" class="form-select" data-old-district="{{ old('district') }}" @if(! old('region_id')) disabled @endif>
+                                <select name="district_id" id="schoolDistrict" class="form-select" data-old-district-id="{{ old('district_id') }}" @if(! old('region_id')) disabled @endif>
                                     <option value="">{{ old('region_id') ? 'Select district' : 'Select region first' }}</option>
                                     @if(old('region_id') && isset($districtsByRegion[(string) old('region_id')]))
-                                        @foreach($districtsByRegion[(string) old('region_id')] as $districtName)
-                                            <option value="{{ $districtName }}" {{ (string) old('district') === (string) $districtName ? 'selected' : '' }}>
-                                                {{ $districtName }}
+                                        @foreach($districtsByRegion[(string) old('region_id')] as $districtOption)
+                                            <option value="{{ $districtOption['id'] }}" {{ (string) old('district_id') === (string) $districtOption['id'] ? 'selected' : '' }}>
+                                                {{ $districtOption['name'] }}
                                             </option>
                                         @endforeach
                                     @endif
                                 </select>
-                                @error('district')
+                                @error('district_id')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -406,10 +406,10 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="editSchoolDistrict" class="form-label">District</label>
-                                <select name="district" id="editSchoolDistrict" class="form-select" disabled>
+                                <select name="district_id" id="editSchoolDistrict" class="form-select" disabled>
                                     <option value="">Select region first</option>
                                 </select>
-                                @error('district')
+                                @error('district_id')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -514,7 +514,7 @@
             document.addEventListener('DOMContentLoaded', function () {
                 const districtsByRegion = @json($districtsByRegion ?? []);
 
-                function populateDistrictSelect(districtSelect, regionId, selectedDistrict) {
+                function populateDistrictSelect(districtSelect, regionId, selectedDistrictId) {
                     if (!districtSelect) {
                         return;
                     }
@@ -527,26 +527,15 @@
                     placeholder.textContent = regionId ? 'Select district' : 'Select region first';
                     districtSelect.appendChild(placeholder);
 
-                    let hasSelected = false;
-                    districts.forEach(function (name) {
+                    districts.forEach(function (district) {
                         const option = document.createElement('option');
-                        option.value = name;
-                        option.textContent = name;
-                        if (selectedDistrict && selectedDistrict === name) {
+                        option.value = district.id;
+                        option.textContent = district.name;
+                        if (selectedDistrictId && String(selectedDistrictId) === String(district.id)) {
                             option.selected = true;
-                            hasSelected = true;
                         }
                         districtSelect.appendChild(option);
                     });
-
-                    // Preserve legacy free-text districts not in the seeded list.
-                    if (selectedDistrict && !hasSelected) {
-                        const legacyOption = document.createElement('option');
-                        legacyOption.value = selectedDistrict;
-                        legacyOption.textContent = selectedDistrict + ' (current)';
-                        legacyOption.selected = true;
-                        districtSelect.appendChild(legacyOption);
-                    }
 
                     if (regionId) {
                         districtSelect.removeAttribute('disabled');
@@ -564,7 +553,7 @@
                     populateDistrictSelect(
                         createDistrict,
                         createRegion.value,
-                        createDistrict?.getAttribute('data-old-district') || ''
+                        createDistrict?.getAttribute('data-old-district-id') || ''
                     );
                 }
 
@@ -596,7 +585,7 @@
                     const longitude = button.getAttribute('data-longitude') || '';
                     const phone = button.getAttribute('data-phone') || '';
                     const email = button.getAttribute('data-email') || '';
-                    const district = button.getAttribute('data-district') || '';
+                    const districtId = button.getAttribute('data-district-id') || '';
                     const regionId = button.getAttribute('data-region-id') || '';
                     const ward = button.getAttribute('data-ward') || '';
                     const isActive = button.getAttribute('data-active') === '1';
@@ -611,7 +600,7 @@
                     editPhone.value = phone;
                     editEmail.value = email;
                     editRegion.value = regionId;
-                    populateDistrictSelect(editDistrict, regionId, district);
+                    populateDistrictSelect(editDistrict, regionId, districtId);
                     editWard.value = ward;
                     editToggle.checked = isActive;
                     editStatusInput.value = isActive ? '1' : '0';

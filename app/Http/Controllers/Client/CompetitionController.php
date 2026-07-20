@@ -16,7 +16,7 @@ use App\Models\SchoolClass;
 use App\Models\TeacherClub;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
-use App\Services\StudentCsvBulkImportService;
+use App\Support\SchoolLocation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -204,9 +204,8 @@ class CompetitionController extends Controller
             ? District::query()
                 ->where('region_id', $schoolRegionId)
                 ->orderBy('name')
-                ->pluck('name')
-                ->all()
-            : [];
+                ->get(['id', 'name'])
+            : collect();
 
         return view('client.back.competitions.register', compact(
             'competition',
@@ -375,9 +374,16 @@ class CompetitionController extends Controller
 
         $validated = $request->validate([
             'school_name' => ['required', 'string', 'max:255'],
-            'school_district' => ['nullable', 'string', 'max:255'],
+            'school_district_id' => ['nullable', 'exists:districts,id'],
             'school_ward' => ['nullable', 'string', 'max:255'],
         ]);
+
+        $location = SchoolLocation::normalizeSchoolAttributes([
+            'district_id' => $validated['school_district_id'] ?? null,
+            'region_id' => $teacherClub->school?->region_id,
+        ]);
+        $schoolDistrict = $location['district']
+            ?? $teacherClub->school?->districtName();
 
         $pool = $eligibilityPool->computePool($competition, $teacherClub);
         $poolCount = $pool['count'];
@@ -389,7 +395,7 @@ class CompetitionController extends Controller
             return back()->withErrors(['eligibility' => $poolError])->withInput();
         }
 
-        DB::transaction(function () use ($validated, $competition, $teacherClub, $user, $poolCount, $poolGirlsCount, $poolRatio, $existing, $participantRegistrationService): void {
+        DB::transaction(function () use ($validated, $competition, $teacherClub, $user, $poolCount, $poolGirlsCount, $poolRatio, $existing, $participantRegistrationService, $location, $schoolDistrict): void {
             if ($existing) {
                 $existing->representativeStudents()->delete();
                 $existing->update([
@@ -397,12 +403,13 @@ class CompetitionController extends Controller
                     'teacher_club_id' => $teacherClub->id,
                     'teacher_user_id' => $user->id,
                     'school_id' => $teacherClub->school_id,
-                    'region_id' => $teacherClub->school?->region_id,
+                    'region_id' => $location['region_id'] ?? $teacherClub->school?->region_id,
+                    'district_id' => $location['district_id'] ?? $teacherClub->school?->district_id,
                     'teacher_name' => $user->name,
                     'teacher_email' => $user->email,
                     'teacher_phone' => $user->phone,
                     'school_name' => $validated['school_name'],
-                    'school_district' => $validated['school_district'] ?? $teacherClub->school?->district,
+                    'school_district' => $schoolDistrict,
                     'school_ward' => $validated['school_ward'] ?? $teacherClub->school?->ward,
                     'student_count_snapshot' => $poolCount,
                     'girls_count_snapshot' => $poolGirlsCount,
@@ -422,12 +429,13 @@ class CompetitionController extends Controller
                 'teacher_club_id' => $teacherClub->id,
                 'teacher_user_id' => $user->id,
                 'school_id' => $teacherClub->school_id,
-                'region_id' => $teacherClub->school?->region_id,
+                'region_id' => $location['region_id'] ?? $teacherClub->school?->region_id,
+                'district_id' => $location['district_id'] ?? $teacherClub->school?->district_id,
                 'teacher_name' => $user->name,
                 'teacher_email' => $user->email,
                 'teacher_phone' => $user->phone,
                 'school_name' => $validated['school_name'],
-                'school_district' => $validated['school_district'] ?? $teacherClub->school?->district,
+                'school_district' => $schoolDistrict,
                 'school_ward' => $validated['school_ward'] ?? $teacherClub->school?->ward,
                 'student_count_snapshot' => $poolCount,
                 'girls_count_snapshot' => $poolGirlsCount,

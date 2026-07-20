@@ -33,8 +33,8 @@
                             —
                         @endif
                     </td>
-                    <td>{{ $school->regionModel?->name ?? $school->region ?? '—' }}</td>
-                    <td>{{ $school->district ?? '—' }}</td>
+                    <td>{{ $school->regionModel?->name ?? '—' }}</td>
+                    <td>{{ $school->districtName() ?? '—' }}</td>
                     <td>{{ $school->ward ?? '—' }}</td>
                     <td>
                         {{ $school->is_active ? 'Active' : 'Disabled' }}

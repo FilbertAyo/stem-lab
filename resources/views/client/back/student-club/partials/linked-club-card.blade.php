@@ -49,7 +49,7 @@
 
                         @php
                             $regionName = $school->regionModel?->name ?? $school->region;
-                            $districtRegion = collect([$school->district, $regionName])->filter()->implode(', ');
+                            $districtRegion = collect([$school->districtName(), $regionName])->filter()->implode(', ');
                         @endphp
                         @if($districtRegion !== '')
                             <dt class="col-sm-4 text-muted">District / region</dt>

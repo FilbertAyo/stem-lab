@@ -7,6 +7,7 @@ use App\Models\Competition;
 use App\Models\School;
 use App\Models\TeacherClub;
 use App\Models\User;
+use App\Support\SchoolLocation;
 use Illuminate\Http\Request;
 
 class TeacherClubJoinService
@@ -50,9 +51,14 @@ class TeacherClubJoinService
                     'school_longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:school_latitude'],
                     'school_phone' => ['nullable', 'string', 'max:50'],
                     'school_email' => ['nullable', 'email', 'max:255'],
-                    'school_district' => ['nullable', 'string', 'max:255'],
+                    'school_district_id' => ['nullable', 'exists:districts,id'],
                     'school_ward' => ['nullable', 'string', 'max:255'],
                     'school_region_id' => ['nullable', 'exists:regions,id'],
+                ]);
+
+                $location = SchoolLocation::normalizeSchoolAttributes([
+                    'district_id' => $validated['school_district_id'] ?? null,
+                    'region_id' => $validated['school_region_id'] ?? null,
                 ]);
 
                 $school = School::create([
@@ -61,9 +67,10 @@ class TeacherClubJoinService
                     'longitude' => $validated['school_longitude'] ?? null,
                     'phone' => $validated['school_phone'] ?? null,
                     'email' => $validated['school_email'] ?? null,
-                    'district' => $validated['school_district'] ?? null,
+                    'district_id' => $location['district_id'],
+                    'district' => $location['district'],
                     'ward' => $validated['school_ward'] ?? null,
-                    'region_id' => $validated['school_region_id'] ?? null,
+                    'region_id' => $location['region_id'],
                     'is_active' => true,
                 ]);
 

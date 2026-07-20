@@ -3,10 +3,23 @@
 use App\Models\Club;
 use App\Models\Competition;
 use App\Models\CompetitionPhase;
+use App\Models\District;
+use App\Models\Region;
 use App\Models\School;
 use App\Models\TeacherClub;
 use App\Models\User;
 use Illuminate\Support\Str;
+
+function createRegionAndDistrict(string $regionName = 'Mara', string $districtName = 'Musoma'): array
+{
+    $region = Region::query()->firstOrCreate(['name' => $regionName]);
+    $district = District::query()->firstOrCreate(
+        ['region_id' => $region->id, 'name' => $districtName],
+        ['region_id' => $region->id, 'name' => $districtName],
+    );
+
+    return compact('region', 'district');
+}
 
 function createCompetitionFixture(array $competitionOverrides = []): array
 {

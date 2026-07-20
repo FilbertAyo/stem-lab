@@ -151,7 +151,7 @@ test('store registration promotes draft to pending when eligibility passes', fun
         route('client.competitions.register.store', $competition),
         [
             'school_name' => $school->name,
-            'school_district' => $school->district,
+            'school_district_id' => $school->district_id,
             'school_ward' => null,
         ],
     );

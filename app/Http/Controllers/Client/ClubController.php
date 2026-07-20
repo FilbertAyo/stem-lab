@@ -157,10 +157,10 @@ class ClubController extends Controller
 
         $schools = $existingSchool
             ? collect()
-            : School::active()->with('regionModel')->ordered()->get();
+            : School::active()->with(['regionModel', 'districtModel'])->ordered()->get();
 
         $regions = Region::query()->orderBy('name')->get(['id', 'name']);
-        $districtsByRegion = District::groupedNamesByRegionId();
+        $districtsByRegion = District::groupedByRegionId();
 
         return view('client.back.clubs.join', compact('club', 'schools', 'existingSchool', 'regions', 'districtsByRegion'));
     }

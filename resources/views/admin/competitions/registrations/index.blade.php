@@ -70,7 +70,12 @@
                                         </td>
                                         <td>
                                             <div class="fw-semibold">{{ $registration->school_name }}</div>
-                                            <small class="text-muted">{{ $registration->school_district ?? 'No district' }}</small>
+                                            <small class="text-muted">
+                                                {{ $registration->region?->name ?? $registration->school?->regionModel?->name ?? 'No region' }}
+                                                @if($registration->districtName())
+                                                    · {{ $registration->districtName() }}
+                                                @endif
+                                            </small>
                                         </td>
                                         <td>
                                             <div>{{ $registration->resolvedTeacherName() }}</div>

@@ -176,25 +176,22 @@
                                     <input type="text" id="school_name" class="form-control" name="school_name" value="{{ old('school_name', $registration->school_name ?? $teacherClub->school?->name) }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small" for="school_district">District</label>
+                                    <label class="form-label small" for="school_district_id">District</label>
                                     @php
-                                        $selectedDistrict = old('school_district', $registration->school_district ?? $teacherClub->school?->district);
-                                        $hasRegionDistricts = ! empty($regionDistricts ?? []);
+                                        $selectedDistrictId = old('school_district_id', $registration->district_id ?? $teacherClub->school?->district_id);
                                     @endphp
-                                    @if($hasRegionDistricts)
-                                        <select id="school_district" class="form-select" name="school_district">
+                                    @if(($regionDistricts ?? collect())->isNotEmpty())
+                                        <select id="school_district_id" class="form-select" name="school_district_id">
                                             <option value="">-- Select district --</option>
-                                            @foreach($regionDistricts as $districtName)
-                                                <option value="{{ $districtName }}" {{ (string) $selectedDistrict === (string) $districtName ? 'selected' : '' }}>
-                                                    {{ $districtName }}
+                                            @foreach($regionDistricts as $districtOption)
+                                                <option value="{{ $districtOption->id }}" {{ (string) $selectedDistrictId === (string) $districtOption->id ? 'selected' : '' }}>
+                                                    {{ $districtOption->name }}
                                                 </option>
                                             @endforeach
-                                            @if($selectedDistrict && ! in_array($selectedDistrict, $regionDistricts, true))
-                                                <option value="{{ $selectedDistrict }}" selected>{{ $selectedDistrict }} (current)</option>
-                                            @endif
                                         </select>
                                     @else
-                                        <input type="text" id="school_district" class="form-control" name="school_district" value="{{ $selectedDistrict }}">
+                                        <input type="text" id="school_district_id" class="form-control bg-light" value="{{ $registration->districtName() ?? $teacherClub->school?->districtName() }}" disabled>
+                                        <small class="text-muted">District is managed from the school profile.</small>
                                     @endif
                                 </div>
                                 <div class="col-md-6">

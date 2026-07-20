@@ -801,7 +801,7 @@ class CompetitionController extends Controller
     public function registrations(Request $request, Competition $competition): View
     {
         $registrations = $this->competitionRegistrationsQuery($request, $competition)
-            ->with(['teacher', 'school.regionModel', 'region', 'representativeStudents.student.schoolClass', 'teacherClub'])
+            ->with(['teacher', 'school.regionModel', 'school.districtModel', 'region', 'districtModel', 'representativeStudents.student.schoolClass', 'teacherClub'])
             ->orderByRaw("CASE WHEN status = 'draft' THEN 0 ELSE 1 END")
             ->latest()
             ->paginate(20)
@@ -832,7 +832,7 @@ class CompetitionController extends Controller
         ]);
 
         $registrations = $this->competitionRegistrationsQuery($request, $competition)
-            ->with(['teacher', 'representativeStudents', 'teacherClub'])
+            ->with(['teacher', 'region', 'districtModel', 'representativeStudents', 'teacherClub'])
             ->orderByRaw("CASE WHEN status = 'draft' THEN 0 ELSE 1 END")
             ->latest()
             ->get();
@@ -867,7 +867,9 @@ class CompetitionController extends Controller
         $registration->load([
             'teacher',
             'school.regionModel',
+            'school.districtModel',
             'region',
+            'districtModel',
             'approver',
             'representativeStudents.student.schoolClass',
             'teacherClub',

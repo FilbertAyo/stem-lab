@@ -90,9 +90,9 @@ class PublicCompetitionController extends Controller
     {
         $competition->load(['club', 'phases']);
 
-        $schools = School::active()->with('regionModel')->ordered()->get();
+        $schools = School::active()->with(['regionModel', 'districtModel'])->ordered()->get();
         $regions = Region::query()->orderBy('name')->get(['id', 'name']);
-        $districtsByRegion = District::groupedNamesByRegionId();
+        $districtsByRegion = District::groupedByRegionId();
 
         $allowPublicTeacherSignup = $competition->allowsPublicTeacherRegistration();
 

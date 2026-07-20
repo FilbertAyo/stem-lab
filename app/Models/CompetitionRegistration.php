@@ -21,6 +21,7 @@ class CompetitionRegistration extends Model
         'teacher_user_id',
         'school_id',
         'region_id',
+        'district_id',
         'status',
         'teacher_name',
         'teacher_email',
@@ -114,6 +115,16 @@ class CompetitionRegistration extends Model
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);
+    }
+
+    public function districtModel(): BelongsTo
+    {
+        return $this->belongsTo(District::class, 'district_id');
+    }
+
+    public function districtName(): ?string
+    {
+        return $this->districtModel?->name ?? $this->school_district;
     }
 
     public function approver(): BelongsTo

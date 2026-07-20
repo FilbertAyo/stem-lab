@@ -65,7 +65,7 @@
                                         @endif
                                     </dd>
                                     <dt class="col-sm-4 text-muted fw-normal">District / ward</dt>
-                                    <dd class="col-sm-8 mb-2">{{ $school->district ?? '—' }} / {{ $school->ward ?? '—' }}</dd>
+                                    <dd class="col-sm-8 mb-2">{{ $school->districtName() ?? '—' }} / {{ $school->ward ?? '—' }}</dd>
                                     <dt class="col-sm-4 text-muted fw-normal">School region</dt>
                                     <dd class="col-sm-8 mb-0">{{ $school->regionModel?->name ?? $school->region ?? '—' }}</dd>
                                 @endif

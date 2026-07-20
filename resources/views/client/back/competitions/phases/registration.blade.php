@@ -77,7 +77,7 @@
                                             <dt class="col-sm-4 text-muted fw-normal">Email</dt>
                                             <dd class="col-sm-8 mb-1">{{ $registration->school->email ?: '—' }}</dd>
                                             <dt class="col-sm-4 text-muted fw-normal">District</dt>
-                                            <dd class="col-sm-8 mb-1">{{ $registration->school->district ?: '—' }}</dd>
+                                            <dd class="col-sm-8 mb-1">{{ $registration->school->districtName() ?: '—' }}</dd>
                                             <dt class="col-sm-4 text-muted fw-normal">Ward</dt>
                                             <dd class="col-sm-8 mb-1">{{ $registration->school->ward ?? '—' }}</dd>
                                             <dt class="col-sm-4 text-muted fw-normal">Region</dt>

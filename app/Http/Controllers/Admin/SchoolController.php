@@ -13,7 +13,7 @@ use App\Models\User;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\StudentCsvBulkImportService;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\SchoolLocation;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -36,8 +36,8 @@ class SchoolController extends Controller
         $schools = $query->reviewQueueOrder()->paginate($perPage)->withQueryString();
 
         $regions = Region::query()->orderBy('name')->get(['id', 'name']);
-        $districts = School::whereNotNull('district')->distinct()->orderBy('district')->pluck('district');
-        $districtsByRegion = District::groupedNamesByRegionId();
+        $districts = District::query()->orderBy('name')->get(['id', 'name', 'region_id']);
+        $districtsByRegion = District::groupedByRegionId();
         $pendingReviewCount = School::query()->needsReview()->count();
 
         return view('admin.schools.index', compact('schools', 'regions', 'districts', 'districtsByRegion', 'pendingReviewCount'));
@@ -54,13 +54,13 @@ class SchoolController extends Controller
             'status' => ['nullable', 'in:active,inactive'],
             'review' => ['nullable', 'in:pending,reviewed'],
             'region_id' => ['nullable', 'exists:regions,id'],
-            'district' => ['nullable', 'string', 'max:255'],
+            'district_id' => ['nullable', 'exists:districts,id'],
         ]);
 
         $schools = ($validated['scope'] === 'all'
             ? School::query()
             : $this->schoolsIndexQuery($request))
-            ->with('regionModel')
+            ->with(['regionModel', 'districtModel'])
             ->withCount('teacherClubs')
             ->reviewQueueOrder()
             ->get();
@@ -83,6 +83,7 @@ class SchoolController extends Controller
     {
         $school->load([
             'regionModel',
+            'districtModel',
             'createdBy',
             'updatedBy',
             'teacherClubs.user',
@@ -133,12 +134,13 @@ class SchoolController extends Controller
             'longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:latitude'],
             'phone' => ['nullable', 'string', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],
-            'district' => ['nullable', 'string', 'max:255'],
+            'district_id' => ['nullable', 'exists:districts,id'],
             'ward' => ['nullable', 'string', 'max:255'],
             'region_id' => ['nullable', 'exists:regions,id'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
+        $validated = SchoolLocation::normalizeSchoolAttributes($validated);
         $validated['is_active'] = $request->boolean('is_active', true);
         $validated['admin_reviewed_at'] = now();
 
@@ -196,11 +198,13 @@ class SchoolController extends Controller
             'longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:latitude'],
             'phone' => ['nullable', 'string', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],
-            'district' => ['nullable', 'string', 'max:255'],
+            'district_id' => ['nullable', 'exists:districts,id'],
             'ward' => ['nullable', 'string', 'max:255'],
             'region_id' => ['nullable', 'exists:regions,id'],
             'is_active' => ['required', 'boolean'],
         ]);
+
+        $validated = SchoolLocation::normalizeSchoolAttributes($validated);
 
         $school->update($validated);
 
@@ -404,7 +408,7 @@ class SchoolController extends Controller
     private function schoolsIndexQuery(Request $request): Builder
     {
         $query = School::query()
-            ->with(['regionModel', 'createdBy', 'updatedBy'])
+            ->with(['regionModel', 'districtModel', 'createdBy', 'updatedBy'])
             ->withCount('teacherClubs');
 
         if ($request->filled('search')) {
@@ -416,6 +420,9 @@ class SchoolController extends Controller
                     ->orWhere('phone', 'like', '%'.$search.'%')
                     ->orWhereHas('regionModel', function ($regionQuery) use ($search): void {
                         $regionQuery->where('name', 'like', '%'.$search.'%');
+                    })
+                    ->orWhereHas('districtModel', function ($districtQuery) use ($search): void {
+                        $districtQuery->where('name', 'like', '%'.$search.'%');
                     });
             });
         }
@@ -436,8 +443,8 @@ class SchoolController extends Controller
             $query->where('region_id', $request->integer('region_id'));
         }
 
-        if ($request->filled('district')) {
-            $query->where('district', $request->district);
+        if ($request->filled('district_id')) {
+            $query->where('district_id', $request->integer('district_id'));
         }
 
         return $query;
@@ -468,8 +475,9 @@ class SchoolController extends Controller
             $parts[] = 'region: '.($region?->name ?? $request->input('region_id'));
         }
 
-        if ($request->filled('district')) {
-            $parts[] = 'district: '.$request->input('district');
+        if ($request->filled('district_id')) {
+            $district = District::query()->find($request->integer('district_id'));
+            $parts[] = 'district: '.($district?->name ?? $request->input('district_id'));
         }
 
         return implode(' · ', $parts);
