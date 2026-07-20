@@ -486,6 +486,15 @@
   border-radius: 0.375rem;
 }
 
+button.phase-wizard-step-btn {
+  cursor: pointer;
+  padding: 0;
+}
+
+button.phase-wizard-step-btn:hover:not(.bg-primary) {
+  filter: brightness(0.97);
+}
+
 .competition-meta-box {
   border: 1px solid rgba(var(--bs-dark-rgb), 0.12);
   border-radius: 0.375rem;

@@ -2,71 +2,43 @@
     <div class="col-lg-9">
         <div class="dashboard-content-header mb-3">
             <h4 class="mb-1">{{ $competition->name }}</h4>
-       
-
-      
-       </div>
+        </div>
 
         @include('elements.client-validation')
 
         @php
-            $phaseLiveNow = $competition->phases->first(fn ($p) => $p->isOpenNow());
-            $phaseModelCurrent = $competition->currentPhase();
-            $wizardFocusPhase = $phaseLiveNow ?? $phaseModelCurrent ?? $competition->phases->firstWhere('status', 'upcoming');
-            if (! $wizardFocusPhase && $competition->phases->isNotEmpty()) {
-                $wizardFocusPhase = $competition->phases->last();
-            }
+            $accessiblePhaseKeys = $participantPhaseView['accessiblePhaseKeys'] ?? [];
+            $selectedPhaseKey = $participantPhaseView['selectedPhaseKey'] ?? null;
+            $selectedPhase = $participantPhaseView['selectedPhase'] ?? null;
             $hasUpcomingPhase = $competition->phases->contains(fn ($p) => $p->status === 'upcoming');
-
-            // Progression gates: a team can only move to later phases after clearing the previous milestone.
-            $registrationApproved = $registration && $registration->status === 'approved';
-            $ideaSubmitted = $idea && $idea->status !== 'draft';
-
-            $ideaDecisionStatus = $idea?->shortlist?->status;
-            if ($ideaDecisionStatus === null && $idea && $idea->status === 'shortlisted') {
-                $ideaDecisionStatus = 'shortlisted';
-            }
-            $ideaShortlisted = $ideaDecisionStatus === 'shortlisted';
-
-            $prototypeSubmitted = $idea?->prototypeSubmission && $idea->prototypeSubmission->status === 'submitted';
-            $prototypeShortlisted = $idea?->prototypeSubmission?->prototypeShortlist?->status === 'shortlisted';
-
-            $modificationSubmitted = $idea?->prototypeModification && $idea->prototypeModification->status === 'submitted';
         @endphp
 
         <div class="card border shadow-none mb-4 phase-wizard-card">
             <div class="card-body py-3 px-3 px-md-4">
                 <div class="d-flex flex-column flex-md-row flex-md-wrap align-items-md-center justify-content-md-between gap-3 mb-3">
                     <div>
-                      
-                        @if($phaseLiveNow)
+                        @if($selectedPhase)
                             <p class="mb-0 fs-5 fw-semibold d-flex align-items-center flex-wrap gap-2">
-                                <span>{{ $phaseLiveNow->name }}</span>
-                                <span class="badge bg-success">Active phase</span>
-                            </p>
-                            <p class="text-muted small mb-0 mt-1">This phase is open for actions now.</p>
-                        @elseif($phaseModelCurrent)
-                            <p class="mb-0 fs-5 fw-semibold d-flex align-items-center flex-wrap gap-2">
-                                <span>{{ $phaseModelCurrent->name }}</span>
-                                <span class="badge bg-primary rounded-pill">{{ ucfirst(str_replace('_', ' ', $phaseModelCurrent->status)) }}</span>
-                            </p>
-                            <p class="text-muted small mb-0 mt-1">Marked as the current phase (check dates below if actions are not yet available).</p>
-                        @elseif($wizardFocusPhase)
-                            <p class="mb-0 fs-5 fw-semibold d-flex align-items-center flex-wrap gap-2">
-                                <span>{{ $wizardFocusPhase->name }}</span>
-                                @if($hasUpcomingPhase)
-                                    <span class="badge bg-secondary rounded-pill">Next up</span>
+                                <span>{{ $selectedPhase->name }}</span>
+                                @if($selectedPhase->isOpenNow())
+                                    <span class="badge bg-success">Active phase</span>
                                 @else
-                                    <span class="badge bg-secondary rounded-pill">Timeline</span>
+                                    <span class="badge bg-primary rounded-pill">{{ ucfirst(str_replace('_', ' ', $selectedPhase->status)) }}</span>
                                 @endif
                             </p>
                             <p class="text-muted small mb-0 mt-1">
-                                @if($hasUpcomingPhase)
-                                    No phase is live yet — this is the next stage in the journey.
+                                @if($selectedPhase->isOpenNow())
+                                    This phase is open for actions now.
                                 @else
-                                    No phase is open for actions right now; use the steps below to see where things stand.
+                                    Reviewing this stage. Select another step below if you need to go back.
                                 @endif
                             </p>
+                        @elseif($hasUpcomingPhase)
+                            <p class="mb-0 fs-5 fw-semibold d-flex align-items-center flex-wrap gap-2">
+                                <span>Competition journey</span>
+                                <span class="badge bg-secondary rounded-pill">Next up</span>
+                            </p>
+                            <p class="text-muted small mb-0 mt-1">No phase is live for you yet — check the timeline below.</p>
                         @else
                             <p class="mb-0 text-muted">No phases configured for this competition.</p>
                         @endif
@@ -80,24 +52,39 @@
                                 @php
                                     $isLive = $phase->isOpenNow();
                                     $isClosed = $phase->status === 'closed' || ($phase->closes_at && now()->gt($phase->closes_at));
-                                    $isFocus = $wizardFocusPhase && (int) $wizardFocusPhase->id === (int) $phase->id;
+                                    $isSelected = $selectedPhaseKey && $selectedPhaseKey === $phase->phase_key;
+                                    $isAccessible = in_array($phase->phase_key, $accessiblePhaseKeys, true);
                                 @endphp
                                 <div class="phase-wizard-step flex-grow-1 text-center px-1" style="min-width: 4.5rem; max-width: 9rem;">
                                     <div class="position-relative mx-auto mb-2" style="width: 2.5rem; height: 2.5rem;">
-                                 
-                                        <div class="phase-wizard-marker d-flex align-items-center justify-content-center fw-bold border border-2 mx-auto
-                                            @if($isLive) bg-success text-white border-success
-                                            @elseif($isClosed) bg-light text-muted border-secondary
-                                            @elseif($isFocus) bg-primary text-white border-primary
-                                            @else bg-white text-muted border-secondary @endif">
-                                            @if($isClosed)
-                                                <i class="bi bi-check-lg"></i>
-                                            @else
-                                                {{ $phase->sequence }}
-                                            @endif
-                                        </div>
+                                        @if($isAccessible)
+                                            <button type="button"
+                                                class="phase-wizard-marker phase-wizard-step-btn d-flex align-items-center justify-content-center fw-bold border border-2 mx-auto
+                                                    @if($isSelected) bg-primary text-white border-primary
+                                                    @elseif($isLive) bg-success text-white border-success
+                                                    @elseif($isClosed) bg-light text-muted border-secondary
+                                                    @else bg-white text-muted border-secondary @endif"
+                                                data-phase-key="{{ $phase->phase_key }}"
+                                                title="View {{ $phase->name }}">
+                                                @if($isClosed && ! $isSelected)
+                                                    <i class="bi bi-check-lg"></i>
+                                                @else
+                                                    {{ $phase->sequence }}
+                                                @endif
+                                            </button>
+                                        @else
+                                            <div class="phase-wizard-marker d-flex align-items-center justify-content-center fw-bold border border-2 mx-auto
+                                                @if($isClosed) bg-light text-muted border-secondary opacity-50
+                                                @else bg-white text-muted border-secondary opacity-50 @endif">
+                                                @if($isClosed)
+                                                    <i class="bi bi-check-lg"></i>
+                                                @else
+                                                    {{ $phase->sequence }}
+                                                @endif
+                                            </div>
+                                        @endif
                                     </div>
-                                    <div class="small fw-semibold lh-sm text-truncate" title="{{ $phase->name }}">{{ $phase->name }}</div>
+                                    <div class="small fw-semibold lh-sm text-truncate @if($isSelected) text-primary @endif" title="{{ $phase->name }}">{{ $phase->name }}</div>
                                     <div class="text-muted" style="font-size: 0.65rem;">
                                         @if($phase->opens_at || $phase->closes_at)
                                             @if($phase->opens_at)
@@ -124,38 +111,118 @@
             </div>
         </div>
 
-@if($competition->isPhaseOpen('registration'))
-       @include('client.back.competitions.phases.registration')
-@endif
+        @if(in_array('registration', $accessiblePhaseKeys, true))
+            <div class="competition-phase-panel @if($selectedPhaseKey !== 'registration') d-none @endif" data-phase-key="registration" id="phase-panel-registration">
+                @include('client.back.competitions.phases.registration')
+            </div>
+        @endif
 
-@if($competition->isPhaseOpen('idea_submission') && $registrationApproved)
-    @include('client.back.competitions.phases.idea_submission')
-@endif
+        @if(in_array('idea_submission', $accessiblePhaseKeys, true))
+            <div class="competition-phase-panel @if($selectedPhaseKey !== 'idea_submission') d-none @endif" data-phase-key="idea_submission" id="phase-panel-idea-submission">
+                @include('client.back.competitions.phases.idea_submission')
+            </div>
+        @endif
 
-@if($competition->isPhaseOpen('idea_shortlisting') && $registrationApproved && $ideaSubmitted)
-    @include('client.back.competitions.phases.idea_shortlisting')
-@endif
+        @if(in_array('idea_shortlisting', $accessiblePhaseKeys, true))
+            <div class="competition-phase-panel @if($selectedPhaseKey !== 'idea_shortlisting') d-none @endif" data-phase-key="idea_shortlisting" id="phase-panel-idea-shortlisting">
+                @include('client.back.competitions.phases.idea_shortlisting')
+            </div>
+        @endif
 
-@if($competition->isPhaseOpen('prototype_development') && $registrationApproved && $ideaSubmitted && $ideaShortlisted)
-    @include('client.back.competitions.phases.prototype_development')
-@endif
+        @if(in_array('prototype_development', $accessiblePhaseKeys, true))
+            <div class="competition-phase-panel @if($selectedPhaseKey !== 'prototype_development') d-none @endif" data-phase-key="prototype_development" id="phase-panel-prototype-development">
+                @include('client.back.competitions.phases.prototype_development')
+            </div>
+        @endif
 
-@if($competition->isPhaseOpen('prototype_shortlisting') && $registrationApproved && $ideaSubmitted && $ideaShortlisted && $prototypeSubmitted)
-    @include('client.back.competitions.phases.prototype_shortlisting')
-@endif
+        @if(in_array('prototype_shortlisting', $accessiblePhaseKeys, true))
+            <div class="competition-phase-panel @if($selectedPhaseKey !== 'prototype_shortlisting') d-none @endif" data-phase-key="prototype_shortlisting" id="phase-panel-prototype-shortlisting">
+                @include('client.back.competitions.phases.prototype_shortlisting')
+            </div>
+        @endif
 
-@if($competition->isPhaseOpen('mentor_onboarding') && $registrationApproved && $ideaSubmitted && $ideaShortlisted && $prototypeSubmitted && $prototypeShortlisted)
-    @include('client.back.competitions.phases.mentor_onboarding')
-@endif
+        @if(in_array('mentor_onboarding', $accessiblePhaseKeys, true))
+            <div class="competition-phase-panel @if($selectedPhaseKey !== 'mentor_onboarding') d-none @endif" data-phase-key="mentor_onboarding" id="phase-panel-mentor-onboarding">
+                @include('client.back.competitions.phases.mentor_onboarding')
+            </div>
+        @endif
 
-@if($competition->isPhaseOpen('prototype_modification') && $registrationApproved && $ideaSubmitted && $ideaShortlisted && $prototypeSubmitted && $prototypeShortlisted)
-    @include('client.back.competitions.phases.prototype_modification')
-@endif
+        @if(in_array('prototype_modification', $accessiblePhaseKeys, true))
+            <div class="competition-phase-panel @if($selectedPhaseKey !== 'prototype_modification') d-none @endif" data-phase-key="prototype_modification" id="phase-panel-prototype-modification">
+                @include('client.back.competitions.phases.prototype_modification')
+            </div>
+        @endif
 
-@if($competition->isPhaseOpen('pitch_winner') && $registrationApproved && $ideaSubmitted && $ideaShortlisted && $prototypeSubmitted && $prototypeShortlisted && $modificationSubmitted)
-    @include('client.back.competitions.phases.pitch_winner')
-@endif
-
+        @if(in_array('pitch_winner', $accessiblePhaseKeys, true))
+            <div class="competition-phase-panel @if($selectedPhaseKey !== 'pitch_winner') d-none @endif" data-phase-key="pitch_winner" id="phase-panel-pitch-winner">
+                @include('client.back.competitions.phases.pitch_winner')
+            </div>
+        @endif
     </div>
-</x-app-layout>
 
+    @push('scripts')
+        <script>
+            (function () {
+                var panels = document.querySelectorAll('.competition-phase-panel');
+                var stepButtons = document.querySelectorAll('.phase-wizard-step-btn');
+                if (!panels.length || !stepButtons.length) {
+                    return;
+                }
+
+                var legacyHashMap = {
+                    'idea-submission': 'idea_submission',
+                    'prototype-development': 'prototype_development',
+                    'prototype-modification': 'prototype_modification',
+                    'idea-shortlisting': 'idea_shortlisting',
+                    'prototype-shortlisting': 'prototype_shortlisting',
+                    'mentor-onboarding': 'mentor_onboarding',
+                    'pitch-winner': 'pitch_winner',
+                    'registration': 'registration'
+                };
+
+                function resolvePhaseFromHash() {
+                    var hash = (window.location.hash || '').replace(/^#/, '');
+                    if (!hash) {
+                        return null;
+                    }
+                    if (hash.indexOf('phase-') === 0) {
+                        return hash.slice(6).replace(/-/g, '_');
+                    }
+                    return legacyHashMap[hash] || hash.replace(/-/g, '_');
+                }
+
+                function showPhase(phaseKey) {
+                    panels.forEach(function (panel) {
+                        panel.classList.toggle('d-none', panel.dataset.phaseKey !== phaseKey);
+                    });
+
+                    stepButtons.forEach(function (button) {
+                        var isSelected = button.dataset.phaseKey === phaseKey;
+                        button.classList.toggle('bg-primary', isSelected);
+                        button.classList.toggle('text-white', isSelected);
+                        button.classList.toggle('border-primary', isSelected);
+                        if (isSelected) {
+                            button.classList.remove('bg-success', 'border-success');
+                        }
+                    });
+                }
+
+                stepButtons.forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        var phaseKey = button.dataset.phaseKey;
+                        showPhase(phaseKey);
+                        var hash = 'phase-' + phaseKey.replace(/_/g, '-');
+                        if (window.location.hash !== '#' + hash) {
+                            history.replaceState(null, '', '#' + hash);
+                        }
+                    });
+                });
+
+                var hashPhase = resolvePhaseFromHash();
+                if (hashPhase && document.querySelector('.competition-phase-panel[data-phase-key="' + hashPhase + '"]')) {
+                    showPhase(hashPhase);
+                }
+            })();
+        </script>
+    @endpush
+</x-app-layout>

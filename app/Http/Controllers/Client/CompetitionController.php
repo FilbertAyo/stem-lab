@@ -16,6 +16,7 @@ use App\Models\SchoolClass;
 use App\Models\TeacherClub;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
+use App\Support\CompetitionParticipantPhaseNavigator;
 use App\Support\SchoolLocation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -138,6 +139,32 @@ class CompetitionController extends Controller
 
         $regions = Region::query()->orderBy('name')->get(['id', 'name']);
 
+        $registrationApproved = $registration && $registration->status === 'approved';
+        $ideaSubmitted = $idea && $idea->status !== 'draft';
+        $ideaDecisionStatus = $idea?->shortlist?->status;
+        if ($ideaDecisionStatus === null && $idea && $idea->status === 'shortlisted') {
+            $ideaDecisionStatus = 'shortlisted';
+        }
+        $ideaShortlisted = $ideaDecisionStatus === 'shortlisted';
+        $prototypeSubmitted = $idea?->prototypeSubmission && $idea->prototypeSubmission->status === 'submitted';
+        $prototypeShortlisted = $idea?->prototypeSubmission?->prototypeShortlist?->status === 'shortlisted';
+        $modificationSubmitted = $idea?->prototypeModification && $idea->prototypeModification->status === 'submitted';
+
+        $requestedPhase = CompetitionParticipantPhaseNavigator::normalizeRequestedPhaseKey(
+            request()->query('phase') ?? request()->query('view_phase')
+        );
+
+        $participantPhaseView = CompetitionParticipantPhaseNavigator::resolve(
+            $competition,
+            $registrationApproved,
+            $ideaSubmitted,
+            $ideaShortlisted,
+            $prototypeSubmitted,
+            $prototypeShortlisted,
+            $modificationSubmitted,
+            $requestedPhase,
+        );
+
         return view('client.back.competitions.show', compact(
             'competition',
             'teacherClub',
@@ -147,6 +174,13 @@ class CompetitionController extends Controller
             'regions',
             'prototypeEvidenceFormUrl',
             'prototypeModificationEvidenceFormUrl',
+            'participantPhaseView',
+            'registrationApproved',
+            'ideaSubmitted',
+            'ideaShortlisted',
+            'prototypeSubmitted',
+            'prototypeShortlisted',
+            'modificationSubmitted',
         ));
     }
 
