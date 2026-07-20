@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Jobs\DispatchCompetitionShortlistNotifications;
 use App\Mail\CompetitionEligibilityReminderMail;
+use App\Mail\CompetitionRegistrationApprovedMail;
 use App\Models\Club;
 use App\Models\Competition;
 use App\Models\CompetitionClassRequirement;
@@ -935,7 +936,13 @@ class CompetitionController extends Controller
             ['registration_ulid' => $registration->ulid]
         );
 
-        return back()->with('status', 'Registration approved successfully.');
+        $emailSent = $this->sendRegistrationApprovedEmail($competition, $registration);
+
+        $status = $emailSent
+            ? 'Registration approved successfully. Congratulations email sent to the teacher.'
+            : 'Registration approved successfully. No teacher email was available to notify.';
+
+        return back()->with('status', $status);
     }
 
     public function overrideRegistrationEligibility(
@@ -973,6 +980,8 @@ class CompetitionController extends Controller
                 'reason' => $validated['override_reason'],
             ]
         );
+
+        $this->sendRegistrationApprovedEmail($competition, $registration);
 
         return back()->with('status', 'Participant passed the registration phase by admin decision.');
     }
@@ -1351,6 +1360,51 @@ class CompetitionController extends Controller
                     ->delete();
             }
         });
+    }
+
+    private function sendRegistrationApprovedEmail(
+        Competition $competition,
+        CompetitionRegistration $registration
+    ): bool {
+        $teacherEmail = $registration->resolvedTeacherEmail();
+        if (! filled($teacherEmail)) {
+            return false;
+        }
+
+        $competitionUrl = ClientUrl::route('client.competitions.show', $competition);
+
+        try {
+            Mail::to($teacherEmail)->send(
+                new CompetitionRegistrationApprovedMail($competition, $registration, $competitionUrl)
+            );
+        } catch (\Throwable $e) {
+            report($e);
+
+            $this->logStageEvent(
+                $competition,
+                'registration_approved_email_failed',
+                "Failed to send registration approval email to {$registration->school_name} ({$teacherEmail}).",
+                [
+                    'registration_ulid' => $registration->ulid,
+                    'teacher_email' => $teacherEmail,
+                    'error' => $e->getMessage(),
+                ]
+            );
+
+            return false;
+        }
+
+        $this->logStageEvent(
+            $competition,
+            'registration_approved_email_sent',
+            "Registration approval email sent to {$registration->school_name} ({$teacherEmail}).",
+            [
+                'registration_ulid' => $registration->ulid,
+                'teacher_email' => $teacherEmail,
+            ]
+        );
+
+        return true;
     }
 
     private function logStageEvent(
