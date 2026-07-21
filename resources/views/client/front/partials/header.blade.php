@@ -68,7 +68,7 @@
                   </ul>
                   <div class="hstack">
                     <a href="{{ route('login') }}"
-                      class="btn btn-dark text-white fs-6 bg-dark px-4 py-2 w-100 hstack justify-content-center">Get Started</a>
+                      class="btn btn-dark text-white fs-6 bg-dark px-4 py-2 w-100 hstack justify-content-center">Login</a>
                   </div>
                 </div>
                 <div>
