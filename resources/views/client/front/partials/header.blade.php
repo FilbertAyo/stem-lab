@@ -25,7 +25,7 @@
             </li>
           </ul>
           <div class="d-flex align-items-center">
-            <a href="{{ route('login') }}" class="btn btn-primary border-0 text-white fs-2 px-4 py-2">Get Started</a>
+            <a href="{{ route('login') }}" class="btn btn-primary border-0 text-white fs-2 px-4 py-2">Login</a>
           </div>
         </nav>
 
