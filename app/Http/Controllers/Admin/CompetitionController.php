@@ -1077,6 +1077,7 @@ class CompetitionController extends Controller
                 'registration.school',
                 'registration.teacher',
                 'communityRegion',
+                'communityDistrict',
                 'scores',
                 'shortlist',
             ])
@@ -1100,6 +1101,7 @@ class CompetitionController extends Controller
             'registration.teacherClub',
             'registration.representativeStudents.student.schoolClass',
             'communityRegion',
+            'communityDistrict',
             'scores.judge',
             'shortlist',
             'reopenedBy',

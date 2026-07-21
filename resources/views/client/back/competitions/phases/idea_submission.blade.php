@@ -10,10 +10,17 @@
         'Mathematics',
         'Integrated STEM',
         'Environmental Science',
+        'Robotics',
+        'Computer Science / ICT',
+        'Agriculture & Food Science',
+        'Health & Biotechnology',
     ];
     $selectedStemCategory = (string) old('stem_category', $idea?->stem_category);
     $isCustomStemCategory = $selectedStemCategory !== '' && ! in_array($selectedStemCategory, $stemCategoryOptions, true);
     $selectedStemCategoryOther = (string) old('stem_category_other', $isCustomStemCategory ? $selectedStemCategory : '');
+    $selectedCommunityRegionId = (string) old('community_region_id', $idea?->community_region_id);
+    $selectedCommunityDistrictId = (string) old('community_district_id', $idea?->community_district_id);
+    $districtsByRegion = $districtsByRegion ?? [];
 @endphp
 
 <div id="idea-submission" class="row">
@@ -73,7 +80,15 @@
 
                         <div class="mb-3">
                             <label class="form-label">Problem title <span class="text-danger">*</span></label>
-                            <input type="text" name="problem_title" class="form-control @error('problem_title') is-invalid @enderror" value="{{ old('problem_title', $idea?->problem_title) }}" required maxlength="255">
+                            <input
+                                type="text"
+                                name="problem_title"
+                                class="form-control @error('problem_title') is-invalid @enderror"
+                                value="{{ old('problem_title', $idea?->problem_title) }}"
+                                placeholder="e.g. Reducing plastic waste in our school community"
+                                required
+                                maxlength="255"
+                            >
                             @error('problem_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                         <div class="mb-3">
@@ -114,18 +129,37 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Community region</label>
-                                <select name="community_region_id" class="form-select @error('community_region_id') is-invalid @enderror">
+                                <select
+                                    id="community_region_id"
+                                    name="community_region_id"
+                                    class="form-select @error('community_region_id') is-invalid @enderror"
+                                >
                                     <option value="">Select region</option>
                                     @foreach($regions as $region)
-                                        <option value="{{ $region->id }}" @selected((string) old('community_region_id', $idea?->community_region_id) === (string) $region->id)>{{ $region->name }}</option>
+                                        <option value="{{ $region->id }}" @selected($selectedCommunityRegionId === (string) $region->id)>{{ $region->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('community_region_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Community / location</label>
-                                <input type="text" name="community_location" class="form-control @error('community_location') is-invalid @enderror" value="{{ old('community_location', $idea?->community_location) }}" maxlength="255">
-                                @error('community_location')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                <label class="form-label">Community district</label>
+                                <select
+                                    id="community_district_id"
+                                    name="community_district_id"
+                                    class="form-select @error('community_district_id') is-invalid @enderror"
+                                    data-old-district-id="{{ $selectedCommunityDistrictId }}"
+                                    @disabled($selectedCommunityRegionId === '')
+                                >
+                                    <option value="">{{ $selectedCommunityRegionId !== '' ? 'Select district' : 'Select region first' }}</option>
+                                    @if($selectedCommunityRegionId !== '' && isset($districtsByRegion[$selectedCommunityRegionId]))
+                                        @foreach($districtsByRegion[$selectedCommunityRegionId] as $districtOption)
+                                            <option value="{{ $districtOption['id'] }}" @selected($selectedCommunityDistrictId === (string) $districtOption['id'])>
+                                                {{ $districtOption['name'] }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                @error('community_district_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
                       
@@ -214,6 +248,9 @@
                 const stemCategorySelect = form.querySelector('select[name="stem_category"]');
                 const stemCategoryOtherWrap = document.getElementById('stemCategoryOtherWrap');
                 const stemCategoryOtherInput = document.getElementById('stemCategoryOtherInput');
+                const regionSelect = document.getElementById('community_region_id');
+                const districtSelect = document.getElementById('community_district_id');
+                const districtsByRegion = @json($districtsByRegion);
 
                 function toggleStemCategoryOther() {
                     if (!stemCategorySelect || !stemCategoryOtherWrap || !stemCategoryOtherInput) return;
@@ -222,6 +259,34 @@
                     stemCategoryOtherInput.required = isOther;
                     if (!isOther) {
                         stemCategoryOtherInput.value = '';
+                    }
+                }
+
+                function populateDistricts(regionId, selectedDistrictId) {
+                    if (!districtSelect) return;
+
+                    const districts = districtsByRegion[regionId] || [];
+                    districtSelect.innerHTML = '';
+
+                    const placeholder = document.createElement('option');
+                    placeholder.value = '';
+                    placeholder.textContent = regionId ? 'Select district' : 'Select region first';
+                    districtSelect.appendChild(placeholder);
+
+                    districts.forEach(function (district) {
+                        const option = document.createElement('option');
+                        option.value = district.id;
+                        option.textContent = district.name;
+                        if (selectedDistrictId && String(selectedDistrictId) === String(district.id)) {
+                            option.selected = true;
+                        }
+                        districtSelect.appendChild(option);
+                    });
+
+                    if (regionId && districts.length) {
+                        districtSelect.removeAttribute('disabled');
+                    } else {
+                        districtSelect.setAttribute('disabled', 'disabled');
                     }
                 }
 
@@ -247,6 +312,18 @@
 
                 if (stemCategorySelect) {
                     stemCategorySelect.addEventListener('change', toggleStemCategoryOther);
+                }
+
+                if (regionSelect && districtSelect) {
+                    regionSelect.addEventListener('change', function () {
+                        populateDistricts(this.value, null);
+                    });
+
+                    const initialRegion = regionSelect.value;
+                    const initialDistrictId = districtSelect.getAttribute('data-old-district-id') || '';
+                    if (initialRegion) {
+                        populateDistricts(initialRegion, initialDistrictId);
+                    }
                 }
 
                 toggleStemCategoryOther();

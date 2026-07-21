@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CompetitionIdeaSubmittedMail;
 use App\Models\Competition;
 use App\Models\CompetitionIdea;
 use App\Models\CompetitionRegistration;
@@ -16,6 +17,7 @@ use App\Models\SchoolClass;
 use App\Models\TeacherClub;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
+use App\Support\ClientUrl;
 use App\Support\CompetitionParticipantPhaseNavigator;
 use App\Support\SchoolLocation;
 use Illuminate\Http\RedirectResponse;
@@ -23,6 +25,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -104,6 +107,7 @@ class CompetitionController extends Controller
                 'scores',
                 'shortlist',
                 'communityRegion',
+                'communityDistrict',
                 'prototypeSubmission.prototypeShortlist.mentors',
                 'prototypeSubmission.modification.modificationShortlist',
                 'prototypeModification.modificationShortlist',
@@ -138,6 +142,7 @@ class CompetitionController extends Controller
         }
 
         $regions = Region::query()->orderBy('name')->get(['id', 'name']);
+        $districtsByRegion = District::groupedByRegionId();
 
         $registrationApproved = $registration && $registration->status === 'approved';
         $ideaSubmitted = $idea && $idea->status !== 'draft';
@@ -172,6 +177,7 @@ class CompetitionController extends Controller
             'idea',
             'poolStudents',
             'regions',
+            'districtsByRegion',
             'prototypeEvidenceFormUrl',
             'prototypeModificationEvidenceFormUrl',
             'participantPhaseView',
@@ -677,7 +683,31 @@ class CompetitionController extends Controller
             'stem_category' => ['required', 'string', 'max:120'],
             'stem_category_other' => ['nullable', 'string', 'max:120'],
             'community_region_id' => ['nullable', 'exists:regions,id'],
-            'community_location' => ['nullable', 'string', 'max:255'],
+            'community_district_id' => [
+                'nullable',
+                'exists:districts,id',
+                function (string $attribute, mixed $value, \Closure $fail) use ($request): void {
+                    if ($value === null || $value === '') {
+                        return;
+                    }
+
+                    $regionId = $request->input('community_region_id');
+                    if (! $regionId) {
+                        $fail('Select a community region before choosing a district.');
+
+                        return;
+                    }
+
+                    $belongsToRegion = District::query()
+                        ->whereKey($value)
+                        ->where('region_id', $regionId)
+                        ->exists();
+
+                    if (! $belongsToRegion) {
+                        $fail('The selected district does not belong to the chosen region.');
+                    }
+                },
+            ],
             'supporting_notes' => ['nullable', 'string'],
             'submit_final' => ['nullable', 'boolean'],
         ];
@@ -706,9 +736,17 @@ class CompetitionController extends Controller
             }
         }
 
+        $communityDistrictId = isset($validated['community_district_id'])
+            ? (int) $validated['community_district_id']
+            : null;
+        $communityLocation = $communityDistrictId
+            ? District::query()->whereKey($communityDistrictId)->value('name')
+            : null;
+
         $idea = CompetitionIdea::firstOrNew([
             'competition_registration_id' => $registration->id,
         ]);
+        $wasAlreadySubmitted = $idea->exists && $idea->status === 'submitted';
 
         $idea->fill([
             'competition_id' => $competition->id,
@@ -717,7 +755,8 @@ class CompetitionController extends Controller
             'proposed_solution' => $validated['proposed_solution'],
             'stem_category' => $stemCategory,
             'community_region_id' => $validated['community_region_id'] ?? null,
-            'community_location' => $validated['community_location'] ?? null,
+            'community_district_id' => $communityDistrictId,
+            'community_location' => $communityLocation,
             'supporting_notes' => $validated['supporting_notes'] ?? null,
         ]);
 
@@ -755,7 +794,7 @@ class CompetitionController extends Controller
 
             DB::transaction(function () use ($idea, $registration, $representatives, $request, $validated): void {
                 $idea->status = 'submitted';
-                $idea->submitted_at = now();
+                $idea->submitted_at = $idea->submitted_at ?? now();
                 $idea->save();
 
                 $this->replaceIdeaRepresentatives(
@@ -766,10 +805,14 @@ class CompetitionController extends Controller
                 );
             });
 
+            if (! $wasAlreadySubmitted) {
+                $this->sendIdeaSubmittedEmail($competition, $registration, $idea);
+            }
+
             return redirect()
                 ->route('client.competitions.show', $competition)
                 ->withFragment('idea-submission')
-                ->with('status', 'Idea submitted successfully. Your school now waits for regional shortlisting.');
+                ->with('status', 'Idea submitted successfully. Check your email for confirmation — your school now waits for regional shortlisting approval.');
         }
 
         if (! $idea->exists) {
@@ -1130,6 +1173,29 @@ class CompetitionController extends Controller
                 'role' => $request->input("student_roles.{$student->id}"),
                 'is_representative' => true,
             ]);
+        }
+    }
+
+    private function sendIdeaSubmittedEmail(
+        Competition $competition,
+        CompetitionRegistration $registration,
+        CompetitionIdea $idea,
+    ): void {
+        $teacherEmail = $registration->resolvedTeacherEmail();
+        if (! filled($teacherEmail)) {
+            return;
+        }
+
+        $competitionUrl = ClientUrl::route('client.competitions.show', [
+            'competition' => $competition,
+        ]).'?phase=idea_submission#idea-submission';
+
+        try {
+            Mail::to($teacherEmail)->send(
+                new CompetitionIdeaSubmittedMail($competition, $registration, $idea, $competitionUrl)
+            );
+        } catch (\Throwable $e) {
+            report($e);
         }
     }
 

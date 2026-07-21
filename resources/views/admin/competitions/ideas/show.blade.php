@@ -82,8 +82,8 @@
                                 <dd class="col-sm-8 mb-2">{{ $idea->stem_category ?: '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Community region</dt>
                                 <dd class="col-sm-8 mb-2">{{ $idea->communityRegion?->name ?? '—' }}</dd>
-                                <dt class="col-sm-4 text-muted fw-normal">Community / location</dt>
-                                <dd class="col-sm-8 mb-2">{{ $idea->community_location ?: '—' }}</dd>
+                                <dt class="col-sm-4 text-muted fw-normal">Community district</dt>
+                                <dd class="col-sm-8 mb-2">{{ $idea->communityDistrict?->name ?? ($idea->community_location ?: '—') }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Submitted</dt>
                                 <dd class="col-sm-8 mb-2">{{ $idea->submitted_at?->timezone(config('app.timezone'))->format('j M Y, H:i') ?? '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Shortlist</dt>

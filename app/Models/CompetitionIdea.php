@@ -23,6 +23,7 @@ class CompetitionIdea extends Model
         'proposed_solution',
         'stem_category',
         'community_region_id',
+        'community_district_id',
         'community_location',
         'supporting_notes',
         'attachments_meta',
@@ -50,6 +51,11 @@ class CompetitionIdea extends Model
     public function communityRegion(): BelongsTo
     {
         return $this->belongsTo(Region::class, 'community_region_id');
+    }
+
+    public function communityDistrict(): BelongsTo
+    {
+        return $this->belongsTo(District::class, 'community_district_id');
     }
 
     public function reopenedBy(): BelongsTo
