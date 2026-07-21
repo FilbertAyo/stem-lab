@@ -85,7 +85,6 @@
                                 name="problem_title"
                                 class="form-control @error('problem_title') is-invalid @enderror"
                                 value="{{ old('problem_title', $idea?->problem_title) }}"
-                                placeholder="e.g. Reducing plastic waste in our school community"
                                 required
                                 maxlength="255"
                             >
