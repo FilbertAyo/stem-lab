@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\HasPublicUlid;
 use App\Services\SubscriptionSelectionService;
 use App\Services\TeacherClubCodeService;
+use App\Services\TeacherClubSharedContextService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -121,10 +122,23 @@ class TeacherClub extends Model
      */
     public function approve(): bool
     {
-        $approved = $this->update(['status' => 'approved']);
+        $sharedContext = app(TeacherClubSharedContextService::class);
+        $sharedDay = $this->school_id !== null
+            ? $sharedContext->existingClubDayForSchoolClub((int) $this->club_id, (int) $this->school_id)
+            : null;
+        $clubDay = $this->club_day ?? $sharedDay;
+
+        $approved = $this->update([
+            'status' => 'approved',
+            'club_day' => $clubDay,
+        ]);
 
         if ($approved) {
             app(SubscriptionSelectionService::class)->applyPublicSchoolAccess($this->user);
+
+            if (filled($clubDay)) {
+                $sharedContext->syncClubDay($this->fresh(), $clubDay);
+            }
         }
 
         return $approved;

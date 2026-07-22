@@ -15,6 +15,7 @@ class TeacherClubJoinService
     public function __construct(
         private readonly CompetitionParticipantRegistrationService $participantRegistrationService,
         private readonly SubscriptionSelectionService $subscriptionSelectionService,
+        private readonly TeacherClubSharedContextService $sharedContext,
     ) {}
 
     /**
@@ -106,6 +107,10 @@ class TeacherClubJoinService
         } else {
             $teacherClubData['status'] = 'pending';
             $teacherClubData['is_leader'] = false;
+            $teacherClubData['club_day'] = $this->sharedContext->existingClubDayForSchoolClub(
+                $club->id,
+                (int) $schoolId,
+            );
             $message = "Your request to join {$club->name} has been submitted and is pending approval from your school's leader.";
         }
 
@@ -118,6 +123,11 @@ class TeacherClubJoinService
 
         if ($teacherClub->status === 'approved') {
             $this->subscriptionSelectionService->applyPublicSchoolAccess($user);
+        }
+
+        // Keep shared club day in sync when an approved co-teacher is created (admin-style joins).
+        if ($teacherClub->status === 'approved' && filled($teacherClub->club_day)) {
+            $this->sharedContext->syncClubDay($teacherClub, $teacherClub->club_day);
         }
 
         $this->participantRegistrationService->ensureForClubMembership($teacherClub, $competition);

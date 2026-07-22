@@ -13,7 +13,9 @@ use App\Models\User;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\StudentCsvBulkImportService;
+use App\Services\TeacherClubSharedContextService;
 use App\Support\SchoolLocation;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -100,15 +102,27 @@ class SchoolController extends Controller
         // Get all students for this school (using database query)
         $students = \App\Models\Student::whereHas('teacherClub', function ($query) use ($school) {
             $query->where('school_id', $school->id);
-        })->with('schoolClass')->get()->unique('id')->values();
+        })->with(['schoolClass', 'teacherClub.club'])->get()->unique('id')->values();
 
+        // One option per club: students always attach to the school club leader (shared roster).
         $bulkUploadTeacherClubs = $school->teacherClubs()
             ->approved()
+            ->where('is_leader', true)
             ->with(['user:id,name', 'club:id,name'])
             ->orderBy('club_id')
-            ->get(['id', 'user_id', 'club_id', 'school_id']);
+            ->get(['id', 'user_id', 'club_id', 'school_id', 'is_leader']);
 
         $clubs = Club::query()->active()->ordered()->get(['id', 'name']);
+
+        $sharedClubDaysByClubId = $school->teacherClubs
+            ->where('status', 'approved')
+            ->groupBy('club_id')
+            ->map(function ($memberships) {
+                $leader = $memberships->firstWhere('is_leader', true) ?? $memberships->sortBy('id')->first();
+
+                return $leader?->club_day
+                    ?? $memberships->first(fn ($m) => filled($m->club_day))?->club_day;
+            });
 
         $unassignedTeachers = User::query()
             ->where('role', 'teacher')
@@ -123,6 +137,7 @@ class SchoolController extends Controller
             'bulkUploadTeacherClubs',
             'clubs',
             'unassignedTeachers',
+            'sharedClubDaysByClubId',
         ));
     }
 
@@ -264,8 +279,12 @@ class SchoolController extends Controller
             ->with('status', "{$teacherName} has been removed from {$clubName} successfully.");
     }
 
-    public function updateClubDay(Request $request, School $school, TeacherClub $teacherClub): RedirectResponse
-    {
+    public function updateClubDay(
+        Request $request,
+        School $school,
+        TeacherClub $teacherClub,
+        TeacherClubSharedContextService $sharedContext,
+    ): RedirectResponse {
         $belongsToSchool = (int) $teacherClub->school_id === (int) $school->id;
 
         if (! $belongsToSchool) {
@@ -276,16 +295,13 @@ class SchoolController extends Controller
             'club_day' => ['nullable', Rule::in(['monday', 'tuesday', 'wednesday', 'thursday', 'friday'])],
         ]);
 
-        $teacherClub->update([
-            'club_day' => $validated['club_day'] ?? null,
-        ]);
+        $sharedContext->syncClubDay($teacherClub, $validated['club_day'] ?? null);
 
-        $teacherName = $teacherClub->user?->name ?? 'Teacher';
         $clubName = $teacherClub->club?->name ?? 'club';
 
         return redirect()
             ->route('admin.schools.show', $school)
-            ->with('status', "Dedicated club day updated for {$teacherName} ({$clubName}).");
+            ->with('status', "Dedicated club day updated for all teachers in {$clubName} at this school.");
     }
 
     public function removeStudent(
@@ -357,6 +373,7 @@ class SchoolController extends Controller
         Request $request,
         School $school,
         CompetitionParticipantRegistrationService $participantRegistrationService,
+        TeacherClubSharedContextService $sharedContext,
     ): RedirectResponse {
         $validated = $request->validate([
             'user_id' => ['required', 'integer', 'exists:users,id'],
@@ -394,14 +411,21 @@ class SchoolController extends Controller
             ->approved()
             ->exists();
 
+        $clubDay = $validated['club_day']
+            ?? $sharedContext->existingClubDayForSchoolClub($club->id, $school->id);
+
         $teacherClub = TeacherClub::create([
             'user_id' => $user->id,
             'club_id' => $club->id,
             'school_id' => $school->id,
-            'club_day' => $validated['club_day'] ?? null,
+            'club_day' => $clubDay,
             'status' => 'approved',
             'is_leader' => ! $hasApprovedTeacherFromSchool,
         ]);
+
+        if ($hasApprovedTeacherFromSchool && filled($clubDay)) {
+            $sharedContext->syncClubDay($teacherClub, $clubDay);
+        }
 
         $participantRegistrationService->ensureForClubMembership($teacherClub);
 
@@ -414,6 +438,7 @@ class SchoolController extends Controller
         Request $request,
         School $school,
         StudentCsvBulkImportService $csvImport,
+        TeacherClubSharedContextService $sharedContext,
     ): RedirectResponse {
         $validated = $request->validate([
             'teacher_club_id' => ['required', 'integer'],
@@ -432,7 +457,8 @@ class SchoolController extends Controller
                 ->withInput();
         }
 
-        $result = $csvImport->import($teacherClub, $request->file('csv_file'));
+        $rosterOwner = $sharedContext->resolveRosterOwner($teacherClub);
+        $result = $csvImport->import($rosterOwner, $request->file('csv_file'));
 
         if ($result['errors'] !== []) {
             return redirect()
@@ -441,9 +467,15 @@ class SchoolController extends Controller
                 ->withInput();
         }
 
+        $clubName = $rosterOwner->club?->name ?? 'club';
+        $leaderName = $rosterOwner->user?->name ?? 'the club leader';
+
         return redirect()
             ->route('admin.schools.show', $school)
-            ->with('status', "Successfully imported {$result['success_count']} student(s).");
+            ->with(
+                'status',
+                "Successfully imported {$result['success_count']} student(s) to {$clubName} (shared roster under {$leaderName})."
+            );
     }
 
     private function schoolsIndexQuery(Request $request): Builder

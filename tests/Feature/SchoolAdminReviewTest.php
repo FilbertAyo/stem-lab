@@ -213,6 +213,152 @@ test('admin cannot assign teacher who already belongs to a school', function () 
     expect($teacher->fresh()->teacherClubs()->count())->toBe(1);
 });
 
+test('updating club day syncs to all teachers in the same school club', function () {
+    $school = School::query()->create([
+        'name' => 'Shared Day School '.Str::random(6),
+        'is_active' => true,
+        'admin_reviewed_at' => now(),
+    ]);
+
+    $club = Club::query()->create([
+        'name' => 'Club '.Str::random(6),
+        'is_active' => true,
+    ]);
+
+    $leader = User::factory()->create(['role' => 'teacher']);
+    $coTeacher = User::factory()->create(['role' => 'teacher']);
+
+    $leaderMembership = $leader->teacherClubs()->create([
+        'club_id' => $club->id,
+        'school_id' => $school->id,
+        'status' => 'approved',
+        'is_leader' => true,
+        'club_day' => 'monday',
+    ]);
+
+    $coMembership = $coTeacher->teacherClubs()->create([
+        'club_id' => $club->id,
+        'school_id' => $school->id,
+        'status' => 'approved',
+        'is_leader' => false,
+        'club_day' => 'monday',
+    ]);
+
+    $admin = User::factory()->create(['role' => 'admin']);
+
+    $response = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+        ->put(adminSchoolsUrl('/'.$school->ulid.'/teacher-clubs/'.$coMembership->ulid.'/club-day'), [
+            'club_day' => 'wednesday',
+        ]);
+
+    $response->assertRedirect(adminSchoolsUrl('/'.$school->ulid));
+    $response->assertSessionHas('status');
+
+    expect($leaderMembership->fresh()->club_day)->toBe('wednesday')
+        ->and($coMembership->fresh()->club_day)->toBe('wednesday');
+});
+
+test('adding co-teacher inherits existing shared club day', function () {
+    $school = School::query()->create([
+        'name' => 'Inherit Day School '.Str::random(6),
+        'is_active' => true,
+        'admin_reviewed_at' => now(),
+    ]);
+
+    $club = Club::query()->create([
+        'name' => 'Club '.Str::random(6),
+        'is_active' => true,
+    ]);
+
+    $leader = User::factory()->create(['role' => 'teacher']);
+    $leader->teacherClubs()->create([
+        'club_id' => $club->id,
+        'school_id' => $school->id,
+        'status' => 'approved',
+        'is_leader' => true,
+        'club_day' => 'friday',
+    ]);
+
+    $newTeacher = User::factory()->create(['role' => 'teacher']);
+    $admin = User::factory()->create(['role' => 'admin']);
+
+    $response = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+        ->post(adminSchoolsUrl('/'.$school->ulid.'/teachers'), [
+            'user_id' => $newTeacher->id,
+            'club_id' => $club->id,
+        ]);
+
+    $response->assertRedirect(adminSchoolsUrl('/'.$school->ulid));
+
+    $newMembership = $newTeacher->fresh()->teacherClubs()->first();
+
+    expect($newMembership)->not->toBeNull()
+        ->and($newMembership->is_leader)->toBeFalse()
+        ->and($newMembership->club_day)->toBe('friday');
+});
+
+test('admin bulk upload attaches students to club leader for shared roster', function () {
+    $school = School::query()->create([
+        'name' => 'Roster School '.Str::random(6),
+        'is_active' => true,
+        'admin_reviewed_at' => now(),
+    ]);
+
+    $club = Club::query()->create([
+        'name' => 'Club '.Str::random(6),
+        'is_active' => true,
+    ]);
+
+    $schoolClass = \App\Models\SchoolClass::query()->create([
+        'name' => 'Form 1 '.Str::random(4),
+        'is_active' => true,
+    ]);
+
+    $leader = User::factory()->create(['role' => 'teacher']);
+    $coTeacher = User::factory()->create(['role' => 'teacher']);
+
+    $leaderMembership = $leader->teacherClubs()->create([
+        'club_id' => $club->id,
+        'school_id' => $school->id,
+        'status' => 'approved',
+        'is_leader' => true,
+        'club_day' => 'monday',
+    ]);
+
+    $coMembership = $coTeacher->teacherClubs()->create([
+        'club_id' => $club->id,
+        'school_id' => $school->id,
+        'status' => 'approved',
+        'is_leader' => false,
+        'club_day' => 'monday',
+    ]);
+
+    $sharedContext = app(\App\Services\TeacherClubSharedContextService::class);
+    $rosterOwner = $sharedContext->resolveRosterOwner($coMembership);
+
+    expect($rosterOwner->id)->toBe($leaderMembership->id);
+
+    $csv = "name,date_of_birth,gender,class_name\nShared Student,14-07-2011,female,{$schoolClass->name}\n";
+    $path = sys_get_temp_dir().'/students_'.uniqid().'.csv';
+    file_put_contents($path, $csv);
+    $file = new \Illuminate\Http\UploadedFile($path, 'students.csv', 'text/csv', null, true);
+
+    $result = app(\App\Services\StudentCsvBulkImportService::class)->import($rosterOwner, $file);
+
+    @unlink($path);
+
+    expect($result['errors'])->toBe([])
+        ->and($result['success_count'])->toBe(1);
+
+    $student = \App\Models\Student::query()->where('name', 'Shared Student')->first();
+
+    expect($student)->not->toBeNull()
+        ->and($student->teacher_club_id)->toBe($leaderMembership->id)
+        ->and($coTeacher->approvedCoMemberTeacherClubIds()->contains($student->teacher_club_id))->toBeTrue();
+});
+
 test('mark all reviewed bulk approves pending schools matching filters', function () {
     ['region' => $region, 'district' => $maraDistrict] = createRegionAndDistrict('Mara', 'Musoma');
     ['district' => $mwanzaDistrict] = createRegionAndDistrict('Mwanza', 'Ilemela');

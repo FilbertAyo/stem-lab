@@ -8,6 +8,7 @@ use App\Models\TeacherClub;
 use App\Models\User;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\StudentCsvBulkImportService;
+use App\Services\TeacherClubSharedContextService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -319,7 +320,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Resolve the teacher's own approved membership for the club context on the page.
+     * Resolve the shared roster owner (club leader) for student create/import.
      */
     private function resolveWritableTeacherClub(TeacherClub $pageClub): TeacherClub
     {
@@ -336,7 +337,10 @@ class StudentController extends Controller
             $query->where('school_id', $pageClub->school_id);
         }
 
-        return $query->firstOrFail();
+        // Ensure the acting teacher belongs to this school club before writing.
+        $query->firstOrFail();
+
+        return app(TeacherClubSharedContextService::class)->resolveRosterOwner($pageClub);
     }
 
     private function teacherClubIdRule(): \Closure

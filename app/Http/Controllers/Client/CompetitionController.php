@@ -17,6 +17,8 @@ use App\Models\SchoolClass;
 use App\Models\TeacherClub;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
+use App\Services\StudentCsvBulkImportService;
+use App\Services\TeacherClubSharedContextService;
 use App\Support\ClientUrl;
 use App\Support\CompetitionParticipantPhaseNavigator;
 use App\Support\SchoolLocation;
@@ -288,7 +290,10 @@ class CompetitionController extends Controller
             'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
         ]);
 
-        $result = $csvImport->import($teacherClub, $request->file('csv_file'), $competition);
+        $rosterOwner = app(TeacherClubSharedContextService::class)
+            ->resolveRosterOwner($teacherClub);
+
+        $result = $csvImport->import($rosterOwner, $request->file('csv_file'), $competition);
 
         if ($result['errors'] !== []) {
             return redirect()

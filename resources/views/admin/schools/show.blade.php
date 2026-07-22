@@ -145,20 +145,27 @@
                                                             <span class="text-muted">—</span>
                                                         @else
                                                             <div class="d-flex flex-column gap-2">
-                                                                @foreach($teacherClubs as $tc)
+                                                @foreach($teacherClubs as $tc)
+                                                                    @php
+                                                                        $sharedDay = $sharedClubDaysByClubId[$tc->club_id] ?? $tc->club_day;
+                                                                    @endphp
                                                                     <div class="border rounded p-2">
                                                                         <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
                                                                             <div>
                                                                                 <span class="badge bg-info">{{ $tc->club->name ?? 'N/A' }}</span>
+                                                                                @if($tc->is_leader)
+                                                                                    <span class="badge bg-success">Leader</span>
+                                                                                @endif
                                                                                 @if($tc->club_code)
                                                                                     <small class="text-muted d-block mt-1">Code: <code>{{ $tc->club_code }}</code></small>
                                                                                 @endif
+                                                                                <small class="text-muted d-block">Shared club day for all teachers in this club</small>
                                                                             </div>
                                                                             <form
                                                                                 action="{{ route('admin.schools.teacher-clubs.update-club-day', [$school, $tc]) }}"
                                                                                 method="POST"
                                                                                 class="d-flex align-items-center gap-2 js-club-day-form"
-                                                                                data-initial-day="{{ $tc->club_day ?? '' }}"
+                                                                                data-initial-day="{{ $sharedDay ?? '' }}"
                                                                             >
                                                                                 @csrf
                                                                                 @method('PUT')
@@ -170,13 +177,13 @@
                                                                                 >
                                                                                     <option value="">Select day</option>
                                                                                     @foreach(['monday' => 'Monday', 'tuesday' => 'Tuesday', 'wednesday' => 'Wednesday', 'thursday' => 'Thursday', 'friday' => 'Friday'] as $dayValue => $dayLabel)
-                                                                                        <option value="{{ $dayValue }}" @selected($tc->club_day === $dayValue)>{{ $dayLabel }}</option>
+                                                                                        <option value="{{ $dayValue }}" @selected($sharedDay === $dayValue)>{{ $dayLabel }}</option>
                                                                                     @endforeach
                                                                                 </select>
                                                                                 <button
                                                                                     type="submit"
                                                                                     class="btn btn-sm btn-outline-primary px-2 js-club-day-save-btn"
-                                                                                    @if($tc->club_day) style="display: none;" @endif
+                                                                                    @if($sharedDay) style="display: none;" @endif
                                                                                 >
                                                                                     Save
                                                                                 </button>
@@ -283,6 +290,7 @@
                                                     <th>Age</th>
                                                     <th>Gender</th>
                                                     <th>Class</th>
+                                                    <th>Club</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
@@ -321,6 +329,11 @@
                                                             @endif
                                                         </td>
                                                         <td>{{ $student->schoolClass->name ?? '—' }}</td>
+                                                        <td>
+                                                            <span class="badge bg-light text-dark">
+                                                                {{ $student->teacherClub?->club?->name ?? '—' }}
+                                                            </span>
+                                                        </td>
                                                         <td>
                                                             <button
                                                                 type="submit"
@@ -468,11 +481,12 @@
                                             id="teacher_club_day"
                                             name="club_day"
                                         >
-                                            <option value="">Select day (optional)</option>
+                                            <option value="">Select day (optional — shared by club)</option>
                                             @foreach(['monday' => 'Monday', 'tuesday' => 'Tuesday', 'wednesday' => 'Wednesday', 'thursday' => 'Thursday', 'friday' => 'Friday'] as $dayValue => $dayLabel)
                                                 <option value="{{ $dayValue }}" @selected(old('club_day') === $dayValue)>{{ $dayLabel }}</option>
                                             @endforeach
                                         </select>
+                                        <small class="text-muted">If this club already has a day, new teachers inherit it automatically.</small>
                                         @error('club_day')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -515,7 +529,7 @@
                             CSV columns required:
                             <code>name,date_of_birth,gender,class_name</code>
                             (or <code>name,age,gender,class_name</code>).
-                            Assign students to the <strong>same teacher + club</strong> that holds the competition registration—club pages can show co-teachers&rsquo; students, but eligibility only counts that teacher&rsquo;s roster (and competition class rules).
+                            Students are saved under the <strong>club leader</strong> and shared with every approved teacher in that club at this school.
                         </div>
 
                         <div class="mb-3">
@@ -525,22 +539,24 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="teacher_club_id" class="form-label">
-                                Assign Imported Students To <span class="text-danger">*</span>
+                            <label for="bulk_upload_teacher_club_id" class="form-label">
+                                Club (shared roster) <span class="text-danger">*</span>
                             </label>
                             <select
                                 class="form-select border @error('teacher_club_id') is-invalid @enderror"
-                                id="teacher_club_id"
+                                id="bulk_upload_teacher_club_id"
                                 name="teacher_club_id"
                                 required
                             >
-                                <option value="">Select teacher and club...</option>
+                                <option value="">Select club...</option>
                                 @foreach($bulkUploadTeacherClubs as $teacherClub)
                                     <option
                                         value="{{ $teacherClub->id }}"
-                                        @selected(old('teacher_club_id') == $teacherClub->id)
+                                        @selected(old('teacher_club_id', $bulkUploadTeacherClubs->count() === 1 ? $teacherClub->id : null) == $teacherClub->id)
                                     >
-                                        {{ $teacherClub->user->name ?? 'Teacher' }} - {{ $teacherClub->club->name ?? 'Club' }}@if($teacherClub->club_code) ({{ $teacherClub->club_code }})@endif
+                                        {{ $teacherClub->club->name ?? 'Club' }}
+                                        — Leader: {{ $teacherClub->user->name ?? 'Teacher' }}
+                                        @if($teacherClub->club_code) ({{ $teacherClub->club_code }})@endif
                                     </option>
                                 @endforeach
                             </select>
@@ -548,7 +564,9 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             @if($bulkUploadTeacherClubs->isEmpty())
-                                <small class="text-danger">No approved teacher-club memberships found for this school.</small>
+                                <small class="text-danger">No club leaders found for this school. Add or approve a teacher first.</small>
+                            @else
+                                <small class="text-muted">Uploads attach to the leader and appear for all co-teachers in the same club.</small>
                             @endif
                         </div>
 
