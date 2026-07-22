@@ -68,6 +68,17 @@
         #schools-map { height: 70vh; width: 100%; min-height: 400px; }
         #schoolsMapModal .modal-body { padding: 0; }
         #schoolsMapModal .map-empty { padding: 3rem 1.5rem; }
+
+        .dash-map-btn {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            font-weight: 600;
+            padding: .45rem 1rem;
+            box-shadow: 0 2px 8px rgba(7, 38, 73, .18);
+        }
+        .dash-map-btn i { font-size: 1.15rem; }
     </style>
 
     <div class="dash-head">
@@ -75,8 +86,8 @@
             <h5>Dashboard Overview</h5>
             <p class="text-muted">System statistics and key metrics</p>
         </div>
-        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#schoolsMapModal">
-            <i class="ti ti-map-2"></i> Map
+        <button type="button" class="btn btn-primary dash-map-btn" data-bs-toggle="modal" data-bs-target="#schoolsMapModal">
+            <i class="ti ti-map-2"></i> Schools Map
         </button>
     </div>
 
