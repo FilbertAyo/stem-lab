@@ -21,8 +21,11 @@ use App\Models\CompetitionPrototypeSubmission;
 use App\Models\CompetitionRegistration;
 use App\Models\CompetitionShortlist;
 use App\Models\CompetitionStageEvent;
+use App\Models\School;
 use App\Models\SchoolClass;
+use App\Models\TeacherClub;
 use App\Services\CompetitionEligibilityPoolService;
+use App\Services\CompetitionParticipantRegistrationService;
 use App\Support\ClientUrl;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
@@ -822,7 +825,72 @@ class CompetitionController extends Controller
             }
         }
 
-        return view('admin.competitions.registrations.index', compact('competition', 'registrations'));
+        $enrollableSchools = $this->enrollableSchoolsForCompetition($competition);
+
+        return view('admin.competitions.registrations.index', compact(
+            'competition',
+            'registrations',
+            'enrollableSchools',
+        ));
+    }
+
+    public function enrollSchool(
+        Request $request,
+        Competition $competition,
+        CompetitionParticipantRegistrationService $participantRegistrationService,
+        CompetitionEligibilityPoolService $eligibilityPool,
+    ): RedirectResponse {
+        $validated = $request->validate([
+            'school_id' => ['required', 'integer', 'exists:schools,id'],
+        ]);
+
+        $schoolId = (int) $validated['school_id'];
+        $school = School::query()->findOrFail($schoolId);
+
+        $existing = $participantRegistrationService->findForSchool($competition, $schoolId);
+        if ($existing) {
+            return back()
+                ->with('error', "{$school->name} is already enrolled in this competition.")
+                ->withInput();
+        }
+
+        $teacherClub = TeacherClub::query()
+            ->with(['user', 'school'])
+            ->where('club_id', $competition->club_id)
+            ->where('school_id', $schoolId)
+            ->where('status', 'approved')
+            ->orderByDesc('is_leader')
+            ->orderBy('id')
+            ->first();
+
+        if (! $teacherClub) {
+            return back()
+                ->with('error', "{$school->name} has no approved teacher for this competition's club.")
+                ->withInput();
+        }
+
+        $registration = $participantRegistrationService->ensureDraftRegistration($teacherClub, $competition);
+
+        $eligibilityPool->applyPoolToOpenRegistration(
+            $registration,
+            $teacherClub,
+            $eligibilityPool->computePool($competition, $teacherClub),
+        );
+
+        $this->logStageEvent(
+            $competition,
+            'registration_enrolled_by_admin',
+            "School enrolled by admin: {$registration->school_name}.",
+            [
+                'registration_ulid' => $registration->ulid,
+                'school_id' => $schoolId,
+                'teacher_club_id' => $teacherClub->id,
+            ]
+        );
+
+        return redirect()
+            ->route('admin.competitions.registrations.index', $competition)
+            ->with('status', "{$school->name} enrolled successfully. Registration is incomplete until the teacher finishes eligibility.");
     }
 
     public function exportRegistrations(Request $request, Competition $competition): Response
@@ -1232,6 +1300,33 @@ class CompetitionController extends Controller
         }
 
         return $query;
+    }
+
+    /**
+     * Active schools with an approved teacher for this competition's club, not yet registered.
+     *
+     * @return \Illuminate\Support\Collection<int, School>
+     */
+    private function enrollableSchoolsForCompetition(Competition $competition)
+    {
+        $registeredSchoolIds = $competition->registrations()
+            ->whereNotNull('school_id')
+            ->pluck('school_id')
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values()
+            ->all();
+
+        return School::query()
+            ->active()
+            ->ordered()
+            ->whereHas('teacherClubs', function (Builder $query) use ($competition): void {
+                $query->where('club_id', $competition->club_id)
+                    ->where('status', 'approved');
+            })
+            ->when($registeredSchoolIds !== [], fn (Builder $query) => $query->whereNotIn('id', $registeredSchoolIds))
+            ->with(['regionModel', 'districtModel'])
+            ->get();
     }
 
     private function generateUniqueSlug(string $name, ?int $ignoreId = null): string

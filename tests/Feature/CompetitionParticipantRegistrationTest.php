@@ -103,6 +103,68 @@ test('admin registrations index includes draft participants', function () {
     $response->assertOk();
     $response->assertSee('Incomplete');
     $response->assertSee($school->name);
+    $response->assertSee('Enroll School');
+});
+
+test('admin can enroll a school into a competition registration', function () {
+    ['school' => $school, 'competition' => $competition] = createCompetitionFixture();
+    createTeacherClubForCompetition($competition, $school);
+
+    expect(
+        CompetitionRegistration::query()
+            ->where('competition_id', $competition->id)
+            ->where('school_id', $school->id)
+            ->exists()
+    )->toBeFalse();
+
+    $admin = User::factory()->create(['role' => 'admin']);
+    $host = adminRequestHost();
+
+    $response = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => $host])
+        ->post('http://'.$host.'/competitions/'.$competition->ulid.'/registrations/enroll', [
+            'school_id' => $school->id,
+        ]);
+
+    $response->assertRedirect('http://'.$host.'/competitions/'.$competition->ulid.'/registrations');
+    $response->assertSessionHas('status');
+
+    $registration = CompetitionRegistration::query()
+        ->where('competition_id', $competition->id)
+        ->where('school_id', $school->id)
+        ->first();
+
+    expect($registration)->not->toBeNull()
+        ->and($registration->status)->toBe('draft')
+        ->and($registration->school_name)->toBe($school->name);
+});
+
+test('admin cannot enroll a school that is already registered', function () {
+    ['school' => $school, 'competition' => $competition] = createCompetitionFixture();
+    $teacherClub = createTeacherClubForCompetition($competition, $school);
+
+    app(CompetitionParticipantRegistrationService::class)
+        ->ensureDraftRegistration($teacherClub, $competition);
+
+    $admin = User::factory()->create(['role' => 'admin']);
+    $host = adminRequestHost();
+
+    $response = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => $host])
+        ->from('http://'.$host.'/competitions/'.$competition->ulid.'/registrations')
+        ->post('http://'.$host.'/competitions/'.$competition->ulid.'/registrations/enroll', [
+            'school_id' => $school->id,
+        ]);
+
+    $response->assertRedirect('http://'.$host.'/competitions/'.$competition->ulid.'/registrations');
+    $response->assertSessionHas('error');
+
+    expect(
+        CompetitionRegistration::query()
+            ->where('competition_id', $competition->id)
+            ->where('school_id', $school->id)
+            ->count()
+    )->toBe(1);
 });
 
 test('admin can override failed eligibility and pass a participant registration', function () {

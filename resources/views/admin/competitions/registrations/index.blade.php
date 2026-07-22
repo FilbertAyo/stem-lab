@@ -6,6 +6,14 @@
                     <h5 class="mb-0">Registrations — {{ $competition->name }}</h5>
               </div>
                 <div class="d-flex gap-2">
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#enrollSchoolModal"
+                    >
+                        <i class="ti ti-school"></i> Enroll School
+                    </button>
                     <a
                         href="{{ route('admin.competitions.registrations.export', [$competition] + request()->only(['search', 'status'])) }}"
                         class="btn btn-sm btn-danger"
@@ -193,4 +201,68 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="enrollSchoolModal" tabindex="-1" aria-labelledby="enrollSchoolModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="enrollSchoolModalLabel">Enroll school</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('admin.competitions.registrations.enroll', $competition) }}">
+                    @csrf
+                    <div class="modal-body">
+                        <p class="small text-muted mb-3">
+                            Create an incomplete competition registration for a school that already has an approved teacher in this competition’s club.
+                        </p>
+                        <div class="mb-0">
+                            <label class="form-label" for="enroll_school_id">School</label>
+                            <select
+                                name="school_id"
+                                id="enroll_school_id"
+                                class="form-select @error('school_id') is-invalid @enderror"
+                                required
+                                @disabled($enrollableSchools->isEmpty())
+                            >
+                                <option value="">Select a school…</option>
+                                @foreach($enrollableSchools as $school)
+                                    <option value="{{ $school->id }}" @selected((string) old('school_id') === (string) $school->id)>
+                                        {{ $school->name }}
+                                        @if($school->regionModel?->name || $school->districtName())
+                                            — {{ collect([$school->regionModel?->name, $school->districtName()])->filter()->implode(' · ') }}
+                                        @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('school_id')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                            @if($enrollableSchools->isEmpty())
+                                <div class="form-text text-warning mt-2">
+                                    No eligible schools left. Schools need an approved club teacher and must not already be registered.
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" @disabled($enrollableSchools->isEmpty())>
+                            Enroll school
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if($errors->has('school_id') || (session('error') && old('school_id') !== null))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var modalEl = document.getElementById('enrollSchoolModal');
+                if (modalEl && window.bootstrap) {
+                    window.bootstrap.Modal.getOrCreateInstance(modalEl).show();
+                }
+            });
+        </script>
+    @endif
 </x-admin-layout>

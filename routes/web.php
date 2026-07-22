@@ -204,6 +204,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::delete('/{competition}', [CompetitionController::class, 'destroy'])->name('destroy');
             Route::get('/{competition}/registrations', [CompetitionController::class, 'registrations'])->name('registrations.index');
             Route::get('/{competition}/registrations/export', [CompetitionController::class, 'exportRegistrations'])->name('registrations.export');
+            Route::post('/{competition}/registrations/enroll', [CompetitionController::class, 'enrollSchool'])->name('registrations.enroll');
             Route::get('/{competition}/registrations/{registration}', [CompetitionController::class, 'showRegistration'])->name('registrations.show');
             Route::post('/{competition}/registrations/{registration}/approve', [CompetitionController::class, 'approveRegistration'])->name('registrations.approve');
             Route::post('/{competition}/registrations/{registration}/override-eligibility', [CompetitionController::class, 'overrideRegistrationEligibility'])->name('registrations.override-eligibility');
