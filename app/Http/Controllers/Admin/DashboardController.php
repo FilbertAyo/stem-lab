@@ -193,12 +193,19 @@ class DashboardController extends Controller
             ->limit(8)
             ->get();
 
+        $mapSchools = School::query()
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->orderBy('name')
+            ->get(['id', 'name', 'latitude', 'longitude', 'district', 'ward']);
+
         return view('admin.dashboard', compact(
             'stats',
             'latestActiveAdmin',
             'recentActivities',
             'visitorChartData',
-            'dashboardCompetitions'
+            'dashboardCompetitions',
+            'mapSchools'
         ));
     }
 }

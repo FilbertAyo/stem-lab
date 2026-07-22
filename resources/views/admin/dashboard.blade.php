@@ -65,14 +65,43 @@
 
         #visitor-week-view .nav-link { padding: .2rem .6rem; font-size: .7rem; }
 
-        .dash-table th { font-size: .68rem; text-transform: uppercase; letter-spacing: .03em; color: var(--bs-secondary-color, #6c757d); }
-        .dash-table td { font-size: .78rem; }
+        #schools-map { height: 70vh; width: 100%; min-height: 400px; }
+        #schoolsMapModal .modal-body { padding: 0; }
+        #schoolsMapModal .map-empty { padding: 3rem 1.5rem; }
     </style>
 
     <div class="dash-head">
         <div>
             <h5>Dashboard Overview</h5>
             <p class="text-muted">System statistics and key metrics</p>
+        </div>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#schoolsMapModal">
+            <i class="ti ti-map-2"></i> Map
+        </button>
+    </div>
+
+    <!-- Schools Map Modal -->
+    <div class="modal fade" id="schoolsMapModal" tabindex="-1" aria-labelledby="schoolsMapModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="schoolsMapModalLabel">
+                        Schools Map
+                        <span class="text-muted fw-normal fs-6">({{ $mapSchools->count() }} {{ $mapSchools->count() === 1 ? 'school' : 'schools' }})</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @if($mapSchools->isEmpty())
+                        <div class="map-empty text-center text-muted">
+                            <i class="ti ti-map-off" style="font-size: 2rem;"></i>
+                            <p class="mb-0 mt-2">No schools with coordinates yet. Add latitude and longitude when creating or editing a school.</p>
+                        </div>
+                    @else
+                        <div id="schools-map"></div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 
@@ -322,11 +351,85 @@
     @endforeach
 
     @push('scripts')
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script type="application/json" id="schools-map-data">
+        {!! json_encode($mapSchools->map(fn ($s) => [
+            'id' => $s->id,
+            'name' => $s->name,
+            'latitude' => (float) $s->latitude,
+            'longitude' => (float) $s->longitude,
+            'district' => $s->district,
+            'ward' => $s->ward,
+        ])->values()) !!}
+    </script>
     <script type="application/json" id="visitor-week-chart-data">
         {!! json_encode($visitorChartData) !!}
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Schools map (Leaflet) — init when modal opens
+            var schoolsMap = null;
+            var schoolsMapModal = document.getElementById('schoolsMapModal');
+            if (schoolsMapModal) {
+                schoolsMapModal.addEventListener('shown.bs.modal', function () {
+                    var mapEl = document.getElementById('schools-map');
+                    if (!mapEl || typeof L === 'undefined') return;
+
+                    var schools = [];
+                    try {
+                        schools = JSON.parse(document.getElementById('schools-map-data').textContent);
+                    } catch (e) {
+                        schools = [];
+                    }
+
+                    if (!schoolsMap) {
+                        schoolsMap = L.map('schools-map').setView([-6.3690, 34.8888], 6);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 19,
+                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                        }).addTo(schoolsMap);
+
+                        var bounds = [];
+                        function escapeHtml(str) {
+                            if (!str) return '';
+                            return String(str)
+                                .replace(/&/g, '&amp;')
+                                .replace(/</g, '&lt;')
+                                .replace(/>/g, '&gt;')
+                                .replace(/"/g, '&quot;');
+                        }
+
+                        schools.forEach(function (school) {
+                            var lat = school.latitude;
+                            var lng = school.longitude;
+                            if (typeof lat !== 'number' || typeof lng !== 'number') return;
+
+                            var meta = [];
+                            if (school.district) meta.push(escapeHtml(school.district));
+                            if (school.ward) meta.push(escapeHtml(school.ward));
+                            var popup = '<strong>' + escapeHtml(school.name) + '</strong>';
+                            if (meta.length) {
+                                popup += '<br><span class="text-muted">' + meta.join(' · ') + '</span>';
+                            }
+
+                            L.marker([lat, lng]).addTo(schoolsMap).bindPopup(popup);
+                            bounds.push([lat, lng]);
+                        });
+
+                        if (bounds.length === 1) {
+                            schoolsMap.setView(bounds[0], 14);
+                        } else if (bounds.length > 1) {
+                            schoolsMap.fitBounds(bounds, { padding: [40, 40] });
+                        }
+                    }
+
+                    setTimeout(function () {
+                        schoolsMap.invalidateSize();
+                    }, 100);
+                });
+            }
+
             var chartData = JSON.parse(document.getElementById('visitor-week-chart-data').textContent);
             if (typeof ApexCharts === 'undefined') return;
 
