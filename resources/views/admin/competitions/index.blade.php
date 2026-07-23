@@ -64,7 +64,6 @@
                                     <th>Club</th>
                                     <th>Timeline</th>
                                     <th>Stages</th>
-                                    <th>Requirements</th>
                                     <th>Status</th>
                                     <th class="text-center" style="width: 140px;">Actions</th>
                                 </tr>
@@ -167,14 +166,7 @@
                                                 </div>
                                             @endif
                                         </td>
-                                        <td>
-                                            <div class="small">
-                                                <div><i class="ti ti-users"></i> Pool {{ $competition->min_members }}{{ $competition->max_members ? '–'.$competition->max_members : '+' }} · {{ $competition->representative_count ?? 10 }} reps</div>
-                                                @if($competition->min_age || $competition->max_age)
-                                                    <div><i class="ti ti-user"></i> {{ $competition->min_age ?? 'Any' }}-{{ $competition->max_age ?? 'Any' }} years</div>
-                                                @endif
-                                            </div>
-                                        </td>
+                                    
                                         <td>
                                             <span class="badge bg-{{ $competition->status_badge }}">
                                                 {{ ucfirst($competition->status) }}
