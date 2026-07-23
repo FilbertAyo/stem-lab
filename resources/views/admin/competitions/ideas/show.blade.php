@@ -38,7 +38,7 @@
                         <div class="card-body small">
                             <dl class="row mb-0">
                                 <dt class="col-sm-4 text-muted fw-normal">School</dt>
-                                <dd class="col-sm-8 mb-2">{{ $registration?->school_name ?? $school?->name ?? '—' }}</dd>
+                                <dd class="col-sm-8 mb-2">{{ $registration?->resolvedSchoolName() ?: ($school?->name ?? '—') }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Teacher</dt>
                                 <dd class="col-sm-8 mb-2">{{ $registration?->teacher_name ?? '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Teacher email</dt>

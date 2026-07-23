@@ -128,18 +128,10 @@
           </li>
 
           <li class="pc-item pc-hasmenu">
-            <a href="#!" class="pc-link">
+            <a href="{{ route('admin.competitions.index') }}" class="pc-link">
               <span class="pc-micon"><i class="ti ti-trophy"></i></span>
               <span class="pc-mtext">Competitions</span>
-              <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
             </a>
-            <ul class="pc-submenu">
-              <li class="pc-item">
-                <a href="{{ route('admin.competitions.index') }}" class="pc-link">
-                  <span class="pc-mtext">All Competitions</span>
-                </a>
-              </li>
-            </ul>
           </li>
 
           <li class="pc-item">

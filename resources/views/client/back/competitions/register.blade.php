@@ -175,7 +175,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_name">School name <span class="text-danger">*</span></label>
-                                    <input type="text" id="school_name" class="form-control" name="school_name" value="{{ old('school_name', $registration?->school_name ?? $teacherClub->school?->name) }}" required>
+                                    @if($teacherClub->school)
+                                        <input type="text" id="school_name" class="form-control bg-light" value="{{ $teacherClub->school->name }}" disabled>
+                                        <input type="hidden" name="school_name" value="{{ $teacherClub->school->name }}">
+                                        <small class="text-muted">Managed from the school profile — contact admin to change.</small>
+                                    @else
+                                        <input type="text" id="school_name" class="form-control" name="school_name" value="{{ old('school_name', $registration?->school_name) }}" required>
+                                    @endif
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_district_id">District</label>
@@ -198,7 +204,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small" for="school_ward">Ward</label>
-                                    <input type="text" id="school_ward" class="form-control" name="school_ward" value="{{ old('school_ward', $registration?->school_ward ?? $teacherClub->school?->ward) }}">
+                                    @if($teacherClub->school)
+                                        <input type="text" id="school_ward" class="form-control bg-light" value="{{ $teacherClub->school->ward ?: '—' }}" disabled>
+                                        <input type="hidden" name="school_ward" value="{{ $teacherClub->school->ward }}">
+                                        <small class="text-muted">Managed from the school profile.</small>
+                                    @else
+                                        <input type="text" id="school_ward" class="form-control" name="school_ward" value="{{ old('school_ward', $registration?->school_ward) }}">
+                                    @endif
                                 </div>
                             </div>
 

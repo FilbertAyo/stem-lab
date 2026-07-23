@@ -104,6 +104,53 @@ test('admin registrations index includes draft participants', function () {
     $response->assertSee('Incomplete');
     $response->assertSee($school->name);
     $response->assertSee('Enroll School');
+    $response->assertSee('All regions');
+    $response->assertSee('All districts');
+});
+
+test('admin can filter competition registrations by region and district', function () {
+    ['region' => $regionA, 'district' => $districtA] = createRegionAndDistrict('Mara', 'Musoma');
+    ['region' => $regionB, 'district' => $districtB] = createRegionAndDistrict('Mwanza', 'Ilemela');
+
+    ['school' => $schoolA, 'competition' => $competition] = createCompetitionFixture();
+    $schoolA->update([
+        'region_id' => $regionA->id,
+        'district_id' => $districtA->id,
+    ]);
+
+    $schoolB = \App\Models\School::query()->create([
+        'name' => 'Other School '.Str::random(6),
+        'is_active' => true,
+        'region_id' => $regionB->id,
+        'district_id' => $districtB->id,
+    ]);
+
+    $teacherClubA = createTeacherClubForCompetition($competition, $schoolA);
+    $teacherClubB = createTeacherClubForCompetition($competition, $schoolB);
+
+    $service = app(CompetitionParticipantRegistrationService::class);
+    $registrationA = $service->ensureDraftRegistration($teacherClubA, $competition);
+    $registrationB = $service->ensureDraftRegistration($teacherClubB, $competition);
+
+    $registrationA->update([
+        'region_id' => $regionA->id,
+        'district_id' => $districtA->id,
+    ]);
+    $registrationB->update([
+        'region_id' => $regionB->id,
+        'district_id' => $districtB->id,
+    ]);
+
+    $admin = User::factory()->create(['role' => 'admin']);
+    $host = adminRequestHost();
+
+    $response = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => $host])
+        ->get('http://'.$host.'/competitions/'.$competition->ulid.'/registrations?region_id='.$regionA->id.'&district_id='.$districtA->id);
+
+    $response->assertOk();
+    $response->assertSee($schoolA->name);
+    $response->assertDontSee($schoolB->name);
 });
 
 test('admin can enroll a school into a competition registration', function () {

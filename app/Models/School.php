@@ -82,6 +82,14 @@ class School extends Model
     }
 
     /**
+     * Competition registrations linked to this school.
+     */
+    public function competitionRegistrations(): HasMany
+    {
+        return $this->hasMany(CompetitionRegistration::class);
+    }
+
+    /**
      * Get the students registered under this school (through teacher clubs).
      */
     public function students(): HasManyThrough

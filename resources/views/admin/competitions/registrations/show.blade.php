@@ -18,10 +18,10 @@
                         <ol class="breadcrumb mb-0 small">
                             <li class="breadcrumb-item"><a href="{{ route('admin.competitions.show', $competition) }}">{{ $competition->name }}</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('admin.competitions.registrations.index', $competition) }}">Registrations</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ $registration->school_name }}</li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ $registration->resolvedSchoolName() }}</li>
                         </ol>
                     </nav>
-                    <h5 class="mb-0">Registration — {{ $registration->school_name }}</h5>
+                    <h5 class="mb-0">Registration — {{ $registration->resolvedSchoolName() }}</h5>
                     <p class="text-muted mb-0 small">Teacher snapshot, school details, and student pool for this competition.</p>
                 </div>
                 <div class="d-flex flex-wrap gap-2">
@@ -180,11 +180,11 @@
                                         <dt class="col-sm-4 text-muted fw-normal">Region</dt>
                                         <dd class="col-sm-8 mb-1">{{ $regionDisplay ?: '—' }}</dd>
                                         <dt class="col-sm-4 text-muted fw-normal">School</dt>
-                                        <dd class="col-sm-8 mb-1">{{ $registration->school_name ?: '—' }}</dd>
+                                        <dd class="col-sm-8 mb-1">{{ $registration->resolvedSchoolName() ?: '—' }}</dd>
                                         <dt class="col-sm-4 text-muted fw-normal">District</dt>
                                         <dd class="col-sm-8 mb-1">{{ $registration->districtName() ?: '—' }}</dd>
                                         <dt class="col-sm-4 text-muted fw-normal">Ward</dt>
-                                        <dd class="col-sm-8 mb-1">{{ $registration->school_ward ?: '—' }}</dd>
+                                        <dd class="col-sm-8 mb-1">{{ $registration->resolvedSchoolWard() ?: '—' }}</dd>
                                     </dl>
                                 </div>
                                 @if($registration->school)

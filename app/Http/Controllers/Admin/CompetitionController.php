@@ -21,6 +21,8 @@ use App\Models\CompetitionPrototypeSubmission;
 use App\Models\CompetitionRegistration;
 use App\Models\CompetitionShortlist;
 use App\Models\CompetitionStageEvent;
+use App\Models\District;
+use App\Models\Region;
 use App\Models\School;
 use App\Models\SchoolClass;
 use App\Models\TeacherClub;
@@ -826,11 +828,20 @@ class CompetitionController extends Controller
         }
 
         $enrollableSchools = $this->enrollableSchoolsForCompetition($competition);
+        $regions = Region::query()->orderBy('name')->get(['id', 'name']);
+        $districts = District::query()
+            ->when($request->filled('region_id'), fn (Builder $query) => $query->where('region_id', $request->integer('region_id')))
+            ->orderBy('name')
+            ->get(['id', 'name', 'region_id']);
+        $districtsByRegion = District::groupedByRegionId();
 
         return view('admin.competitions.registrations.index', compact(
             'competition',
             'registrations',
             'enrollableSchools',
+            'regions',
+            'districts',
+            'districtsByRegion',
         ));
     }
 
@@ -880,7 +891,7 @@ class CompetitionController extends Controller
         $this->logStageEvent(
             $competition,
             'registration_enrolled_by_admin',
-            "School enrolled by admin: {$registration->school_name}.",
+            "School enrolled by admin: {$registration->resolvedSchoolName()}.",
             [
                 'registration_ulid' => $registration->ulid,
                 'school_id' => $schoolId,
@@ -898,10 +909,12 @@ class CompetitionController extends Controller
         $request->validate([
             'search' => ['nullable', 'string', 'max:255'],
             'status' => ['nullable', 'in:draft,pending,approved,rejected,ineligible'],
+            'region_id' => ['nullable', 'integer', 'exists:regions,id'],
+            'district_id' => ['nullable', 'integer', 'exists:districts,id'],
         ]);
 
         $registrations = $this->competitionRegistrationsQuery($request, $competition)
-            ->with(['teacher', 'region', 'districtModel', 'representativeStudents', 'teacherClub'])
+            ->with(['teacher', 'school.regionModel', 'school.districtModel', 'region', 'districtModel', 'representativeStudents', 'teacherClub'])
             ->orderByRaw("CASE WHEN status = 'draft' THEN 0 ELSE 1 END")
             ->latest()
             ->get();
@@ -912,6 +925,18 @@ class CompetitionController extends Controller
         }
         if ($request->filled('status')) {
             $filterParts[] = 'Status: '.ucfirst((string) $request->status);
+        }
+        if ($request->filled('region_id')) {
+            $regionName = Region::query()->whereKey($request->integer('region_id'))->value('name');
+            if ($regionName) {
+                $filterParts[] = 'Region: '.$regionName;
+            }
+        }
+        if ($request->filled('district_id')) {
+            $districtName = District::query()->whereKey($request->integer('district_id'))->value('name');
+            if ($districtName) {
+                $filterParts[] = 'District: '.$districtName;
+            }
         }
 
         $pdf = Pdf::loadView('admin.downloads.competition-registrations-list', [
@@ -1000,7 +1025,7 @@ class CompetitionController extends Controller
         $this->logStageEvent(
             $competition,
             'registration_approved',
-            "Registration approved for {$registration->school_name}.",
+            "Registration approved for {$registration->resolvedSchoolName()}.",
             ['registration_ulid' => $registration->ulid]
         );
 
@@ -1041,7 +1066,7 @@ class CompetitionController extends Controller
         $this->logStageEvent(
             $competition,
             'registration_eligibility_overridden',
-            "Eligibility overridden and registration approved for {$registration->school_name}.",
+            "Eligibility overridden and registration approved for {$registration->resolvedSchoolName()}.",
             [
                 'registration_ulid' => $registration->ulid,
                 'eligibility_met' => $registration->eligibility_met,
@@ -1080,7 +1105,7 @@ class CompetitionController extends Controller
         $this->logStageEvent(
             $competition,
             'registration_rejected',
-            "Registration rejected for {$registration->school_name}.",
+            "Registration rejected for {$registration->resolvedSchoolName()}.",
             ['registration_ulid' => $registration->ulid, 'reason' => $validated['rejection_reason']]
         );
 
@@ -1125,7 +1150,7 @@ class CompetitionController extends Controller
         $this->logStageEvent(
             $competition,
             'eligibility_reminder_sent',
-            "Eligibility reminder sent to {$registration->school_name} ({$teacherEmail}).",
+            "Eligibility reminder sent to {$registration->resolvedSchoolName()} ({$teacherEmail}).",
             [
                 'registration_ulid' => $registration->ulid,
                 'reminder_count' => $registration->eligibility_reminder_count,
@@ -1222,7 +1247,7 @@ class CompetitionController extends Controller
         $this->logStageEvent(
             $competition,
             'idea_scored',
-            "Idea scored for {$idea->registration?->school_name}.",
+            "Idea scored for {$idea->registration?->resolvedSchoolName()}.",
             ['idea_ulid' => $idea->ulid, 'total_score' => $total]
         );
 
@@ -1265,7 +1290,7 @@ class CompetitionController extends Controller
         $this->logStageEvent(
             $competition,
             'idea_shortlist_decision',
-            "Shortlist decision set to {$validated['status']} for {$idea->registration?->school_name}.",
+            "Shortlist decision set to {$validated['status']} for {$idea->registration?->resolvedSchoolName()}.",
             ['idea_ulid' => $idea->ulid, 'status' => $validated['status'], 'rank' => $validated['rank'] ?? null]
         );
 
@@ -1287,6 +1312,9 @@ class CompetitionController extends Controller
             $query->where(function ($q) use ($search): void {
                 $like = '%'.$search.'%';
                 $q->where('school_name', 'like', $like)
+                    ->orWhereHas('school', function ($schoolQuery) use ($like): void {
+                        $schoolQuery->where('name', 'like', $like);
+                    })
                     ->orWhere('teacher_name', 'like', $like)
                     ->orWhere('teacher_email', 'like', $like)
                     ->orWhere('teacher_phone', 'like', $like)
@@ -1297,6 +1325,14 @@ class CompetitionController extends Controller
 
         if ($request->filled('status')) {
             $query->where('status', (string) $request->input('status'));
+        }
+
+        if ($request->filled('region_id')) {
+            $query->where('region_id', $request->integer('region_id'));
+        }
+
+        if ($request->filled('district_id')) {
+            $query->where('district_id', $request->integer('district_id'));
         }
 
         return $query;
@@ -1480,7 +1516,7 @@ class CompetitionController extends Controller
             $this->logStageEvent(
                 $competition,
                 'registration_approved_email_failed',
-                "Failed to send registration approval email to {$registration->school_name} ({$teacherEmail}).",
+                "Failed to send registration approval email to {$registration->resolvedSchoolName()} ({$teacherEmail}).",
                 [
                     'registration_ulid' => $registration->ulid,
                     'teacher_email' => $teacherEmail,
@@ -1494,7 +1530,7 @@ class CompetitionController extends Controller
         $this->logStageEvent(
             $competition,
             'registration_approved_email_sent',
-            "Registration approval email sent to {$registration->school_name} ({$teacherEmail}).",
+            "Registration approval email sent to {$registration->resolvedSchoolName()} ({$teacherEmail}).",
             [
                 'registration_ulid' => $registration->ulid,
                 'teacher_email' => $teacherEmail,

@@ -48,7 +48,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td style="min-width: 180px;">
-                                                <div class="fw-semibold">{{ $submission->registration?->school_name ?? '—' }}</div>
+                                                <div class="fw-semibold">{{ $submission->registration?->resolvedSchoolName() ?? '—' }}</div>
                                                 <small class="text-muted">{{ $submission->registration?->teacher_name ?? '—' }}</small>
                                             </td>
                                             <td style="min-width: 240px;">

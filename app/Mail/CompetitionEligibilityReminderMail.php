@@ -34,7 +34,7 @@ class CompetitionEligibilityReminderMail extends Mailable
             with: [
                 'teacherName' => $this->registration->teacher_name ?: 'Teacher',
                 'competitionName' => $this->competition->name,
-                'schoolName' => $this->registration->school_name,
+                'schoolName' => $this->registration->resolvedSchoolName(),
                 'registerUrl' => $this->registerUrl,
             ],
         );

@@ -5,7 +5,7 @@
                 <div>
                     <h5 class="mb-0">Prototype Submission Review - {{ $competition->name }}</h5>
                     <p class="text-muted mb-0">
-                        School: {{ $submission->registration?->school_name ?? '—' }}
+                        School: {{ $submission->registration?->resolvedSchoolName() ?? '—' }}
                     </p>
                 </div>
                 <div class="d-flex gap-2">

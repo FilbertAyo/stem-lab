@@ -15,7 +15,7 @@
                         <i class="ti ti-school"></i> Enroll School
                     </button>
                     <a
-                        href="{{ route('admin.competitions.registrations.export', [$competition] + request()->only(['search', 'status'])) }}"
+                        href="{{ route('admin.competitions.registrations.export', [$competition] + request()->only(['search', 'status', 'region_id', 'district_id'])) }}"
                         class="btn btn-sm btn-danger"
                     >
                         <i class="ti ti-download"></i> Download PDF
@@ -29,11 +29,11 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <form method="GET" action="{{ route('admin.competitions.registrations.index', $competition) }}" class="row g-2 align-items-end">
-                        <div class="col-md-5 col-lg-4">
+                        <div class="col-md-4 col-lg-3">
                             <label class="form-label small mb-1" for="search">Search</label>
-                            <input type="search" name="search" id="search" value="{{ request('search') }}" class="form-control" placeholder="School, teacher, email, phone, district…">
+                            <input type="search" name="search" id="search" value="{{ request('search') }}" class="form-control" placeholder="School, teacher, email, phone…">
                         </div>
-                        <div class="col-md-3 col-lg-2">
+                        <div class="col-md-2 col-lg-2">
                             <label class="form-label small mb-1" for="status">Status</label>
                             <select name="status" id="status" class="form-select">
                                 <option value="">All</option>
@@ -42,6 +42,28 @@
                                 <option value="approved" @selected(request('status') === 'approved')>Approved</option>
                                 <option value="rejected" @selected(request('status') === 'rejected')>Rejected</option>
                                 <option value="ineligible" @selected(request('status') === 'ineligible')>Ineligible</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-lg-2">
+                            <label class="form-label small mb-1" for="filter_region_id">Region</label>
+                            <select name="region_id" id="filter_region_id" class="form-select">
+                                <option value="">All regions</option>
+                                @foreach($regions as $region)
+                                    <option value="{{ $region->id }}" @selected((string) request('region_id') === (string) $region->id)>
+                                        {{ $region->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-lg-2">
+                            <label class="form-label small mb-1" for="filter_district_id">District</label>
+                            <select name="district_id" id="filter_district_id" class="form-select">
+                                <option value="">All districts</option>
+                                @foreach($districts as $district)
+                                    <option value="{{ $district->id }}" @selected((string) request('district_id') === (string) $district->id)>
+                                        {{ $district->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-4 col-lg-3 d-flex flex-wrap gap-2">
@@ -77,7 +99,7 @@
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>
-                                            <div class="fw-semibold">{{ $registration->school_name }}</div>
+                                            <div class="fw-semibold">{{ $registration->resolvedSchoolName() }}</div>
                                             <small class="text-muted">
                                                 {{ $registration->region?->name ?? $registration->school?->regionModel?->name ?? 'No region' }}
                                                 @if($registration->districtName())
@@ -181,7 +203,7 @@
                                         <form method="POST" action="{{ route('admin.competitions.registrations.reject', [$competition, $registration]) }}">
                                             @csrf
                                             <div class="modal-body">
-                                                <p class="small text-muted mb-2">{{ $registration->school_name }}</p>
+                                                <p class="small text-muted mb-2">{{ $registration->resolvedSchoolName() }}</p>
                                                 <label class="form-label" for="rejection_reason_{{ $registration->id }}">Reason</label>
                                                 <textarea class="form-control" name="rejection_reason" id="rejection_reason_{{ $registration->id }}" rows="4" required></textarea>
                                             </div>
@@ -265,4 +287,43 @@
             });
         </script>
     @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var districtsByRegion = @json($districtsByRegion ?? []);
+            var regionSelect = document.getElementById('filter_region_id');
+            var districtSelect = document.getElementById('filter_district_id');
+
+            if (!regionSelect || !districtSelect) {
+                return;
+            }
+
+            function populateDistricts(regionId, selectedDistrictId) {
+                var districts = regionId
+                    ? (districtsByRegion[regionId] || [])
+                    : Object.values(districtsByRegion).flat();
+
+                districtSelect.innerHTML = '';
+
+                var allOption = document.createElement('option');
+                allOption.value = '';
+                allOption.textContent = 'All districts';
+                districtSelect.appendChild(allOption);
+
+                districts.forEach(function (district) {
+                    var option = document.createElement('option');
+                    option.value = district.id;
+                    option.textContent = district.name;
+                    if (selectedDistrictId && String(selectedDistrictId) === String(district.id)) {
+                        option.selected = true;
+                    }
+                    districtSelect.appendChild(option);
+                });
+            }
+
+            regionSelect.addEventListener('change', function () {
+                populateDistricts(regionSelect.value, '');
+            });
+        });
+    </script>
 </x-admin-layout>

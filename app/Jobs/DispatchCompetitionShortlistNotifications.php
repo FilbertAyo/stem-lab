@@ -39,7 +39,7 @@ class DispatchCompetitionShortlistNotifications implements ShouldQueue
             'idea_id' => $idea->id,
             'decision' => $this->decisionStatus,
             'teacher_email' => $idea->registration->teacher->email,
-            'school' => $idea->registration->school_name,
+            'school' => $idea->registration->resolvedSchoolName(),
         ]);
     }
 }

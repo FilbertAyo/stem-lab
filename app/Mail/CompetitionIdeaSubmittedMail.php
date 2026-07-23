@@ -36,7 +36,7 @@ class CompetitionIdeaSubmittedMail extends Mailable
             with: [
                 'teacherName' => $this->registration->resolvedTeacherName() ?: 'Teacher',
                 'competitionName' => $this->competition->name,
-                'schoolName' => $this->registration->school_name,
+                'schoolName' => $this->registration->resolvedSchoolName(),
                 'problemTitle' => $this->idea->problem_title,
                 'competitionUrl' => $this->competitionUrl,
             ],

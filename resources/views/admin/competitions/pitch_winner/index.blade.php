@@ -29,7 +29,7 @@
                                     @foreach($calledTeams as $team)
                                         <tr>
                                             <td>
-                                                <div class="fw-semibold">{{ $team->registration?->school_name ?? '—' }}</div>
+                                                <div class="fw-semibold">{{ $team->registration?->resolvedSchoolName() ?? '—' }}</div>
                                                 <small class="text-muted">{{ $team->registration?->teacher_name ?? '—' }}</small>
                                             </td>
                                             <td>

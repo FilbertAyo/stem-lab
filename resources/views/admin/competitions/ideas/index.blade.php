@@ -31,7 +31,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
-                                            <div class="fw-semibold">{{ $idea->registration?->school_name ?? 'N/A' }}</div>
+                                            <div class="fw-semibold">{{ $idea->registration?->resolvedSchoolName() ?? 'N/A' }}</div>
                                             <small class="text-muted">{{ $idea->registration?->teacher_name }}</small>
                                         </td>
                                         <td>

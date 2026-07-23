@@ -92,6 +92,18 @@ class CompetitionRegistration extends Model
         return filled($phone) ? (string) $phone : null;
     }
 
+    public function resolvedSchoolName(): string
+    {
+        return (string) ($this->school?->name ?: $this->school_name ?: '');
+    }
+
+    public function resolvedSchoolWard(): ?string
+    {
+        $ward = $this->school?->ward ?? $this->school_ward;
+
+        return filled($ward) ? (string) $ward : null;
+    }
+
     public function competition(): BelongsTo
     {
         return $this->belongsTo(Competition::class);

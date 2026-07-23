@@ -4,7 +4,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h5 class="mb-0">Prototype Modification Review - {{ $competition->name }}</h5>
-                    <p class="text-muted mb-0">School: {{ $modification->registration?->school_name ?? '—' }}</p>
+                    <p class="text-muted mb-0">School: {{ $modification->registration?->resolvedSchoolName() ?? '—' }}</p>
                 </div>
                 <div class="d-flex gap-2">
                     @if(filled($googleFormUrl))

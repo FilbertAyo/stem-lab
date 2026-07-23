@@ -12,6 +12,7 @@ use App\Models\TeacherClub;
 use App\Models\User;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
+use App\Services\CompetitionRegistrationSchoolSyncService;
 use App\Services\StudentCsvBulkImportService;
 use App\Services\TeacherClubSharedContextService;
 use App\Support\SchoolLocation;
@@ -222,6 +223,8 @@ class SchoolController extends Controller
         $validated = SchoolLocation::normalizeSchoolAttributes($validated);
 
         $school->update($validated);
+
+        app(CompetitionRegistrationSchoolSyncService::class)->syncFromSchool($school->fresh(['districtModel']));
 
         return redirect()->route('admin.schools.index')->with('status', 'School updated successfully.');
     }

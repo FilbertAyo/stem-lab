@@ -417,18 +417,45 @@ class CompetitionController extends Controller
                 ->with('status', 'Your school already has a competition registration.');
         }
 
+        $linkedSchool = $teacherClub->school;
+
         $validated = $request->validate([
-            'school_name' => ['required', 'string', 'max:255'],
+            'school_name' => [$linkedSchool ? 'nullable' : 'required', 'string', 'max:255'],
             'school_district_id' => ['nullable', 'exists:districts,id'],
             'school_ward' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $location = SchoolLocation::normalizeSchoolAttributes([
-            'district_id' => $validated['school_district_id'] ?? null,
-            'region_id' => $teacherClub->school?->region_id,
-        ]);
-        $schoolDistrict = $location['district']
-            ?? $teacherClub->school?->districtName();
+        if ($linkedSchool) {
+            $schoolName = $linkedSchool->name;
+            $schoolWard = $linkedSchool->ward;
+            $snapshot = SchoolLocation::registrationSnapshotFromSchool($linkedSchool);
+
+            if (! empty($validated['school_district_id'])) {
+                $normalized = SchoolLocation::normalizeSchoolAttributes([
+                    'district_id' => $validated['school_district_id'],
+                    'region_id' => $linkedSchool->region_id,
+                ]);
+                $snapshot['district_id'] = $normalized['district_id'] ?? $snapshot['district_id'];
+                $snapshot['region_id'] = $normalized['region_id'] ?? $snapshot['region_id'];
+                $snapshot['school_district'] = $normalized['district'] ?? $snapshot['school_district'];
+            }
+
+            $location = $snapshot;
+            $schoolDistrict = $snapshot['school_district'] ?? $linkedSchool->districtName();
+        } else {
+            $schoolName = $validated['school_name'];
+            $schoolWard = $validated['school_ward'] ?? null;
+            $normalized = SchoolLocation::normalizeSchoolAttributes([
+                'district_id' => $validated['school_district_id'] ?? null,
+                'region_id' => null,
+            ]);
+            $location = [
+                'region_id' => $normalized['region_id'] ?? null,
+                'district_id' => $normalized['district_id'] ?? null,
+                'school_district' => $normalized['district'] ?? null,
+            ];
+            $schoolDistrict = $location['school_district'];
+        }
 
         $pool = $eligibilityPool->computePool($competition, $teacherClub);
         $poolCount = $pool['count'];
@@ -440,7 +467,7 @@ class CompetitionController extends Controller
             return back()->withErrors(['eligibility' => $poolError])->withInput();
         }
 
-        DB::transaction(function () use ($validated, $competition, $teacherClub, $user, $poolCount, $poolGirlsCount, $poolRatio, $existing, $participantRegistrationService, $location, $schoolDistrict): void {
+        DB::transaction(function () use ($schoolName, $schoolWard, $competition, $teacherClub, $user, $poolCount, $poolGirlsCount, $poolRatio, $existing, $participantRegistrationService, $location, $schoolDistrict): void {
             if ($existing) {
                 $existing->representativeStudents()->delete();
                 $existing->update([
@@ -453,9 +480,9 @@ class CompetitionController extends Controller
                     'teacher_name' => $user->name,
                     'teacher_email' => $user->email,
                     'teacher_phone' => $user->phone,
-                    'school_name' => $validated['school_name'],
+                    'school_name' => $schoolName,
                     'school_district' => $schoolDistrict,
-                    'school_ward' => $validated['school_ward'] ?? $teacherClub->school?->ward,
+                    'school_ward' => $schoolWard,
                     'student_count_snapshot' => $poolCount,
                     'girls_count_snapshot' => $poolGirlsCount,
                     'girls_ratio_snapshot' => round((float) $poolRatio, 2),
@@ -479,9 +506,9 @@ class CompetitionController extends Controller
                 'teacher_name' => $user->name,
                 'teacher_email' => $user->email,
                 'teacher_phone' => $user->phone,
-                'school_name' => $validated['school_name'],
+                'school_name' => $schoolName,
                 'school_district' => $schoolDistrict,
-                'school_ward' => $validated['school_ward'] ?? $teacherClub->school?->ward,
+                'school_ward' => $schoolWard,
                 'student_count_snapshot' => $poolCount,
                 'girls_count_snapshot' => $poolGirlsCount,
                 'girls_ratio_snapshot' => round((float) $poolRatio, 2),

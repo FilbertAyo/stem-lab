@@ -21,10 +21,10 @@
             @forelse($registrations as $index => $registration)
                 <tr>
                     <td class="sn">{{ $index + 1 }}</td>
-                    <td>{{ $registration->school_name ?: '—' }}</td>
+                    <td>{{ $registration->resolvedSchoolName() ?: '—' }}</td>
                     <td>{{ $registration->region?->name ?: '—' }}</td>
                     <td>{{ $registration->districtName() ?: '—' }}</td>
-                    <td>{{ $registration->school_ward ?: '—' }}</td>
+                    <td>{{ $registration->resolvedSchoolWard() ?: '—' }}</td>
                     <td>{{ $registration->resolvedTeacherName() ?: '—' }}</td>
                     <td>{{ $registration->resolvedTeacherEmail() ?: '—' }}</td>
                     <td>{{ $registration->resolvedTeacherPhone() ?: '—' }}</td>

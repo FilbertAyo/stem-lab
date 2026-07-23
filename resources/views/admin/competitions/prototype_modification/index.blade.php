@@ -46,7 +46,7 @@
                                         @endphp
                                         <tr>
                                             <td>
-                                                <div class="fw-semibold">{{ $modification->registration?->school_name ?? '—' }}</div>
+                                                <div class="fw-semibold">{{ $modification->registration?->resolvedSchoolName() ?? '—' }}</div>
                                                 <small class="text-muted">{{ $modification->registration?->teacher_name ?? '—' }}</small>
                                             </td>
                                             <td>
