@@ -30,7 +30,7 @@
                         @if($canSendEligibilityReminder)
                             <form method="POST" action="{{ route('admin.competitions.registrations.eligibility-reminder', [$competition, $registration]) }}" class="d-inline">
                                 @csrf
-                                <button type="submit" class="btn btn-warning">
+                                <button type="submit" class="btn btn-sm btn-warning">
                                     Send eligibility reminder
                                     @if($registration->eligibility_reminder_count > 0)
                                         ({{ $registration->eligibility_reminder_count }}/{{ $maxEligibilityReminders }})
@@ -38,24 +38,24 @@
                                 </button>
                             </form>
                         @elseif(! $registration->resolvedTeacherEmail())
-                            <button type="button" class="btn btn-outline-secondary" disabled title="Add a teacher email before sending reminders">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Add a teacher email before sending reminders">
                                 No teacher email
                             </button>
                         @else
-                            <button type="button" class="btn btn-outline-secondary" disabled title="Maximum reminders ({{ $maxEligibilityReminders }}) already sent">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Maximum reminders ({{ $maxEligibilityReminders }}) already sent">
                                 Reminder limit reached ({{ $registration->eligibility_reminder_count }}/{{ $maxEligibilityReminders }})
                             </button>
                         @endif
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#overrideEligibilityModal">
+                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#overrideEligibilityModal">
                             Pass phase (admin override)
                         </button>
                     @endif
                     @if($registration->status === 'pending')
                         <form method="POST" action="{{ route('admin.competitions.registrations.approve', [$competition, $registration]) }}" class="d-inline">
                             @csrf
-                            <button type="submit" class="btn btn-success">Approve</button>
+                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
                         </form>
-                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rejectRegistrationModal">Reject</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rejectRegistrationModal">Reject</button>
                     @endif
                 </div>
             </div>
