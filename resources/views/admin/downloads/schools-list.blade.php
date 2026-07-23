@@ -12,6 +12,7 @@
                 <th>Ward</th>
                 <th>Status</th>
                 <th>Teachers</th>
+                <th>Students</th>
             </tr>
         </thead>
         <tbody>
@@ -43,10 +44,11 @@
                         @endif
                     </td>
                     <td>{{ $school->teacher_clubs_count ?? 0 }}</td>
+                    <td>{{ $school->students_count ?? 0 }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8" class="empty">No records found for the selected export options.</td>
+                    <td colspan="9" class="empty">No records found for the selected export options.</td>
                 </tr>
             @endforelse
         </tbody>

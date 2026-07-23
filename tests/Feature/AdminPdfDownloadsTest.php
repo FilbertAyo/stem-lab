@@ -127,4 +127,15 @@ test('download templates start with sn and omit ownership columns', function () 
     expect($modelsHtml)->toContain('S/N')
         ->and($modelsHtml)->not->toContain('Created by')
         ->and($modelsHtml)->not->toContain('Updated at');
+
+    $schoolsHtml = view('admin.downloads.schools-list', [
+        'schools' => collect(),
+        'title' => 'Schools',
+        'generatedAt' => now(),
+        'filterSummary' => null,
+    ])->render();
+
+    expect($schoolsHtml)->toContain('S/N')
+        ->and($schoolsHtml)->toContain('Teachers')
+        ->and($schoolsHtml)->toContain('Students');
 });

@@ -63,7 +63,7 @@ class SchoolController extends Controller
             ? School::query()
             : $this->schoolsIndexQuery($request))
             ->with(['regionModel', 'districtModel'])
-            ->withCount('teacherClubs')
+            ->withCount(['teacherClubs', 'students'])
             ->reviewQueueOrder()
             ->get();
 
