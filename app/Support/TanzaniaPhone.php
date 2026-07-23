@@ -31,4 +31,18 @@ class TanzaniaPhone
 
         return '+255' . $local;
     }
+
+    /**
+     * Build a WhatsApp chat URL (https://wa.me/255XXXXXXXXX) for a Tanzania mobile number.
+     */
+    public static function whatsappUrl(?string $phone): ?string
+    {
+        $normalized = self::normalize($phone);
+
+        if ($normalized === null) {
+            return null;
+        }
+
+        return 'https://wa.me/' . ltrim($normalized, '+');
+    }
 }

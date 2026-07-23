@@ -120,7 +120,7 @@
                                 <dt class="col-sm-4 text-muted fw-normal">Email</dt>
                                 <dd class="col-sm-8 mb-1">{{ $registration->resolvedTeacherEmail() ?: '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Phone</dt>
-                                <dd class="col-sm-8 mb-1">{{ $registration->resolvedTeacherPhone() ?: '—' }}</dd>
+                                <dd class="col-sm-8 mb-1"><x-whatsapp-phone :phone="$registration->resolvedTeacherPhone()" /></dd>
                                 @if($registration->teacherClub?->club_code)
                                     <dt class="col-sm-4 text-muted fw-normal">Club code</dt>
                                     <dd class="col-sm-8 mb-1"><code>{{ $registration->teacherClub->club_code }}</code></dd>
@@ -204,7 +204,7 @@
                                                 @endif
                                             </dd>
                                             <dt class="col-sm-4 text-muted fw-normal">Phone</dt>
-                                            <dd class="col-sm-8 mb-1">{{ $registration->school->phone ?: '—' }}</dd>
+                                            <dd class="col-sm-8 mb-1"><x-whatsapp-phone :phone="$registration->school->phone" /></dd>
                                             <dt class="col-sm-4 text-muted fw-normal">Email</dt>
                                             <dd class="col-sm-8 mb-1">{{ $registration->school->email ?: '—' }}</dd>
                                             <dt class="col-sm-4 text-muted fw-normal">District</dt>

@@ -44,7 +44,7 @@
                                 <dt class="col-sm-4 text-muted fw-normal">Teacher email</dt>
                                 <dd class="col-sm-8 mb-2">{{ $registration?->teacher_email ?? '—' }}</dd>
                                 <dt class="col-sm-4 text-muted fw-normal">Teacher phone</dt>
-                                <dd class="col-sm-8 mb-2">{{ $registration?->teacher_phone ?? '—' }}</dd>
+                                <dd class="col-sm-8 mb-2"><x-whatsapp-phone :phone="$registration?->teacher_phone" /></dd>
                                 @if($registration?->teacherClub?->club_code)
                                     <dt class="col-sm-4 text-muted fw-normal">Club code</dt>
                                     <dd class="col-sm-8 mb-2"><code>{{ $registration->teacherClub->club_code }}</code></dd>

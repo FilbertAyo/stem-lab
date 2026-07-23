@@ -183,7 +183,9 @@
                                                         <div class="fw-semibold">{{ $mentor->name }}</div>
                                                         <div class="small text-muted">
                                                             {{ filled($mentor->email) ? $mentor->email : '—' }}
-                                                            @if(filled($mentor->phone)) • {{ $mentor->phone }} @endif
+                                                            @if(filled($mentor->phone))
+                                                                • <x-whatsapp-phone :phone="$mentor->phone" />
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
