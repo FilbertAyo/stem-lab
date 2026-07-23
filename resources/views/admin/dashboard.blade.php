@@ -143,6 +143,14 @@
         </div>
 
         <div class="stat-card">
+            <div class="stat-icon bg-success bg-opacity-10 text-success"><i class="ti ti-users-group"></i></div>
+            <div class="min-w-0">
+                <p class="stat-label">Students in Club</p>
+                <p class="stat-value">{{ $stats['students_in_club'] }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
             <div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="ti ti-3d-cube-sphere"></i></div>
             <div class="min-w-0">
                 <p class="stat-label">3D Models</p>

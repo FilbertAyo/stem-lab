@@ -28,6 +28,7 @@ class DashboardController extends Controller
             'total_admins' => User::where('role', 'admin')->count(),
             'total_teachers' => User::where('role', 'teacher')->count(),
             'total_students' => User::where('role', 'student')->count(),
+            'students_in_club' => Student::count(),
             'total_3d_models' => Model3d::count(),
             'active_3d_models' => Model3d::where('is_active', true)->count(),
             'total_vr_experiments' => VrExperiment::count(),
