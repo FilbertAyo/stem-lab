@@ -45,7 +45,11 @@ class CompetitionController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Competition::query()->with(['club', 'creator']);
+        $query = Competition::query()->with([
+            'club',
+            'creator',
+            'phases' => fn ($phases) => $phases->orderBy('sequence'),
+        ]);
 
         if ($request->filled('status')) {
             $query->where('status', $request->string('status'));

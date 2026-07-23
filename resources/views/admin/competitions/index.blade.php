@@ -63,10 +63,10 @@
                                     <th>Competition</th>
                                     <th>Club</th>
                                     <th>Timeline</th>
-                                    <th>Phases</th>
+                                    <th>Stages</th>
                                     <th>Requirements</th>
                                     <th>Status</th>
-                                    <th class="text-center" style="width: 220px;">Actions</th>
+                                    <th class="text-center" style="width: 140px;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -108,8 +108,64 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="text-center">
-                                            <span class="badge bg-light text-dark">{{ $competition->phases()->count() }}</span>
+                                        <td style="min-width: 280px;">
+                                            @if($competition->phases->isEmpty())
+                                                <span class="text-muted small">No stages</span>
+                                            @else
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    @foreach($competition->phases as $phase)
+                                                        @php
+                                                            $phaseAction = match ($phase->phase_key) {
+                                                                'registration' => [
+                                                                    'route' => route('admin.competitions.registrations.index', $competition),
+                                                                    'btn' => 'btn-outline-success',
+                                                                    'icon' => 'ti ti-users',
+                                                                ],
+                                                                'idea_submission', 'idea_shortlisting' => [
+                                                                    'route' => route('admin.competitions.ideas.index', $competition),
+                                                                    'btn' => 'btn-outline-warning',
+                                                                    'icon' => 'ti ti-bulb',
+                                                                ],
+                                                                'prototype_development', 'prototype_shortlisting' => [
+                                                                    'route' => route('admin.competitions.prototype-shortlisting.index', $competition),
+                                                                    'btn' => 'btn-outline-info',
+                                                                    'icon' => 'ti ti-list-check',
+                                                                ],
+                                                                'mentor_onboarding', 'prototype_modification' => [
+                                                                    'route' => route('admin.competitions.prototype-modification.index', $competition),
+                                                                    'btn' => 'btn-outline-dark',
+                                                                    'icon' => 'ti ti-adjustments',
+                                                                ],
+                                                                'pitch_winner' => [
+                                                                    'route' => route('admin.competitions.pitch-winner.index', $competition),
+                                                                    'btn' => 'btn-outline-success',
+                                                                    'icon' => 'ti ti-microphone',
+                                                                ],
+                                                                default => null,
+                                                            };
+                                                            $statusClass = match ($phase->status) {
+                                                                'open' => 'bg-success',
+                                                                'closed' => 'bg-secondary',
+                                                                'results_pending' => 'bg-warning text-dark',
+                                                                default => 'bg-light text-dark',
+                                                            };
+                                                        @endphp
+                                                        @if($phaseAction)
+                                                            <a href="{{ $phaseAction['route'] }}"
+                                                               class="btn btn-sm {{ $phaseAction['btn'] }} py-0 px-2"
+                                                               title="{{ $phase->name }} · {{ ucfirst(str_replace('_', ' ', $phase->status)) }}">
+                                                                <i class="{{ $phaseAction['icon'] }}"></i>
+                                                                {{ $phase->name }}
+                                                                <span class="badge {{ $statusClass }} ms-1">{{ ucfirst(str_replace('_', ' ', $phase->status)) }}</span>
+                                                            </a>
+                                                        @else
+                                                            <span class="badge bg-light text-dark border" title="No admin page for this stage">
+                                                                {{ $phase->name }}
+                                                            </span>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            @endif
                                         </td>
                                         <td>
                                             <div class="small">
@@ -136,14 +192,6 @@
                                                 <a href="{{ route('admin.competitions.edit', $competition) }}" 
                                                    class="btn btn-sm btn-outline-primary" title="Edit">
                                                     <i class="ti ti-edit"></i>
-                                                </a>
-                                                <a href="{{ route('admin.competitions.registrations.index', $competition) }}"
-                                                   class="btn btn-sm btn-outline-success" title="Registrations">
-                                                    <i class="ti ti-users"></i>
-                                                </a>
-                                                <a href="{{ route('admin.competitions.ideas.index', $competition) }}"
-                                                   class="btn btn-sm btn-outline-warning" title="Ideas">
-                                                    <i class="ti ti-bulb"></i>
                                                 </a>
                                                 <button type="button" class="btn btn-sm btn-outline-danger" 
                                                         data-bs-toggle="modal" data-bs-target="#deleteModal"
