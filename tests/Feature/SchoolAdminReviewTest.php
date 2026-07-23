@@ -125,7 +125,7 @@ test('mark reviewed keeps school active and removes from pending queue', functio
 
     $response = $this->actingAs($admin)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
-        ->post(adminSchoolsUrl('/'.$school->ulid.'/mark-reviewed'));
+        ->post(adminSchoolsUrl('/'.$school->getRouteKey().'/mark-reviewed'));
 
     $response->assertRedirect();
 
@@ -154,13 +154,13 @@ test('admin can assign unassigned teacher to school from school show page', func
 
     $response = $this->actingAs($admin)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
-        ->post(adminSchoolsUrl('/'.$school->ulid.'/teachers'), [
+        ->post(adminSchoolsUrl('/'.$school->getRouteKey().'/teachers'), [
             'user_id' => $teacher->id,
             'club_id' => $club->id,
             'club_day' => 'monday',
         ]);
 
-    $response->assertRedirect(adminSchoolsUrl('/'.$school->ulid));
+    $response->assertRedirect(adminSchoolsUrl('/'.$school->getRouteKey()));
     $response->assertSessionHas('success');
 
     $teacherClub = $teacher->fresh()->teacherClubs()->first();
@@ -202,12 +202,12 @@ test('admin cannot assign teacher who already belongs to a school', function () 
 
     $response = $this->actingAs($admin)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
-        ->post(adminSchoolsUrl('/'.$targetSchool->ulid.'/teachers'), [
+        ->post(adminSchoolsUrl('/'.$targetSchool->getRouteKey().'/teachers'), [
             'user_id' => $teacher->id,
             'club_id' => $club->id,
         ]);
 
-    $response->assertRedirect(adminSchoolsUrl('/'.$targetSchool->ulid));
+    $response->assertRedirect(adminSchoolsUrl('/'.$targetSchool->getRouteKey()));
     $response->assertSessionHasErrors('user_id');
 
     expect($teacher->fresh()->teacherClubs()->count())->toBe(1);
@@ -248,11 +248,11 @@ test('updating club day syncs to all teachers in the same school club', function
 
     $response = $this->actingAs($admin)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
-        ->put(adminSchoolsUrl('/'.$school->ulid.'/teacher-clubs/'.$coMembership->ulid.'/club-day'), [
+        ->put(adminSchoolsUrl('/'.$school->getRouteKey().'/teacher-clubs/'.$coMembership->ulid.'/club-day'), [
             'club_day' => 'wednesday',
         ]);
 
-    $response->assertRedirect(adminSchoolsUrl('/'.$school->ulid));
+    $response->assertRedirect(adminSchoolsUrl('/'.$school->getRouteKey()));
     $response->assertSessionHas('status');
 
     expect($leaderMembership->fresh()->club_day)->toBe('wednesday')
@@ -285,12 +285,12 @@ test('adding co-teacher inherits existing shared club day', function () {
 
     $response = $this->actingAs($admin)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
-        ->post(adminSchoolsUrl('/'.$school->ulid.'/teachers'), [
+        ->post(adminSchoolsUrl('/'.$school->getRouteKey().'/teachers'), [
             'user_id' => $newTeacher->id,
             'club_id' => $club->id,
         ]);
 
-    $response->assertRedirect(adminSchoolsUrl('/'.$school->ulid));
+    $response->assertRedirect(adminSchoolsUrl('/'.$school->getRouteKey()));
 
     $newMembership = $newTeacher->fresh()->teacherClubs()->first();
 

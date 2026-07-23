@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->bindUlidWithLegacyId('school', School::class);
+        $this->bindShortIdWithLegacyIds('school', School::class);
         $this->bindShortIdWithLegacyIds('club', Club::class);
         $this->bindUlidWithLegacyId('schoolClass', SchoolClass::class);
         $this->bindUlidWithLegacyId('teacherClub', TeacherClub::class);

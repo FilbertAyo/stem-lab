@@ -2,6 +2,7 @@
 
 use App\Models\Club;
 use App\Models\Competition;
+use App\Models\School;
 use App\Models\Subject;
 use App\Models\User;
 use App\Models\VrAssessmentAttempt;
@@ -59,7 +60,7 @@ function adminHostUrl(string $path = '/'): string
     return 'http://'.$host.$path;
 }
 
-test('vr experiments, banks, attempts, subjects, clubs, and users receive short public ids', function () {
+test('vr experiments, banks, attempts, subjects, clubs, users, and schools receive short public ids', function () {
     $subject = createPublicIdSubject();
     $experiment = createPublicIdVrExperiment($subject);
     $bank = createPublicIdQuestionBank($experiment);
@@ -78,8 +79,12 @@ test('vr experiments, banks, attempts, subjects, clubs, and users receive short 
         'name' => 'Club '.Str::random(4),
         'is_active' => true,
     ])->fresh();
+    $school = School::query()->create([
+        'name' => 'School '.Str::random(4),
+        'is_active' => true,
+    ])->fresh();
 
-    foreach ([$subject, $experiment, $bank, $attempt, $club, $user->fresh()] as $model) {
+    foreach ([$subject, $experiment, $bank, $attempt, $club, $user->fresh(), $school] as $model) {
         expect($model->public_id)
             ->toBeString()
             ->toHaveLength(6)
@@ -96,23 +101,26 @@ test('generated routes use short public ids for scoped modules', function () {
     $bank = createPublicIdQuestionBank($experiment);
     $user = User::factory()->create(['role' => 'admin']);
     $club = Club::query()->create(['name' => 'Club '.Str::random(4), 'is_active' => true])->fresh();
+    $school = School::query()->create(['name' => 'School '.Str::random(4), 'is_active' => true])->fresh();
 
     expect(route('subjects.show', $subject, false))->toEndWith('/subjects/'.$subject->public_id)
         ->and(route('admin.vr-experiments.edit', $experiment, false))->toEndWith('/vr-experiments/'.$experiment->public_id.'/edit')
         ->and(route('admin.vr-assessments.question-banks.show', $bank, false))->toEndWith('/vr-assessments/question-banks/'.$bank->public_id)
         ->and(route('admin.clubs.show', $club, false))->toEndWith('/clubs/'.$club->public_id)
+        ->and(route('admin.schools.show', $school, false))->toEndWith('/schools/'.$school->public_id)
         ->and(route('admin.progress.student', $user, false))->toEndWith('/progress/student/'.$user->public_id)
         ->and(route('client.vr-experiments.show', $experiment, false))->toBe('/vr-experiments/'.$experiment->public_id)
         ->and(route('client.vr-assessments.show', $bank, false))->toBe('/vr-quizzes/'.$bank->public_id)
         ->and(route('client.clubs.join.form', $club, false))->toBe('/clubs/join/'.$club->public_id);
 });
 
-test('legacy ulid get urls redirect for subjects clubs and vr modules', function () {
+test('legacy ulid get urls redirect for subjects clubs schools and vr modules', function () {
     $admin = User::factory()->create(['role' => 'admin']);
     $subject = createPublicIdSubject();
     $experiment = createPublicIdVrExperiment($subject);
     $bank = createPublicIdQuestionBank($experiment);
     $club = Club::query()->create(['name' => 'Club '.Str::random(4), 'is_active' => true])->fresh();
+    $school = School::query()->create(['name' => 'School '.Str::random(4), 'is_active' => true])->fresh();
 
     $this->actingAs($admin)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
@@ -136,6 +144,12 @@ test('legacy ulid get urls redirect for subjects clubs and vr modules', function
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
         ->get(adminHostUrl('/clubs/'.$club->ulid))
         ->assertRedirect(adminHostUrl('/clubs/'.$club->public_id))
+        ->assertStatus(301);
+
+    $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+        ->get(adminHostUrl('/schools/'.$school->ulid))
+        ->assertRedirect(adminHostUrl('/schools/'.$school->public_id))
         ->assertStatus(301);
 });
 
@@ -205,6 +219,16 @@ test('public ids backfill command is idempotent across resources', function () {
     $first = $subject->public_id;
     Artisan::call('public-ids:backfill', ['resource' => 'subjects', '--verify' => true]);
     expect($subject->fresh()->public_id)->toBe($first);
+
+    $school = School::query()->create(['name' => 'School '.Str::random(4), 'is_active' => true])->fresh();
+    $school->forceFill(['public_id' => null])->saveQuietly();
+    $schoolUlid = $school->ulid;
+
+    Artisan::call('public-ids:backfill', ['resource' => 'schools']);
+    $school->refresh();
+
+    expect($school->public_id)->toBeString()->toHaveLength(6)
+        ->and($school->ulid)->toBe($schoolUlid);
 });
 
 test('competition urls still use ulids and are unchanged', function () {

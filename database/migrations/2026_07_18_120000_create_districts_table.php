@@ -19,6 +19,27 @@ return new class extends Migration
 
             $table->unique(['region_id', 'name']);
         });
+
+        Schema::table('schools', function (Blueprint $table) {
+            $table->foreign('district_id')
+                ->references('id')
+                ->on('districts')
+                ->nullOnDelete();
+        });
+
+        Schema::table('competition_registrations', function (Blueprint $table) {
+            $table->foreign('district_id')
+                ->references('id')
+                ->on('districts')
+                ->nullOnDelete();
+        });
+
+        Schema::table('competition_ideas', function (Blueprint $table) {
+            $table->foreign('community_district_id')
+                ->references('id')
+                ->on('districts')
+                ->nullOnDelete();
+        });
     }
 
     /**
@@ -26,6 +47,18 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('competition_ideas', function (Blueprint $table) {
+            $table->dropForeign(['community_district_id']);
+        });
+
+        Schema::table('competition_registrations', function (Blueprint $table) {
+            $table->dropForeign(['district_id']);
+        });
+
+        Schema::table('schools', function (Blueprint $table) {
+            $table->dropForeign(['district_id']);
+        });
+
         Schema::dropIfExists('districts');
     }
 };

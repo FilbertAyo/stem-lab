@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('club_id')->constrained('clubs')->onDelete('cascade');
             $table->foreignId('vr_experiment_id')->nullable()->constrained('vr_experiments')->onDelete('set null');
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->string('title');
             $table->text('description')->nullable();
             $table->date('session_date');

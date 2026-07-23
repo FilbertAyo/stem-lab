@@ -57,6 +57,7 @@ return new class extends Migration
             $table->foreignId('teacher_user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('school_id')->constrained('schools')->cascadeOnDelete();
             $table->foreignId('region_id')->nullable()->constrained('regions')->nullOnDelete();
+            $table->foreignId('district_id')->nullable();
             $table->string('status', 32)->default('pending');
             $table->string('teacher_name', 255);
             $table->string('teacher_email', 255);
@@ -128,6 +129,7 @@ return new class extends Migration
             $table->longText('proposed_solution')->nullable();
             $table->string('stem_category', 120)->nullable();
             $table->foreignId('community_region_id')->nullable()->constrained('regions')->nullOnDelete();
+            $table->foreignId('community_district_id')->nullable();
             $table->string('community_location', 255)->nullable();
             $table->longText('supporting_notes')->nullable();
             $table->json('attachments_meta')->nullable();

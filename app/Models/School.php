@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPublicShortId;
+use App\Models\Concerns\HasPublicUlid;
 use App\Models\Concerns\TracksOwnership;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,12 +11,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Support\Str;
 
 class School extends Model
 {
     use HasFactory;
     use TracksOwnership;
+    use HasPublicUlid;
+    use HasPublicShortId {
+        HasPublicShortId::getRouteKeyName insteadof HasPublicUlid;
+    }
 
     protected $fillable = [
         'ulid',
@@ -40,20 +45,6 @@ class School extends Model
         'is_active' => 'boolean',
         'admin_reviewed_at' => 'datetime',
     ];
-
-    protected static function booted(): void
-    {
-        static::creating(function (self $school): void {
-            if (blank($school->ulid)) {
-                $school->ulid = (string) Str::ulid();
-            }
-        });
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'ulid';
-    }
 
     /**
      * Get the region this school belongs to.

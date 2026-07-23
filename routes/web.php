@@ -161,18 +161,21 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/', [SchoolController::class, 'index'])->name('index');
             Route::get('/export', [SchoolController::class, 'export'])->name('export');
             Route::post('/mark-all-reviewed', [SchoolController::class, 'markAllReviewed'])->name('mark-all-reviewed');
-            Route::post('/{school}/mark-reviewed', [SchoolController::class, 'markReviewed'])->name('mark-reviewed');
-            Route::delete('/teacher-clubs/{teacherClub}', [SchoolController::class, 'removeTeacherFromClub'])->name('remove-teacher-from-club');
-            Route::put('/{school}/teacher-clubs/{teacherClub}/club-day', [SchoolController::class, 'updateClubDay'])->name('teacher-clubs.update-club-day');
-            Route::delete('/{school}/students/{student}', [SchoolController::class, 'removeStudent'])->name('remove-student');
-            Route::post('/{school}/students/bulk-destroy', [SchoolController::class, 'bulkRemoveStudents'])->name('students.bulk-destroy');
-            Route::post('/{school}/students/bulk-import', [SchoolController::class, 'bulkImportStudents'])->name('students.bulk-import');
-            Route::post('/{school}/teachers', [SchoolController::class, 'storeTeacher'])->name('teachers.store');
-            Route::get('/{school}', [SchoolController::class, 'show'])->name('show');
             Route::post('/', [SchoolController::class, 'store'])->name('store');
-            Route::put('/{school}', [SchoolController::class, 'update'])->name('update');
-            Route::delete('/{school}', [SchoolController::class, 'destroy'])->name('destroy');
-            Route::post('/{school}/toggle-status', [SchoolController::class, 'toggleStatus'])->name('toggle-status');
+            Route::delete('/teacher-clubs/{teacherClub}', [SchoolController::class, 'removeTeacherFromClub'])->name('remove-teacher-from-club');
+
+            Route::middleware('redirect.legacy.public-id')->group(function () {
+                Route::post('/{school}/mark-reviewed', [SchoolController::class, 'markReviewed'])->name('mark-reviewed');
+                Route::put('/{school}/teacher-clubs/{teacherClub}/club-day', [SchoolController::class, 'updateClubDay'])->name('teacher-clubs.update-club-day');
+                Route::delete('/{school}/students/{student}', [SchoolController::class, 'removeStudent'])->name('remove-student');
+                Route::post('/{school}/students/bulk-destroy', [SchoolController::class, 'bulkRemoveStudents'])->name('students.bulk-destroy');
+                Route::post('/{school}/students/bulk-import', [SchoolController::class, 'bulkImportStudents'])->name('students.bulk-import');
+                Route::post('/{school}/teachers', [SchoolController::class, 'storeTeacher'])->name('teachers.store');
+                Route::get('/{school}', [SchoolController::class, 'show'])->name('show');
+                Route::put('/{school}', [SchoolController::class, 'update'])->name('update');
+                Route::delete('/{school}', [SchoolController::class, 'destroy'])->name('destroy');
+                Route::post('/{school}/toggle-status', [SchoolController::class, 'toggleStatus'])->name('toggle-status');
+            });
         });
 
         // Competitions routes

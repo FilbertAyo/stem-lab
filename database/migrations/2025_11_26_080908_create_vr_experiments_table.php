@@ -22,6 +22,8 @@ return new class extends Migration
             $table->foreignId('school_class_id')->constrained('school_classes')->onDelete('cascade');
             $table->foreignId('subject_id')->nullable()->constrained('subjects')->onDelete('cascade');
             $table->boolean('is_active')->default(true);
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }

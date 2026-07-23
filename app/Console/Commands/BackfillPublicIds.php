@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Club;
 use App\Models\Model3d;
+use App\Models\School;
 use App\Models\Subject;
 use App\Models\User;
 use App\Models\VrAssessmentAttempt;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 class BackfillPublicIds extends Command
 {
     protected $signature = 'public-ids:backfill
-                            {resource : One of model3ds, vr-experiments, question-banks, assessment-attempts, subjects, clubs, users}
+                            {resource : One of model3ds, vr-experiments, question-banks, assessment-attempts, subjects, clubs, users, schools}
                             {--dry-run : Report how many rows need a public_id without writing}
                             {--verify : Only report remaining nulls and duplicate counts}';
 
@@ -60,6 +61,11 @@ class BackfillPublicIds extends Command
             'model' => User::class,
             'table' => 'users',
             'label' => 'users',
+        ],
+        'schools' => [
+            'model' => School::class,
+            'table' => 'schools',
+            'label' => 'schools',
         ],
     ];
 

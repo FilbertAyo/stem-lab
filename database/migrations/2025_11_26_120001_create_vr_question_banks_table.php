@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('passing_score')->default(60)->comment('Passing score percentage');
             $table->boolean('is_active')->default(true);
             $table->integer('display_order')->default(0);
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
             // Index for faster queries

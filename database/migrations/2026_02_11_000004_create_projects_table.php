@@ -27,6 +27,11 @@ return new class extends Migration
                 ->constrained('users')
                 ->nullOnDelete();
 
+            $table->foreignId('updated_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
             $table->string('name');
             $table->string('slug')->unique();
 
@@ -44,15 +49,13 @@ return new class extends Migration
             $table->longText('guide')->nullable(); // rich-text overview / fallback guide
             $table->longText('embedded_code')->nullable(); // quick single code block fallback
 
-            $table->boolean('is_published')->default(false);
             $table->boolean('is_active')->default(true);
-            $table->timestamp('published_at')->nullable();
 
             $table->timestamps();
 
             // Helpful indexes
-            $table->index(['project_category_id', 'is_published', 'is_active'], 'projects_category_publish_active_idx');
-            $table->index(['difficulty', 'is_published', 'is_active'], 'projects_difficulty_publish_active_idx');
+            $table->index(['project_category_id', 'is_active'], 'projects_category_active_idx');
+            $table->index(['difficulty', 'is_active'], 'projects_difficulty_active_idx');
             $table->index('name', 'projects_name_idx');
             $table->index('school_class_id', 'projects_school_class_id_index');
         });

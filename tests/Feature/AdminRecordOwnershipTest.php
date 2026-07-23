@@ -55,7 +55,7 @@ test('authenticated admin create and update set ownership on schools', function 
 
     $this->actingAs($updater)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
-        ->put(ownershipAdminUrl('/schools/'.$school->ulid), [
+        ->put(ownershipAdminUrl('/schools/'.$school->getRouteKey()), [
             'name' => $updatedName,
             'is_active' => '1',
         ])
@@ -84,7 +84,7 @@ test('legacy ownership remains null and displays fallback label', function () {
 
     $response = $this->actingAs($admin)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
-        ->get(ownershipAdminUrl('/schools/'.$school->ulid));
+        ->get(ownershipAdminUrl('/schools/'.$school->getRouteKey()));
 
     $response->assertOk();
     $response->assertSee('Created by: Legacy / unavailable', false);
@@ -112,7 +112,7 @@ test('deleted owner user falls back to legacy unavailable label', function () {
 
     $response = $this->actingAs($viewer)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
-        ->get(ownershipAdminUrl('/schools/'.$school->ulid));
+        ->get(ownershipAdminUrl('/schools/'.$school->getRouteKey()));
 
     $response->assertOk();
     $response->assertSee('Created by: Legacy / unavailable', false);
