@@ -124,7 +124,9 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
 
             Route::middleware('redirect.legacy.public-id')->group(function () {
                 Route::get('/{club}', [ClubController::class, 'show'])->name('show');
+                Route::get('/{club}/leaders/export', [ClubController::class, 'exportLeaders'])->name('leaders.export');
                 Route::get('/{club}/members/export', [ClubController::class, 'exportApprovedMembers'])->name('members.export');
+                Route::get('/{club}/requests/export', [ClubController::class, 'exportPendingRequests'])->name('requests.export');
                 Route::put('/{club}', [ClubController::class, 'update'])->name('update');
                 Route::post('/{club}/toggle-status', [ClubController::class, 'toggleStatus'])->name('toggle-status');
                 Route::post('/{club}/transfer-leadership', [ClubController::class, 'transferLeadership'])->name('transfer-leadership');

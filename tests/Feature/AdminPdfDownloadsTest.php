@@ -102,6 +102,49 @@ test('admin can download filtered competition registrations without eligibility 
         ->and($html)->not->toContain('Updated at');
 });
 
+test('admin can download club leaders members and pending requests pdfs', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+
+    $club = \App\Models\Club::query()->create([
+        'name' => 'Club PDF '.Str::random(6),
+        'is_active' => true,
+    ]);
+
+    $clubKey = $club->getRouteKey();
+
+    assertPdfDownload(
+        $this->actingAs($admin)
+            ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+            ->get(pdfDownloadAdminUrl('/clubs/'.$clubKey.'/leaders/export'))
+    );
+
+    assertPdfDownload(
+        $this->actingAs($admin)
+            ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+            ->get(pdfDownloadAdminUrl('/clubs/'.$clubKey.'/members/export'))
+    );
+
+    assertPdfDownload(
+        $this->actingAs($admin)
+            ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+            ->get(pdfDownloadAdminUrl('/clubs/'.$clubKey.'/requests/export'))
+    );
+
+    $html = view('admin.downloads.club-teacher-clubs-list', [
+        'rows' => collect(),
+        'title' => $club->name.' - School Leaders',
+        'generatedAt' => now(),
+        'filterSummary' => 'Club: '.$club->name,
+        'emptyMessage' => 'No school leaders found.',
+    ])->render();
+
+    expect($html)->toContain('S/N')
+        ->and($html)->not->toContain('Joined Date')
+        ->and($html)->not->toContain('Request Date')
+        ->and($html)->not->toContain('Created by')
+        ->and($html)->not->toContain('Updated at');
+});
+
 test('download templates start with sn and omit ownership columns', function () {
     $html = view('admin.downloads.classes-list', [
         'classes' => collect(),

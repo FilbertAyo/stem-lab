@@ -170,20 +170,70 @@ class ClubController extends Controller
     /**
      * Download approved club members as PDF.
      */
+    public function exportLeaders(Club $club): Response
+    {
+        $rows = $club->teacherClubs()
+            ->approved()
+            ->leaders()
+            ->with(['user', 'school'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        return $this->downloadClubTeacherClubsPdf(
+            $club,
+            $rows,
+            $club->name.' - School Leaders',
+            Str::slug($club->name).'_school_leaders_'.now()->format('Y-m-d').'.pdf',
+            'No school leaders found.'
+        );
+    }
+
     public function exportApprovedMembers(Club $club): Response
     {
-        $members = $club->teacherClubs()
+        $rows = $club->teacherClubs()
             ->approved()
             ->with(['user', 'school'])
             ->orderByDesc('created_at')
             ->get();
 
-        $filename = Str::slug($club->name).'_approved_members_'.now()->format('Y-m-d').'.pdf';
+        return $this->downloadClubTeacherClubsPdf(
+            $club,
+            $rows,
+            $club->name.' - Approved Members',
+            Str::slug($club->name).'_approved_members_'.now()->format('Y-m-d').'.pdf',
+            'No approved members found.'
+        );
+    }
 
-        $pdf = Pdf::loadView('admin.clubs.members-list-pdf', [
-            'members' => $members,
-            'title' => $club->name.' - Approved Members',
+    public function exportPendingRequests(Club $club): Response
+    {
+        $rows = $club->pendingRequests()
+            ->with(['user', 'school'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        return $this->downloadClubTeacherClubsPdf(
+            $club,
+            $rows,
+            $club->name.' - Pending Requests',
+            Str::slug($club->name).'_pending_requests_'.now()->format('Y-m-d').'.pdf',
+            'No pending requests found.'
+        );
+    }
+
+    private function downloadClubTeacherClubsPdf(
+        Club $club,
+        $rows,
+        string $title,
+        string $filename,
+        string $emptyMessage
+    ): Response {
+        $pdf = Pdf::loadView('admin.downloads.club-teacher-clubs-list', [
+            'rows' => $rows,
+            'title' => $title,
             'generatedAt' => now(),
+            'filterSummary' => 'Club: '.$club->name,
+            'emptyMessage' => $emptyMessage,
         ])->setPaper('a4', 'portrait');
 
         return $pdf->download($filename);

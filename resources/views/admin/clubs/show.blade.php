@@ -82,6 +82,13 @@
                 <div class="tab-pane fade {{ $activeTab === 'leaders' ? 'show active' : '' }}" id="pills-leaders" role="tabpanel" aria-labelledby="pills-leaders-tab">
                     <div class="card mb-4">
                         <div class="card-body p-0">
+                            <div class="d-flex justify-content-end p-3 border-bottom bg-light">
+                                <a href="{{ route('admin.clubs.leaders.export', $club) }}" class="btn btn-sm btn-danger">
+                                    <i class="ti ti-download me-1"></i>
+                                    Download PDF
+                                </a>
+                            </div>
+
                             @if($leaders->isEmpty())
                                 <div class="text-center text-muted py-5">
                                     <i class="ti ti-users-off fs-1 d-block mb-2"></i>
@@ -137,9 +144,9 @@
                     <div class="card mb-4">
                         <div class="card-body p-0">
                             <div class="d-flex justify-content-end p-3 border-bottom bg-light">
-                                <a href="{{ route('admin.clubs.members.export', $club) }}" class="btn btn-danger btn-sm">
+                                <a href="{{ route('admin.clubs.members.export', $club) }}" class="btn btn-sm btn-danger">
                                     <i class="ti ti-download me-1"></i>
-                                    Download List
+                                    Download PDF
                                 </a>
                             </div>
 
@@ -188,6 +195,13 @@
                 <div class="tab-pane fade {{ $activeTab === 'requests' ? 'show active' : '' }}" id="pills-requests" role="tabpanel" aria-labelledby="pills-requests-tab">
                     <div class="card mb-4">
                         <div class="card-body p-0">
+                            <div class="d-flex justify-content-end p-3 border-bottom bg-light">
+                                <a href="{{ route('admin.clubs.requests.export', $club) }}" class="btn btn-sm btn-danger">
+                                    <i class="ti ti-download me-1"></i>
+                                    Download PDF
+                                </a>
+                            </div>
+
                             @if($pendingRequests->isEmpty())
                                 <div class="text-center text-muted py-5">
                                     <i class="ti ti-clock fs-1 d-block mb-2"></i>

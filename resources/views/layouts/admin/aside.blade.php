@@ -110,20 +110,25 @@
           <li class="pc-item pc-hasmenu">
             <a href="#!" class="pc-link">
               <span class="pc-micon"><i class="ti ti-clipboard-check"></i></span>
-              <span class="pc-mtext">VR Assessment</span>
+              <span class="pc-mtext">Assessments</span>
               <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
             </a>
             <ul class="pc-submenu">
               <li class="pc-item">
                 <a href="{{ route('admin.vr-assessments.question-banks.index') }}" class="pc-link">
-                  <span class="pc-mtext">Question Banks</span>
+                  <span class="pc-mtext">VR Question Banks</span>
                 </a>
               </li>
               <li class="pc-item">
                 <a href="{{ route('admin.vr-assessments.results.index') }}" class="pc-link">
-                  <span class="pc-mtext">Assessment Results</span>
+                  <span class="pc-mtext">VR Assessment Results</span>
                 </a>
               </li>
+              <li class="pc-item">
+            <a href="{{ route('admin.progress.index') }}" class="pc-link">
+              <span class="pc-mtext">3D Model Results</span>
+            </a>
+          </li>
             </ul>
           </li>
 
@@ -134,12 +139,7 @@
             </a>
           </li>
 
-          <li class="pc-item">
-            <a href="{{ route('admin.progress.index') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-box"></i></span>
-              <span class="pc-mtext">3D Model Results</span>
-            </a>
-          </li>
+        
 
         
 
