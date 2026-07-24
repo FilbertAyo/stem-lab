@@ -1,85 +1,6 @@
 <x-admin-layout>
-    <style>
-        .dash-head { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .75rem; }
-        .dash-head h5 { margin: 0; font-weight: 700; }
-        .dash-head p { margin: 0; font-size: .75rem; }
-
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: .6rem;
-            margin-bottom: .9rem;
-        }
-        @media (min-width: 576px) {
-            .stat-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (min-width: 992px) {
-            .stat-grid { grid-template-columns: repeat(6, 1fr); }
-        }
-        .stat-card {
-            position: relative;
-            background: var(--bs-card-bg, #fff);
-            border: 1px solid var(--bs-border-color, #e9ecef);
-            border-radius: 0;
-            padding: .65rem .75rem;
-            display: flex;
-            align-items: center;
-            gap: .6rem;
-            min-width: 0;
-            overflow: hidden;
-            transition: transform .15s ease, box-shadow .15s ease;
-        }
-        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(7, 38, 73, .08); }
-        .stat-card .stat-icon {
-            flex-shrink: 0;
-            width: 34px;
-            height: 34px;
-            border-radius: .25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.05rem;
-        }
-        .stat-card .stat-label {
-            font-size: .68rem;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            color: var(--bs-secondary-color, #6c757d);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin: 0;
-        }
-        .stat-card .stat-value { font-size: 1.15rem; font-weight: 700; line-height: 1.15; margin: 0; }
-        .stat-card .stat-sub { font-size: .65rem; color: var(--bs-secondary-color, #98a2b3); margin: 0; white-space: nowrap; }
-
-        .dash-card { border: 1px solid var(--bs-border-color, #e9ecef); border-radius: 0; box-shadow: none; }
-        .dash-card .card-header { background: transparent; padding: .6rem .85rem; font-size: .8rem; font-weight: 600; }
-        .dash-card .card-body { padding: .75rem .85rem; }
-
-        .activity-item { display: flex; align-items: flex-start; gap: .55rem; padding: .45rem 0; border-bottom: 1px dashed var(--bs-border-color, #eef0f2); }
-        .activity-item:last-child { border-bottom: 0; }
-        .activity-item .avatar { width: 26px; height: 26px; font-size: .8rem; display: flex; align-items: center; justify-content: center; }
-        .activity-item h6 { font-size: .74rem; margin: 0 0 .1rem; }
-        .activity-item small, .activity-item p { font-size: .66rem; margin: 0; }
-
-        #visitor-week-view .nav-link { padding: .2rem .6rem; font-size: .7rem; }
-
-        #schools-map { height: 70vh; width: 100%; min-height: 400px; }
-        #schoolsMapModal .modal-body { padding: 0; }
-        #schoolsMapModal .map-empty { padding: 3rem 1.5rem; }
-
-        .dash-map-btn {
-            flex-shrink: 0;
-            display: inline-flex;
-            align-items: center;
-            gap: .4rem;
-            font-weight: 600;
-            padding: .45rem 1rem;
-            box-shadow: 0 2px 8px rgba(7, 38, 73, .18);
-        }
-        .dash-map-btn i { font-size: 1.15rem; }
-    </style>
+    <link rel="stylesheet" href="{{ asset('admin/css/dashboard.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 
     <div class="dash-head">
         <div>
@@ -105,7 +26,7 @@
                 <div class="modal-body">
                     @if($mapSchools->isEmpty())
                         <div class="map-empty text-center text-muted">
-                            <i class="ti ti-map-off" style="font-size: 2rem;"></i>
+                            <i class="ti ti-map-off map-empty-icon"></i>
                             <p class="mb-0 mt-2">No schools with coordinates yet. Add latitude and longitude when creating or editing a school.</p>
                         </div>
                     @else
@@ -223,7 +144,7 @@
                     </ul>
                 </div>
                 <div class="card-body">
-                    <div id="visitor-week-combined-chart" style="min-height: 260px;"></div>
+                    <div id="visitor-week-combined-chart"></div>
                 </div>
             </div>
         </div>
@@ -301,7 +222,7 @@
     </div>
 
     @foreach($dashboardCompetitions as $competition)
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="competitionPhasesCanvas{{ $competition->id }}" aria-labelledby="competitionPhasesCanvasLabel{{ $competition->id }}" style="--bs-offcanvas-width: 640px;">
+        <div class="offcanvas offcanvas-end dash-phases-offcanvas" tabindex="-1" id="competitionPhasesCanvas{{ $competition->id }}" aria-labelledby="competitionPhasesCanvasLabel{{ $competition->id }}">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="competitionPhasesCanvasLabel{{ $competition->id }}">
                     {{ $competition->name }} - Phases
@@ -370,7 +291,6 @@
     @endforeach
 
     @push('scripts')
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script type="application/json" id="schools-map-data">
         {!! json_encode($mapSchools->map(fn ($s) => [
