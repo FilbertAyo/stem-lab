@@ -21,6 +21,7 @@
     $selectedCommunityRegionId = (string) old('community_region_id', $idea?->community_region_id);
     $selectedCommunityDistrictId = (string) old('community_district_id', $idea?->community_district_id);
     $districtsByRegion = $districtsByRegion ?? [];
+    $ideaIsSubmitted = $idea && $idea->status === 'submitted';
 @endphp
 
 <div id="idea-submission" class="row">
@@ -47,10 +48,12 @@
                             Share your school’s problem and proposed STEM solution for this competition phase.
                         </p>
                     @endif
-                    <p class="text-primary small mb-0 mt-3">
-                        Submit one idea for your school. Select exactly <strong>{{ $repCount }}</strong> student representatives from your pool;
-                        at least <strong>70%</strong> must be girls.
-                    </p>
+                    @unless($ideaIsSubmitted)
+                        <p class="text-primary small mb-0 mt-3">
+                            Submit one idea for your school. Select exactly <strong>{{ $repCount }}</strong> student representatives from your pool;
+                            at least <strong>70%</strong> must be girls.
+                        </p>
+                    @endunless
                 </div>
             </div>
             <div class="card-body">
@@ -65,13 +68,73 @@
                     <div class="alert alert-warning mb-0">Your registration is pending approval. You can submit an idea once it is approved.</div>
                 @elseif($registration->status === 'rejected')
                     <div class="alert alert-danger mb-0">Your registration was not approved. Contact the organisers if you need help.</div>
-                @elseif($poolStudents->isEmpty())
+                @elseif($poolStudents->isEmpty() && ! $ideaIsSubmitted)
                     <div class="alert alert-warning mb-0">Add students to your class pool (registration) before you can select representatives.</div>
-                @else
-                    @if($idea && $idea->status === 'submitted')
-                        <div class="alert alert-info mb-3">Your idea is submitted. You can update it while this phase stays open unless the organisers lock submissions.</div>
-                    @endif
+                @elseif($ideaIsSubmitted)
+                    <div class="alert alert-success mb-4">
+                        Your idea has been submitted. It is locked and awaiting regional shortlisting approval.
+                        @if($idea->submitted_at)
+                            <span class="d-block small mt-1">Submitted {{ $idea->submitted_at->timezone(config('app.timezone'))->format('M j, Y g:i A') }}.</span>
+                        @endif
+                    </div>
 
+                    <h6 class="text-muted small fw-semibold mb-3">Idea details</h6>
+                    <dl class="row small mb-4">
+                        <dt class="col-sm-3 text-muted fw-normal">Problem title</dt>
+                        <dd class="col-sm-9 mb-2">{{ $idea->problem_title ?: '—' }}</dd>
+
+                        <dt class="col-sm-3 text-muted fw-normal">Problem statement</dt>
+                        <dd class="col-sm-9 mb-2">{!! nl2br(e($idea->problem_statement ?: '—')) !!}</dd>
+
+                        <dt class="col-sm-3 text-muted fw-normal">Proposed solution</dt>
+                        <dd class="col-sm-9 mb-2">{!! nl2br(e($idea->proposed_solution ?: '—')) !!}</dd>
+
+                        <dt class="col-sm-3 text-muted fw-normal">STEM discipline</dt>
+                        <dd class="col-sm-9 mb-2">{{ $idea->stem_category ?: '—' }}</dd>
+
+                        <dt class="col-sm-3 text-muted fw-normal">Community region</dt>
+                        <dd class="col-sm-9 mb-2">{{ $idea->communityRegion?->name ?: '—' }}</dd>
+
+                        <dt class="col-sm-3 text-muted fw-normal">Community district</dt>
+                        <dd class="col-sm-9 mb-2">{{ $idea->communityDistrict?->name ?: ($idea->community_location ?: '—') }}</dd>
+
+                        <dt class="col-sm-3 text-muted fw-normal">Supporting notes</dt>
+                        <dd class="col-sm-9 mb-2">{!! nl2br(e($idea->supporting_notes ?: '—')) !!}</dd>
+                    </dl>
+
+                    <hr class="my-4 opacity-25">
+
+                    <h6 class="text-muted small fw-semibold mb-2">Student representatives</h6>
+                    @php
+                        $submittedReps = $registration->representativeStudents->loadMissing('student.schoolClass');
+                    @endphp
+                    @if($submittedReps->isEmpty())
+                        <p class="small text-muted mb-0">No representatives recorded.</p>
+                    @else
+                        <div class="table-responsive border mb-0">
+                            <table class="table table-bordered align-middle mb-0 small">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Gender</th>
+                                        <th>Class</th>
+                                        <th>Role</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($submittedReps as $rep)
+                                        <tr>
+                                            <td>{{ $rep->student?->name ?: '—' }}</td>
+                                            <td>{{ $rep->student?->gender ? ucfirst((string) $rep->student->gender) : '—' }}</td>
+                                            <td>{{ $rep->student?->schoolClass?->name ?? '—' }}</td>
+                                            <td>{{ $rep->role ?: '—' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                @else
                     <form method="POST" action="{{ route('client.competitions.idea.store', $competition) }}" id="idea-submission-form" data-max-reps="{{ $repCount }}">
                         @csrf
                         <input type="hidden" name="sync_representatives" value="1">
@@ -161,7 +224,7 @@
                                 @error('community_district_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
-                      
+
                         <div class="mb-4">
                             <label class="form-label">Supporting notes</label>
                             <textarea name="supporting_notes" class="form-control @error('supporting_notes') is-invalid @enderror" rows="3">{{ old('supporting_notes', $idea?->supporting_notes) }}</textarea>
@@ -235,7 +298,7 @@
 </div>
 
 @push('scripts')
-    @if($teacherClub && $registration && $registration->status === 'approved' && $poolStudents->isNotEmpty())
+    @if($teacherClub && $registration && $registration->status === 'approved' && $poolStudents->isNotEmpty() && ! $ideaIsSubmitted)
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const form = document.getElementById('idea-submission-form');

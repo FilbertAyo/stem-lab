@@ -708,6 +708,13 @@ class CompetitionController extends Controller
                 ->with('error', 'Idea submission phase is currently closed.');
         }
 
+        $existingIdea = $registration->idea;
+        if ($existingIdea && $existingIdea->status === 'submitted') {
+            return redirect()->route('client.competitions.show', $competition)
+                ->withFragment('idea-submission')
+                ->with('error', 'Your idea has already been submitted and can no longer be edited.');
+        }
+
         $rules = [
             'problem_title' => ['required', 'string', 'max:255'],
             'problem_statement' => ['required', 'string'],
@@ -778,7 +785,6 @@ class CompetitionController extends Controller
         $idea = CompetitionIdea::firstOrNew([
             'competition_registration_id' => $registration->id,
         ]);
-        $wasAlreadySubmitted = $idea->exists && $idea->status === 'submitted';
 
         $idea->fill([
             'competition_id' => $competition->id,
@@ -841,9 +847,7 @@ class CompetitionController extends Controller
                 );
             });
 
-            if (! $wasAlreadySubmitted) {
-                $this->sendIdeaSubmittedEmail($competition, $registration, $idea);
-            }
+            $this->sendIdeaSubmittedEmail($competition, $registration, $idea);
 
             return redirect()
                 ->route('client.competitions.show', $competition)

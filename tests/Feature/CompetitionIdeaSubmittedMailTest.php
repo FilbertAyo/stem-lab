@@ -112,7 +112,7 @@ test('final idea submit sends congratulation email to teacher', function () {
     });
 });
 
-test('resubmitting an already submitted idea does not send another email', function () {
+test('submitted idea cannot be edited again', function () {
     Mail::fake();
 
     ['school' => $school, 'competition' => $competition] = createCompetitionFixture([
@@ -181,7 +181,10 @@ test('resubmitting an already submitted idea does not send another email', funct
         ->post(route('client.competitions.idea.store', $competition), array_merge($payload, [
             'problem_title' => 'Updated solar lighting idea',
         ]))
-        ->assertRedirect();
+        ->assertRedirect(route('client.competitions.show', $competition).'#idea-submission')
+        ->assertSessionHas('error', 'Your idea has already been submitted and can no longer be edited.');
+
+    expect($registration->fresh()->idea->problem_title)->toBe('Solar lighting for evening study');
 
     Mail::assertSent(CompetitionIdeaSubmittedMail::class, 1);
 });
