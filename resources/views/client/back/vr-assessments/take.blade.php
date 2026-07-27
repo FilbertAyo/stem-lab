@@ -204,6 +204,30 @@
     <script>
         const totalQuestions = {{ $attempt->total_questions }};
         let answeredCount = {{ count($answeredQuestionIds) }};
+        let quizSubmitting = false;
+        let timerInterval = null;
+
+        function csrfToken() {
+            return document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
+        }
+
+        function lockQuizSubmit() {
+            quizSubmitting = true;
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            const form = document.getElementById('submit-form');
+            const submitBtn = form?.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+            }
+            if (form && window.StemLabFormGuard) {
+                window.StemLabFormGuard.lock(form);
+            } else if (form) {
+                form.dataset.submitting = '1';
+            }
+        }
 
         function updateUnansweredHint() {
             const hint = document.getElementById('unanswered-hint');
@@ -267,11 +291,16 @@
         const timerDisplay = document.getElementById('time-display');
         const timerContainer = document.getElementById('timer-container');
 
-        const timerInterval = setInterval(() => {
+        timerInterval = setInterval(() => {
             timeRemaining--;
 
             if (timeRemaining <= 0) {
-                clearInterval(timerInterval);
+                if (quizSubmitting) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    return;
+                }
+                lockQuizSubmit();
                 document.getElementById('submit-form').submit();
                 return;
             }
@@ -309,7 +338,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-CSRF-TOKEN': csrfToken(),
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
@@ -335,11 +364,20 @@
         }
 
         function confirmSubmit() {
-            const unanswered = totalQuestions - answeredCount;
-            if (unanswered > 0) {
-                return confirm(`You have ${unanswered} unanswered question(s). Are you sure you want to submit?`);
+            if (quizSubmitting) {
+                return false;
             }
-            return confirm('Are you sure you want to submit your quiz?');
+
+            const unanswered = totalQuestions - answeredCount;
+            const confirmed = unanswered > 0
+                ? confirm(`You have ${unanswered} unanswered question(s). Are you sure you want to submit?`)
+                : confirm('Are you sure you want to submit your quiz?');
+
+            if (confirmed) {
+                lockQuizSubmit();
+            }
+
+            return confirmed;
         }
 
         updateUnansweredHint();

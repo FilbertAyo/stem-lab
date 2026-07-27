@@ -13,6 +13,12 @@
         <div class="card-body py-8 px-lg-5">
           <h4 class="text-center fw-semibold mb-4">Sign In</h4>
 
+          @if (session('status'))
+            <div class="alert alert-warning mb-3" role="alert">
+              {{ session('status') }}
+            </div>
+          @endif
+
           <form class="d-flex flex-column gap-3" method="POST" action="{{ route('login') }}">
             @csrf
 

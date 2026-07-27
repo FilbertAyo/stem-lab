@@ -5,6 +5,9 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Exceptions\PostTooLargeException;
 use Illuminate\Http\Request;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -36,5 +39,41 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             return back()->withErrors(['upload' => $message])->withInput();
+        });
+
+        // TokenMismatchException is prepared into HttpException(419) before render callbacks run.
+        $exceptions->render(function (HttpException $e, Request $request) {
+            if ($e->getStatusCode() !== 419) {
+                return null;
+            }
+
+            if (! $e->getPrevious() instanceof TokenMismatchException) {
+                return null;
+            }
+
+            if (! $request->isMethod('POST') || ! $request->is('login')) {
+                return null;
+            }
+
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Page expired. Please refresh and try again.'], 419);
+            }
+
+            $user = Auth::user() ?? $request->user();
+
+            if ($user) {
+                if ($user->role === 'admin') {
+                    return redirect()->intended(config('app.admin_url').'/dashboard');
+                }
+
+                if ($user->role === 'student' && method_exists($user, 'needsStudentOnboarding') && $user->needsStudentOnboarding()) {
+                    return redirect()->intended(route('student.onboarding.show', absolute: false));
+                }
+
+                return redirect()->intended(route('dashboard', absolute: false));
+            }
+
+            return redirect('/login')
+                ->with('status', 'Your session expired. Please refresh the page and try signing in again.');
         });
     })->create();

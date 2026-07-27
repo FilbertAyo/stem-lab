@@ -1,3 +1,96 @@
+/**
+ * Prevent double-submit on mutating forms (avoids 419 CSRF races after session regenerate).
+ * Opt out with data-allow-double-submit="1" on the form.
+ */
+(function () {
+    function formSubmitControls(form) {
+        return form.querySelectorAll(
+            'button[type="submit"], input[type="submit"], button:not([type])'
+        );
+    }
+
+    function lockFormSubmit(form) {
+        form.dataset.submitting = '1';
+        form.setAttribute('aria-busy', 'true');
+
+        formSubmitControls(form).forEach(function (control) {
+            if (control.disabled) {
+                return;
+            }
+            control.disabled = true;
+            control.setAttribute('aria-disabled', 'true');
+        });
+    }
+
+    function unlockFormSubmit(form) {
+        delete form.dataset.submitting;
+        form.removeAttribute('aria-busy');
+
+        formSubmitControls(form).forEach(function (control) {
+            control.disabled = false;
+            control.removeAttribute('aria-disabled');
+        });
+    }
+
+    document.addEventListener(
+        'submit',
+        function (event) {
+            var form = event.target;
+            if (!(form instanceof HTMLFormElement)) {
+                return;
+            }
+
+            var method = (form.getAttribute('method') || 'GET').toUpperCase();
+            if (method === 'GET') {
+                return;
+            }
+
+            if (form.dataset.allowDoubleSubmit === '1') {
+                return;
+            }
+
+            if (form.dataset.submitting === '1') {
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            }
+
+            lockFormSubmit(form);
+        },
+        true
+    );
+
+    // Unlock if a later handler (e.g. onsubmit confirm) cancels the submit.
+    document.addEventListener(
+        'submit',
+        function (event) {
+            var form = event.target;
+            if (!(form instanceof HTMLFormElement)) {
+                return;
+            }
+
+            if (event.defaultPrevented && form.dataset.submitting === '1') {
+                unlockFormSubmit(form);
+            }
+        },
+        false
+    );
+
+    window.addEventListener('pageshow', function (event) {
+        if (!event.persisted) {
+            return;
+        }
+
+        document.querySelectorAll('form[data-submitting="1"]').forEach(unlockFormSubmit);
+    });
+
+    // Expose for programmatic form.submit() call sites that bypass the submit event.
+    window.StemLabFormGuard = {
+        lock: lockFormSubmit,
+        unlock: unlockFormSubmit,
+    };
+})();
+
 $(function () {
 
     // Header Scroll
@@ -59,14 +152,19 @@ $(function () {
     }
 
     const btn = document.getElementById("scrollToTopBtn");
-    btn.addEventListener("click", scrollToTop);
+    if (btn) {
+        btn.addEventListener("click", scrollToTop);
+    }
 
     window.onscroll = function () {
-        const btn = document.getElementById("scrollToTopBtn");
+        const scrollBtn = document.getElementById("scrollToTopBtn");
+        if (!scrollBtn) {
+            return;
+        }
         if (document.documentElement.scrollTop > 100 || document.body.scrollTop > 100) {
-            btn.style.display = "flex";
+            scrollBtn.style.display = "flex";
         } else {
-            btn.style.display = "none";
+            scrollBtn.style.display = "none";
         }
     };
 

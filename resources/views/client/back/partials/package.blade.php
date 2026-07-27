@@ -229,10 +229,30 @@
 (function() {
   var selectForm = document.getElementById('package-select-form');
   var selectInput = document.getElementById('package-select-input');
+  var packageSubmitting = false;
+
+  function lockPackageActions() {
+    packageSubmitting = true;
+    document.querySelectorAll('.js-package-action').forEach(function(btn) {
+      btn.disabled = true;
+      btn.setAttribute('aria-disabled', 'true');
+    });
+    if (selectForm) {
+      if (window.StemLabFormGuard) {
+        window.StemLabFormGuard.lock(selectForm);
+      } else {
+        selectForm.dataset.submitting = '1';
+      }
+    }
+  }
 
   document.querySelectorAll('.js-package-action').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
+      if (packageSubmitting) {
+        return;
+      }
+
       var packageType = btn.getAttribute('data-package');
       var packageSlug = btn.getAttribute('data-slug');
       var modalId = null;
@@ -254,6 +274,7 @@
 
       if (selectForm && selectInput && selectForm.getAttribute('data-disabled') !== '1' && (packageSlug === 'free-trial' || packageSlug === 'individual')) {
         selectInput.value = packageSlug;
+        lockPackageActions();
         selectForm.submit();
         return;
       }
