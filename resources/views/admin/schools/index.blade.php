@@ -115,6 +115,7 @@
                                     <th>Region</th>
                                     <th>District</th>
                                     <th>Ward</th>
+                                    <th>Coordinates</th>
                                     <th>Status</th>
                                     <th class="text-center">Students No.</th>
                                     <th class="text-center">Actions</th>
@@ -142,7 +143,21 @@
                                         <td>{{ $school->regionModel?->name ?? '—' }}</td>
                                         <td>{{ $school->districtName() ?? '—' }}</td>
                                         <td>{{ $school->ward ?? '—' }}</td>
-                                       
+                                        <td>
+                                            @if($school->latitude !== null && $school->longitude !== null)
+                                                <a
+                                                    href="https://www.google.com/maps?q={{ $school->latitude }},{{ $school->longitude }}"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="small text-nowrap"
+                                                    title="Open in Google Maps"
+                                                >
+                                                    {{ $school->latitude }}, {{ $school->longitude }}
+                                                </a>
+                                            @else
+                                                <span class="text-muted">—</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             <span class="badge {{ $school->is_active ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $school->is_active ? 'Active' : 'Disabled' }}
@@ -218,7 +233,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="text-center text-muted py-4">
+                                        <td colspan="10" class="text-center text-muted py-4">
                                             No schools found. Use the "Add School" button to create the first one.
                                         </td>
                                     </tr>

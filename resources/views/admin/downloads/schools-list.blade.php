@@ -10,6 +10,7 @@
                 <th>Region</th>
                 <th>District</th>
                 <th>Ward</th>
+                <th>Coordinates</th>
                 <th>Status</th>
                 <th>Teachers</th>
                 <th>Students</th>
@@ -38,6 +39,13 @@
                     <td>{{ $school->districtName() ?? '—' }}</td>
                     <td>{{ $school->ward ?? '—' }}</td>
                     <td>
+                        @if($school->latitude !== null && $school->longitude !== null)
+                            {{ $school->latitude }}, {{ $school->longitude }}
+                        @else
+                            —
+                        @endif
+                    </td>
+                    <td>
                         {{ $school->is_active ? 'Active' : 'Disabled' }}
                         @if($school->needs_review)
                             (New)
@@ -48,7 +56,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9" class="empty">No records found for the selected export options.</td>
+                    <td colspan="10" class="empty">No records found for the selected export options.</td>
                 </tr>
             @endforelse
         </tbody>
