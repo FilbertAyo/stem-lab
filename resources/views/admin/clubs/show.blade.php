@@ -82,8 +82,32 @@
                 <div class="tab-pane fade {{ $activeTab === 'leaders' ? 'show active' : '' }}" id="pills-leaders" role="tabpanel" aria-labelledby="pills-leaders-tab">
                     <div class="card mb-4">
                         <div class="card-body p-0">
-                            <div class="d-flex justify-content-end p-3 border-bottom bg-light">
-                                <a href="{{ route('admin.clubs.leaders.export', $club) }}" class="btn btn-sm btn-danger">
+                            <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 p-3 border-bottom bg-light">
+                                <form method="GET" action="{{ route('admin.clubs.show', $club) }}" class="row g-2 align-items-end flex-grow-1">
+                                    <input type="hidden" name="tab" value="leaders">
+                                    <div class="col-md-6 col-lg-5">
+                                        <label class="form-label small mb-1" for="leaders_search">Search leaders</label>
+                                        <input
+                                            type="search"
+                                            id="leaders_search"
+                                            name="leaders_search"
+                                            class="form-control form-control-sm"
+                                            value="{{ $leadersSearch }}"
+                                            placeholder="Name, email, school, or club code..."
+                                        >
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">
+                                            <i class="ti ti-search"></i> Search
+                                        </button>
+                                        @if($leadersSearch !== '')
+                                            <a href="{{ route('admin.clubs.show', ['club' => $club, 'tab' => 'leaders']) }}" class="btn btn-sm btn-outline-secondary">
+                                                Clear
+                                            </a>
+                                        @endif
+                                    </div>
+                                </form>
+                                <a href="{{ route('admin.clubs.leaders.export', array_filter(['club' => $club, 'leaders_search' => $leadersSearch ?: null])) }}" class="btn btn-sm btn-danger">
                                     <i class="ti ti-download me-1"></i>
                                     Download PDF
                                 </a>
@@ -92,7 +116,7 @@
                             @if($leaders->isEmpty())
                                 <div class="text-center text-muted py-5">
                                     <i class="ti ti-users-off fs-1 d-block mb-2"></i>
-                                    No leaders assigned yet.
+                                    {{ $leadersSearch !== '' ? 'No leaders match your search.' : 'No leaders assigned yet.' }}
                                 </div>
                             @else
                                 <div class="table-responsive p-3">
@@ -143,8 +167,32 @@
                 <div class="tab-pane fade {{ $activeTab === 'members' ? 'show active' : '' }}" id="pills-members" role="tabpanel" aria-labelledby="pills-members-tab">
                     <div class="card mb-4">
                         <div class="card-body p-0">
-                            <div class="d-flex justify-content-end p-3 border-bottom bg-light">
-                                <a href="{{ route('admin.clubs.members.export', $club) }}" class="btn btn-sm btn-danger">
+                            <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 p-3 border-bottom bg-light">
+                                <form method="GET" action="{{ route('admin.clubs.show', $club) }}" class="row g-2 align-items-end flex-grow-1">
+                                    <input type="hidden" name="tab" value="members">
+                                    <div class="col-md-6 col-lg-5">
+                                        <label class="form-label small mb-1" for="members_search">Search members</label>
+                                        <input
+                                            type="search"
+                                            id="members_search"
+                                            name="members_search"
+                                            class="form-control form-control-sm"
+                                            value="{{ $membersSearch }}"
+                                            placeholder="Name, email, school, or club code..."
+                                        >
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">
+                                            <i class="ti ti-search"></i> Search
+                                        </button>
+                                        @if($membersSearch !== '')
+                                            <a href="{{ route('admin.clubs.show', ['club' => $club, 'tab' => 'members']) }}" class="btn btn-sm btn-outline-secondary">
+                                                Clear
+                                            </a>
+                                        @endif
+                                    </div>
+                                </form>
+                                <a href="{{ route('admin.clubs.members.export', array_filter(['club' => $club, 'members_search' => $membersSearch ?: null])) }}" class="btn btn-sm btn-danger">
                                     <i class="ti ti-download me-1"></i>
                                     Download PDF
                                 </a>
@@ -153,7 +201,7 @@
                             @if($approvedMembers->isEmpty())
                                 <div class="text-center text-muted py-5">
                                     <i class="ti ti-users-off fs-1 d-block mb-2"></i>
-                                    No approved members yet.
+                                    {{ $membersSearch !== '' ? 'No members match your search.' : 'No approved members yet.' }}
                                 </div>
                             @else
                                 <div class="table-responsive p-3">
@@ -195,8 +243,32 @@
                 <div class="tab-pane fade {{ $activeTab === 'requests' ? 'show active' : '' }}" id="pills-requests" role="tabpanel" aria-labelledby="pills-requests-tab">
                     <div class="card mb-4">
                         <div class="card-body p-0">
-                            <div class="d-flex justify-content-end p-3 border-bottom bg-light">
-                                <a href="{{ route('admin.clubs.requests.export', $club) }}" class="btn btn-sm btn-danger">
+                            <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 p-3 border-bottom bg-light">
+                                <form method="GET" action="{{ route('admin.clubs.show', $club) }}" class="row g-2 align-items-end flex-grow-1">
+                                    <input type="hidden" name="tab" value="requests">
+                                    <div class="col-md-6 col-lg-5">
+                                        <label class="form-label small mb-1" for="requests_search">Search requests</label>
+                                        <input
+                                            type="search"
+                                            id="requests_search"
+                                            name="requests_search"
+                                            class="form-control form-control-sm"
+                                            value="{{ $requestsSearch }}"
+                                            placeholder="Name, email, school, or club code..."
+                                        >
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">
+                                            <i class="ti ti-search"></i> Search
+                                        </button>
+                                        @if($requestsSearch !== '')
+                                            <a href="{{ route('admin.clubs.show', ['club' => $club, 'tab' => 'requests']) }}" class="btn btn-sm btn-outline-secondary">
+                                                Clear
+                                            </a>
+                                        @endif
+                                    </div>
+                                </form>
+                                <a href="{{ route('admin.clubs.requests.export', array_filter(['club' => $club, 'requests_search' => $requestsSearch ?: null])) }}" class="btn btn-sm btn-danger">
                                     <i class="ti ti-download me-1"></i>
                                     Download PDF
                                 </a>
@@ -205,7 +277,7 @@
                             @if($pendingRequests->isEmpty())
                                 <div class="text-center text-muted py-5">
                                     <i class="ti ti-clock fs-1 d-block mb-2"></i>
-                                    No pending requests.
+                                    {{ $requestsSearch !== '' ? 'No requests match your search.' : 'No pending requests.' }}
                                 </div>
                             @else
                                 <div class="table-responsive p-3">

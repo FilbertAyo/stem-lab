@@ -98,35 +98,48 @@ class ClubController extends Controller
     /**
      * Display the specified club with members and pending requests.
      */
-    public function show(Club $club): View
+    public function show(Request $request, Club $club): View
     {
+        $leadersSearch = trim((string) $request->input('leaders_search', ''));
+        $membersSearch = trim((string) $request->input('members_search', ''));
+        $requestsSearch = trim((string) $request->input('requests_search', ''));
+
         // Get all leaders (one per school)
-        $leaders = $club->teacherClubs()
+        $leadersQuery = $club->teacherClubs()
             ->approved()
             ->leaders()
             ->with(['user', 'school'])
-            ->orderByDesc('created_at')
+            ->orderByDesc('created_at');
+        $this->applyTeacherClubSearch($leadersQuery, $leadersSearch);
+
+        $leaders = $leadersQuery
             ->paginate(10, ['*'], 'leaders_page')
             ->withQueryString();
 
         // Get approved members
-        $approvedMembers = $club->teacherClubs()
+        $approvedMembersQuery = $club->teacherClubs()
             ->approved()
             ->with(['user', 'school'])
-            ->orderByDesc('created_at')
+            ->orderByDesc('created_at');
+        $this->applyTeacherClubSearch($approvedMembersQuery, $membersSearch);
+
+        $approvedMembers = $approvedMembersQuery
             ->paginate(10, ['*'], 'members_page')
             ->withQueryString();
 
         // Get pending requests
-        $pendingRequests = $club->pendingRequests()
+        $pendingRequestsQuery = $club->pendingRequests()
             ->with(['user', 'school'])
-            ->orderByDesc('created_at')
+            ->orderByDesc('created_at');
+        $this->applyTeacherClubSearch($pendingRequestsQuery, $requestsSearch);
+
+        $pendingRequests = $pendingRequestsQuery
             ->paginate(10, ['*'], 'requests_page')
-            ->withQueryString()
-            ->appends(['tab' => 'requests']);
+            ->withQueryString();
 
         $leaders->appends(['tab' => 'leaders']);
         $approvedMembers->appends(['tab' => 'members']);
+        $pendingRequests->appends(['tab' => 'requests']);
 
         // Get all approved members grouped by school for transfer leadership modal.
         $transferMembers = $club->teacherClubs()
@@ -148,8 +161,11 @@ class ClubController extends Controller
         })->values()->all();
 
         $activeTab = match (true) {
-            request()->has('requests_page') || request('tab') === 'requests' => 'requests',
-            request()->has('members_page') || request('tab') === 'members' => 'members',
+            $request->input('tab') === 'requests' || $request->has('requests_page') => 'requests',
+            $request->input('tab') === 'members' || $request->has('members_page') => 'members',
+            $request->input('tab') === 'leaders' || $request->has('leaders_page') => 'leaders',
+            $request->filled('requests_search') => 'requests',
+            $request->filled('members_search') => 'members',
             default => 'leaders',
         };
 
@@ -164,60 +180,93 @@ class ClubController extends Controller
             'leaders',
             'membersBySchoolJson',
             'activeTab',
+            'leadersSearch',
+            'membersSearch',
+            'requestsSearch',
         ));
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\TeacherClub>|\Illuminate\Database\Eloquent\Relations\Relation  $query
+     */
+    private function applyTeacherClubSearch($query, string $search): void
+    {
+        if ($search === '') {
+            return;
+        }
+
+        $query->where(function ($q) use ($search): void {
+            $q->where('club_code', 'like', '%'.$search.'%')
+                ->orWhereHas('user', function ($userQuery) use ($search): void {
+                    $userQuery->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('email', 'like', '%'.$search.'%');
+                })
+                ->orWhereHas('school', function ($schoolQuery) use ($search): void {
+                    $schoolQuery->where('name', 'like', '%'.$search.'%');
+                });
+        });
     }
 
     /**
      * Download approved club members as PDF.
      */
-    public function exportLeaders(Club $club): Response
+    public function exportLeaders(Request $request, Club $club): Response
     {
-        $rows = $club->teacherClubs()
+        $search = trim((string) $request->input('leaders_search', ''));
+
+        $rowsQuery = $club->teacherClubs()
             ->approved()
             ->leaders()
             ->with(['user', 'school'])
-            ->orderByDesc('created_at')
-            ->get();
+            ->orderByDesc('created_at');
+        $this->applyTeacherClubSearch($rowsQuery, $search);
 
         return $this->downloadClubTeacherClubsPdf(
             $club,
-            $rows,
+            $rowsQuery->get(),
             $club->name.' - School Leaders',
             Str::slug($club->name).'_school_leaders_'.now()->format('Y-m-d').'.pdf',
-            'No school leaders found.'
+            $search !== '' ? 'No school leaders match your search.' : 'No school leaders found.',
+            $search !== '' ? 'Club: '.$club->name.' · search: '.$search : 'Club: '.$club->name,
         );
     }
 
-    public function exportApprovedMembers(Club $club): Response
+    public function exportApprovedMembers(Request $request, Club $club): Response
     {
-        $rows = $club->teacherClubs()
+        $search = trim((string) $request->input('members_search', ''));
+
+        $rowsQuery = $club->teacherClubs()
             ->approved()
             ->with(['user', 'school'])
-            ->orderByDesc('created_at')
-            ->get();
+            ->orderByDesc('created_at');
+        $this->applyTeacherClubSearch($rowsQuery, $search);
 
         return $this->downloadClubTeacherClubsPdf(
             $club,
-            $rows,
+            $rowsQuery->get(),
             $club->name.' - Approved Members',
             Str::slug($club->name).'_approved_members_'.now()->format('Y-m-d').'.pdf',
-            'No approved members found.'
+            $search !== '' ? 'No approved members match your search.' : 'No approved members found.',
+            $search !== '' ? 'Club: '.$club->name.' · search: '.$search : 'Club: '.$club->name,
         );
     }
 
-    public function exportPendingRequests(Club $club): Response
+    public function exportPendingRequests(Request $request, Club $club): Response
     {
-        $rows = $club->pendingRequests()
+        $search = trim((string) $request->input('requests_search', ''));
+
+        $rowsQuery = $club->pendingRequests()
             ->with(['user', 'school'])
-            ->orderByDesc('created_at')
-            ->get();
+            ->orderByDesc('created_at');
+        $this->applyTeacherClubSearch($rowsQuery, $search);
 
         return $this->downloadClubTeacherClubsPdf(
             $club,
-            $rows,
+            $rowsQuery->get(),
             $club->name.' - Pending Requests',
             Str::slug($club->name).'_pending_requests_'.now()->format('Y-m-d').'.pdf',
-            'No pending requests found.'
+            $search !== '' ? 'No pending requests match your search.' : 'No pending requests found.',
+            $search !== '' ? 'Club: '.$club->name.' · search: '.$search : 'Club: '.$club->name,
         );
     }
 
@@ -226,13 +275,14 @@ class ClubController extends Controller
         $rows,
         string $title,
         string $filename,
-        string $emptyMessage
+        string $emptyMessage,
+        ?string $filterSummary = null,
     ): Response {
         $pdf = Pdf::loadView('admin.downloads.club-teacher-clubs-list', [
             'rows' => $rows,
             'title' => $title,
             'generatedAt' => now(),
-            'filterSummary' => 'Club: '.$club->name,
+            'filterSummary' => $filterSummary ?? ('Club: '.$club->name),
             'emptyMessage' => $emptyMessage,
         ])->setPaper('a4', 'portrait');
 
