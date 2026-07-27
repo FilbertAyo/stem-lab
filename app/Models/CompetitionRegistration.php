@@ -62,6 +62,15 @@ class CompetitionRegistration extends Model
         return $this->status === 'draft';
     }
 
+    /**
+     * Admin "Pass phase" override approves a registration without meeting pool eligibility.
+     * Those schools must still be able to submit ideas in later phases.
+     */
+    public function passedViaEligibilityOverride(): bool
+    {
+        return $this->status === 'approved' && ! $this->eligibility_met;
+    }
+
     public function canSendEligibilityReminder(): bool
     {
         if (! $this->needsEligibilityCompletion()) {

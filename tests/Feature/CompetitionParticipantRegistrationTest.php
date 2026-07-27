@@ -238,6 +238,7 @@ test('admin can override failed eligibility and pass a participant registration'
 
     expect($registration->status)->toBe('approved')
         ->and($registration->eligibility_met)->toBeFalse()
+        ->and($registration->passedViaEligibilityOverride())->toBeTrue()
         ->and($registration->approved_by)->toBe($admin->id)
         ->and($registration->approved_at)->not->toBeNull()
         ->and($registration->submitted_at)->not->toBeNull();

@@ -802,9 +802,13 @@ class CompetitionController extends Controller
             $poolGirlsCount = $pool['girls_count'];
             $poolRatio = (float) $pool['girls_ratio'];
 
-            $poolError = $this->competitionPoolEligibilityError($competition, $poolCount, $poolRatio);
-            if ($poolError !== null) {
-                return back()->withErrors(['representative_student_ids' => $poolError])->withInput();
+            // Registration-phase pool eligibility already decided (or admin-overridden).
+            // Do not re-block idea submission for schools that passed via admin override.
+            if (! $registration->passedViaEligibilityOverride()) {
+                $poolError = $this->competitionPoolEligibilityError($competition, $poolCount, $poolRatio);
+                if ($poolError !== null) {
+                    return back()->withErrors(['representative_student_ids' => $poolError])->withInput();
+                }
             }
 
             $representatives = $poolStudents
