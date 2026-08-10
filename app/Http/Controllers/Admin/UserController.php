@@ -137,7 +137,7 @@ class UserController extends Controller
     }
 
     /**
-     * Filter users by name or email (case-insensitive where supported).
+     * Filter users by name, email, or phone (case-insensitive where supported).
      */
     protected function applyNameEmailSearch(Builder $query, Request $request): void
     {
@@ -149,7 +149,8 @@ class UserController extends Controller
         $like = '%'.$term.'%';
         $query->where(function (Builder $inner) use ($like): void {
             $inner->where('name', 'like', $like)
-                ->orWhere('email', 'like', $like);
+                ->orWhere('email', 'like', $like)
+                ->orWhere('phone', 'like', $like);
         });
     }
 

@@ -21,6 +21,7 @@
                                     <th>#</th>
                                     <th>Name</th>
                                     <th>Email</th>
+                                    <th>Phone</th>
                                     <th>Role</th>
                                     <th>Status</th>
                                     <th>Email Verified</th>
@@ -34,6 +35,7 @@
                                         <td>{{ $users->firstItem() + $index }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
+                                        <td><x-whatsapp-phone :phone="$user->phone" /></td>
                                         <td>
                                             <span class="badge bg-info">{{ ucfirst($user->role) }}</span>
                                         </td>
@@ -86,7 +88,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No teachers found.</td>
+                                        <td colspan="9" class="text-center">No teachers found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

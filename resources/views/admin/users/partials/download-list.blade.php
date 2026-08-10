@@ -2,6 +2,7 @@
     'listRoute',
     'exportRoute',
     'entityLabel' => 'Users',
+    'searchPlaceholder' => 'Search by name, email, or phone number...',
 ])
 
 @php
@@ -17,7 +18,7 @@
                     id="filter_q"
                     name="q"
                     class="form-control"
-                    placeholder="Search by name or email..."
+                    placeholder="{{ $searchPlaceholder }}"
                     value="{{ request('q') }}"
                     autocomplete="off">
             </div>
