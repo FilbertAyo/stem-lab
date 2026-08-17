@@ -188,3 +188,119 @@ test('submitted idea cannot be edited again', function () {
 
     Mail::assertSent(CompetitionIdeaSubmittedMail::class, 1);
 });
+
+test('save draft does not submit the idea', function () {
+    Mail::fake();
+
+    ['school' => $school, 'competition' => $competition] = createCompetitionFixture([
+        'min_members' => 3,
+        'representative_count' => 3,
+    ]);
+
+    CompetitionPhase::query()->create([
+        'competition_id' => $competition->id,
+        'phase_key' => 'idea_submission',
+        'name' => 'Idea submission',
+        'sequence' => 2,
+        'status' => 'open',
+        'opens_at' => now()->subDay(),
+        'closes_at' => now()->addMonth(),
+        'is_required_action' => true,
+        'action_type' => 'idea',
+    ]);
+
+    $teacherClub = createTeacherClubForCompetition($competition, $school);
+    $registration = app(CompetitionParticipantRegistrationService::class)
+        ->ensureDraftRegistration($teacherClub, $competition);
+    $registration->update([
+        'status' => 'approved',
+        'submitted_at' => now()->subDay(),
+        'approved_at' => now()->subHour(),
+        'eligibility_met' => true,
+        'student_count_snapshot' => 3,
+        'girls_count_snapshot' => 3,
+        'girls_ratio_snapshot' => 100,
+    ]);
+
+    $this->actingAs($teacherClub->user)
+        ->post(route('client.competitions.idea.store', $competition), [
+            'problem_title' => 'Draft water idea',
+            'problem_statement' => 'Problem statement',
+            'proposed_solution' => 'Proposed solution',
+            'stem_category' => 'Science',
+            'submit_final' => '0',
+            'submit_intent' => 'draft',
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('status', 'Draft saved successfully.');
+
+    expect($registration->fresh()->idea?->status)->toBe('draft');
+    Mail::assertNothingSent();
+});
+
+test('submit intent submits even when draft submit_final is also posted', function () {
+    Mail::fake();
+
+    ['school' => $school, 'competition' => $competition] = createCompetitionFixture([
+        'min_members' => 3,
+        'representative_count' => 3,
+    ]);
+    ['region' => $region, 'district' => $district] = createRegionAndDistrict();
+
+    CompetitionPhase::query()->create([
+        'competition_id' => $competition->id,
+        'phase_key' => 'idea_submission',
+        'name' => 'Idea submission',
+        'sequence' => 2,
+        'status' => 'open',
+        'opens_at' => now()->subDay(),
+        'closes_at' => now()->addMonth(),
+        'is_required_action' => true,
+        'action_type' => 'idea',
+    ]);
+
+    $teacherClub = createTeacherClubForCompetition($competition, $school, [
+        'email' => 'intent-submit@example.com',
+    ]);
+    $class = SchoolClass::query()->create([
+        'name' => 'Form 3 '.Str::random(4),
+        'is_active' => true,
+    ]);
+    $girls = collect([
+        $teacherClub->students()->create(['name' => 'Amina', 'gender' => 'female', 'school_class_id' => $class->id, 'age' => 14]),
+        $teacherClub->students()->create(['name' => 'Neema', 'gender' => 'female', 'school_class_id' => $class->id, 'age' => 14]),
+        $teacherClub->students()->create(['name' => 'Fatuma', 'gender' => 'female', 'school_class_id' => $class->id, 'age' => 15]),
+    ]);
+
+    $registration = app(CompetitionParticipantRegistrationService::class)
+        ->ensureDraftRegistration($teacherClub, $competition);
+    $registration->update([
+        'status' => 'approved',
+        'submitted_at' => now()->subDay(),
+        'approved_at' => now()->subHour(),
+        'teacher_email' => 'intent-submit@example.com',
+        'eligibility_met' => true,
+        'student_count_snapshot' => 3,
+        'girls_count_snapshot' => 3,
+        'girls_ratio_snapshot' => 100,
+    ]);
+
+    $this->actingAs($teacherClub->user)
+        ->post(route('client.competitions.idea.store', $competition), [
+            'problem_title' => 'Submit with both button values',
+            'problem_statement' => 'Problem statement',
+            'proposed_solution' => 'Proposed solution',
+            'stem_category' => 'Science',
+            'community_region_id' => $region->id,
+            'community_district_id' => $district->id,
+            'representative_student_ids' => $girls->pluck('id')->all(),
+            'sync_representatives' => '1',
+            'submit_final' => ['0', '1'],
+            'submit_intent' => 'submit',
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('status');
+
+    expect($registration->fresh()->idea?->status)->toBe('submitted');
+    Mail::assertSent(CompetitionIdeaSubmittedMail::class, 1);
+});

@@ -9,9 +9,23 @@
         );
     }
 
-    function lockFormSubmit(form) {
+    function lockFormSubmit(form, submitter) {
         form.dataset.submitting = '1';
         form.setAttribute('aria-busy', 'true');
+
+        // Disabled submit buttons are omitted from POST data. Copy the clicked
+        // button's name/value into a hidden field so Save draft vs Submit still works.
+        if (submitter && submitter.name && form.contains(submitter)) {
+            var proxy = form.querySelector('input[data-submitter-proxy="1"]');
+            if (!proxy) {
+                proxy = document.createElement('input');
+                proxy.type = 'hidden';
+                proxy.setAttribute('data-submitter-proxy', '1');
+                form.appendChild(proxy);
+            }
+            proxy.name = submitter.name;
+            proxy.value = submitter.value;
+        }
 
         formSubmitControls(form).forEach(function (control) {
             if (control.disabled) {
@@ -31,6 +45,24 @@
             control.removeAttribute('aria-disabled');
         });
     }
+
+    var lastSubmitter = null;
+
+    document.addEventListener(
+        'click',
+        function (event) {
+            var target = event.target;
+            if (!(target instanceof Element)) {
+                return;
+            }
+
+            var control = target.closest('button[type="submit"], input[type="submit"], button:not([type])');
+            if (control && control.form) {
+                lastSubmitter = control;
+            }
+        },
+        true
+    );
 
     document.addEventListener(
         'submit',
@@ -55,7 +87,9 @@
                 return;
             }
 
-            lockFormSubmit(form);
+            var submitter = event.submitter || (lastSubmitter && lastSubmitter.form === form ? lastSubmitter : null);
+            lockFormSubmit(form, submitter);
+            lastSubmitter = null;
         },
         true
     );

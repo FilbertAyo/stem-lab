@@ -8,6 +8,7 @@ use App\Models\CompetitionRegistration;
 use App\Models\ModelQuestionAnswer;
 use App\Models\Student;
 use App\Models\VrAssessmentAttempt;
+use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\Teacher\TeacherClubAnalyticsService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -68,16 +69,8 @@ class DashboardController extends Controller
                     ->orderByDesc('competition_start')
                     ->get();
 
-                $registrations = CompetitionRegistration::query()
-                    ->where('teacher_user_id', $userId)
-                    ->whereIn('competition_id', $competitions->pluck('id'))
-                    ->with([
-                        'idea.shortlist',
-                        'prototypeSubmission.prototypeShortlist',
-                        'prototypeModification',
-                    ])
-                    ->get()
-                    ->keyBy('competition_id');
+                $registrations = app(CompetitionParticipantRegistrationService::class)
+                    ->registrationsForTeacher(...$approvedTeacherClubs->values()->all());
 
                 $competitionReminders = $competitions->map(function (Competition $competition) use ($registrations) {
                 $registration = $registrations->get($competition->id);

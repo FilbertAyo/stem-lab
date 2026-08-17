@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CompetitionPhase;
 use App\Models\CompetitionRegistration;
 use App\Models\SchoolClass;
 use App\Models\TeacherClub;
@@ -173,4 +174,99 @@ test('co-teacher index sees school registration status', function () {
             ->get($competition->id)
             ?->status
     )->toBe('pending');
+});
+
+test('co-teacher sees approved not not-registered after admin eligibility override', function () {
+    ['school' => $school, 'competition' => $competition] = createCompetitionFixture();
+
+    CompetitionPhase::query()->create([
+        'competition_id' => $competition->id,
+        'phase_key' => 'idea_submission',
+        'name' => 'Idea submission',
+        'sequence' => 2,
+        'status' => 'open',
+        'opens_at' => now()->subDay(),
+        'closes_at' => now()->addMonth(),
+        'is_required_action' => true,
+        'action_type' => 'idea',
+    ]);
+
+    $leader = createTeacherClubForCompetition($competition, $school);
+    $registration = app(CompetitionParticipantRegistrationService::class)
+        ->ensureDraftRegistration($leader, $competition);
+
+    $registration->update([
+        'status' => 'approved',
+        'submitted_at' => now()->subDay(),
+        'approved_at' => now()->subHour(),
+        'eligibility_met' => false,
+        'teacher_user_id' => $leader->user_id,
+        'teacher_club_id' => $leader->id,
+        'school_id' => $school->id,
+    ]);
+
+    $coTeacher = User::factory()->create(['role' => 'teacher']);
+    TeacherClub::query()->create([
+        'user_id' => $coTeacher->id,
+        'club_id' => $competition->club_id,
+        'school_id' => $school->id,
+        'status' => 'approved',
+        'is_leader' => false,
+    ]);
+
+    $index = $this->actingAs($coTeacher)->get(route('client.competitions.index'));
+    $index->assertOk();
+    $index->assertDontSee('Not registered');
+    $index->assertSee('Approved');
+
+    $show = $this->actingAs($coTeacher)->get(route('client.competitions.show', $competition));
+    $show->assertOk();
+    $show->assertSee('Problem title');
+    $show->assertSee('Save draft');
+    $show->assertDontSee('Complete and submit your participant registration');
+});
+
+test('stale draft does not hide an approved school registration for the same teacher', function () {
+    ['school' => $school, 'competition' => $competition] = createCompetitionFixture();
+
+    $otherSchool = \App\Models\School::query()->create([
+        'name' => 'Other School '.Str::random(6),
+        'is_active' => true,
+    ]);
+
+    $teacherClub = createTeacherClubForCompetition($competition, $school);
+    $service = app(CompetitionParticipantRegistrationService::class);
+
+    $approved = $service->ensureDraftRegistration($teacherClub, $competition);
+    $approved->update([
+        'status' => 'approved',
+        'submitted_at' => now(),
+        'approved_at' => now(),
+        'eligibility_met' => false,
+        'school_id' => $school->id,
+    ]);
+
+    CompetitionRegistration::query()->create([
+        'competition_id' => $competition->id,
+        'teacher_club_id' => $teacherClub->id,
+        'teacher_user_id' => $teacherClub->user_id,
+        'school_id' => $otherSchool->id,
+        'status' => 'draft',
+        'teacher_name' => 'Stale Draft',
+        'teacher_email' => 'stale@example.com',
+        'school_name' => $otherSchool->name,
+        'eligibility_met' => false,
+        'student_count_snapshot' => 0,
+        'girls_count_snapshot' => 0,
+        'girls_ratio_snapshot' => 0,
+    ]);
+
+    expect($service->findForTeacherClub($competition, $teacherClub)?->status)->toBe('approved')
+        ->and($service->registrationsForTeacher($teacherClub)->get($competition->id)?->status)->toBe('approved');
+
+    $this->actingAs($teacherClub->user)
+        ->get(route('client.competitions.index'))
+        ->assertOk()
+        ->assertSee('Approved')
+        ->assertDontSee('Not registered');
 });

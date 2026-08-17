@@ -121,8 +121,8 @@
                         @endif
 
                         <div class="d-flex flex-wrap gap-2 mt-2">
-                            <button type="submit" class="btn btn-sm btn-dark" name="submit_final" value="0">Save draft</button>
-                            <button type="submit" class="btn btn-sm btn-primary text-white" name="submit_final" value="1">Submit modification</button>
+                            <button type="submit" class="btn btn-sm btn-dark" name="submit_final" value="0" data-submit-intent="draft">Save draft</button>
+                            <button type="submit" class="btn btn-sm btn-primary text-white" name="submit_final" value="1" data-submit-intent="submit">Submit modification</button>
                         </div>
                     </form>
                 @endif

@@ -68,8 +68,6 @@
                     <div class="alert alert-warning mb-0">Your registration is pending approval. You can submit an idea once it is approved.</div>
                 @elseif($registration->status === 'rejected')
                     <div class="alert alert-danger mb-0">Your registration was not approved. Contact the organisers if you need help.</div>
-                @elseif($poolStudents->isEmpty() && ! $ideaIsSubmitted)
-                    <div class="alert alert-warning mb-0">Add students to your class pool (registration) before you can select representatives.</div>
                 @elseif($ideaIsSubmitted)
                     <div class="alert alert-success mb-4">
                         Your idea has been submitted. It is locked and awaiting regional shortlisting approval.
@@ -138,6 +136,14 @@
                     <form method="POST" action="{{ route('client.competitions.idea.store', $competition) }}" id="idea-submission-form" data-max-reps="{{ $repCount }}">
                         @csrf
                         <input type="hidden" name="sync_representatives" value="1">
+                        <input type="hidden" name="submit_intent" id="idea-submit-intent" value="draft">
+
+                        @if($poolStudents->isEmpty())
+                            <div class="alert alert-warning mb-4">
+                                Add students to your club roster before you can select representatives.
+                                <a href="{{ route('client.clubs.index') }}" class="alert-link">Manage students</a>
+                            </div>
+                        @endif
 
                         <h6 class="text-muted small fw-semibold mb-3">Idea details</h6>
 
@@ -287,8 +293,8 @@
                         </div>
 
                         <div class="d-flex flex-wrap gap-2 mt-2">
-                            <button type="submit" class="btn btn-dark" name="submit_final" value="0">Save draft</button>
-                            <button type="submit" class="btn btn-primary text-white" name="submit_final" value="1">Submit</button>
+                            <button type="submit" class="btn btn-dark" name="submit_final" value="0" data-submit-intent="draft">Save draft</button>
+                            <button type="submit" class="btn btn-primary text-white" name="submit_final" value="1" data-submit-intent="submit">Submit</button>
                         </div>
                     </form>
                 @endif
@@ -298,7 +304,7 @@
 </div>
 
 @push('scripts')
-    @if($teacherClub && $registration && $registration->status === 'approved' && $poolStudents->isNotEmpty() && ! $ideaIsSubmitted)
+    @if($teacherClub && $registration && $registration->status === 'approved' && ! $ideaIsSubmitted)
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const form = document.getElementById('idea-submission-form');
@@ -313,6 +319,15 @@
                 const regionSelect = document.getElementById('community_region_id');
                 const districtSelect = document.getElementById('community_district_id');
                 const districtsByRegion = @json($districtsByRegion);
+
+                const intentInput = document.getElementById('idea-submit-intent');
+                form.querySelectorAll('button[type="submit"][data-submit-intent]').forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        if (intentInput) {
+                            intentInput.value = button.getAttribute('data-submit-intent') || 'draft';
+                        }
+                    });
+                });
 
                 function toggleStemCategoryOther() {
                     if (!stemCategorySelect || !stemCategoryOtherWrap || !stemCategoryOtherInput) return;

@@ -96,7 +96,7 @@ class CompetitionController extends Controller
         $poolStudents = collect();
 
         if ($teacherClub) {
-            $registration = $participantRegistrationService->findForTeacherClub($competition, $teacherClub);
+            $registration = $participantRegistrationService->ensureDraftRegistration($teacherClub, $competition);
             if ($registration) {
                 $registration->load([
                     'representativeStudents.student.schoolClass',
@@ -715,6 +715,8 @@ class CompetitionController extends Controller
                 ->with('error', 'Your idea has already been submitted and can no longer be edited.');
         }
 
+        $this->normalizeSubmitFinal($request);
+
         $rules = [
             'problem_title' => ['required', 'string', 'max:255'],
             'problem_statement' => ['required', 'string'],
@@ -994,6 +996,8 @@ class CompetitionController extends Controller
             'competition_idea_id' => $idea->id,
         ]);
 
+        $this->normalizeSubmitFinal($request);
+
         $rules = [
             'prototype_title' => ['required', 'string', 'max:255'],
             'prototype_concept' => ['required', 'string'],
@@ -1110,6 +1114,8 @@ class CompetitionController extends Controller
         $modification = CompetitionPrototypeModification::firstOrNew([
             'competition_idea_id' => $idea->id,
         ]);
+
+        $this->normalizeSubmitFinal($request);
 
         $validated = $request->validate([
             'prototype_title' => ['required', 'string', 'max:255'],
@@ -1249,6 +1255,35 @@ class CompetitionController extends Controller
 
         return app(CompetitionParticipantRegistrationService::class)
             ->findForTeacherClub($competition, $teacherClub);
+    }
+
+    /**
+     * Disabled submit buttons are omitted from POST; some browsers also send both
+     * Save draft and Submit values. Normalize to a single boolean flag.
+     */
+    private function normalizeSubmitFinal(Request $request): void
+    {
+        $request->merge([
+            'submit_final' => $this->wantsFinalSubmit($request) ? '1' : '0',
+        ]);
+    }
+
+    private function wantsFinalSubmit(Request $request): bool
+    {
+        $value = $request->input('submit_final');
+        if (is_array($value)) {
+            $value = end($value);
+        }
+        if (filter_var($value, FILTER_VALIDATE_BOOLEAN)) {
+            return true;
+        }
+
+        $intent = $request->input('submit_intent');
+        if (is_array($intent)) {
+            $intent = end($intent);
+        }
+
+        return $intent === 'submit';
     }
 
     private function registrationNotAllowedRedirect(

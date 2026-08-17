@@ -265,10 +265,10 @@
                                     </div>
 
                                     @if($canEdit)
-                                        <div class="d-flex flex-wrap gap-2 mt-2">
-                                            <button type="submit" class="btn btn-dark btn-sm" name="submit_final" value="0">Save draft</button>
-                                            <button type="submit" class="btn btn-primary text-white btn-sm" name="submit_final" value="1">Submit prototype</button>
-                                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <button type="submit" class="btn btn-dark btn-sm" name="submit_final" value="0" data-submit-intent="draft">Save draft</button>
+                            <button type="submit" class="btn btn-primary text-white btn-sm" name="submit_final" value="1" data-submit-intent="submit">Submit prototype</button>
+                        </div>
                                     @endif
                                 </form>
                             @endif

@@ -33,22 +33,37 @@ class CompetitionParticipantRegistrationService
 
     public function findForSchool(Competition $competition, int $schoolId): ?CompetitionRegistration
     {
-        return CompetitionRegistration::query()
-            ->where('competition_id', $competition->id)
-            ->where('school_id', $schoolId)
-            ->first();
+        return $this->preferRegistration(
+            CompetitionRegistration::query()
+                ->where('competition_id', $competition->id)
+                ->where('school_id', $schoolId)
+                ->get()
+        );
     }
 
     public function findForTeacherClub(Competition $competition, TeacherClub $teacherClub): ?CompetitionRegistration
     {
+        $coMemberIds = [];
         if ($teacherClub->school_id !== null) {
-            return $this->findForSchool($competition, (int) $teacherClub->school_id);
+            $coMemberIds = app(TeacherClubSharedContextService::class)->coMemberIds($teacherClub);
         }
 
-        return CompetitionRegistration::query()
-            ->where('competition_id', $competition->id)
-            ->where('teacher_club_id', $teacherClub->id)
-            ->first();
+        return $this->preferRegistration(
+            CompetitionRegistration::query()
+                ->where('competition_id', $competition->id)
+                ->where(function ($query) use ($teacherClub, $coMemberIds): void {
+                    $query->where('teacher_club_id', $teacherClub->id);
+
+                    if ($teacherClub->school_id !== null) {
+                        $query->orWhere('school_id', (int) $teacherClub->school_id);
+                    }
+
+                    if ($coMemberIds !== []) {
+                        $query->orWhereIn('teacher_club_id', $coMemberIds);
+                    }
+                })
+                ->get()
+        );
     }
 
     /**
@@ -104,7 +119,12 @@ class CompetitionParticipantRegistrationService
         }
 
         return CompetitionRegistration::query()
-            ->with(['competition', 'idea'])
+            ->with([
+                'competition',
+                'idea.shortlist',
+                'prototypeSubmission.prototypeShortlist',
+                'prototypeModification',
+            ])
             ->where(function ($query) use ($schoolIds, $teacherClubIds): void {
                 if ($schoolIds !== []) {
                     $query->whereIn('school_id', $schoolIds);
@@ -114,8 +134,36 @@ class CompetitionParticipantRegistrationService
                 }
             })
             ->get()
-            ->unique('competition_id')
-            ->keyBy('competition_id');
+            ->groupBy(fn (CompetitionRegistration $registration): int => (int) $registration->competition_id)
+            ->map(fn (Collection $group) => $this->preferRegistration($group))
+            ->filter()
+            ->keyBy(fn (CompetitionRegistration $registration): int => (int) $registration->competition_id);
+    }
+
+    /**
+     * When duplicate rows exist for one school/competition, keep the furthest-along registration.
+     *
+     * @param  Collection<int, CompetitionRegistration>  $registrations
+     */
+    private function preferRegistration(Collection $registrations): ?CompetitionRegistration
+    {
+        if ($registrations->isEmpty()) {
+            return null;
+        }
+
+        return $registrations
+            ->sortByDesc(function (CompetitionRegistration $registration): array {
+                $statusRank = match ($registration->status) {
+                    'approved' => 50,
+                    'pending' => 40,
+                    'draft' => 20,
+                    'rejected' => 10,
+                    default => 0,
+                };
+
+                return [$statusRank, (int) $registration->id];
+            })
+            ->first();
     }
 
     /**
