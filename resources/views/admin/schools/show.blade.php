@@ -1,4 +1,35 @@
 <x-admin-layout>
+    <style>
+        .school-people-card > .card-header {
+            padding-bottom: 1rem;
+        }
+        #school-tabs {
+            border-bottom: 0;
+        }
+        #school-tabs .nav-item {
+            margin-bottom: 0;
+        }
+        #school-tabs .nav-link {
+            margin-bottom: 0;
+            white-space: nowrap;
+            border: 1px solid var(--bs-border-color);
+            background: transparent;
+            color: var(--bs-body-color);
+        }
+        #school-tabs .nav-link .badge {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+        #school-tabs .nav-link.active {
+            border-color: transparent;
+            color: #fff;
+            background-color: var(--bs-primary);
+        }
+        #school-tabs .nav-link.active .badge {
+            background-color: #fff;
+            color: var(--bs-primary);
+        }
+    </style>
     @php
         $locationParts = array_filter([
             $school->districtName(),
@@ -76,14 +107,14 @@
                 </div>
             </div>
 
-            <div class="card mb-4">
-                <div class="card-header pb-0">
-                    <ul class="nav nav-tabs card-header-tabs" id="school-tabs" role="tablist" aria-label="School people">
+            <div class="card mb-4 school-people-card">
+                <div class="card-header">
+                    <ul class="nav nav-pills flex-wrap gap-2 mb-0" id="school-tabs" role="tablist" aria-label="School people">
                         <li class="nav-item" role="presentation">
                             <button
-                                class="nav-link {{ $activeTab === 'students' ? 'active' : '' }}"
+                                class="nav-link d-inline-flex align-items-center {{ $activeTab === 'students' ? 'active' : '' }}"
                                 id="pills-students-tab"
-                                data-bs-toggle="tab"
+                                data-bs-toggle="pill"
                                 data-bs-target="#pills-students"
                                 data-tab="students"
                                 type="button"
@@ -93,14 +124,14 @@
                             >
                                 <i class="ti ti-school me-1"></i>
                                 Students
-                                <span class="badge bg-light text-dark ms-1">{{ $students->count() }}</span>
+                                <span class="badge ms-2">{{ $students->count() }}</span>
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button
-                                class="nav-link {{ $activeTab === 'teachers' ? 'active' : '' }}"
+                                class="nav-link d-inline-flex align-items-center {{ $activeTab === 'teachers' ? 'active' : '' }}"
                                 id="pills-teachers-tab"
-                                data-bs-toggle="tab"
+                                data-bs-toggle="pill"
                                 data-bs-target="#pills-teachers"
                                 data-tab="teachers"
                                 type="button"
@@ -110,7 +141,7 @@
                             >
                                 <i class="ti ti-users me-1"></i>
                                 Teachers
-                                <span class="badge bg-light text-dark ms-1">{{ $teachers->count() }}</span>
+                                <span class="badge ms-2">{{ $teachers->count() }}</span>
                             </button>
                         </li>
                     </ul>
@@ -748,7 +779,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('#school-tabs [data-bs-toggle="tab"]').forEach(function (tab) {
+        document.querySelectorAll('#school-tabs [data-bs-toggle="pill"]').forEach(function (tab) {
             tab.addEventListener('shown.bs.tab', function (event) {
                 var tabName = event.target.getAttribute('data-tab');
                 if (!tabName) {

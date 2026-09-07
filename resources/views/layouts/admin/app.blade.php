@@ -19,6 +19,7 @@
     <!-- [Template CSS Files] -->
     <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}" id="main-style-link">
     <link rel="stylesheet" href="{{ asset('admin/css/style-preset.css') }}">
+    @stack('styles')
 
 </head>
 
