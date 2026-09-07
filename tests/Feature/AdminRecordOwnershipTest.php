@@ -302,6 +302,11 @@ test('admin school create response includes ownership labels on index', function
         ->get(ownershipAdminUrl('/schools'));
 
     $response->assertOk();
-    $response->assertSee('Created by: Index Admin', false);
-    $response->assertSee('Last updated by: Index Admin', false);
+    $response->assertSee('data-created-by="Index Admin"', false);
+    $response->assertSee('data-updated-by="Index Admin"', false);
+
+    $school = School::query()->where('name', 'like', 'Indexed School %')->latest('id')->first();
+    expect($school)->not->toBeNull()
+        ->and($school->created_by)->toBe($admin->id)
+        ->and($school->updated_by)->toBe($admin->id);
 });

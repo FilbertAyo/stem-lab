@@ -119,7 +119,10 @@ test('co member teacher can register student from shared club page', function ()
     ]);
 
     $response->assertRedirect(route('client.clubs.show', $leaderClub));
-    expect(Student::query()->where('teacher_club_id', $coTeacherClub->id)->where('name', 'Co-member Student')->exists())->toBeTrue();
+
+    // Shared club roster attaches new students to the school club leader.
+    expect(Student::query()->where('teacher_club_id', $leaderClub->id)->where('name', 'Co-member Student')->exists())->toBeTrue()
+        ->and(Student::query()->where('teacher_club_id', $coTeacherClub->id)->where('name', 'Co-member Student')->exists())->toBeFalse();
 });
 
 test('student store accepts day first date of birth format', function () {
