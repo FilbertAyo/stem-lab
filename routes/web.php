@@ -168,6 +168,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
                 Route::post('/{school}/mark-reviewed', [SchoolController::class, 'markReviewed'])->name('mark-reviewed');
                 Route::put('/{school}/teacher-clubs/{teacherClub}/club-day', [SchoolController::class, 'updateClubDay'])->name('teacher-clubs.update-club-day');
                 Route::delete('/{school}/students/{student}', [SchoolController::class, 'removeStudent'])->name('remove-student');
+                Route::post('/{school}/students', [SchoolController::class, 'storeStudent'])->name('students.store');
                 Route::post('/{school}/students/bulk-destroy', [SchoolController::class, 'bulkRemoveStudents'])->name('students.bulk-destroy');
                 Route::post('/{school}/students/bulk-import', [SchoolController::class, 'bulkImportStudents'])->name('students.bulk-import');
                 Route::post('/{school}/students/{student}/credentials', [SchoolController::class, 'provisionStudent'])->name('students.credentials.store');

@@ -7,6 +7,7 @@ use App\Models\Club;
 use App\Models\District;
 use App\Models\Region;
 use App\Models\School;
+use App\Models\SchoolClass;
 use App\Models\Student;
 use App\Models\TeacherClub;
 use App\Models\User;
@@ -132,6 +133,8 @@ class SchoolController extends Controller
             ->orderBy('name')
             ->get(['id', 'name', 'email', 'phone']);
 
+        $schoolClasses = SchoolClass::query()->active()->ordered()->get(['id', 'name']);
+
         $requestedTab = $request->query('tab');
         $activeTab = is_string($requestedTab) ? $requestedTab : '';
         if (! in_array($activeTab, ['teachers', 'students'], true)) {
@@ -146,6 +149,7 @@ class SchoolController extends Controller
             'clubs',
             'unassignedTeachers',
             'sharedClubDaysByClubId',
+            'schoolClasses',
             'activeTab',
         ));
     }
@@ -500,6 +504,71 @@ class SchoolController extends Controller
 
         return $this->redirectToSchoolShow($school, 'teachers')
             ->with('success', "{$user->name} has been added to {$club->name} at {$school->name}.");
+    }
+
+    public function storeStudent(
+        Request $request,
+        School $school,
+        StudentCsvBulkImportService $csvImport,
+        TeacherClubSharedContextService $sharedContext,
+        CompetitionEligibilityPoolService $eligibilityPool,
+    ): RedirectResponse {
+        $validated = $request->validate([
+            'teacher_club_id' => ['required', 'integer'],
+            'name' => ['required', 'string', 'max:255'],
+            'date_of_birth' => ['required', 'string', 'max:32'],
+            'gender' => ['required', 'string', Rule::in(['male', 'female', 'other'])],
+            'school_class_id' => ['required', 'exists:school_classes,id'],
+        ]);
+
+        $teacherClub = $school->teacherClubs()
+            ->approved()
+            ->where('id', (int) $validated['teacher_club_id'])
+            ->first();
+
+        if (! $teacherClub) {
+            return $this->redirectToSchoolShow($school, 'students')
+                ->withErrors(['teacher_club_id' => 'Select a valid approved teacher/club for this school.'])
+                ->withInput();
+        }
+
+        $parsedDob = $csvImport->parseDateOfBirth($validated['date_of_birth']);
+        if ($parsedDob === null) {
+            return $this->redirectToSchoolShow($school, 'students')
+                ->withErrors(['date_of_birth' => 'Invalid date of birth. Use DD-MM-YYYY, DD/MM/YYYY, or YYYY-MM-DD.'])
+                ->withInput();
+        }
+
+        if ($parsedDob->isFuture()) {
+            return $this->redirectToSchoolShow($school, 'students')
+                ->withErrors(['date_of_birth' => 'Date of birth cannot be in the future.'])
+                ->withInput();
+        }
+
+        $age = $parsedDob->age;
+        if ($age < 1 || $age > 150) {
+            return $this->redirectToSchoolShow($school, 'students')
+                ->withErrors(['date_of_birth' => 'Date of birth must result in age between 1 and 150.'])
+                ->withInput();
+        }
+
+        $rosterOwner = $sharedContext->resolveRosterOwner($teacherClub);
+
+        Student::create([
+            'teacher_club_id' => $rosterOwner->id,
+            'name' => $validated['name'],
+            'date_of_birth' => $parsedDob->format('Y-m-d'),
+            'age' => $age,
+            'gender' => $validated['gender'],
+            'school_class_id' => $validated['school_class_id'],
+        ]);
+
+        $eligibilityPool->refreshOpenRegistrationSnapshots($rosterOwner);
+
+        $clubName = $rosterOwner->club?->name ?? 'club';
+
+        return $this->redirectToSchoolShow($school, 'students')
+            ->with('status', "{$validated['name']} has been added to {$clubName} at {$school->name}.");
     }
 
     public function bulkImportStudents(

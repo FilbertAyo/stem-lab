@@ -195,6 +195,15 @@
                                     @endif
                                     <button
                                         type="button"
+                                        class="btn btn-sm btn-outline-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#addStudentModal"
+                                        @disabled($bulkUploadTeacherClubs->isEmpty())
+                                    >
+                                        <i class="ti ti-user-plus me-1"></i> Add Student
+                                    </button>
+                                    <button
+                                        type="button"
                                         class="btn btn-sm btn-primary"
                                         data-bs-toggle="modal"
                                         data-bs-target="#bulkUploadStudentsModal"
@@ -208,14 +217,25 @@
                                 <div class="text-center text-muted py-5">
                                     <i class="ti ti-user-off fs-1 d-block mb-2"></i>
                                     <p class="mb-2">No students registered for this school yet.</p>
-                                    <button
-                                        type="button"
-                                        class="btn btn-sm btn-outline-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#bulkUploadStudentsModal"
-                                    >
-                                        Bulk upload students
-                                    </button>
+                                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#addStudentModal"
+                                            @disabled($bulkUploadTeacherClubs->isEmpty())
+                                        >
+                                            Add a student
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#bulkUploadStudentsModal"
+                                        >
+                                            Bulk upload students
+                                        </button>
+                                    </div>
                                 </div>
                             @else
                                 <form
@@ -671,6 +691,154 @@
         </div>
     </div>
 
+    <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg mt-5">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addStudentModalLabel">
+                        <i class="ti ti-user-plus me-2"></i>
+                        Add Student to {{ $school->name }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form
+                    method="POST"
+                    action="{{ route('admin.schools.students.store', $school) }}"
+                    id="addStudentForm"
+                >
+                    @csrf
+                    <input type="hidden" name="_form" value="add_student">
+                    <div class="modal-body">
+                        <div class="alert alert-info">
+                            <i class="ti ti-info-circle me-1"></i>
+                            The student is saved under the <strong>club leader</strong> and shared with every approved teacher in that club at this school.
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="add_student_teacher_club_id" class="form-label">
+                                Club (shared roster) <span class="text-danger">*</span>
+                            </label>
+                            <select
+                                class="form-select border @error('teacher_club_id') is-invalid @enderror"
+                                id="add_student_teacher_club_id"
+                                name="teacher_club_id"
+                                required
+                            >
+                                <option value="">Select club...</option>
+                                @foreach($bulkUploadTeacherClubs as $teacherClub)
+                                    <option
+                                        value="{{ $teacherClub->id }}"
+                                        @selected(old('teacher_club_id', $bulkUploadTeacherClubs->count() === 1 ? $teacherClub->id : null) == $teacherClub->id)
+                                    >
+                                        {{ $teacherClub->club->name ?? 'Club' }}
+                                        — Leader: {{ $teacherClub->user->name ?? 'Teacher' }}
+                                        @if($teacherClub->club_code) ({{ $teacherClub->club_code }})@endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('teacher_club_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            @if($bulkUploadTeacherClubs->isEmpty())
+                                <small class="text-danger">No club leaders found for this school. Add or approve a teacher first.</small>
+                            @endif
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="add_student_name" class="form-label">
+                                Student Name <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control border @error('name') is-invalid @enderror"
+                                id="add_student_name"
+                                name="name"
+                                value="{{ old('name') }}"
+                                required
+                            >
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="add_student_date_of_birth" class="form-label">
+                                        Date of Birth <span class="text-danger">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        class="form-control border @error('date_of_birth') is-invalid @enderror"
+                                        id="add_student_date_of_birth"
+                                        name="date_of_birth"
+                                        value="{{ old('date_of_birth') }}"
+                                        placeholder="DD-MM-YYYY"
+                                        inputmode="numeric"
+                                        required
+                                    >
+                                    <small class="text-muted">Use DD-MM-YYYY, e.g. 14-07-2011</small>
+                                    @error('date_of_birth')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="add_student_gender" class="form-label">
+                                        Gender <span class="text-danger">*</span>
+                                    </label>
+                                    <select
+                                        class="form-select border @error('gender') is-invalid @enderror"
+                                        id="add_student_gender"
+                                        name="gender"
+                                        required
+                                    >
+                                        <option value="">Select gender...</option>
+                                        <option value="male" @selected(old('gender') === 'male')>Male</option>
+                                        <option value="female" @selected(old('gender') === 'female')>Female</option>
+                                        <option value="other" @selected(old('gender') === 'other')>Other</option>
+                                    </select>
+                                    @error('gender')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-0">
+                            <label for="add_student_school_class_id" class="form-label">
+                                Class <span class="text-danger">*</span>
+                            </label>
+                            <select
+                                class="form-select border @error('school_class_id') is-invalid @enderror"
+                                id="add_student_school_class_id"
+                                name="school_class_id"
+                                required
+                            >
+                                <option value="">Select class...</option>
+                                @foreach($schoolClasses as $schoolClass)
+                                    <option value="{{ $schoolClass->id }}" @selected(old('school_class_id') == $schoolClass->id)>
+                                        {{ $schoolClass->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('school_class_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" @disabled($bulkUploadTeacherClubs->isEmpty())>
+                            <i class="ti ti-user-plus me-1"></i> Add Student
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="bulkUploadStudentsModal" tabindex="-1" aria-labelledby="bulkUploadStudentsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg mt-5">
             <div class="modal-content">
@@ -766,7 +934,12 @@
     <input
         type="hidden"
         id="has_admin_bulk_upload_errors"
-        value="{{ ($errors->has('teacher_club_id') || $errors->has('csv_file')) ? '1' : '0' }}"
+        value="{{ (old('_form') !== 'add_student' && ($errors->has('teacher_club_id') || $errors->has('csv_file'))) ? '1' : '0' }}"
+    >
+    <input
+        type="hidden"
+        id="has_add_student_errors"
+        value="{{ (old('_form') === 'add_student' || $errors->has('name') || $errors->has('date_of_birth') || $errors->has('gender') || $errors->has('school_class_id')) ? '1' : '0' }}"
     >
     <input
         type="hidden"
@@ -864,6 +1037,15 @@
             if (bulkModalElement) {
                 var bulkModal = new bootstrap.Modal(bulkModalElement);
                 bulkModal.show();
+            }
+        }
+
+        var hasAddStudentErrors = document.getElementById('has_add_student_errors')?.value === '1';
+        if (hasAddStudentErrors) {
+            var addStudentModalElement = document.getElementById('addStudentModal');
+            if (addStudentModalElement) {
+                var addStudentModal = new bootstrap.Modal(addStudentModalElement);
+                addStudentModal.show();
             }
         }
 

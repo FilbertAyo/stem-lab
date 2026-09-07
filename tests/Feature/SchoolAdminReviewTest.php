@@ -359,6 +359,57 @@ test('admin bulk upload attaches students to club leader for shared roster', fun
         ->and($coTeacher->approvedCoMemberTeacherClubIds()->contains($student->teacher_club_id))->toBeTrue();
 });
 
+test('admin can add a single student to a school club roster', function () {
+    $school = School::query()->create([
+        'name' => 'Single Student School '.Str::random(6),
+        'is_active' => true,
+        'admin_reviewed_at' => now(),
+    ]);
+
+    $club = Club::query()->create([
+        'name' => 'Club '.Str::random(6),
+        'is_active' => true,
+    ]);
+
+    $schoolClass = \App\Models\SchoolClass::query()->create([
+        'name' => 'Form 1 '.Str::random(4),
+        'is_active' => true,
+    ]);
+
+    $leader = User::factory()->create(['role' => 'teacher']);
+    $leaderMembership = $leader->teacherClubs()->create([
+        'club_id' => $club->id,
+        'school_id' => $school->id,
+        'status' => 'approved',
+        'is_leader' => true,
+        'club_day' => 'monday',
+    ]);
+
+    $admin = User::factory()->create(['role' => 'admin']);
+
+    $response = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+        ->post(adminSchoolsUrl('/'.$school->getRouteKey().'/students'), [
+            '_form' => 'add_student',
+            'teacher_club_id' => $leaderMembership->id,
+            'name' => 'Amina Hassan',
+            'date_of_birth' => '14-07-2011',
+            'gender' => 'female',
+            'school_class_id' => $schoolClass->id,
+        ]);
+
+    $response->assertRedirect(adminSchoolsUrl('/'.$school->getRouteKey().'?tab=students'));
+    $response->assertSessionHas('status');
+
+    $student = \App\Models\Student::query()->where('name', 'Amina Hassan')->first();
+
+    expect($student)->not->toBeNull()
+        ->and($student->teacher_club_id)->toBe($leaderMembership->id)
+        ->and($student->gender)->toBe('female')
+        ->and($student->school_class_id)->toBe($schoolClass->id)
+        ->and($student->age)->toBeGreaterThan(0);
+});
+
 test('mark all reviewed bulk approves pending schools matching filters', function () {
     ['region' => $region, 'district' => $maraDistrict] = createRegionAndDistrict('Mara', 'Musoma');
     ['district' => $mwanzaDistrict] = createRegionAndDistrict('Mwanza', 'Ilemela');
