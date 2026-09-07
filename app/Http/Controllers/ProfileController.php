@@ -50,10 +50,14 @@ class ProfileController extends Controller
             $validated['school_class_id'] = $validated['school_class_id'] ?? null;
         }
 
+        if (array_key_exists('email', $validated) && $validated['email'] === null) {
+            $validated['email'] = null;
+        }
+
         $user->fill($validated);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
         $user->save();

@@ -84,7 +84,7 @@ class ClubController extends Controller
 
         $students = Student::query()
             ->whereIn('teacher_club_id', $coMemberTeacherClubIds)
-            ->with(['schoolClass'])
+            ->with(['schoolClass', 'user'])
             ->orderBy('name')
             ->get();
 

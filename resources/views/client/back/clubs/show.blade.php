@@ -100,6 +100,14 @@
                                 @if($students->isNotEmpty())
                                     <button type="submit"
                                             form="bulkDeleteStudentsForm"
+                                            formaction="{{ route('client.students.credentials.bulk') }}"
+                                            formmethod="post"
+                                            class="btn btn-outline-primary"
+                                            id="createSelectedLoginsBtn">
+                                        Create logins
+                                    </button>
+                                    <button type="submit"
+                                            form="bulkDeleteStudentsForm"
                                                 class="btn btn-danger d-none"
                                             id="deleteSelectedStudentsBtn">
                                         <i class="bi bi-trash me-1"></i>Delete selected
@@ -163,9 +171,25 @@
                                                             @endif
                                                         </td>
                                                         <td class="text-end">
-                                                            @if($student->isLinked())
-                                                                <a href="{{ route('client.my-students.show', $student) }}" class="btn btn-sm btn-outline-primary">Progress</a>
-                                                            @endif
+                                                            <div class="d-inline-flex flex-wrap gap-1 justify-content-end">
+                                                                @if($student->isLinked())
+                                                                    <a href="{{ route('client.my-students.show', $student) }}" class="btn btn-sm btn-outline-primary">Progress</a>
+                                                                    @if($student->user?->usesPinLogin())
+                                                                        <button type="submit"
+                                                                                form="reset-pin-{{ $student->id }}"
+                                                                                class="btn btn-sm btn-outline-secondary"
+                                                                                onclick="return confirm('This will replace the current PIN for {{ $student->name }}. Continue?')">
+                                                                            Reset PIN
+                                                                        </button>
+                                                                    @endif
+                                                                @else
+                                                                    <button type="submit"
+                                                                            form="create-login-{{ $student->id }}"
+                                                                            class="btn btn-sm btn-outline-primary">
+                                                                        Create login
+                                                                    </button>
+                                                                @endif
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -173,6 +197,25 @@
                                         </table>
                                     </div>
                                 </form>
+                                @foreach($students as $student)
+                                    @if(! $student->isLinked())
+                                        <form id="create-login-{{ $student->id }}"
+                                              method="POST"
+                                              action="{{ route('client.students.credentials.store', $student) }}"
+                                              class="d-none">
+                                            @csrf
+                                            <input type="hidden" name="teacher_club_id" value="{{ $teacherClub->id }}">
+                                        </form>
+                                    @elseif($student->user?->usesPinLogin())
+                                        <form id="reset-pin-{{ $student->id }}"
+                                              method="POST"
+                                              action="{{ route('client.students.credentials.reset', $student) }}"
+                                              class="d-none">
+                                            @csrf
+                                            <input type="hidden" name="teacher_club_id" value="{{ $teacherClub->id }}">
+                                        </form>
+                                    @endif
+                                @endforeach
                             @endif
                         </div>
                     </div>
@@ -412,6 +455,8 @@
     <input type="hidden" id="has_register_errors" value="{{ ($errors->has('name') || $errors->has('date_of_birth') || $errors->has('gender') || $errors->has('school_class_id') || ($errors->has('teacher_club_id') && !$errors->has('csv_file'))) ? '1' : '0' }}">
     <input type="hidden" id="has_bulk_errors" value="{{ ($errors->has('csv_file') || ($errors->has('teacher_club_id') && !$errors->has('name') && !$errors->has('date_of_birth'))) ? '1' : '0' }}">
 
+    @include('partials.provisioned-credentials-modal')
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const templateButton = document.getElementById('downloadStudentTemplateBtn');
@@ -479,6 +524,11 @@
                 bulkDeleteForm.addEventListener('submit', function (e) {
                     const selected = bulkDeleteForm.querySelectorAll('.student-row-checkbox:checked');
                     if (selected.length === 0) { e.preventDefault(); return; }
+                    const submitter = e.submitter;
+                    const action = (submitter && submitter.getAttribute('formaction')) || bulkDeleteForm.getAttribute('action') || '';
+                    if (action.indexOf('credentials') !== -1) {
+                        return;
+                    }
                     if (!window.confirm('Delete ' + selected.length + ' student(s)? This cannot be undone.')) e.preventDefault();
                 });
                 syncSelectAllAndDeleteButton();

@@ -7,8 +7,10 @@ use App\Models\Student;
 use App\Models\TeacherClub;
 use App\Models\User;
 use App\Services\CompetitionEligibilityPoolService;
+use App\Services\StudentAccountProvisionService;
 use App\Services\StudentCsvBulkImportService;
 use App\Services\TeacherClubSharedContextService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +19,8 @@ use Illuminate\Validation\ValidationException;
 
 class StudentController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Store a newly registered student from the club show page.
      */
@@ -246,6 +250,76 @@ class StudentController extends Controller
             $teacherClub,
             "Removed {$deleted} student(s).",
         );
+    }
+
+    public function provision(
+        Request $request,
+        Student $student,
+        StudentAccountProvisionService $provision,
+    ): RedirectResponse {
+        $this->authorize('provision', $student);
+
+        $credential = $provision->provision($student);
+
+        return $this->redirectAfterStudentMutation($request, $student->teacherClub)
+            ->with('status', 'Login created for '.$credential->student->name.'. Write down the PIN; it will not be shown again.')
+            ->with('provisioned_credentials', $provision->sessionPayload([$credential]));
+    }
+
+    public function resetPin(
+        Request $request,
+        Student $student,
+        StudentAccountProvisionService $provision,
+    ): RedirectResponse {
+        $this->authorize('resetPin', $student);
+
+        $credential = $provision->resetPin($student);
+
+        return $this->redirectAfterStudentMutation($request, $student->teacherClub)
+            ->with('status', 'PIN reset for '.$credential->student->name.'. Write down the new PIN; it will not be shown again.')
+            ->with('provisioned_credentials', $provision->sessionPayload([$credential]));
+    }
+
+    public function bulkProvision(Request $request, StudentAccountProvisionService $provision): RedirectResponse
+    {
+        $pageClub = $this->findTeacherClubFromRequest($request);
+
+        $validated = $this->validateForClubMutation($request, [
+            'student_ids' => ['required', 'array', 'min:1'],
+            'student_ids.*' => ['integer', 'exists:students,id'],
+            'redirect_to' => ['nullable', 'string', 'max:2048'],
+            'teacher_club_id' => ['nullable', $this->teacherClubIdRule()],
+        ], $pageClub);
+
+        $user = Auth::user();
+        $manageableTeacherClubIds = $user->approvedCoMemberTeacherClubIds();
+
+        $students = Student::query()
+            ->whereIn('id', $validated['student_ids'])
+            ->whereIn('teacher_club_id', $manageableTeacherClubIds)
+            ->get();
+
+        $result = $provision->provisionMany($students);
+
+        $teacherClub = $pageClub;
+        if ($teacherClub === null && $students->isNotEmpty()) {
+            $teacherClub = $students->first()->teacherClub;
+        }
+
+        if ($result['credentials'] === []) {
+            return $this->redirectAfterStudentMutation($request, $teacherClub)
+                ->with('error', 'No logins were created. Selected students already have accounts.');
+        }
+
+        $created = count($result['credentials']);
+        $message = "Created logins for {$created} student(s). Write down the PINs; they will not be shown again.";
+        if ($result['skipped'] > 0) {
+            $message .= " {$result['skipped']} already had an account.";
+        }
+
+        return $this->redirectAfterStudentMutation($request, $teacherClub)
+            ->with('status', $message)
+            ->with('provisioned_credentials', $provision->sessionPayload($result['credentials']));
     }
 
     /**

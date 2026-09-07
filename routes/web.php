@@ -170,6 +170,9 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
                 Route::delete('/{school}/students/{student}', [SchoolController::class, 'removeStudent'])->name('remove-student');
                 Route::post('/{school}/students/bulk-destroy', [SchoolController::class, 'bulkRemoveStudents'])->name('students.bulk-destroy');
                 Route::post('/{school}/students/bulk-import', [SchoolController::class, 'bulkImportStudents'])->name('students.bulk-import');
+                Route::post('/{school}/students/{student}/credentials', [SchoolController::class, 'provisionStudent'])->name('students.credentials.store');
+                Route::post('/{school}/students/{student}/credentials/reset', [SchoolController::class, 'resetStudentPin'])->name('students.credentials.reset');
+                Route::post('/{school}/students/credentials/bulk', [SchoolController::class, 'bulkProvisionStudents'])->name('students.credentials.bulk');
                 Route::post('/{school}/teachers', [SchoolController::class, 'storeTeacher'])->name('teachers.store');
                 Route::get('/{school}', [SchoolController::class, 'show'])->name('show');
                 Route::put('/{school}', [SchoolController::class, 'update'])->name('update');
@@ -504,6 +507,9 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
             Route::delete('/students/{student}', [ClientStudentController::class, 'destroy'])->name('client.students.destroy');
             Route::post('/students/bulk', [ClientStudentController::class, 'bulkStoreWithoutRouteClub'])->name('client.students.bulk-store');
             Route::post('/students/bulk-destroy', [ClientStudentController::class, 'bulkDestroy'])->name('client.students.bulk-destroy');
+            Route::post('/students/credentials/bulk', [ClientStudentController::class, 'bulkProvision'])->name('client.students.credentials.bulk');
+            Route::post('/students/{student}/credentials', [ClientStudentController::class, 'provision'])->name('client.students.credentials.store');
+            Route::post('/students/{student}/credentials/reset', [ClientStudentController::class, 'resetPin'])->name('client.students.credentials.reset');
 
             // Weekly Sessions routes
             Route::prefix('weekly-sessions')->name('client.weekly-sessions.')->group(function () {

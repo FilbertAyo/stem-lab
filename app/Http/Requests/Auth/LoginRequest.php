@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
+use App\Support\StudentLoginId;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
@@ -12,6 +14,10 @@ use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
+    public const METHOD_EMAIL = 'email';
+
+    public const METHOD_STUDENT_ID = 'student_id';
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -27,8 +33,16 @@ class LoginRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isStudentId = $this->isStudentIdLogin();
+
         return [
-            'email' => ['required', 'string', 'email'],
+            'login_method' => ['nullable', 'string', 'in:'.self::METHOD_EMAIL.','.self::METHOD_STUDENT_ID],
+            'email' => $isStudentId
+                ? ['nullable', 'string']
+                : ['required', 'string', 'email'],
+            'login_id' => $isStudentId
+                ? ['required', 'string', 'max:32']
+                : ['nullable', 'string'],
             'password' => ['required', 'string'],
             'remember' => ['nullable', 'boolean'],
             'admin_login' => ['sometimes', 'boolean'],
@@ -45,49 +59,50 @@ class LoginRequest extends FormRequest
         $this->ensureIsNotRateLimited();
 
         $validated = $this->validated();
-        $credentials = Arr::only($validated, ['email', 'password']);
-
         $remember = (bool) Arr::get($validated, 'remember', false);
-        
-        // Detect admin login by checking request host
         $isAdminLogin = $this->isAdminDomain();
-        
-        // Fallback: also check admin_login flag for backward compatibility during transition
-        if (!$isAdminLogin) {
+        $errorField = $this->isStudentIdLogin() ? 'login_id' : 'email';
+
+        if (! $isAdminLogin) {
             $isAdminLogin = (bool) Arr::get($validated, 'admin_login', false);
         }
 
-        // Force remember=false for admin logins to ensure sessions expire properly
         if ($isAdminLogin) {
             $remember = false;
         }
+
+        $credentials = $this->credentialsFromValidated($validated);
 
         if (! Auth::attempt($credentials, $remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                $errorField => trans('auth.failed'),
             ]);
         }
 
         $authenticatedUser = Auth::user();
 
-        if ($isAdminLogin && $authenticatedUser?->role !== 'admin') {
+        if ($authenticatedUser instanceof User && $authenticatedUser->usesPinLogin()) {
+            Auth::logout();
+            Auth::login($authenticatedUser, false);
+        }
+
+        if ($isAdminLogin && (! $authenticatedUser instanceof User || $authenticatedUser->role !== 'admin')) {
             Auth::logout();
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                $errorField => trans('auth.failed'),
             ]);
         }
 
-        // Check if admin user is active
-        if ($isAdminLogin && $authenticatedUser && $authenticatedUser->role === 'admin' && !$authenticatedUser->is_active) {
+        if ($authenticatedUser instanceof User && ! $authenticatedUser->is_active) {
             Auth::logout();
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => 'Your account has been disabled. Please contact an administrator.',
+                $errorField => 'Your account has been disabled. Please contact an administrator.',
             ]);
         }
 
@@ -108,9 +123,10 @@ class LoginRequest extends FormRequest
         event(new Lockout($this));
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
+        $errorField = $this->isStudentIdLogin() ? 'login_id' : 'email';
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            $errorField => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -122,11 +138,52 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        $validated = $this->validated();
-        $email = Str::lower((string) Arr::get($validated, 'email', ''));
+        $identifier = $this->isStudentIdLogin()
+            ? StudentLoginId::normalize((string) $this->input('login_id', ''))
+            : Str::lower((string) $this->input('email', ''));
         $ipAddress = (string) request()->ip();
 
-        return Str::transliterate($email.'|'.$ipAddress);
+        return Str::transliterate($identifier.'|'.$ipAddress);
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $method = $this->input('login_method', self::METHOD_EMAIL);
+
+        if ($this->isAdminDomain() || $method !== self::METHOD_STUDENT_ID) {
+            $method = self::METHOD_EMAIL;
+        }
+
+        $this->merge([
+            'login_method' => $method,
+        ]);
+
+        if ($method === self::METHOD_STUDENT_ID && is_string($this->input('login_id'))) {
+            $this->merge([
+                'login_id' => StudentLoginId::normalize((string) $this->input('login_id')),
+            ]);
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     * @return array<string, mixed>
+     */
+    protected function credentialsFromValidated(array $validated): array
+    {
+        if ($this->isStudentIdLogin()) {
+            return [
+                'login_id' => Arr::get($validated, 'login_id'),
+                'password' => Arr::get($validated, 'password'),
+            ];
+        }
+
+        return Arr::only($validated, ['email', 'password']);
+    }
+
+    protected function isStudentIdLogin(): bool
+    {
+        return $this->input('login_method') === self::METHOD_STUDENT_ID && ! $this->isAdminDomain();
     }
 
     /**
@@ -136,7 +193,7 @@ class LoginRequest extends FormRequest
     {
         $host = $this->getHost();
         $adminHost = parse_url(config('app.admin_url'), PHP_URL_HOST);
-        
+
         return $host === $adminHost;
     }
 }

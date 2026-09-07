@@ -62,10 +62,10 @@ class DashboardController extends Controller
                     ->keyBy('club_id');
 
                 $competitions = Competition::query()
-                ->active()
-                ->published()
-                ->whereIn('club_id', $teacherClubIds)
-                ->with(['phases'])
+                    ->active()
+                    ->published()
+                    ->whereIn('club_id', $teacherClubIds)
+                    ->with(['phases'])
                     ->orderByDesc('competition_start')
                     ->get();
 
@@ -73,104 +73,104 @@ class DashboardController extends Controller
                     ->registrationsForTeacher(...$approvedTeacherClubs->values()->all());
 
                 $competitionReminders = $competitions->map(function (Competition $competition) use ($registrations) {
-                $registration = $registrations->get($competition->id);
-                $registrationStatus = $registration?->status;
-                $idea = $registration?->idea;
-                $ideaDecisionStatus = $idea?->shortlist?->status;
-                if (! $ideaDecisionStatus && $idea?->status === 'shortlisted') {
-                    $ideaDecisionStatus = 'shortlisted';
-                }
+                    $registration = $registrations->get($competition->id);
+                    $registrationStatus = $registration?->status;
+                    $idea = $registration?->idea;
+                    $ideaDecisionStatus = $idea?->shortlist?->status;
+                    if (! $ideaDecisionStatus && $idea?->status === 'shortlisted') {
+                        $ideaDecisionStatus = 'shortlisted';
+                    }
 
-                $prototype = $registration?->prototypeSubmission;
-                $prototypeDecisionStatus = $prototype?->prototypeShortlist?->status;
-                $prototypeModification = $registration?->prototypeModification;
+                    $prototype = $registration?->prototypeSubmission;
+                    $prototypeDecisionStatus = $prototype?->prototypeShortlist?->status;
+                    $prototypeModification = $registration?->prototypeModification;
 
-                if ($registrationStatus === 'draft') {
-                    return [
-                        'priority' => 100,
-                        'kind' => 'action_required',
-                        'label' => 'Complete your competition registration (participants and school details).',
-                        'competition' => $competition,
-                        'route' => route('client.competitions.register', $competition),
-                        'route_label' => 'Complete registration',
-                        'badge_class' => 'bg-danger',
-                        'time' => $registration->updated_at,
-                    ];
-                }
+                    if ($registrationStatus === 'draft') {
+                        return [
+                            'priority' => 100,
+                            'kind' => 'action_required',
+                            'label' => 'Complete your competition registration (participants and school details).',
+                            'competition' => $competition,
+                            'route' => route('client.competitions.register', $competition),
+                            'route_label' => 'Complete registration',
+                            'badge_class' => 'bg-danger',
+                            'time' => $registration->updated_at,
+                        ];
+                    }
 
-                if (! $registration && $competition->allowsTeacherRegistration(null)) {
-                    return [
-                        'priority' => 99,
-                        'kind' => 'action_required',
-                        'label' => 'You joined this club earlier — register your team for the competition.',
-                        'competition' => $competition,
-                        'route' => route('client.competitions.register', $competition),
-                        'route_label' => 'Register now',
-                        'badge_class' => 'bg-danger',
-                        'time' => $competition->registration_deadline,
-                    ];
-                }
+                    if (! $registration && $competition->allowsTeacherRegistration(null)) {
+                        return [
+                            'priority' => 99,
+                            'kind' => 'action_required',
+                            'label' => 'You joined this club earlier — register your team for the competition.',
+                            'competition' => $competition,
+                            'route' => route('client.competitions.register', $competition),
+                            'route_label' => 'Register now',
+                            'badge_class' => 'bg-danger',
+                            'time' => $competition->registration_deadline,
+                        ];
+                    }
 
-                if ($registrationStatus === 'pending') {
-                    return [
-                        'priority' => 90,
-                        'kind' => 'pending',
-                        'label' => 'Registration submitted and waiting for approval.',
-                        'competition' => $competition,
-                        'route' => route('client.competitions.show', $competition),
-                        'route_label' => 'View status',
-                        'time' => $registration->submitted_at,
-                    ];
-                }
+                    if ($registrationStatus === 'pending') {
+                        return [
+                            'priority' => 90,
+                            'kind' => 'pending',
+                            'label' => 'Registration submitted and waiting for approval.',
+                            'competition' => $competition,
+                            'route' => route('client.competitions.show', $competition),
+                            'route_label' => 'View status',
+                            'time' => $registration->submitted_at,
+                        ];
+                    }
 
-                if ($registrationStatus === 'rejected' && $competition->allowsTeacherRegistration($registration)) {
-                    return [
-                        'priority' => 95,
-                        'kind' => 'action_required',
-                        'label' => 'Registration was rejected - update and resubmit.',
-                        'competition' => $competition,
-                        'route' => route('client.competitions.register', $competition),
-                        'route_label' => 'Update registration',
-                        'badge_class' => 'bg-warning text-dark',
-                        'time' => $registration->updated_at,
-                    ];
-                }
+                    if ($registrationStatus === 'rejected' && $competition->allowsTeacherRegistration($registration)) {
+                        return [
+                            'priority' => 95,
+                            'kind' => 'action_required',
+                            'label' => 'Registration was rejected - update and resubmit.',
+                            'competition' => $competition,
+                            'route' => route('client.competitions.register', $competition),
+                            'route_label' => 'Update registration',
+                            'badge_class' => 'bg-warning text-dark',
+                            'time' => $registration->updated_at,
+                        ];
+                    }
 
-                if ($registrationStatus === 'approved' && $competition->isPhaseOpen('idea_submission') && (! $idea || $idea->status === 'draft')) {
-                    return [
-                        'priority' => 85,
-                        'kind' => 'action_required',
-                        'label' => 'Idea submission phase is open - submit your idea.',
-                        'competition' => $competition,
-                        'route' => route('client.competitions.show', $competition).'#idea-submission',
-                        'route_label' => 'Submit idea',
-                        'time' => $competition->competition_end,
-                    ];
-                }
+                    if ($registrationStatus === 'approved' && $competition->isPhaseOpen('idea_submission') && (! $idea || $idea->status === 'draft')) {
+                        return [
+                            'priority' => 85,
+                            'kind' => 'action_required',
+                            'label' => 'Idea submission phase is open - submit your idea.',
+                            'competition' => $competition,
+                            'route' => route('client.competitions.show', $competition).'#idea-submission',
+                            'route_label' => 'Submit idea',
+                            'time' => $competition->competition_end,
+                        ];
+                    }
 
-                if ($registrationStatus === 'approved' && $competition->isPhaseOpen('prototype_development') && $ideaDecisionStatus === 'shortlisted' && (! $prototype || $prototype->status === 'draft')) {
-                    return [
-                        'priority' => 80,
-                        'kind' => 'action_required',
-                        'label' => 'Prototype phase is open for shortlisted teams.',
-                        'competition' => $competition,
-                        'route' => route('client.competitions.show', $competition).'#prototype-development',
-                        'route_label' => 'Submit prototype',
-                        'time' => $competition->competition_end,
-                    ];
-                }
+                    if ($registrationStatus === 'approved' && $competition->isPhaseOpen('prototype_development') && $ideaDecisionStatus === 'shortlisted' && (! $prototype || $prototype->status === 'draft')) {
+                        return [
+                            'priority' => 80,
+                            'kind' => 'action_required',
+                            'label' => 'Prototype phase is open for shortlisted teams.',
+                            'competition' => $competition,
+                            'route' => route('client.competitions.show', $competition).'#prototype-development',
+                            'route_label' => 'Submit prototype',
+                            'time' => $competition->competition_end,
+                        ];
+                    }
 
-                if ($registrationStatus === 'approved' && $competition->isPhaseOpen('prototype_modification') && $prototypeDecisionStatus === 'shortlisted' && (! $prototypeModification || $prototypeModification->status === 'draft')) {
-                    return [
-                        'priority' => 75,
-                        'kind' => 'action_required',
-                        'label' => 'Prototype modification phase is open for your team.',
-                        'competition' => $competition,
-                        'route' => route('client.competitions.show', $competition).'#prototype-modification',
-                        'route_label' => 'Submit modification',
-                        'time' => $competition->competition_end,
-                    ];
-                }
+                    if ($registrationStatus === 'approved' && $competition->isPhaseOpen('prototype_modification') && $prototypeDecisionStatus === 'shortlisted' && (! $prototypeModification || $prototypeModification->status === 'draft')) {
+                        return [
+                            'priority' => 75,
+                            'kind' => 'action_required',
+                            'label' => 'Prototype modification phase is open for your team.',
+                            'competition' => $competition,
+                            'route' => route('client.competitions.show', $competition).'#prototype-modification',
+                            'route_label' => 'Submit modification',
+                            'time' => $competition->competition_end,
+                        ];
+                    }
 
                     return null;
                 })->filter()->values();
@@ -233,7 +233,8 @@ class DashboardController extends Controller
         }
 
         $showPhoneReminder = in_array($user->role, ['teacher', 'student', 'parent'], true)
-            && blank($user->phone);
+            && blank($user->phone)
+            && ! $user->usesPinLogin();
 
         return view('client.back.dashboard', compact(
             'stats',

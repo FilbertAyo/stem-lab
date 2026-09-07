@@ -4,44 +4,69 @@
 @section('page', 'confirm-password')
 
 @section('content')
-@include('partials.auth-top-bar')
+<x-auth-shell
+  brand-title="A quick security check."
+  brand-lead="This is a protected part of your account. Confirm your password to continue."
+>
+  <span class="auth-shell__eyebrow">Security</span>
+  <h2 class="auth-shell__title">Confirm your password</h2>
+  <p class="auth-shell__subtitle">For your safety, please re-enter your password to continue.</p>
 
-<div class="page-wrapper overflow-hidden">
-  <section class="bg-light-gray d-flex align-items-center justify-content-center min-vh-100">
-    <div class="container py-3">
-      <div class="sign-in card mx-auto shadow-lg">
-        <div class="card-body py-8 px-lg-5">
-          <h4 class="text-center fw-semibold mb-3">Confirm Password</h4>
+  <form class="d-flex flex-column gap-3" method="POST" action="{{ route('password.confirm') }}" novalidate>
+    @csrf
 
-          <p class="text-center mb-3">
-            This is a secure area of the application. Please confirm your password before continuing.
-          </p>
-
-          <form class="d-flex flex-column gap-3 mt-3" method="POST" action="{{ route('password.confirm') }}">
-            @csrf
-
-            <div>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Password"
-                required
-                autocomplete="current-password"
-                class="form-control border px-2 @error('password') is-invalid @enderror"
-              >
-              @error('password')
-                <div class="invalid-feedback d-block">{{ $message }}</div>
-              @enderror
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100 justify-content-center py-2 fw-medium my-3 fs-5 lh-lg">
-              Confirm
-            </button>
-          </form>
-        </div>
+    <div class="auth-field">
+      <label class="auth-field__label" for="password">Password</label>
+      <div class="auth-field__control">
+        <iconify-icon class="auth-field__icon" icon="lucide:lock" aria-hidden="true"></iconify-icon>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Your password"
+          required
+          autofocus
+          autocomplete="current-password"
+          class="form-control @error('password') is-invalid @enderror"
+        >
+        <button
+          type="button"
+          class="auth-field__toggle"
+          data-toggle-password="#password"
+          aria-label="Show password"
+          aria-pressed="false"
+        >
+          <iconify-icon icon="lucide:eye" aria-hidden="true"></iconify-icon>
+        </button>
       </div>
+      @error('password')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+      @enderror
     </div>
-  </section>
-</div>
+
+    <button type="submit" class="btn btn-primary w-100 justify-content-center mt-1">
+      <span>Confirm</span>
+      <iconify-icon icon="lucide:shield-check" aria-hidden="true" class="ms-1"></iconify-icon>
+    </button>
+  </form>
+</x-auth-shell>
 @endsection
+
+@push('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-toggle-password]').forEach(function (toggle) {
+      toggle.addEventListener('click', function () {
+        const target = document.querySelector(toggle.getAttribute('data-toggle-password'));
+        if (!target) return;
+        const shown = target.type === 'text';
+        target.type = shown ? 'password' : 'text';
+        toggle.setAttribute('aria-pressed', String(!shown));
+        toggle.setAttribute('aria-label', shown ? 'Show password' : 'Hide password');
+        const icon = toggle.querySelector('iconify-icon');
+        if (icon) icon.setAttribute('icon', shown ? 'lucide:eye' : 'lucide:eye-off');
+      });
+    });
+  });
+</script>
+@endpush

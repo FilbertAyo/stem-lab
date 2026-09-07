@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\TeacherClub;
 use App\Models\User;
 use App\Services\Learning\StudentProgressSummaryService;
+use App\Support\StudentLoginId;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -22,7 +23,7 @@ class StudentClubLinkService
 
     public function normalizeCode(string $code): string
     {
-        return strtoupper(trim($code));
+        return StudentLoginId::normalize($code);
     }
 
     public function lookup(string $admissionNumber, string $clubCode): ?StudentClubMatch
@@ -99,6 +100,11 @@ class StudentClubLinkService
             ]);
         }
 
+        return $this->attachUser($user, $student);
+    }
+
+    public function attachUser(User $user, Student $student): Student
+    {
         return DB::transaction(function () use ($user, $student) {
             $linkedAt = now();
 

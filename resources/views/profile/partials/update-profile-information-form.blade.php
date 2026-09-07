@@ -27,7 +27,7 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                <label for="phone" class="form-label">Phone Number</label>
+                <label for="phone" class="form-label">Phone Number @unless($user->usesPinLogin())<span class="text-danger">*</span>@endunless</label>
                 <input
                     type="tel"
                     class="form-control @error('phone') is-invalid @enderror border px-2"
@@ -36,7 +36,7 @@
                     value="{{ old('phone', $user->phone) }}"
                     placeholder="+255XX or 07XX"
                     autocomplete="tel"
-                    required
+                    @unless($user->usesPinLogin()) required @endunless
                 >
                 @error('phone')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -44,14 +44,14 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                <label for="email" class="form-label">Email Address</label>
+                <label for="email" class="form-label">Email Address @unless($user->usesPinLogin())<span class="text-danger">*</span>@endunless</label>
                 <input
                     type="email"
                     class="form-control @error('email') is-invalid @enderror border px-2"
                     id="email"
                     name="email"
                     value="{{ old('email', $user->email) }}"
-                    required
+                    @unless($user->usesPinLogin()) required @endunless
                     autocomplete="username"
                 >
                 @error('email')

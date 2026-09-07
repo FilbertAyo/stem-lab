@@ -26,8 +26,13 @@
 
         @if(! $student->isLinked())
             <div class="alert alert-info mt-3">
-                This student is on your roster but has not created a platform account yet.
+                This student is on your roster but does not have a platform login yet.
+                You can create a login from the club roster.
             </div>
+            <form method="POST" action="{{ route('client.students.credentials.store', $student) }}" class="mt-2">
+                @csrf
+                <button type="submit" class="btn btn-outline-primary btn-sm">Create login</button>
+            </form>
         @else
             <section class="row g-3 mt-2 mb-4">
                 <div class="col-6 col-lg-4 col-xl-2">

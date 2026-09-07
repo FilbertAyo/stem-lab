@@ -16,10 +16,11 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
-    use HasPublicUlid;
+
     use HasPublicShortId {
         HasPublicShortId::getRouteKeyName insteadof HasPublicUlid;
     }
+    use HasPublicUlid;
     use Notifiable;
 
     /**
@@ -30,6 +31,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'login_id',
+        'uses_pin',
         'phone',
         'date_of_birth',
         'gender',
@@ -66,7 +69,18 @@ class User extends Authenticatable
             'club_linked_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'uses_pin' => 'boolean',
         ];
+    }
+
+    public function usesPinLogin(): bool
+    {
+        return $this->uses_pin === true;
+    }
+
+    public function hasEmailLogin(): bool
+    {
+        return filled($this->email) && ! $this->usesPinLogin();
     }
 
     public function linkedRosterStudent()

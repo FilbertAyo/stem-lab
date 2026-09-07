@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\CompetitionRegistrationSchoolSyncService;
+use App\Services\StudentAccountProvisionService;
 use App\Services\StudentCsvBulkImportService;
 use App\Services\TeacherClubSharedContextService;
 use App\Support\SchoolLocation;
@@ -103,7 +104,7 @@ class SchoolController extends Controller
         // Get all students for this school (using database query)
         $students = \App\Models\Student::whereHas('teacherClub', function ($query) use ($school) {
             $query->where('school_id', $school->id);
-        })->with(['schoolClass', 'teacherClub.club'])->get()->unique('id')->values();
+        })->with(['schoolClass', 'teacherClub.club', 'user'])->get()->unique('id')->values();
 
         // One option per club: students always attach to the school club leader (shared roster).
         $bulkUploadTeacherClubs = $school->teacherClubs()
@@ -372,6 +373,79 @@ class SchoolController extends Controller
             ->with('status', "{$deleted} student(s) removed successfully.");
     }
 
+    public function provisionStudent(
+        School $school,
+        Student $student,
+        StudentAccountProvisionService $provision,
+    ): RedirectResponse {
+        $this->assertStudentBelongsToSchool($school, $student);
+
+        $credential = $provision->provision($student);
+
+        return redirect()
+            ->route('admin.schools.show', $school)
+            ->with('status', 'Login created for '.$credential->student->name.'. Write down the PIN; it will not be shown again.')
+            ->with('provisioned_credentials', $provision->sessionPayload([$credential]));
+    }
+
+    public function resetStudentPin(
+        School $school,
+        Student $student,
+        StudentAccountProvisionService $provision,
+    ): RedirectResponse {
+        $this->assertStudentBelongsToSchool($school, $student);
+
+        $credential = $provision->resetPin($student);
+
+        return redirect()
+            ->route('admin.schools.show', $school)
+            ->with('status', 'PIN reset for '.$credential->student->name.'. Write down the new PIN; it will not be shown again.')
+            ->with('provisioned_credentials', $provision->sessionPayload([$credential]));
+    }
+
+    public function bulkProvisionStudents(
+        Request $request,
+        School $school,
+        StudentAccountProvisionService $provision,
+    ): RedirectResponse {
+        $validated = $request->validate([
+            'student_ids' => ['required', 'array', 'min:1'],
+            'student_ids.*' => ['integer', 'exists:students,id'],
+        ]);
+
+        $students = Student::query()
+            ->whereIn('id', $validated['student_ids'])
+            ->whereHas('teacherClub', function ($query) use ($school): void {
+                $query->where('school_id', $school->id);
+            })
+            ->get();
+
+        if ($students->isEmpty()) {
+            return redirect()
+                ->route('admin.schools.show', $school)
+                ->with('error', 'No matching students were found for this school.');
+        }
+
+        $result = $provision->provisionMany($students);
+
+        if ($result['credentials'] === []) {
+            return redirect()
+                ->route('admin.schools.show', $school)
+                ->with('error', 'No logins were created. Selected students already have accounts.');
+        }
+
+        $created = count($result['credentials']);
+        $message = "Created logins for {$created} student(s). Write down the PINs; they will not be shown again.";
+        if ($result['skipped'] > 0) {
+            $message .= " {$result['skipped']} already had an account.";
+        }
+
+        return redirect()
+            ->route('admin.schools.show', $school)
+            ->with('status', $message)
+            ->with('provisioned_credentials', $provision->sessionPayload($result['credentials']));
+    }
+
     public function storeTeacher(
         Request $request,
         School $school,
@@ -479,6 +553,17 @@ class SchoolController extends Controller
                 'status',
                 "Successfully imported {$result['success_count']} student(s) to {$clubName} (shared roster under {$leaderName})."
             );
+    }
+
+    private function assertStudentBelongsToSchool(School $school, Student $student): void
+    {
+        $student->loadMissing('teacherClub');
+
+        $belongsToSchool = (int) $student->teacherClub?->school_id === (int) $school->id;
+
+        if (! $belongsToSchool) {
+            abort(404);
+        }
     }
 
     private function schoolsIndexQuery(Request $request): Builder

@@ -20,11 +20,12 @@ class ProfileUpdateRequest extends FormRequest
     {
         $isClientRole = in_array($this->user()?->role, ['teacher', 'student', 'parent'], true);
         $isStudent = $this->user()?->role === 'student';
+        $isPinUser = $this->user()?->usesPinLogin() === true;
 
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
-                'required',
+                $isPinUser ? 'nullable' : 'required',
                 'string',
                 'lowercase',
                 'email',
@@ -32,7 +33,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
             'phone' => [
-                Rule::requiredIf($isClientRole),
+                Rule::requiredIf($isClientRole && ! $isPinUser),
                 'nullable',
                 'string',
                 function (string $attribute, mixed $value, \Closure $fail): void {
@@ -73,13 +74,27 @@ class ProfileUpdateRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $phone = $this->input('phone');
+        $email = $this->input('email');
+
+        $merge = [];
+        if ($email === '') {
+            $merge['email'] = null;
+        }
         if ($phone === null || $phone === '') {
+            if ($merge !== []) {
+                $this->merge($merge);
+            }
+
             return;
         }
 
         $normalizedPhone = TanzaniaPhone::normalize((string) $phone);
         if ($normalizedPhone) {
-            $this->merge(['phone' => $normalizedPhone]);
+            $merge['phone'] = $normalizedPhone;
+        }
+
+        if ($merge !== []) {
+            $this->merge($merge);
         }
     }
 }

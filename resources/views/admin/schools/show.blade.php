@@ -240,6 +240,16 @@
                                     <button
                                         type="submit"
                                         form="bulkDeleteStudentsForm"
+                                        formaction="{{ route('admin.schools.students.credentials.bulk', $school) }}"
+                                        formmethod="post"
+                                        class="btn btn-sm btn-outline-primary"
+                                        id="createSelectedLoginsBtn"
+                                    >
+                                        Create logins
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        form="bulkDeleteStudentsForm"
                                         class="btn btn-sm btn-outline-danger d-none"
                                         id="deleteSelectedStudentsBtn"
                                     >
@@ -335,15 +345,35 @@
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <button
-                                                                type="submit"
-                                                                form="delete-student-{{ $student->id }}"
-                                                                class="btn btn-sm btn-outline-danger p-1"
-                                                                title="Delete student"
-                                                                onclick="return confirm('Are you sure you want to delete {{ $student->name }}? This action cannot be undone.')"
-                                                            >
-                                                                delete
-                                                            </button>
+                                                            <div class="d-flex flex-wrap gap-1">
+                                                                @if(! $student->isLinked())
+                                                                    <button
+                                                                        type="submit"
+                                                                        form="create-login-{{ $student->id }}"
+                                                                        class="btn btn-sm btn-outline-primary p-1"
+                                                                    >
+                                                                        Create login
+                                                                    </button>
+                                                                @elseif($student->user?->usesPinLogin())
+                                                                    <button
+                                                                        type="submit"
+                                                                        form="reset-pin-{{ $student->id }}"
+                                                                        class="btn btn-sm btn-outline-secondary p-1"
+                                                                        onclick="return confirm('This will replace the current PIN for {{ $student->name }}. Continue?')"
+                                                                    >
+                                                                        Reset PIN
+                                                                    </button>
+                                                                @endif
+                                                                <button
+                                                                    type="submit"
+                                                                    form="delete-student-{{ $student->id }}"
+                                                                    class="btn btn-sm btn-outline-danger p-1"
+                                                                    title="Delete student"
+                                                                    onclick="return confirm('Are you sure you want to delete {{ $student->name }}? This action cannot be undone.')"
+                                                                >
+                                                                    delete
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -361,6 +391,25 @@
                                         @csrf
                                         @method('DELETE')
                                     </form>
+                                    @if(! $student->isLinked())
+                                        <form
+                                            id="create-login-{{ $student->id }}"
+                                            action="{{ route('admin.schools.students.credentials.store', [$school, $student]) }}"
+                                            method="POST"
+                                            class="d-none"
+                                        >
+                                            @csrf
+                                        </form>
+                                    @elseif($student->user?->usesPinLogin())
+                                        <form
+                                            id="reset-pin-{{ $student->id }}"
+                                            action="{{ route('admin.schools.students.credentials.reset', [$school, $student]) }}"
+                                            method="POST"
+                                            class="d-none"
+                                        >
+                                            @csrf
+                                        </form>
+                                    @endif
                                 @endforeach
                             @endif
                         </div>
@@ -608,6 +657,8 @@
         id="has_add_teacher_errors"
         value="{{ ($errors->has('user_id') || $errors->has('club_id') || $errors->has('club_day')) ? '1' : '0' }}"
     >
+
+    @include('partials.provisioned-credentials-modal')
 </x-admin-layout>
 
 <script>
@@ -719,6 +770,12 @@
                 var selected = bulkDeleteForm.querySelectorAll('.student-row-checkbox:checked');
                 if (selected.length === 0) {
                     e.preventDefault();
+                    return;
+                }
+
+                var submitter = e.submitter;
+                var action = (submitter && submitter.getAttribute('formaction')) || bulkDeleteForm.getAttribute('action') || '';
+                if (action.indexOf('credentials') !== -1) {
                     return;
                 }
 
