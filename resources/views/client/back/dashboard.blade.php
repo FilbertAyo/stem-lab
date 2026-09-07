@@ -14,7 +14,9 @@
     $competitionNotificationCount = $competitionNotificationCount ?? 0;
     $competitionShortcuts = $competitionShortcuts ?? [];
     $clubStats = $clubStats ?? null;
+    $studentAnalytics = $studentAnalytics ?? null;
     $isTeacher = Auth::user()->role === 'teacher';
+    $isStudent = Auth::user()->role === 'student';
 @endphp
 
 <x-app-layout>
@@ -42,6 +44,9 @@
         @endif
 
         
+        @if($isStudent && $studentAnalytics)
+          @include('client.back.partials.student-analytics')
+        @else
         <section class="row g-2 g-md-3 mb-4">
           @if($isTeacher && $clubStats)
             <div class="col-6 col-lg-3">
@@ -124,6 +129,7 @@
             </div>
           @endif
         </section>
+        @endif
 
         @include('client.back.partials.package')
 

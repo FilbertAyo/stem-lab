@@ -11,6 +11,18 @@ enum LearningEventType: string
     case ProjectViewed = 'project.viewed';
     case ResourceAccessed = 'resource.accessed';
 
+    public function label(): string
+    {
+        return match ($this) {
+            self::ModelQuestionAnswered => 'Answered a lesson question',
+            self::ModelCompleted => 'Finished a 3D lesson',
+            self::ModelViewed => 'Viewed a 3D model',
+            self::VrQuizCompleted => 'Completed a VR quiz',
+            self::ProjectViewed => 'Viewed a project',
+            self::ResourceAccessed => 'Opened a resource',
+        };
+    }
+
     /** @return list<string> */
     public static function resourceTypes(): array
     {

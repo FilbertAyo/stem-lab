@@ -9,6 +9,7 @@ use App\Models\ModelQuestionAnswer;
 use App\Models\Student;
 use App\Models\VrAssessmentAttempt;
 use App\Services\CompetitionParticipantRegistrationService;
+use App\Services\Learning\StudentDashboardAnalyticsService;
 use App\Services\Teacher\TeacherClubAnalyticsService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -236,13 +237,18 @@ class DashboardController extends Controller
             && blank($user->phone)
             && ! $user->usesPinLogin();
 
+        $studentAnalytics = $user->role === 'student'
+            ? app(StudentDashboardAnalyticsService::class)->forUser($user)
+            : null;
+
         return view('client.back.dashboard', compact(
             'stats',
             'topCompetitionReminders',
             'competitionNotificationCount',
             'competitionShortcuts',
             'clubStats',
-            'showPhoneReminder'
+            'showPhoneReminder',
+            'studentAnalytics'
         ));
     }
 }
