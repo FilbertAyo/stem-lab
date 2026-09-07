@@ -83,7 +83,7 @@ class SchoolController extends Controller
         return $pdf->download($filename);
     }
 
-    public function show(School $school): View
+    public function show(Request $request, School $school): View
     {
         $school->load([
             'regionModel',
@@ -132,6 +132,12 @@ class SchoolController extends Controller
             ->orderBy('name')
             ->get(['id', 'name', 'email', 'phone']);
 
+        $requestedTab = $request->query('tab');
+        $activeTab = is_string($requestedTab) ? $requestedTab : '';
+        if (! in_array($activeTab, ['teachers', 'students'], true)) {
+            $activeTab = $teachers->isEmpty() && $students->isNotEmpty() ? 'students' : 'teachers';
+        }
+
         return view('admin.schools.show', compact(
             'school',
             'teachers',
@@ -140,6 +146,7 @@ class SchoolController extends Controller
             'clubs',
             'unassignedTeachers',
             'sharedClubDaysByClubId',
+            'activeTab',
         ));
     }
 
@@ -247,8 +254,7 @@ class SchoolController extends Controller
         $hasStudents = $school->students()->exists();
 
         if ($hasTeachers || $hasStudents) {
-            return redirect()
-                ->route('admin.schools.show', $school)
+            return $this->redirectToSchoolShow($school, $hasTeachers ? 'teachers' : 'students')
                 ->with('error', 'Cannot delete school while teachers or students are linked. Remove all linked teachers and students first.');
         }
 
@@ -270,16 +276,14 @@ class SchoolController extends Controller
         $studentsCount = $teacherClub->students()->count();
 
         if ($studentsCount > 0) {
-            return redirect()
-                ->route('admin.schools.show', $school)
+            return $this->redirectToSchoolShow($school, 'teachers')
                 ->with('error', "Cannot remove {$teacherName} from {$clubName} because they have {$studentsCount} registered student(s) in this club.");
         }
 
         // Delete the teacher-club relationship
         $teacherClub->delete();
 
-        return redirect()
-            ->route('admin.schools.show', $school)
+        return $this->redirectToSchoolShow($school, 'teachers')
             ->with('status', "{$teacherName} has been removed from {$clubName} successfully.");
     }
 
@@ -303,8 +307,7 @@ class SchoolController extends Controller
 
         $clubName = $teacherClub->club?->name ?? 'club';
 
-        return redirect()
-            ->route('admin.schools.show', $school)
+        return $this->redirectToSchoolShow($school, 'teachers')
             ->with('status', "Dedicated club day updated for all teachers in {$clubName} at this school.");
     }
 
@@ -327,8 +330,7 @@ class SchoolController extends Controller
             $eligibilityPool->refreshOpenRegistrationSnapshots($teacherClub);
         }
 
-        return redirect()
-            ->route('admin.schools.show', $school)
+        return $this->redirectToSchoolShow($school, 'students')
             ->with('status', "{$studentName} removed successfully.");
     }
 
@@ -351,8 +353,7 @@ class SchoolController extends Controller
             ->get();
 
         if ($students->isEmpty()) {
-            return redirect()
-                ->route('admin.schools.show', $school)
+            return $this->redirectToSchoolShow($school, 'students')
                 ->with('error', 'No matching students were found for this school.');
         }
 
@@ -368,8 +369,7 @@ class SchoolController extends Controller
             }
         });
 
-        return redirect()
-            ->route('admin.schools.show', $school)
+        return $this->redirectToSchoolShow($school, 'students')
             ->with('status', "{$deleted} student(s) removed successfully.");
     }
 
@@ -382,8 +382,7 @@ class SchoolController extends Controller
 
         $credential = $provision->provision($student);
 
-        return redirect()
-            ->route('admin.schools.show', $school)
+        return $this->redirectToSchoolShow($school, 'students')
             ->with('status', 'Login created for '.$credential->student->name.'. Write down the PIN; it will not be shown again.')
             ->with('provisioned_credentials', $provision->sessionPayload([$credential]));
     }
@@ -397,8 +396,7 @@ class SchoolController extends Controller
 
         $credential = $provision->resetPin($student);
 
-        return redirect()
-            ->route('admin.schools.show', $school)
+        return $this->redirectToSchoolShow($school, 'students')
             ->with('status', 'PIN reset for '.$credential->student->name.'. Write down the new PIN; it will not be shown again.')
             ->with('provisioned_credentials', $provision->sessionPayload([$credential]));
     }
@@ -421,16 +419,14 @@ class SchoolController extends Controller
             ->get();
 
         if ($students->isEmpty()) {
-            return redirect()
-                ->route('admin.schools.show', $school)
+            return $this->redirectToSchoolShow($school, 'students')
                 ->with('error', 'No matching students were found for this school.');
         }
 
         $result = $provision->provisionMany($students);
 
         if ($result['credentials'] === []) {
-            return redirect()
-                ->route('admin.schools.show', $school)
+            return $this->redirectToSchoolShow($school, 'students')
                 ->with('error', 'No logins were created. Selected students already have accounts.');
         }
 
@@ -440,8 +436,7 @@ class SchoolController extends Controller
             $message .= " {$result['skipped']} already had an account.";
         }
 
-        return redirect()
-            ->route('admin.schools.show', $school)
+        return $this->redirectToSchoolShow($school, 'students')
             ->with('status', $message)
             ->with('provisioned_credentials', $provision->sessionPayload($result['credentials']));
     }
@@ -461,15 +456,13 @@ class SchoolController extends Controller
         $user = User::query()->findOrFail((int) $validated['user_id']);
 
         if ($user->role !== 'teacher') {
-            return redirect()
-                ->route('admin.schools.show', $school)
+            return $this->redirectToSchoolShow($school, 'teachers')
                 ->withErrors(['user_id' => 'Only teacher accounts can be assigned to a school.'])
                 ->withInput();
         }
 
         if ($user->teacherClubs()->exists()) {
-            return redirect()
-                ->route('admin.schools.show', $school)
+            return $this->redirectToSchoolShow($school, 'teachers')
                 ->withErrors(['user_id' => 'This teacher is already assigned to a school.'])
                 ->withInput();
         }
@@ -477,8 +470,7 @@ class SchoolController extends Controller
         $club = Club::query()->findOrFail((int) $validated['club_id']);
 
         if ($school->teacherClubs()->where('club_id', $club->id)->where('user_id', $user->id)->exists()) {
-            return redirect()
-                ->route('admin.schools.show', $school)
+            return $this->redirectToSchoolShow($school, 'teachers')
                 ->withErrors(['user_id' => 'This teacher is already assigned to the selected club at this school.'])
                 ->withInput();
         }
@@ -506,8 +498,7 @@ class SchoolController extends Controller
 
         $participantRegistrationService->ensureForClubMembership($teacherClub);
 
-        return redirect()
-            ->route('admin.schools.show', $school)
+        return $this->redirectToSchoolShow($school, 'teachers')
             ->with('success', "{$user->name} has been added to {$club->name} at {$school->name}.");
     }
 
@@ -528,8 +519,7 @@ class SchoolController extends Controller
             ->first();
 
         if (! $teacherClub) {
-            return redirect()
-                ->route('admin.schools.show', $school)
+            return $this->redirectToSchoolShow($school, 'students')
                 ->withErrors(['teacher_club_id' => 'Select a valid approved teacher/club for this school.'])
                 ->withInput();
         }
@@ -538,8 +528,7 @@ class SchoolController extends Controller
         $result = $csvImport->import($rosterOwner, $request->file('csv_file'));
 
         if ($result['errors'] !== []) {
-            return redirect()
-                ->route('admin.schools.show', $school)
+            return $this->redirectToSchoolShow($school, 'students')
                 ->with('error', $csvImport->formatErrorsForFlash($result['errors']))
                 ->withInput();
         }
@@ -547,12 +536,19 @@ class SchoolController extends Controller
         $clubName = $rosterOwner->club?->name ?? 'club';
         $leaderName = $rosterOwner->user?->name ?? 'the club leader';
 
-        return redirect()
-            ->route('admin.schools.show', $school)
+        return $this->redirectToSchoolShow($school, 'students')
             ->with(
                 'status',
                 "Successfully imported {$result['success_count']} student(s) to {$clubName} (shared roster under {$leaderName})."
             );
+    }
+
+    private function redirectToSchoolShow(School $school, string $tab): RedirectResponse
+    {
+        return redirect()->route('admin.schools.show', [
+            'school' => $school,
+            'tab' => $tab,
+        ]);
     }
 
     private function assertStudentBelongsToSchool(School $school, Student $student): void

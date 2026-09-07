@@ -160,7 +160,7 @@ test('admin can assign unassigned teacher to school from school show page', func
             'club_day' => 'monday',
         ]);
 
-    $response->assertRedirect(adminSchoolsUrl('/'.$school->getRouteKey()));
+    $response->assertRedirect(adminSchoolsUrl('/'.$school->getRouteKey().'?tab=teachers'));
     $response->assertSessionHas('success');
 
     $teacherClub = $teacher->fresh()->teacherClubs()->first();
@@ -207,7 +207,7 @@ test('admin cannot assign teacher who already belongs to a school', function () 
             'club_id' => $club->id,
         ]);
 
-    $response->assertRedirect(adminSchoolsUrl('/'.$targetSchool->getRouteKey()));
+    $response->assertRedirect(adminSchoolsUrl('/'.$targetSchool->getRouteKey().'?tab=teachers'));
     $response->assertSessionHasErrors('user_id');
 
     expect($teacher->fresh()->teacherClubs()->count())->toBe(1);
@@ -252,7 +252,7 @@ test('updating club day syncs to all teachers in the same school club', function
             'club_day' => 'wednesday',
         ]);
 
-    $response->assertRedirect(adminSchoolsUrl('/'.$school->getRouteKey()));
+    $response->assertRedirect(adminSchoolsUrl('/'.$school->getRouteKey().'?tab=teachers'));
     $response->assertSessionHas('status');
 
     expect($leaderMembership->fresh()->club_day)->toBe('wednesday')
@@ -290,7 +290,7 @@ test('adding co-teacher inherits existing shared club day', function () {
             'club_id' => $club->id,
         ]);
 
-    $response->assertRedirect(adminSchoolsUrl('/'.$school->getRouteKey()));
+    $response->assertRedirect(adminSchoolsUrl('/'.$school->getRouteKey().'?tab=teachers'));
 
     $newMembership = $newTeacher->fresh()->teacherClubs()->first();
 
@@ -410,4 +410,58 @@ test('mark all reviewed bulk approves pending schools matching filters', functio
     expect(
         School::query()->needsReview()->where('district_id', $mwanzaDistrict->id)->exists()
     )->toBeTrue();
+});
+
+test('admin school show uses full-width tabs for teachers and students', function () {
+    $school = School::query()->create([
+        'name' => 'Tab School '.Str::random(6),
+        'is_active' => true,
+        'admin_reviewed_at' => now(),
+    ]);
+
+    $club = Club::query()->create([
+        'name' => 'Club '.Str::random(6),
+        'is_active' => true,
+    ]);
+
+    $teacher = User::factory()->create(['role' => 'teacher']);
+    $teacherClub = $teacher->teacherClubs()->create([
+        'club_id' => $club->id,
+        'school_id' => $school->id,
+        'status' => 'approved',
+        'is_leader' => true,
+    ]);
+
+    $schoolClass = \App\Models\SchoolClass::query()->create([
+        'name' => 'Form 1 '.Str::random(4),
+        'is_active' => true,
+    ]);
+
+    $teacherClub->students()->create([
+        'name' => 'Tab Student',
+        'gender' => 'female',
+        'age' => 14,
+        'school_class_id' => $schoolClass->id,
+    ]);
+
+    $admin = User::factory()->create(['role' => 'admin']);
+
+    $teachersView = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+        ->get(adminSchoolsUrl('/'.$school->getRouteKey()));
+
+    $teachersView->assertOk()
+        ->assertViewHas('activeTab', 'teachers')
+        ->assertSee('id="school-tabs"', false)
+        ->assertSee('id="pills-teachers"', false)
+        ->assertSee('id="pills-students"', false)
+        ->assertSee($teacher->name)
+        ->assertSee('Tab Student');
+
+    $studentsView = $this->actingAs($admin)
+        ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
+        ->get(adminSchoolsUrl('/'.$school->getRouteKey().'?tab=students'));
+
+    $studentsView->assertOk()
+        ->assertViewHas('activeTab', 'students');
 });

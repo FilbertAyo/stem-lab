@@ -72,7 +72,7 @@ test('admin can provision a student on their school', function () {
     $this->actingAs($admin)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
         ->post(route('admin.schools.students.credentials.store', [$school, $rosterStudent]))
-        ->assertRedirect(route('admin.schools.show', $school))
+        ->assertRedirect(route('admin.schools.show', ['school' => $school, 'tab' => 'students']))
         ->assertSessionHas('provisioned_credentials');
 
     expect($rosterStudent->fresh()->isLinked())->toBeTrue();

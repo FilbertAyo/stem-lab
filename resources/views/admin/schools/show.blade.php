@@ -1,10 +1,28 @@
 <x-admin-layout>
+    @php
+        $locationParts = array_filter([
+            $school->districtName(),
+            $school->ward,
+            $school->regionModel?->name,
+        ]);
+        $needsReview = $school->admin_reviewed_at === null;
+    @endphp
     <div class="row">
         <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
                 <div>
-                    <h5 class="mb-0">{{ $school->name }}</h5>
-                    <p class="text-muted mb-0">School Details</p>
+                    <h5 class="mb-1">
+                        {{ $school->name }}
+                        <span class="badge {{ $school->is_active ? 'bg-success' : 'bg-secondary' }} align-middle ms-1">
+                            {{ $school->is_active ? 'Active' : 'Disabled' }}
+                        </span>
+                        @if($needsReview)
+                            <span class="badge bg-warning text-dark align-middle">Needs review</span>
+                        @endif
+                    </h5>
+                    <p class="text-muted mb-0">
+                        {{ $locationParts !== [] ? implode(' · ', $locationParts) : 'Location not set' }}
+                    </p>
                 </div>
                 <div class="d-flex align-items-center gap-2">
                     @if($teachers->isEmpty() && $students->isEmpty())
@@ -17,114 +35,148 @@
                             <i class="ti ti-trash"></i> Delete School
                         </button>
                     @endif
-                    <a href="{{ route('admin.schools.index') }}" class="text-muted">
-                        <i class="ti ti-arrow-left"></i> Back to Schools
+                    <a href="{{ route('admin.schools.index') }}" class="btn btn-sm btn-outline-secondary">
+                        <i class="ti ti-arrow-left me-1"></i> Back to Schools
                     </a>
                 </div>
             </div>
 
-            <!-- School Information Card -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h6 class="mb-0"><i class="ti ti-building"></i> School Information</h6>
+                    <h6 class="mb-0"><i class="ti ti-building me-1"></i> School Information</h6>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="text-muted small">School Name</label>
-                                <p class="mb-0 fw-semibold">{{ $school->name }}</p>
-                            </div>
-                            <div class="mb-3">
-                                <label class="text-muted small">Email</label>
-                                <p class="mb-0">{{ $school->email ?? '—' }}</p>
-                            </div>
-                            <div class="mb-3">
-                                <label class="text-muted small">Phone</label>
-                                <p class="mb-0">{{ $school->phone ?? '—' }}</p>
-                            </div>
+                <div class="card-body pb-2">
+                    <div class="row g-3">
+                        <div class="col-sm-6 col-lg-3">
+                            <label class="text-muted small d-block">Email</label>
+                            <p class="mb-0">{{ $school->email ?? '—' }}</p>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="text-muted small">District</label>
-                                <p class="mb-0">{{ $school->districtName() ?? '—' }}</p>
-                            </div>
-                            <div class="mb-3">
-                                <label class="text-muted small">Ward</label>
-                                <p class="mb-0">{{ $school->ward ?? '—' }}</p>
-                            </div>
-                            <div class="mb-3">
-                                <label class="text-muted small">Region</label>
-                                <p class="mb-0">{{ $school->regionModel?->name ?? '—' }}</p>
-                            </div>
-                           
+                        <div class="col-sm-6 col-lg-3">
+                            <label class="text-muted small d-block">Phone</label>
+                            <p class="mb-0">{{ $school->phone ?? '—' }}</p>
                         </div>
-                        <div class="col-4">
-                        <div class="mb-3">
-                                <label class="text-muted small">Status</label>
+                        <div class="col-sm-6 col-lg-3">
+                            <label class="text-muted small d-block">Coordinates</label>
+                            @if($school->latitude !== null && $school->longitude !== null)
                                 <p class="mb-0">
-                                    <span class="badge {{ $school->is_active ? 'bg-success' : 'bg-secondary' }}">
-                                        {{ $school->is_active ? 'Active' : 'Disabled' }}
-                                    </span>
+                                    <a href="https://www.google.com/maps?q={{ $school->latitude }},{{ $school->longitude }}" target="_blank" rel="noopener noreferrer">
+                                        {{ $school->latitude }}, {{ $school->longitude }}
+                                        <i class="ti ti-external-link"></i>
+                                    </a>
                                 </p>
-                            </div>
-                            <div class="mb-3">
-                                <label class="text-muted small">Coordinates</label>
-                                @if($school->latitude !== null && $school->longitude !== null)
-                                    <p class="mb-0">
-                                        <a href="https://www.google.com/maps?q={{ $school->latitude }},{{ $school->longitude }}" target="_blank" rel="noopener noreferrer">
-                                            {{ $school->latitude }}, {{ $school->longitude }}
-                                            <i class="ti ti-external-link"></i>
-                                        </a>
-                                    </p>
-                                @else
-                                    <p class="mb-0">—</p>
-                                @endif
-                            </div>
-                            <div class="mb-0">
-                                <label class="text-muted small">Ownership</label>
-                                @include('admin.partials.ownership-meta', ['record' => $school, 'compact' => true, 'class' => 'mt-1'])
-                            </div>
+                            @else
+                                <p class="mb-0">—</p>
+                            @endif
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <label class="text-muted small d-block">Ownership</label>
+                            @include('admin.partials.ownership-meta', ['record' => $school, 'compact' => true, 'class' => 'mt-1'])
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <!-- Teachers Card -->
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><i class="ti ti-users"></i> Teachers</h6>
-                            <div class="d-flex align-items-center gap-2">
+            <ul class="nav nav-pills mb-3" id="school-tabs" role="tablist" aria-label="School people">
+                <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link {{ $activeTab === 'teachers' ? 'active' : '' }}"
+                        id="pills-teachers-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#pills-teachers"
+                        data-tab="teachers"
+                        type="button"
+                        role="tab"
+                        aria-controls="pills-teachers"
+                        aria-selected="{{ $activeTab === 'teachers' ? 'true' : 'false' }}"
+                    >
+                        <i class="ti ti-users me-1"></i>
+                        Teachers
+                        <span class="badge bg-light text-dark ms-1">{{ $teachers->count() }}</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link {{ $activeTab === 'students' ? 'active' : '' }}"
+                        id="pills-students-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#pills-students"
+                        data-tab="students"
+                        type="button"
+                        role="tab"
+                        aria-controls="pills-students"
+                        aria-selected="{{ $activeTab === 'students' ? 'true' : 'false' }}"
+                    >
+                        <i class="ti ti-school me-1"></i>
+                        Students
+                        <span class="badge bg-light text-dark ms-1">{{ $students->count() }}</span>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="school-tabsContent">
+                <div
+                    class="tab-pane fade {{ $activeTab === 'teachers' ? 'show active' : '' }}"
+                    id="pills-teachers"
+                    role="tabpanel"
+                    aria-labelledby="pills-teachers-tab"
+                    tabindex="0"
+                >
+                    <div class="card mb-4">
+                        <div class="card-body p-0">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 p-3 border-bottom bg-light">
+                                @if($teachers->isNotEmpty())
+                                    <div class="flex-grow-1" style="max-width: 22rem;">
+                                        <label class="visually-hidden" for="teachers_search">Search teachers</label>
+                                        <input
+                                            type="search"
+                                            id="teachers_search"
+                                            class="form-control form-control-sm js-table-search"
+                                            data-table="#teachers-table"
+                                            data-empty="#teachers-empty-filter"
+                                            placeholder="Search name, email, phone, or club..."
+                                        >
+                                    </div>
+                                @else
+                                    <p class="mb-0 text-muted small">Teachers assigned to clubs at this school.</p>
+                                @endif
                                 <button
                                     type="button"
-                                    class="btn btn-sm btn-outline-primary"
+                                    class="btn btn-sm btn-primary"
                                     data-bs-toggle="modal"
                                     data-bs-target="#addTeacherModal"
                                     @disabled($clubs->isEmpty() || $unassignedTeachers->isEmpty())
                                 >
                                     <i class="ti ti-plus me-1"></i> Add Teacher
                                 </button>
-                                <span class="badge bg-primary">{{ $teachers->count() }}</span>
                             </div>
-                        </div>
-                        <div class="card-body p-0">
+
                             @if($teachers->isEmpty())
-                                <div class="text-center text-muted py-4">
+                                <div class="text-center text-muted py-5">
                                     <i class="ti ti-users-off fs-1 d-block mb-2"></i>
-                                    No teachers registered for this school yet.
+                                    <p class="mb-2">No teachers registered for this school yet.</p>
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-outline-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#addTeacherModal"
+                                        @disabled($clubs->isEmpty() || $unassignedTeachers->isEmpty())
+                                    >
+                                        Add the first teacher
+                                    </button>
                                 </div>
                             @else
+                                <div id="teachers-empty-filter" class="text-center text-muted py-4 d-none">
+                                    No teachers match your search.
+                                </div>
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-bordered mb-0">
-                                        <thead>
+                                    <table class="table table-hover table-bordered table-striped mb-0 align-middle" id="teachers-table">
+                                        <thead class="table-light">
                                             <tr>
-                                                <th>#</th>
+                                                <th style="width: 3rem;">#</th>
                                                 <th>Name</th>
-                                                <th>Phone & Email</th>
-                                                <th>Clubs & Dedicated Day</th>
-                                                <th>Actions</th>
+                                                <th>Phone &amp; Email</th>
+                                                <th>Clubs &amp; Dedicated Day</th>
+                                                <th style="width: 8rem;">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -136,16 +188,15 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td class="fw-semibold">{{ $teacher->name }}</td>
                                                     <td>
-                                                   {{ $teacher->phone ?? '—' }} <br>
-                                                       <span class="text-muted small">{{ $teacher->email }}</span>
-                                                   
+                                                        {{ $teacher->phone ?? '—' }}<br>
+                                                        <span class="text-muted small">{{ $teacher->email }}</span>
                                                     </td>
                                                     <td>
                                                         @if($teacherClubs->isEmpty())
                                                             <span class="text-muted">—</span>
                                                         @else
                                                             <div class="d-flex flex-column gap-2">
-                                                @foreach($teacherClubs as $tc)
+                                                                @foreach($teacherClubs as $tc)
                                                                     @php
                                                                         $sharedDay = $sharedClubDaysByClubId[$tc->club_id] ?? $tc->club_day;
                                                                     @endphp
@@ -210,10 +261,10 @@
                                                                         @method('DELETE')
                                                                         <button
                                                                             type="submit"
-                                                                            class="btn btn-sm btn-outline-danger p-1"
+                                                                            class="btn btn-sm btn-outline-danger"
                                                                             title="Remove from {{ $tc->club->name ?? 'club' }}"
                                                                         >
-                                                                            Remove 
+                                                                            Remove
                                                                         </button>
                                                                     </form>
                                                                 @endforeach
@@ -230,48 +281,76 @@
                     </div>
                 </div>
 
-                <!-- Students Card -->
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><i class="ti ti-school"></i> Students</h6>
-                            <div class="d-flex align-items-center gap-2">
-                                @if($students->isNotEmpty())
-                                    <button
-                                        type="submit"
-                                        form="bulkDeleteStudentsForm"
-                                        formaction="{{ route('admin.schools.students.credentials.bulk', $school) }}"
-                                        formmethod="post"
-                                        class="btn btn-sm btn-outline-primary"
-                                        id="createSelectedLoginsBtn"
-                                    >
-                                        Create logins
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        form="bulkDeleteStudentsForm"
-                                        class="btn btn-sm btn-outline-danger d-none"
-                                        id="deleteSelectedStudentsBtn"
-                                    >
-                                        <i class="ti ti-trash me-1"></i> Delete selected
-                                    </button>
-                                @endif
-                                <button
-                                    type="button"
-                                    class="btn btn-sm btn-outline-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#bulkUploadStudentsModal"
-                                >
-                                    <i class="ti ti-upload me-1"></i> Bulk Upload
-                                </button>
-                                <span class="badge bg-primary">{{ $students->count() }}</span>
-                            </div>
-                        </div>
+                <div
+                    class="tab-pane fade {{ $activeTab === 'students' ? 'show active' : '' }}"
+                    id="pills-students"
+                    role="tabpanel"
+                    aria-labelledby="pills-students-tab"
+                    tabindex="0"
+                >
+                    <div class="card mb-4">
                         <div class="card-body p-0">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 p-3 border-bottom bg-light">
+                                @if($students->isNotEmpty())
+                                    <div class="flex-grow-1" style="max-width: 22rem;">
+                                        <label class="visually-hidden" for="students_search">Search students</label>
+                                        <input
+                                            type="search"
+                                            id="students_search"
+                                            class="form-control form-control-sm js-table-search"
+                                            data-table="#students-table"
+                                            data-empty="#students-empty-filter"
+                                            placeholder="Search name, admission no., class, or club..."
+                                        >
+                                    </div>
+                                @else
+                                    <p class="mb-0 text-muted small">Students registered at this school.</p>
+                                @endif
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    @if($students->isNotEmpty())
+                                        <span class="small text-muted d-none" id="students-selected-count"></span>
+                                        <button
+                                            type="submit"
+                                            form="bulkDeleteStudentsForm"
+                                            formaction="{{ route('admin.schools.students.credentials.bulk', $school) }}"
+                                            formmethod="post"
+                                            class="btn btn-sm btn-outline-primary d-none"
+                                            id="createSelectedLoginsBtn"
+                                        >
+                                            Create logins
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            form="bulkDeleteStudentsForm"
+                                            class="btn btn-sm btn-outline-danger d-none"
+                                            id="deleteSelectedStudentsBtn"
+                                        >
+                                            <i class="ti ti-trash me-1"></i> Delete selected
+                                        </button>
+                                    @endif
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#bulkUploadStudentsModal"
+                                    >
+                                        <i class="ti ti-upload me-1"></i> Bulk Upload
+                                    </button>
+                                </div>
+                            </div>
+
                             @if($students->isEmpty())
-                                <div class="text-center text-muted py-4">
+                                <div class="text-center text-muted py-5">
                                     <i class="ti ti-user-off fs-1 d-block mb-2"></i>
-                                    No students registered for this school yet.
+                                    <p class="mb-2">No students registered for this school yet.</p>
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-outline-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#bulkUploadStudentsModal"
+                                    >
+                                        Bulk upload students
+                                    </button>
                                 </div>
                             @else
                                 <form
@@ -281,9 +360,12 @@
                                     class="mb-0"
                                 >
                                     @csrf
-                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                                        <table class="table table-hover table-bordered mb-0">
-                                            <thead class="sticky-top bg-white">
+                                    <div id="students-empty-filter" class="text-center text-muted py-4 d-none">
+                                        No students match your search.
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-bordered table-striped mb-0 align-middle" id="students-table">
+                                            <thead class="table-light">
                                                 <tr>
                                                     <th class="text-center" style="width: 2.75rem;">
                                                         <input
@@ -294,13 +376,14 @@
                                                             aria-label="Select all students"
                                                         >
                                                     </th>
-                                                    <th>#</th>
+                                                    <th style="width: 3rem;">#</th>
                                                     <th>Admission No.</th>
                                                     <th>Name</th>
                                                     <th>Age</th>
                                                     <th>Gender</th>
                                                     <th>Class</th>
                                                     <th>Club</th>
+                                                    <th>Login</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
@@ -345,12 +428,19 @@
                                                             </span>
                                                         </td>
                                                         <td>
+                                                            @if($student->isLinked())
+                                                                <span class="badge bg-success">Ready</span>
+                                                            @else
+                                                                <span class="badge bg-warning text-dark">No login</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
                                                             <div class="d-flex flex-wrap gap-1">
                                                                 @if(! $student->isLinked())
                                                                     <button
                                                                         type="submit"
                                                                         form="create-login-{{ $student->id }}"
-                                                                        class="btn btn-sm btn-outline-primary p-1"
+                                                                        class="btn btn-sm btn-outline-primary"
                                                                     >
                                                                         Create login
                                                                     </button>
@@ -358,7 +448,7 @@
                                                                     <button
                                                                         type="submit"
                                                                         form="reset-pin-{{ $student->id }}"
-                                                                        class="btn btn-sm btn-outline-secondary p-1"
+                                                                        class="btn btn-sm btn-outline-secondary"
                                                                         onclick="return confirm('This will replace the current PIN for {{ $student->name }}. Continue?')"
                                                                     >
                                                                         Reset PIN
@@ -367,11 +457,11 @@
                                                                 <button
                                                                     type="submit"
                                                                     form="delete-student-{{ $student->id }}"
-                                                                    class="btn btn-sm btn-outline-danger p-1"
+                                                                    class="btn btn-sm btn-outline-danger"
                                                                     title="Delete student"
                                                                     onclick="return confirm('Are you sure you want to delete {{ $student->name }}? This action cannot be undone.')"
                                                                 >
-                                                                    delete
+                                                                    Delete
                                                                 </button>
                                                             </div>
                                                         </td>
@@ -417,7 +507,6 @@
                 </div>
             </div>
 
-         
         </div>
     </div>
 
@@ -663,6 +752,45 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('#school-tabs [data-bs-toggle="pill"]').forEach(function (tab) {
+            tab.addEventListener('shown.bs.tab', function (event) {
+                var tabName = event.target.getAttribute('data-tab');
+                if (!tabName) {
+                    return;
+                }
+
+                var url = new URL(window.location.href);
+                url.searchParams.set('tab', tabName);
+                history.replaceState({}, '', url);
+            });
+        });
+
+        document.querySelectorAll('.js-table-search').forEach(function (input) {
+            var table = document.querySelector(input.getAttribute('data-table'));
+            var emptyState = document.querySelector(input.getAttribute('data-empty'));
+            if (!table) {
+                return;
+            }
+
+            input.addEventListener('input', function () {
+                var query = input.value.toLowerCase().trim();
+                var visible = 0;
+
+                table.querySelectorAll('tbody tr').forEach(function (row) {
+                    var matches = query === '' || row.textContent.toLowerCase().indexOf(query) !== -1;
+                    row.classList.toggle('d-none', !matches);
+                    if (matches) {
+                        visible++;
+                    }
+                });
+
+                table.closest('.table-responsive')?.classList.toggle('d-none', visible === 0 && query !== '');
+                if (emptyState) {
+                    emptyState.classList.toggle('d-none', visible > 0 || query === '');
+                }
+            });
+        });
+
         document.querySelectorAll('.js-club-day-form').forEach(function (form) {
             var select = form.querySelector('.js-club-day-select');
             var saveButton = form.querySelector('.js-club-day-save-btn');
@@ -724,36 +852,54 @@
         var bulkDeleteForm = document.getElementById('bulkDeleteStudentsForm');
         var selectAllStudents = document.getElementById('selectAllStudents');
         var deleteSelectedBtn = document.getElementById('deleteSelectedStudentsBtn');
+        var createSelectedBtn = document.getElementById('createSelectedLoginsBtn');
+        var selectedCountLabel = document.getElementById('students-selected-count');
 
-        function getStudentRowCheckboxes() {
-            return bulkDeleteForm ? bulkDeleteForm.querySelectorAll('.student-row-checkbox') : [];
+        function getStudentRowCheckboxes(visibleOnly) {
+            if (!bulkDeleteForm) {
+                return [];
+            }
+
+            var boxes = Array.prototype.slice.call(bulkDeleteForm.querySelectorAll('.student-row-checkbox'));
+            if (!visibleOnly) {
+                return boxes;
+            }
+
+            return boxes.filter(function (cb) {
+                return !cb.closest('tr')?.classList.contains('d-none');
+            });
         }
 
         function syncSelectAllAndDeleteButton() {
-            var boxes = getStudentRowCheckboxes();
-            if (!deleteSelectedBtn) {
-                return;
-            }
-
+            var visibleBoxes = getStudentRowCheckboxes(true);
             var checked = 0;
-            boxes.forEach(function (cb) {
+            visibleBoxes.forEach(function (cb) {
                 if (cb.checked) {
                     checked++;
                 }
             });
 
-            deleteSelectedBtn.classList.toggle('d-none', checked === 0);
+            if (deleteSelectedBtn) {
+                deleteSelectedBtn.classList.toggle('d-none', checked === 0);
+            }
+            if (createSelectedBtn) {
+                createSelectedBtn.classList.toggle('d-none', checked === 0);
+            }
+            if (selectedCountLabel) {
+                selectedCountLabel.textContent = checked > 0 ? checked + ' selected' : '';
+                selectedCountLabel.classList.toggle('d-none', checked === 0);
+            }
 
             if (selectAllStudents) {
-                selectAllStudents.checked = boxes.length > 0 && checked === boxes.length;
-                selectAllStudents.indeterminate = checked > 0 && checked < boxes.length;
+                selectAllStudents.checked = visibleBoxes.length > 0 && checked === visibleBoxes.length;
+                selectAllStudents.indeterminate = checked > 0 && checked < visibleBoxes.length;
             }
         }
 
         if (bulkDeleteForm && deleteSelectedBtn) {
             if (selectAllStudents) {
                 selectAllStudents.addEventListener('change', function () {
-                    getStudentRowCheckboxes().forEach(function (cb) {
+                    getStudentRowCheckboxes(true).forEach(function (cb) {
                         cb.checked = selectAllStudents.checked;
                     });
                     syncSelectAllAndDeleteButton();
@@ -765,6 +911,11 @@
                     syncSelectAllAndDeleteButton();
                 }
             });
+
+            var studentsSearch = document.getElementById('students_search');
+            if (studentsSearch) {
+                studentsSearch.addEventListener('input', syncSelectAllAndDeleteButton);
+            }
 
             bulkDeleteForm.addEventListener('submit', function (e) {
                 var selected = bulkDeleteForm.querySelectorAll('.student-row-checkbox:checked');
