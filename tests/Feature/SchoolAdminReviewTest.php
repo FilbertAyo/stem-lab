@@ -446,22 +446,22 @@ test('admin school show uses full-width tabs for teachers and students', functio
 
     $admin = User::factory()->create(['role' => 'admin']);
 
-    $teachersView = $this->actingAs($admin)
+    $defaultView = $this->actingAs($admin)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
         ->get(adminSchoolsUrl('/'.$school->getRouteKey()));
 
-    $teachersView->assertOk()
-        ->assertViewHas('activeTab', 'teachers')
+    $defaultView->assertOk()
+        ->assertViewHas('activeTab', 'students')
         ->assertSee('id="school-tabs"', false)
         ->assertSee('id="pills-teachers"', false)
         ->assertSee('id="pills-students"', false)
         ->assertSee($teacher->name)
         ->assertSee('Tab Student');
 
-    $studentsView = $this->actingAs($admin)
+    $teachersView = $this->actingAs($admin)
         ->withServerVariables(['HTTP_HOST' => adminRequestHost()])
-        ->get(adminSchoolsUrl('/'.$school->getRouteKey().'?tab=students'));
+        ->get(adminSchoolsUrl('/'.$school->getRouteKey().'?tab=teachers'));
 
-    $studentsView->assertOk()
-        ->assertViewHas('activeTab', 'students');
+    $teachersView->assertOk()
+        ->assertViewHas('activeTab', 'teachers');
 });

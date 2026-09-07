@@ -135,7 +135,7 @@ class SchoolController extends Controller
         $requestedTab = $request->query('tab');
         $activeTab = is_string($requestedTab) ? $requestedTab : '';
         if (! in_array($activeTab, ['teachers', 'students'], true)) {
-            $activeTab = $teachers->isEmpty() && $students->isNotEmpty() ? 'students' : 'teachers';
+            $activeTab = 'students';
         }
 
         return view('admin.schools.show', compact(

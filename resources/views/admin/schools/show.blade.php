@@ -76,220 +76,54 @@
                 </div>
             </div>
 
-            <ul class="nav nav-pills mb-3" id="school-tabs" role="tablist" aria-label="School people">
-                <li class="nav-item" role="presentation">
-                    <button
-                        class="nav-link {{ $activeTab === 'teachers' ? 'active' : '' }}"
-                        id="pills-teachers-tab"
-                        data-bs-toggle="pill"
-                        data-bs-target="#pills-teachers"
-                        data-tab="teachers"
-                        type="button"
-                        role="tab"
-                        aria-controls="pills-teachers"
-                        aria-selected="{{ $activeTab === 'teachers' ? 'true' : 'false' }}"
-                    >
-                        <i class="ti ti-users me-1"></i>
-                        Teachers
-                        <span class="badge bg-light text-dark ms-1">{{ $teachers->count() }}</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button
-                        class="nav-link {{ $activeTab === 'students' ? 'active' : '' }}"
-                        id="pills-students-tab"
-                        data-bs-toggle="pill"
-                        data-bs-target="#pills-students"
-                        data-tab="students"
-                        type="button"
-                        role="tab"
-                        aria-controls="pills-students"
-                        aria-selected="{{ $activeTab === 'students' ? 'true' : 'false' }}"
-                    >
-                        <i class="ti ti-school me-1"></i>
-                        Students
-                        <span class="badge bg-light text-dark ms-1">{{ $students->count() }}</span>
-                    </button>
-                </li>
-            </ul>
-
-            <div class="tab-content" id="school-tabsContent">
-                <div
-                    class="tab-pane fade {{ $activeTab === 'teachers' ? 'show active' : '' }}"
-                    id="pills-teachers"
-                    role="tabpanel"
-                    aria-labelledby="pills-teachers-tab"
-                    tabindex="0"
-                >
-                    <div class="card mb-4">
-                        <div class="card-body p-0">
-                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 p-3 border-bottom bg-light">
-                                @if($teachers->isNotEmpty())
-                                    <div class="flex-grow-1" style="max-width: 22rem;">
-                                        <label class="visually-hidden" for="teachers_search">Search teachers</label>
-                                        <input
-                                            type="search"
-                                            id="teachers_search"
-                                            class="form-control form-control-sm js-table-search"
-                                            data-table="#teachers-table"
-                                            data-empty="#teachers-empty-filter"
-                                            placeholder="Search name, email, phone, or club..."
-                                        >
-                                    </div>
-                                @else
-                                    <p class="mb-0 text-muted small">Teachers assigned to clubs at this school.</p>
-                                @endif
-                                <button
-                                    type="button"
-                                    class="btn btn-sm btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#addTeacherModal"
-                                    @disabled($clubs->isEmpty() || $unassignedTeachers->isEmpty())
-                                >
-                                    <i class="ti ti-plus me-1"></i> Add Teacher
-                                </button>
-                            </div>
-
-                            @if($teachers->isEmpty())
-                                <div class="text-center text-muted py-5">
-                                    <i class="ti ti-users-off fs-1 d-block mb-2"></i>
-                                    <p class="mb-2">No teachers registered for this school yet.</p>
-                                    <button
-                                        type="button"
-                                        class="btn btn-sm btn-outline-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#addTeacherModal"
-                                        @disabled($clubs->isEmpty() || $unassignedTeachers->isEmpty())
-                                    >
-                                        Add the first teacher
-                                    </button>
-                                </div>
-                            @else
-                                <div id="teachers-empty-filter" class="text-center text-muted py-4 d-none">
-                                    No teachers match your search.
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-bordered table-striped mb-0 align-middle" id="teachers-table">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th style="width: 3rem;">#</th>
-                                                <th>Name</th>
-                                                <th>Phone &amp; Email</th>
-                                                <th>Clubs &amp; Dedicated Day</th>
-                                                <th style="width: 8rem;">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($teachers as $teacher)
-                                                @php
-                                                    $teacherClubs = $school->teacherClubs->where('user_id', $teacher->id);
-                                                @endphp
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td class="fw-semibold">{{ $teacher->name }}</td>
-                                                    <td>
-                                                        {{ $teacher->phone ?? '—' }}<br>
-                                                        <span class="text-muted small">{{ $teacher->email }}</span>
-                                                    </td>
-                                                    <td>
-                                                        @if($teacherClubs->isEmpty())
-                                                            <span class="text-muted">—</span>
-                                                        @else
-                                                            <div class="d-flex flex-column gap-2">
-                                                                @foreach($teacherClubs as $tc)
-                                                                    @php
-                                                                        $sharedDay = $sharedClubDaysByClubId[$tc->club_id] ?? $tc->club_day;
-                                                                    @endphp
-                                                                    <div class="border rounded p-2">
-                                                                        <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
-                                                                            <div>
-                                                                                <span class="badge bg-info">{{ $tc->club->name ?? 'N/A' }}</span>
-                                                                                @if($tc->is_leader)
-                                                                                    <span class="badge bg-success">Leader</span>
-                                                                                @endif
-                                                                                @if($tc->club_code)
-                                                                                    <small class="text-muted d-block mt-1">Code: <code>{{ $tc->club_code }}</code></small>
-                                                                                @endif
-                                                                                <small class="text-muted d-block">Shared club day for all teachers in this club</small>
-                                                                            </div>
-                                                                            <form
-                                                                                action="{{ route('admin.schools.teacher-clubs.update-club-day', [$school, $tc]) }}"
-                                                                                method="POST"
-                                                                                class="d-flex align-items-center gap-2 js-club-day-form"
-                                                                                data-initial-day="{{ $sharedDay ?? '' }}"
-                                                                            >
-                                                                                @csrf
-                                                                                @method('PUT')
-                                                                                <select
-                                                                                    name="club_day"
-                                                                                    class="form-select form-select-sm js-club-day-select"
-                                                                                    style="min-width: 170px;"
-                                                                                    aria-label="Dedicated day"
-                                                                                >
-                                                                                    <option value="">Select day</option>
-                                                                                    @foreach(['monday' => 'Monday', 'tuesday' => 'Tuesday', 'wednesday' => 'Wednesday', 'thursday' => 'Thursday', 'friday' => 'Friday'] as $dayValue => $dayLabel)
-                                                                                        <option value="{{ $dayValue }}" @selected($sharedDay === $dayValue)>{{ $dayLabel }}</option>
-                                                                                    @endforeach
-                                                                                </select>
-                                                                                <button
-                                                                                    type="submit"
-                                                                                    class="btn btn-sm btn-outline-primary px-2 js-club-day-save-btn"
-                                                                                    @if($sharedDay) style="display: none;" @endif
-                                                                                >
-                                                                                    Save
-                                                                                </button>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                @endforeach
-                                                            </div>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if($teacherClubs->isEmpty())
-                                                            <span class="text-muted">—</span>
-                                                        @else
-                                                            <div class="d-flex flex-column gap-2">
-                                                                @foreach($teacherClubs as $tc)
-                                                                    <form
-                                                                        action="{{ route('admin.schools.remove-teacher-from-club', $tc) }}"
-                                                                        method="POST"
-                                                                        class="d-inline"
-                                                                        onsubmit="return confirm('Are you sure you want to remove this teacher from this club? This action cannot be undone.')"
-                                                                    >
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        <button
-                                                                            type="submit"
-                                                                            class="btn btn-sm btn-outline-danger"
-                                                                            title="Remove from {{ $tc->club->name ?? 'club' }}"
-                                                                        >
-                                                                            Remove
-                                                                        </button>
-                                                                    </form>
-                                                                @endforeach
-                                                            </div>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
+            <div class="card mb-4">
+                <div class="card-header pb-0">
+                    <ul class="nav nav-tabs card-header-tabs" id="school-tabs" role="tablist" aria-label="School people">
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link {{ $activeTab === 'students' ? 'active' : '' }}"
+                                id="pills-students-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#pills-students"
+                                data-tab="students"
+                                type="button"
+                                role="tab"
+                                aria-controls="pills-students"
+                                aria-selected="{{ $activeTab === 'students' ? 'true' : 'false' }}"
+                            >
+                                <i class="ti ti-school me-1"></i>
+                                Students
+                                <span class="badge bg-light text-dark ms-1">{{ $students->count() }}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link {{ $activeTab === 'teachers' ? 'active' : '' }}"
+                                id="pills-teachers-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#pills-teachers"
+                                data-tab="teachers"
+                                type="button"
+                                role="tab"
+                                aria-controls="pills-teachers"
+                                aria-selected="{{ $activeTab === 'teachers' ? 'true' : 'false' }}"
+                            >
+                                <i class="ti ti-users me-1"></i>
+                                Teachers
+                                <span class="badge bg-light text-dark ms-1">{{ $teachers->count() }}</span>
+                            </button>
+                        </li>
+                    </ul>
                 </div>
-
-                <div
-                    class="tab-pane fade {{ $activeTab === 'students' ? 'show active' : '' }}"
-                    id="pills-students"
-                    role="tabpanel"
-                    aria-labelledby="pills-students-tab"
-                    tabindex="0"
-                >
-                    <div class="card mb-4">
-                        <div class="card-body p-0">
+                <div class="card-body p-0">
+                    <div class="tab-content" id="school-tabsContent">
+                        <div
+                            class="tab-pane fade {{ $activeTab === 'students' ? 'show active' : '' }}"
+                            id="pills-students"
+                            role="tabpanel"
+                            aria-labelledby="pills-students-tab"
+                            tabindex="0"
+                        >
                             <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 p-3 border-bottom bg-light">
                                 @if($students->isNotEmpty())
                                     <div class="flex-grow-1" style="max-width: 22rem;">
@@ -503,10 +337,172 @@
                                 @endforeach
                             @endif
                         </div>
+
+                        <div
+                            class="tab-pane fade {{ $activeTab === 'teachers' ? 'show active' : '' }}"
+                            id="pills-teachers"
+                            role="tabpanel"
+                            aria-labelledby="pills-teachers-tab"
+                            tabindex="0"
+                        >
+                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 p-3 border-bottom bg-light">
+                                @if($teachers->isNotEmpty())
+                                    <div class="flex-grow-1" style="max-width: 22rem;">
+                                        <label class="visually-hidden" for="teachers_search">Search teachers</label>
+                                        <input
+                                            type="search"
+                                            id="teachers_search"
+                                            class="form-control form-control-sm js-table-search"
+                                            data-table="#teachers-table"
+                                            data-empty="#teachers-empty-filter"
+                                            placeholder="Search name, email, phone, or club..."
+                                        >
+                                    </div>
+                                @else
+                                    <p class="mb-0 text-muted small">Teachers assigned to clubs at this school.</p>
+                                @endif
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#addTeacherModal"
+                                    @disabled($clubs->isEmpty() || $unassignedTeachers->isEmpty())
+                                >
+                                    <i class="ti ti-plus me-1"></i> Add Teacher
+                                </button>
+                            </div>
+
+                            @if($teachers->isEmpty())
+                                <div class="text-center text-muted py-5">
+                                    <i class="ti ti-users-off fs-1 d-block mb-2"></i>
+                                    <p class="mb-2">No teachers registered for this school yet.</p>
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-outline-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#addTeacherModal"
+                                        @disabled($clubs->isEmpty() || $unassignedTeachers->isEmpty())
+                                    >
+                                        Add the first teacher
+                                    </button>
+                                </div>
+                            @else
+                                <div id="teachers-empty-filter" class="text-center text-muted py-4 d-none">
+                                    No teachers match your search.
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered table-striped mb-0 align-middle" id="teachers-table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width: 3rem;">#</th>
+                                                <th>Name</th>
+                                                <th>Phone &amp; Email</th>
+                                                <th>Clubs &amp; Dedicated Day</th>
+                                                <th style="width: 8rem;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($teachers as $teacher)
+                                                @php
+                                                    $teacherClubs = $school->teacherClubs->where('user_id', $teacher->id);
+                                                @endphp
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td class="fw-semibold">{{ $teacher->name }}</td>
+                                                    <td>
+                                                        {{ $teacher->phone ?? '—' }}<br>
+                                                        <span class="text-muted small">{{ $teacher->email }}</span>
+                                                    </td>
+                                                    <td>
+                                                        @if($teacherClubs->isEmpty())
+                                                            <span class="text-muted">—</span>
+                                                        @else
+                                                            <div class="d-flex flex-column gap-2">
+                                                                @foreach($teacherClubs as $tc)
+                                                                    @php
+                                                                        $sharedDay = $sharedClubDaysByClubId[$tc->club_id] ?? $tc->club_day;
+                                                                    @endphp
+                                                                    <div class="border rounded p-2">
+                                                                        <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                                                                            <div>
+                                                                                <span class="badge bg-info">{{ $tc->club->name ?? 'N/A' }}</span>
+                                                                                @if($tc->is_leader)
+                                                                                    <span class="badge bg-success">Leader</span>
+                                                                                @endif
+                                                                                @if($tc->club_code)
+                                                                                    <small class="text-muted d-block mt-1">Code: <code>{{ $tc->club_code }}</code></small>
+                                                                                @endif
+                                                                                <small class="text-muted d-block">Shared club day for all teachers in this club</small>
+                                                                            </div>
+                                                                            <form
+                                                                                action="{{ route('admin.schools.teacher-clubs.update-club-day', [$school, $tc]) }}"
+                                                                                method="POST"
+                                                                                class="d-flex align-items-center gap-2 js-club-day-form"
+                                                                                data-initial-day="{{ $sharedDay ?? '' }}"
+                                                                            >
+                                                                                @csrf
+                                                                                @method('PUT')
+                                                                                <select
+                                                                                    name="club_day"
+                                                                                    class="form-select form-select-sm js-club-day-select"
+                                                                                    style="min-width: 170px;"
+                                                                                    aria-label="Dedicated day"
+                                                                                >
+                                                                                    <option value="">Select day</option>
+                                                                                    @foreach(['monday' => 'Monday', 'tuesday' => 'Tuesday', 'wednesday' => 'Wednesday', 'thursday' => 'Thursday', 'friday' => 'Friday'] as $dayValue => $dayLabel)
+                                                                                        <option value="{{ $dayValue }}" @selected($sharedDay === $dayValue)>{{ $dayLabel }}</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                                <button
+                                                                                    type="submit"
+                                                                                    class="btn btn-sm btn-outline-primary px-2 js-club-day-save-btn"
+                                                                                    @if($sharedDay) style="display: none;" @endif
+                                                                                >
+                                                                                    Save
+                                                                                </button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if($teacherClubs->isEmpty())
+                                                            <span class="text-muted">—</span>
+                                                        @else
+                                                            <div class="d-flex flex-column gap-2">
+                                                                @foreach($teacherClubs as $tc)
+                                                                    <form
+                                                                        action="{{ route('admin.schools.remove-teacher-from-club', $tc) }}"
+                                                                        method="POST"
+                                                                        class="d-inline"
+                                                                        onsubmit="return confirm('Are you sure you want to remove this teacher from this club? This action cannot be undone.')"
+                                                                    >
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button
+                                                                            type="submit"
+                                                                            class="btn btn-sm btn-outline-danger"
+                                                                            title="Remove from {{ $tc->club->name ?? 'club' }}"
+                                                                        >
+                                                                            Remove
+                                                                        </button>
+                                                                    </form>
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -752,7 +748,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('#school-tabs [data-bs-toggle="pill"]').forEach(function (tab) {
+        document.querySelectorAll('#school-tabs [data-bs-toggle="tab"]').forEach(function (tab) {
             tab.addEventListener('shown.bs.tab', function (event) {
                 var tabName = event.target.getAttribute('data-tab');
                 if (!tabName) {
