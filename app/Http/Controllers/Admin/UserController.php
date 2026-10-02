@@ -29,7 +29,9 @@ class UserController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.users.index', compact('adminUsers'));
+        $alertCategories = config('admin-alerts.categories', []);
+
+        return view('admin.users.index', compact('adminUsers', 'alertCategories'));
     }
 
     /**
@@ -213,10 +215,14 @@ class UserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $categoryKeys = array_keys(config('admin-alerts.categories', []));
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', Rules\Password::defaults()],
+            'admin_alert_categories' => ['required', 'array', 'min:1'],
+            'admin_alert_categories.*' => ['string', 'in:'.implode(',', $categoryKeys)],
         ]);
 
         User::create([
@@ -225,6 +231,7 @@ class UserController extends Controller
             'password' => Hash::make($validated['password']),
             'role' => 'admin',
             'is_active' => true,
+            'admin_alert_categories' => array_values(array_unique($validated['admin_alert_categories'])),
         ]);
 
         return $this->redirectToAdminUsersIndex($request)
@@ -245,15 +252,20 @@ class UserController extends Controller
                 ->with('error', 'This account cannot be updated from here.');
         }
 
+        $categoryKeys = array_keys(config('admin-alerts.categories', []));
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'password' => ['nullable', Rules\Password::defaults()],
+            'admin_alert_categories' => ['required', 'array', 'min:1'],
+            'admin_alert_categories.*' => ['string', 'in:'.implode(',', $categoryKeys)],
         ]);
 
         $updateData = [
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'admin_alert_categories' => array_values(array_unique($validated['admin_alert_categories'])),
         ];
 
         if (! empty($validated['password'])) {

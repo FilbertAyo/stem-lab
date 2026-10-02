@@ -68,7 +68,7 @@ Route::middleware(['block.client.on.admin', 'track.landing.visitor'])->group(fun
                 $validated['name'],
                 $validated['email'],
                 $validated['message']
-            ));
+            ), 'technical');
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('Contact form mail failed', ['error' => $e->getMessage()]);
 

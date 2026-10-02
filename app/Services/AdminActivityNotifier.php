@@ -15,19 +15,38 @@ use Throwable;
 class AdminActivityNotifier
 {
     /**
+     * @param  string|list<string>  $categories
      * @return list<string>
      */
-    public function recipientEmails(): array
+    public function recipientEmails(string|array $categories = []): array
     {
+        $categoryList = array_values(array_unique(array_filter(
+            is_array($categories) ? $categories : [$categories],
+            fn ($category) => is_string($category) && $category !== '',
+        )));
+
         $admins = User::query()
             ->where('role', 'admin')
             ->where('is_active', true)
             ->whereNotNull('email')
-            ->pluck('email');
+            ->get(['id', 'email', 'role', 'is_active', 'admin_alert_categories']);
+
+        if ($categoryList !== []) {
+            $admins = $admins->filter(function (User $admin) use ($categoryList): bool {
+                foreach ($categoryList as $category) {
+                    if ($admin->receivesAdminAlert($category)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+        }
 
         $support = config('mail.admin_alert_address');
 
         return $admins
+            ->pluck('email')
             ->push($support)
             ->filter(fn ($email) => is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL))
             ->map(fn (string $email) => strtolower(trim($email)))
@@ -36,9 +55,12 @@ class AdminActivityNotifier
             ->all();
     }
 
-    public function deliver(Mailable $mail): void
+    /**
+     * @param  string|list<string>  $categories
+     */
+    public function deliver(Mailable $mail, string|array $categories = []): void
     {
-        $emails = $this->recipientEmails();
+        $emails = $this->recipientEmails($categories);
 
         if ($emails === []) {
             throw new \RuntimeException('No admin recipients are configured for activity email.');
@@ -49,6 +71,7 @@ class AdminActivityNotifier
 
     /**
      * @param  list<array{label: string, value: string}>  $details
+     * @param  string|list<string>  $categories
      */
     public function alert(
         string $subject,
@@ -58,6 +81,7 @@ class AdminActivityNotifier
         ?string $actionUrl = null,
         string $actionLabel = 'Open in admin',
         ?string $nextStep = null,
+        string|array $categories = [],
     ): void {
         try {
             $this->deliver(new AdminActivityMail(
@@ -68,7 +92,7 @@ class AdminActivityNotifier
                 $actionUrl,
                 $actionLabel,
                 $nextStep,
-            ));
+            ), $categories);
         } catch (Throwable $e) {
             report($e);
         }
@@ -100,6 +124,7 @@ class AdminActivityNotifier
             actionUrl: $actionUrl,
             actionLabel: 'View in admin',
             nextStep: 'Confirm the account is expected and that they can reach their school or competition.',
+            categories: 'needs_attention',
         );
     }
 
@@ -149,6 +174,7 @@ class AdminActivityNotifier
                 actionUrl: $schoolUrl,
                 actionLabel: 'Review school',
                 nextStep: 'Open the school, confirm the name, location, and contact details, then mark it as reviewed.',
+                categories: ['needs_attention', 'clubs'],
             );
 
             return;
@@ -165,6 +191,7 @@ class AdminActivityNotifier
                 nextStep: $teacherClub->status === 'pending'
                     ? 'The request is still pending the school leader. Check back if it stays pending, and watch for the competition registration.'
                     : 'Check the school roster and watch for the competition registration so the team is not left waiting.',
+                categories: ['competition', 'clubs'],
             );
 
             return;
@@ -180,6 +207,7 @@ class AdminActivityNotifier
             nextStep: $teacherClub->status === 'pending'
                 ? 'This request is pending the school leader. Follow up if it stays pending.'
                 : 'Confirm the teacher appears on the school roster.',
+            categories: 'clubs',
         );
     }
 
@@ -239,6 +267,7 @@ class AdminActivityNotifier
             actionUrl: $actionUrl,
             actionLabel: $actionLabel,
             nextStep: $nextStep,
+            categories: 'competition',
         );
     }
 

@@ -43,6 +43,7 @@ class User extends Authenticatable
         'club_linked_at',
         'password',
         'is_active',
+        'admin_alert_categories',
     ];
 
     /**
@@ -70,7 +71,39 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_active' => 'boolean',
             'uses_pin' => 'boolean',
+            'admin_alert_categories' => 'array',
         ];
+    }
+
+    /**
+     * Alert category keys this admin should receive.
+     * Null/empty means every category (safe rollout for existing admins).
+     *
+     * @return list<string>
+     */
+    public function adminAlertCategories(): array
+    {
+        $categories = $this->admin_alert_categories;
+
+        if (! is_array($categories) || $categories === []) {
+            return array_keys(config('admin-alerts.categories', []));
+        }
+
+        $allowed = array_keys(config('admin-alerts.categories', []));
+
+        return array_values(array_intersect(
+            array_map('strval', $categories),
+            $allowed,
+        ));
+    }
+
+    public function receivesAdminAlert(string $category): bool
+    {
+        if ($this->role !== 'admin' || ! $this->is_active) {
+            return false;
+        }
+
+        return in_array($category, $this->adminAlertCategories(), true);
     }
 
     public function usesPinLogin(): bool

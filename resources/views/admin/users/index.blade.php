@@ -43,6 +43,7 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Role</th>
+                                    <th>Alert categories</th>
                                     <th>Status</th>
                                     <th>Email Verified</th>
                                     <th>Created At</th>
@@ -57,6 +58,21 @@
                                         <td>{{ $user->email }}</td>
                                         <td>
                                             <span class="badge bg-primary">{{ ucfirst($user->role) }}</span>
+                                        </td>
+                                        <td>
+                                            @php
+                                                $assigned = is_array($user->admin_alert_categories) ? $user->admin_alert_categories : [];
+                                                $showAll = $assigned === [];
+                                            @endphp
+                                            @if($showAll)
+                                                <span class="badge bg-secondary">All categories</span>
+                                            @else
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    @foreach($assigned as $categoryKey)
+                                                        <span class="badge bg-info text-dark">{{ $alertCategories[$categoryKey]['label'] ?? $categoryKey }}</span>
+                                                    @endforeach
+                                                </div>
+                                            @endif
                                         </td>
                                         <td>
                                             @if($user->is_active)
@@ -82,6 +98,7 @@
                                                     data-user-route-key="{{ $user->getRouteKey() }}"
                                                     data-user-name="{{ $user->name }}"
                                                     data-user-email="{{ $user->email }}"
+                                                    data-alert-categories='@json(is_array($user->admin_alert_categories) ? $user->admin_alert_categories : [])'
                                                     title="Edit">
                                                     <i class="ti ti-edit"></i>
                                                 </button>
@@ -102,7 +119,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No admin users found.</td>
+                                        <td colspan="9" class="text-center">No admin users found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -169,6 +186,29 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        <div class="mb-0">
+                            <label class="form-label">Alert categories <span class="text-danger">*</span></label>
+                            <p class="text-muted small mb-2">Choose which email queues this admin should receive. One admin can own more than one.</p>
+                            @foreach($alertCategories as $key => $category)
+                                <div class="form-check">
+                                    <input
+                                        class="form-check-input @error('admin_alert_categories') is-invalid @enderror"
+                                        type="checkbox"
+                                        name="admin_alert_categories[]"
+                                        value="{{ $key }}"
+                                        id="create_alert_{{ $key }}"
+                                        @checked(collect(old('admin_alert_categories', []))->contains($key))
+                                    >
+                                    <label class="form-check-label" for="create_alert_{{ $key }}">
+                                        <strong>{{ $category['label'] }}</strong>
+                                        <span class="d-block small text-muted">{{ $category['description'] }}</span>
+                                    </label>
+                                </div>
+                            @endforeach
+                            @error('admin_alert_categories')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -218,6 +258,28 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        <div class="mb-0">
+                            <label class="form-label">Alert categories <span class="text-danger">*</span></label>
+                            <p class="text-muted small mb-2">Choose which email queues this admin should receive. One admin can own more than one.</p>
+                            @foreach($alertCategories as $key => $category)
+                                <div class="form-check">
+                                    <input
+                                        class="form-check-input js-edit-alert-category @error('admin_alert_categories') is-invalid @enderror"
+                                        type="checkbox"
+                                        name="admin_alert_categories[]"
+                                        value="{{ $key }}"
+                                        id="edit_alert_{{ $key }}"
+                                    >
+                                    <label class="form-check-label" for="edit_alert_{{ $key }}">
+                                        <strong>{{ $category['label'] }}</strong>
+                                        <span class="d-block small text-muted">{{ $category['description'] }}</span>
+                                    </label>
+                                </div>
+                            @endforeach
+                            @error('admin_alert_categories')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -230,7 +292,6 @@
 
     @push('scripts')
     <script>
-        // Handle edit modal data
         document.addEventListener('DOMContentLoaded', function() {
             const editModal = document.getElementById('editAdminModal');
             if (editModal) {
@@ -239,6 +300,12 @@
                     const userRouteKey = button.getAttribute('data-user-route-key') || button.getAttribute('data-user-id');
                     const userName = button.getAttribute('data-user-name');
                     const userEmail = button.getAttribute('data-user-email');
+                    let selectedCategories = [];
+                    try {
+                        selectedCategories = JSON.parse(button.getAttribute('data-alert-categories') || '[]');
+                    } catch (e) {
+                        selectedCategories = [];
+                    }
 
                     const form = document.getElementById('editAdminForm');
                     form.action = '{{ route("admin.users.update", ":id") }}'.replace(':id', userRouteKey);
@@ -246,6 +313,13 @@
                     document.getElementById('edit_name').value = userName;
                     document.getElementById('edit_email').value = userEmail;
                     document.getElementById('edit_password').value = '';
+
+                    form.querySelectorAll('.js-edit-alert-category').forEach(function(checkbox) {
+                        const shouldCheck = selectedCategories.length === 0
+                            ? true
+                            : selectedCategories.includes(checkbox.value);
+                        checkbox.checked = shouldCheck;
+                    });
                 });
             }
         });
