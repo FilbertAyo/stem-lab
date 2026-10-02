@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Enums\LearningEventType;
 use App\Http\Controllers\Client\Concerns\ResolvesStudentClassContext;
 use App\Http\Controllers\Controller;
-use App\Enums\LearningEventType;
-use App\Services\Learning\StudentLearningEventRecorder;
 use App\Models\VrAssessmentAttempt;
 use App\Models\VrQuestion;
 use App\Models\VrQuestionAnswer;
 use App\Models\VrQuestionBank;
+use App\Services\AdminActivityNotifier;
+use App\Services\Learning\StudentLearningEventRecorder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class VrAssessmentController extends Controller
 {
@@ -22,6 +23,7 @@ class VrAssessmentController extends Controller
 
     public function __construct(
         private readonly StudentLearningEventRecorder $eventRecorder,
+        private readonly AdminActivityNotifier $adminActivity,
     ) {}
 
     /**
@@ -60,12 +62,12 @@ class VrAssessmentController extends Controller
     public function show(VrQuestionBank $questionBank): View
     {
         $questionBank->load(['vrExperiment.schoolClasses', 'vrExperiment.subject']);
-        
+
         // Ensure the bank, experiment, and subject are all active
-        if (!$questionBank->is_active 
-            || !$questionBank->vrExperiment->is_active 
-            || !$questionBank->vrExperiment->subject 
-            || !$questionBank->vrExperiment->subject->is_active
+        if (! $questionBank->is_active
+            || ! $questionBank->vrExperiment->is_active
+            || ! $questionBank->vrExperiment->subject
+            || ! $questionBank->vrExperiment->subject->is_active
             || ! $questionBank->vrExperiment->isAccessibleToStudentClass($this->studentSchoolClassId())) {
             abort(404);
         }
@@ -97,14 +99,14 @@ class VrAssessmentController extends Controller
     public function start(VrQuestionBank $questionBank): RedirectResponse
     {
         $user = Auth::user();
-        
+
         $questionBank->load(['vrExperiment.subject']);
-        
+
         // Ensure the bank, experiment, and subject are all active
-        if (!$questionBank->is_active 
-            || !$questionBank->vrExperiment->is_active 
-            || !$questionBank->vrExperiment->subject 
-            || !$questionBank->vrExperiment->subject->is_active
+        if (! $questionBank->is_active
+            || ! $questionBank->vrExperiment->is_active
+            || ! $questionBank->vrExperiment->subject
+            || ! $questionBank->vrExperiment->subject->is_active
             || ! $questionBank->vrExperiment->isAccessibleToStudentClass($this->studentSchoolClassId())) {
             abort(404);
         }
@@ -115,7 +117,7 @@ class VrAssessmentController extends Controller
             ->whereNull('completed_at')
             ->first();
 
-        if (!$attempt) {
+        if (! $attempt) {
             // Create new attempt
             $attempt = VrAssessmentAttempt::create([
                 'user_id' => $user->id,
@@ -154,7 +156,7 @@ class VrAssessmentController extends Controller
         if ($attempt->questionBank->time_limit) {
             $endTime = $attempt->started_at->addMinutes($attempt->questionBank->time_limit);
             $timeRemaining = max(0, now()->diffInSeconds($endTime, false));
-            
+
             // Auto-submit if time is up
             if ($timeRemaining <= 0) {
                 return $this->autoSubmit($attempt);
@@ -253,7 +255,7 @@ class VrAssessmentController extends Controller
 
         $correctAnswers = $attempt->answers->where('is_correct', true)->count();
         $totalQuestions = $attempt->total_questions;
-        
+
         $score = $totalQuestions > 0 ? ($correctAnswers / $totalQuestions) * 100 : 0;
         $passed = $score >= $attempt->questionBank->passing_score;
 
@@ -277,6 +279,8 @@ class VrAssessmentController extends Controller
                 ],
             );
         }
+
+        $this->adminActivity->vrQuizCompleted($attempt->fresh(['user', 'questionBank']));
     }
 
     /**
@@ -290,7 +294,7 @@ class VrAssessmentController extends Controller
         }
 
         // If not completed, redirect to take the quiz
-        if (!$attempt->completed_at) {
+        if (! $attempt->completed_at) {
             return redirect()->route('client.vr-assessments.take', $attempt);
         }
 
@@ -299,10 +303,9 @@ class VrAssessmentController extends Controller
             'questionBank.questions' => function ($query) {
                 $query->orderBy('order');
             },
-            'answers.question'
+            'answers.question',
         ]);
 
         return view('client.back.vr-assessments.results', compact('attempt'));
     }
 }
-

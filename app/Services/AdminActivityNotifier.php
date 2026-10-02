@@ -7,6 +7,7 @@ use App\Models\Competition;
 use App\Models\CompetitionRegistration;
 use App\Models\TeacherClub;
 use App\Models\User;
+use App\Models\VrAssessmentAttempt;
 use App\Support\AdminUrl;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
@@ -209,6 +210,83 @@ class AdminActivityNotifier
                 : 'Confirm the teacher appears on the school roster.',
             categories: 'clubs',
         );
+    }
+
+    /**
+     * Notify learning admins when a student keeps failing a VR quiz, or finally passes after failing.
+     */
+    public function vrQuizCompleted(VrAssessmentAttempt $attempt): void
+    {
+        $attempt->loadMissing(['user:id,name,email,public_id,ulid', 'questionBank:id,title,public_id,ulid,passing_score']);
+
+        if (! $attempt->isCompleted() || ! $attempt->user) {
+            return;
+        }
+
+        $user = $attempt->user;
+        $bank = $attempt->questionBank;
+        $bankTitle = $bank?->title ?? 'VR quiz';
+        $score = number_format((float) $attempt->score, 1);
+        $passing = (int) ($bank?->passing_score ?? 60);
+
+        $failedCount = VrAssessmentAttempt::query()
+            ->where('user_id', $attempt->user_id)
+            ->where('question_bank_id', $attempt->question_bank_id)
+            ->whereNotNull('completed_at')
+            ->where('passed', false)
+            ->count();
+
+        $passedBefore = VrAssessmentAttempt::query()
+            ->where('user_id', $attempt->user_id)
+            ->where('question_bank_id', $attempt->question_bank_id)
+            ->whereNotNull('completed_at')
+            ->where('passed', true)
+            ->where('id', '!=', $attempt->id)
+            ->exists();
+
+        $resultsUrl = AdminUrl::route('admin.vr-assessments.results.show', $attempt);
+        $failedListUrl = AdminUrl::route('admin.vr-assessments.results.index', ['status' => 'failed']);
+
+        if (! $attempt->passed && $failedCount >= 2) {
+            $this->alert(
+                subject: "Student struggling: {$user->name} failed {$bankTitle} again",
+                headline: 'Repeated VR quiz failure',
+                summary: "{$user->name} has failed {$bankTitle} {$failedCount} times and still has not passed. Latest score: {$score}% (pass mark {$passing}%).",
+                details: $this->rows([
+                    'Student' => $user->name,
+                    'Email' => $user->email,
+                    'Quiz' => $bankTitle,
+                    'Latest score' => "{$score}%",
+                    'Pass mark' => "{$passing}%",
+                    'Failed attempts' => (string) $failedCount,
+                ]),
+                actionUrl: $resultsUrl,
+                actionLabel: 'View attempt',
+                nextStep: 'Check whether the student needs coaching, or whether the quiz/content is too hard.',
+                categories: 'learning',
+            );
+
+            return;
+        }
+
+        if ($attempt->passed && $failedCount > 0 && ! $passedBefore) {
+            $this->alert(
+                subject: "Progress: {$user->name} passed {$bankTitle} after failing",
+                headline: 'Student passed after earlier fails',
+                summary: "{$user->name} passed {$bankTitle} with {$score}% after {$failedCount} earlier failed attempt(s).",
+                details: $this->rows([
+                    'Student' => $user->name,
+                    'Email' => $user->email,
+                    'Quiz' => $bankTitle,
+                    'Passing score' => "{$score}%",
+                    'Earlier fails' => (string) $failedCount,
+                ]),
+                actionUrl: $resultsUrl ?: $failedListUrl,
+                actionLabel: 'View result',
+                nextStep: 'No action required unless you want to celebrate progress with the school or teacher.',
+                categories: 'learning',
+            );
+        }
     }
 
     public function competitionSubmitted(

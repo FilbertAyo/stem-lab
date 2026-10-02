@@ -22,6 +22,10 @@ return [
             'label' => 'STEM clubs',
             'description' => 'Club joins, pending membership requests, and school club activity.',
         ],
+        'learning' => [
+            'label' => 'Student learning',
+            'description' => 'Quiz and VR pass/fail, repeated attempts, low scores, and inactive learners.',
+        ],
         'content' => [
             'label' => 'Labs & content',
             'description' => '3D models, VR experiments, projects, and weekly sessions.',

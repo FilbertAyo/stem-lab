@@ -9,12 +9,19 @@ use App\Models\CompetitionPrototypeModification;
 use App\Models\CompetitionPrototypeSubmission;
 use App\Models\CompetitionRegistration;
 use App\Models\Model3d;
+use App\Models\ModelQuestionAnswer;
 use App\Models\Project;
 use App\Models\School;
+use App\Models\Student;
+use App\Models\StudentProgressSummary;
 use App\Models\TeacherClub;
+use App\Models\User;
+use App\Models\VrAssessmentAttempt;
 use App\Models\VrExperiment;
+use App\Models\VrQuestionBank;
 use App\Models\WeeklySession;
 use App\Support\AdminUrl;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class AdminAttentionDigestService
@@ -32,6 +39,7 @@ class AdminAttentionDigestService
             'needs_attention' => $this->needsAttentionSections(),
             'clubs' => $this->clubsSections(),
             'competition' => $this->competitionSections(),
+            'learning' => $this->learningSections(),
             'content' => $this->contentSections(),
         ], fn (array $sections) => $sections !== []);
     }
@@ -273,6 +281,204 @@ class AdminAttentionDigestService
                 })->all(),
                 'action_url' => AdminUrl::route('admin.competitions.index'),
                 'action_label' => 'Resolve results',
+            ];
+        }
+
+        return $sections;
+    }
+
+    /**
+     * @return list<array{title: string, count: int, items: list<string>, action_url?: string|null, action_label?: string|null}>
+     */
+    private function learningSections(): array
+    {
+        $sections = [];
+        $since = now()->subDays(7);
+
+        $recentFails = VrAssessmentAttempt::query()
+            ->whereNotNull('completed_at')
+            ->where('passed', false)
+            ->where('completed_at', '>=', $since)
+            ->with(['user:id,name,email', 'questionBank:id,title'])
+            ->orderByDesc('completed_at')
+            ->limit(10)
+            ->get();
+        $recentFailCount = VrAssessmentAttempt::query()
+            ->whereNotNull('completed_at')
+            ->where('passed', false)
+            ->where('completed_at', '>=', $since)
+            ->count();
+        if ($recentFailCount > 0) {
+            $sections[] = [
+                'title' => 'VR quiz fails in the last 7 days',
+                'count' => $recentFailCount,
+                'items' => $recentFails->map(function (VrAssessmentAttempt $attempt): string {
+                    $name = $attempt->user?->name ?? 'Student';
+                    $quiz = $attempt->questionBank?->title ?? 'VR quiz';
+                    $score = number_format((float) $attempt->score, 0);
+
+                    return "{$name} · {$quiz} · {$score}%";
+                })->all(),
+                'action_url' => AdminUrl::route('admin.vr-assessments.results.index', ['status' => 'failed']),
+                'action_label' => 'Open failed results',
+            ];
+        }
+
+        $recentPasses = VrAssessmentAttempt::query()
+            ->whereNotNull('completed_at')
+            ->where('passed', true)
+            ->where('completed_at', '>=', $since)
+            ->with(['user:id,name', 'questionBank:id,title'])
+            ->orderByDesc('completed_at')
+            ->limit(8)
+            ->get();
+        $recentPassCount = VrAssessmentAttempt::query()
+            ->whereNotNull('completed_at')
+            ->where('passed', true)
+            ->where('completed_at', '>=', $since)
+            ->count();
+        if ($recentPassCount > 0) {
+            $sections[] = [
+                'title' => 'VR quiz passes in the last 7 days',
+                'count' => $recentPassCount,
+                'items' => $recentPasses->map(function (VrAssessmentAttempt $attempt): string {
+                    $name = $attempt->user?->name ?? 'Student';
+                    $quiz = $attempt->questionBank?->title ?? 'VR quiz';
+                    $score = number_format((float) $attempt->score, 0);
+
+                    return "{$name} · {$quiz} · {$score}%";
+                })->all(),
+                'action_url' => AdminUrl::route('admin.vr-assessments.results.index', ['status' => 'passed']),
+                'action_label' => 'Open passed results',
+            ];
+        }
+
+        $repeatFailers = VrAssessmentAttempt::query()
+            ->select('user_id', 'question_bank_id', DB::raw('COUNT(*) as fail_count'))
+            ->whereNotNull('completed_at')
+            ->where('passed', false)
+            ->groupBy('user_id', 'question_bank_id')
+            ->havingRaw('COUNT(*) >= 2')
+            ->orderByDesc('fail_count')
+            ->limit(10)
+            ->get();
+
+        if ($repeatFailers->isNotEmpty()) {
+            $userIds = $repeatFailers->pluck('user_id')->unique()->all();
+            $bankIds = $repeatFailers->pluck('question_bank_id')->unique()->all();
+            $users = User::query()->whereIn('id', $userIds)->get(['id', 'name'])->keyBy('id');
+            $banks = VrQuestionBank::query()->whereIn('id', $bankIds)->get(['id', 'title'])->keyBy('id');
+
+            $stillStruggling = $repeatFailers->filter(function ($row) {
+                return ! VrAssessmentAttempt::query()
+                    ->where('user_id', $row->user_id)
+                    ->where('question_bank_id', $row->question_bank_id)
+                    ->whereNotNull('completed_at')
+                    ->where('passed', true)
+                    ->exists();
+            });
+
+            if ($stillStruggling->isNotEmpty()) {
+                $sections[] = [
+                    'title' => 'Students with 2+ fails and still not passed',
+                    'count' => $stillStruggling->count(),
+                    'items' => $stillStruggling->map(function ($row) use ($users, $banks): string {
+                        $name = $users->get($row->user_id)?->name ?? 'Student';
+                        $quiz = $banks->get($row->question_bank_id)?->title ?? 'VR quiz';
+
+                        return "{$name} · {$quiz} · {$row->fail_count} fails";
+                    })->values()->all(),
+                    'action_url' => AdminUrl::route('admin.vr-assessments.results.index', ['status' => 'failed']),
+                    'action_label' => 'Review struggling students',
+                ];
+            }
+        }
+
+        $lowScoreCount = StudentProgressSummary::query()
+            ->whereJsonContains('attention_flags', 'low_quiz_score')
+            ->count();
+        if ($lowScoreCount > 0) {
+            $lowScoreRows = StudentProgressSummary::query()
+                ->whereJsonContains('attention_flags', 'low_quiz_score')
+                ->with(['user:id,name', 'student:id,name'])
+                ->orderBy('avg_vr_score')
+                ->limit(10)
+                ->get();
+
+            $sections[] = [
+                'title' => 'Learners with low average VR quiz scores',
+                'count' => $lowScoreCount,
+                'items' => $lowScoreRows->map(function (StudentProgressSummary $summary): string {
+                    $name = $summary->user?->name
+                        ?? $summary->student?->name
+                        ?? 'Student';
+                    $avg = number_format((float) $summary->avg_vr_score, 0);
+
+                    return "{$name} · avg VR score {$avg}%";
+                })->all(),
+                'action_url' => AdminUrl::route('admin.progress.index'),
+                'action_label' => 'Open progress',
+            ];
+        }
+
+        $inactiveCount = StudentProgressSummary::query()
+            ->whereJsonContains('attention_flags', 'inactive')
+            ->count();
+        if ($inactiveCount > 0) {
+            $sections[] = [
+                'title' => 'Inactive linked students (14+ days)',
+                'count' => $inactiveCount,
+                'items' => ["{$inactiveCount} linked student(s) have been inactive for 14+ days."],
+                'action_url' => AdminUrl::route('admin.progress.index'),
+                'action_label' => 'Open progress',
+            ];
+        }
+
+        $unregisteredCount = Student::query()->whereNull('user_id')->count();
+        if ($unregisteredCount > 0) {
+            $sections[] = [
+                'title' => 'Roster students without login accounts',
+                'count' => $unregisteredCount,
+                'items' => ["{$unregisteredCount} student(s) are on school rosters but have not linked a login yet."],
+                'action_url' => AdminUrl::route('admin.users.students'),
+                'action_label' => 'Open students',
+            ];
+        }
+
+        $weakModelRows = ModelQuestionAnswer::query()
+            ->select(
+                'user_id',
+                'model_id',
+                DB::raw('COUNT(*) as answered'),
+                DB::raw('SUM(CASE WHEN is_correct = 1 THEN 1 ELSE 0 END) as correct'),
+            )
+            ->groupBy('user_id', 'model_id')
+            ->havingRaw('COUNT(*) >= 3')
+            ->havingRaw('(SUM(CASE WHEN is_correct = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) < 50')
+            ->orderByRaw('(SUM(CASE WHEN is_correct = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) asc')
+            ->limit(10)
+            ->get();
+
+        if ($weakModelRows->isNotEmpty()) {
+            $userIds = $weakModelRows->pluck('user_id')->unique()->all();
+            $modelIds = $weakModelRows->pluck('model_id')->unique()->all();
+            $users = User::query()->whereIn('id', $userIds)->get(['id', 'name'])->keyBy('id');
+            $models = Model3d::query()->whereIn('id', $modelIds)->get(['id', 'name'])->keyBy('id');
+
+            $sections[] = [
+                'title' => 'Weak 3D model quiz scores (< 50%)',
+                'count' => $weakModelRows->count(),
+                'items' => $weakModelRows->map(function ($row) use ($users, $models): string {
+                    $name = $users->get($row->user_id)?->name ?? 'Student';
+                    $modelLabel = $models->get($row->model_id)?->name ?? '3D model';
+                    $pct = $row->answered > 0
+                        ? number_format(($row->correct / $row->answered) * 100, 0)
+                        : '0';
+
+                    return "{$name} · {$modelLabel} · {$pct}% ({$row->correct}/{$row->answered})";
+                })->all(),
+                'action_url' => AdminUrl::route('admin.progress.index'),
+                'action_label' => 'Open model progress',
             ];
         }
 
