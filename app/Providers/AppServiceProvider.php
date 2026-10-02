@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Listeners\NotifyAdminsOfNewUser;
 use App\Listeners\SendWelcomeEmail;
 use App\Models\Club;
 use App\Models\Competition;
@@ -67,6 +68,7 @@ class AppServiceProvider extends ServiceProvider
         $this->bindShortIdWithLegacyIds('subject', Subject::class);
 
         Event::listen(Registered::class, SendWelcomeEmail::class);
+        Event::listen(Registered::class, NotifyAdminsOfNewUser::class);
 
         Gate::policy(Student::class, TeacherStudentPolicy::class);
 

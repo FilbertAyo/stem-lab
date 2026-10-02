@@ -56,6 +56,9 @@
                     </p>
                 </div>
                 <div class="d-flex align-items-center gap-2">
+                    <a href="{{ route('admin.schools.profile', $school) }}" class="btn btn-sm btn-primary">
+                        <i class="ti ti-download"></i> Download profile
+                    </a>
                     @if($teachers->isEmpty() && $students->isEmpty())
                         <button
                             type="button"

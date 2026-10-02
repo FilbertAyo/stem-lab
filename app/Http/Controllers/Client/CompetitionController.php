@@ -6,19 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Mail\CompetitionIdeaSubmittedMail;
 use App\Models\Competition;
 use App\Models\CompetitionIdea;
+use App\Models\CompetitionPhaseEvidenceForm;
+use App\Models\CompetitionPrototypeModification;
+use App\Models\CompetitionPrototypeSubmission;
 use App\Models\CompetitionRegistration;
 use App\Models\CompetitionRegistrationStudent;
-use App\Models\CompetitionPrototypeSubmission;
-use App\Models\CompetitionPrototypeModification;
-use App\Models\CompetitionPhaseEvidenceForm;
 use App\Models\District;
 use App\Models\Region;
 use App\Models\SchoolClass;
 use App\Models\TeacherClub;
+use App\Services\AdminActivityNotifier;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\StudentCsvBulkImportService;
 use App\Services\TeacherClubSharedContextService;
+use App\Support\AdminUrl;
 use App\Support\ClientUrl;
 use App\Support\CompetitionParticipantPhaseNavigator;
 use App\Support\SchoolLocation;
@@ -518,6 +520,18 @@ class CompetitionController extends Controller
             ]);
         });
 
+        $submitted = $participantRegistrationService->findForTeacherClub($competition, $teacherClub);
+        if ($submitted && $submitted->status === 'pending') {
+            $this->notifyAdminsOfCompetitionSubmission(
+                'registration',
+                $competition,
+                $submitted,
+                $competition->name,
+                'admin.competitions.registrations.show',
+                ['competition' => $competition, 'registration' => $submitted],
+            );
+        }
+
         return redirect()
             ->route('client.competitions.show', $competition)
             ->with('status', 'Registration submitted successfully. Wait for Judges to review your registration and you will be notified.');
@@ -651,6 +665,16 @@ class CompetitionController extends Controller
                 'submitted_at' => now(),
             ]);
         });
+
+        $registration->refresh();
+        $this->notifyAdminsOfCompetitionSubmission(
+            'registration',
+            $competition,
+            $registration,
+            $competition->name,
+            'admin.competitions.registrations.show',
+            ['competition' => $competition, 'registration' => $registration],
+        );
 
         return redirect()->route('client.competitions.show', $competition)
             ->with('status', 'Registration submitted successfully. It is now pending admin approval.');
@@ -850,6 +874,14 @@ class CompetitionController extends Controller
             });
 
             $this->sendIdeaSubmittedEmail($competition, $registration, $idea);
+            $this->notifyAdminsOfCompetitionSubmission(
+                'idea',
+                $competition,
+                $registration,
+                (string) $idea->problem_title,
+                'admin.competitions.ideas.show',
+                ['competition' => $competition, 'idea' => $idea],
+            );
 
             return redirect()
                 ->route('client.competitions.show', $competition)
@@ -941,6 +973,7 @@ class CompetitionController extends Controller
 
         if ($decisionStatus !== 'shortlisted') {
             $statusLabel = $decisionStatus ? ucfirst(str_replace('_', ' ', $decisionStatus)) : 'Not shortlisted yet';
+
             return redirect()->route('client.competitions.show', $competition)
                 ->with('error', "Prototype development is available only for shortlisted teams. Current status: {$statusLabel}.");
         }
@@ -986,6 +1019,7 @@ class CompetitionController extends Controller
 
         if ($decisionStatus !== 'shortlisted') {
             $statusLabel = $decisionStatus ? ucfirst(str_replace('_', ' ', $decisionStatus)) : 'Not shortlisted yet';
+
             return redirect()->route('client.competitions.show', $competition)
                 ->with('error', "Prototype development is available only for shortlisted teams. Current status: {$statusLabel}.");
         }
@@ -1040,6 +1074,15 @@ class CompetitionController extends Controller
         $prototype->save();
 
         if ($request->boolean('submit_final')) {
+            $this->notifyAdminsOfCompetitionSubmission(
+                'prototype',
+                $competition,
+                $registration,
+                (string) $prototype->prototype_title,
+                'admin.competitions.prototype-shortlisting.show',
+                ['competition' => $competition, 'submission' => $prototype],
+            );
+
             return redirect()
                 ->route('client.competitions.show', $competition)
                 ->withFragment('prototype-development')
@@ -1158,6 +1201,15 @@ class CompetitionController extends Controller
         $modification->save();
 
         if ($request->boolean('submit_final')) {
+            $this->notifyAdminsOfCompetitionSubmission(
+                'prototype_modification',
+                $competition,
+                $registration,
+                (string) $modification->prototype_title,
+                'admin.competitions.prototype-modification.show',
+                ['competition' => $competition, 'modification' => $modification],
+            );
+
             return redirect()
                 ->route('client.competitions.show', $competition)
                 ->withFragment('prototype-modification')
@@ -1220,6 +1272,23 @@ class CompetitionController extends Controller
                 'is_representative' => true,
             ]);
         }
+    }
+
+    private function notifyAdminsOfCompetitionSubmission(
+        string $kind,
+        Competition $competition,
+        CompetitionRegistration $registration,
+        string $itemTitle,
+        string $routeName,
+        array $routeParameters,
+    ): void {
+        app(AdminActivityNotifier::class)->competitionSubmitted(
+            $kind,
+            $competition,
+            $registration,
+            $itemTitle,
+            AdminUrl::route($routeName, $routeParameters),
+        );
     }
 
     private function sendIdeaSubmittedEmail(

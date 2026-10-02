@@ -64,12 +64,11 @@ Route::middleware(['block.client.on.admin', 'track.landing.visitor'])->group(fun
         ]);
 
         try {
-            \Illuminate\Support\Facades\Mail::to('support@adilishastemlabs.com')
-                ->send(new \App\Mail\ContactSupportMail(
-                    $validated['name'],
-                    $validated['email'],
-                    $validated['message']
-                ));
+            app(\App\Services\AdminActivityNotifier::class)->deliver(new \App\Mail\ContactSupportMail(
+                $validated['name'],
+                $validated['email'],
+                $validated['message']
+            ));
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('Contact form mail failed', ['error' => $e->getMessage()]);
 
@@ -175,6 +174,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
                 Route::post('/{school}/students/{student}/credentials/reset', [SchoolController::class, 'resetStudentPin'])->name('students.credentials.reset');
                 Route::post('/{school}/students/credentials/bulk', [SchoolController::class, 'bulkProvisionStudents'])->name('students.credentials.bulk');
                 Route::post('/{school}/teachers', [SchoolController::class, 'storeTeacher'])->name('teachers.store');
+                Route::get('/{school}/profile', [SchoolController::class, 'exportProfile'])->name('profile');
                 Route::get('/{school}', [SchoolController::class, 'show'])->name('show');
                 Route::put('/{school}', [SchoolController::class, 'update'])->name('update');
                 Route::delete('/{school}', [SchoolController::class, 'destroy'])->name('destroy');

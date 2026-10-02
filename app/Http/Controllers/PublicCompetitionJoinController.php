@@ -7,6 +7,7 @@ use App\Models\Competition;
 use App\Models\SmileyTutorCredential;
 use App\Models\User;
 use App\Models\Visitor;
+use App\Services\AdminActivityNotifier;
 use App\Services\TeacherClubJoinService;
 use DomainException;
 use Illuminate\Http\RedirectResponse;
@@ -58,6 +59,10 @@ class PublicCompetitionJoinController extends Controller
                 if (! $result['ok']) {
                     throw new DomainException($result['message']);
                 }
+
+                DB::afterCommit(function () use ($user): void {
+                    app(AdminActivityNotifier::class)->newUser($user);
+                });
             });
         } catch (ValidationException $e) {
             return redirect()

@@ -9,6 +9,7 @@ use App\Models\TeacherClub;
 use App\Models\User;
 use App\Support\SchoolLocation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TeacherClubJoinService
 {
@@ -16,6 +17,7 @@ class TeacherClubJoinService
         private readonly CompetitionParticipantRegistrationService $participantRegistrationService,
         private readonly SubscriptionSelectionService $subscriptionSelectionService,
         private readonly TeacherClubSharedContextService $sharedContext,
+        private readonly AdminActivityNotifier $adminActivity,
     ) {}
 
     /**
@@ -131,6 +133,10 @@ class TeacherClubJoinService
         }
 
         $this->participantRegistrationService->ensureForClubMembership($teacherClub, $competition);
+
+        DB::afterCommit(function () use ($user, $teacherClub, $isNewSchool, $competition): void {
+            $this->adminActivity->teacherJoinedClub($user, $teacherClub, $isNewSchool, $competition);
+        });
 
         return [
             'ok' => true,

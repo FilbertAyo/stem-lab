@@ -116,4 +116,9 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    | Shared inbox that still receives admin alerts alongside every active admin.
+    */
+    'admin_alert_address' => env('MAIL_ADMIN_ALERT_ADDRESS', 'support@adilishastemlabs.com'),
+
 ];

@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -79,6 +81,67 @@ class SchoolController extends Controller
             'title' => 'Schools',
             'generatedAt' => now(),
             'filterSummary' => $filterSummary,
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download($filename);
+    }
+
+    /**
+     * One school profile: details, map, each club's teachers and students, and competitions.
+     */
+    public function exportProfile(School $school): Response
+    {
+        $school->load([
+            'regionModel',
+            'districtModel',
+            'teacherClubs.user',
+            'teacherClubs.club',
+            'teacherClubs.students.schoolClass',
+            'competitionRegistrations.competition',
+        ]);
+
+        $clubGroups = $school->teacherClubs
+            ->groupBy('club_id')
+            ->map(function ($memberships) {
+                $club = $memberships->first()?->club;
+                $leader = $memberships->firstWhere('is_leader', true) ?? $memberships->sortBy('id')->first();
+                $day = $leader?->club_day
+                    ?? $memberships->first(fn ($membership) => filled($membership->club_day))?->club_day;
+
+                $students = $memberships
+                    ->flatMap(fn (TeacherClub $membership) => $membership->students)
+                    ->unique('id')
+                    ->sortBy(fn (Student $student) => mb_strtolower($student->name))
+                    ->values();
+
+                return [
+                    'name' => $club?->name ?? 'Club',
+                    'day' => filled($day) ? ucfirst((string) $day) : '—',
+                    'leader' => $leader?->user?->name ?? '—',
+                    'memberships' => $memberships->sortBy(fn (TeacherClub $membership) => mb_strtolower((string) $membership->user?->name))->values(),
+                    'students' => $students,
+                ];
+            })
+            ->sortBy(fn (array $group) => mb_strtolower($group['name']))
+            ->values();
+
+        $teacherCount = $school->teacherClubs->pluck('user_id')->unique()->count();
+        $studentCount = $clubGroups->sum(fn (array $group) => $group['students']->count());
+        $registrations = $school->competitionRegistrations
+            ->sortByDesc(fn ($registration) => $registration->submitted_at ?? $registration->created_at)
+            ->values();
+
+        $slug = Str::slug($school->name) ?: 'school';
+        $filename = 'school_profile_'.$slug.'_'.now()->format('Y-m-d').'.pdf';
+
+        $pdf = Pdf::loadView('admin.downloads.school-profile', [
+            'school' => $school,
+            'clubGroups' => $clubGroups,
+            'registrations' => $registrations,
+            'teacherCount' => $teacherCount,
+            'studentCount' => $studentCount,
+            'mapImage' => $this->schoolMapImage($school),
+            'generatedAt' => now(),
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download($filename);
@@ -629,6 +692,37 @@ class SchoolController extends Controller
         if (! $belongsToSchool) {
             abort(404);
         }
+    }
+
+    private function schoolMapImage(School $school): ?string
+    {
+        if ($school->latitude === null || $school->longitude === null) {
+            return null;
+        }
+
+        $lat = $school->latitude;
+        $lng = $school->longitude;
+        $url = 'https://staticmap.openstreetmap.de/staticmap.php'
+            .'?center='.$lat.','.$lng
+            .'&zoom=15&size=640x280&maptype=mapnik'
+            .'&markers='.$lat.','.$lng.',red-pushpin';
+
+        try {
+            $response = Http::timeout(8)->get($url);
+        } catch (\Throwable) {
+            return null;
+        }
+
+        if (! $response->successful() || $response->body() === '') {
+            return null;
+        }
+
+        $mime = strtolower(trim(strtok((string) $response->header('Content-Type'), ';') ?: ''));
+        if (! str_starts_with($mime, 'image/')) {
+            return null;
+        }
+
+        return 'data:'.$mime.';base64,'.base64_encode($response->body());
     }
 
     private function schoolsIndexQuery(Request $request): Builder
