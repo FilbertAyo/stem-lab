@@ -19,6 +19,7 @@
         h3 { font-size: 12px; margin: 12px 0 6px; }
         .map { width: 100%; max-height: 240px; margin: 0 0 8px; }
         .note { margin: 0 0 8px; }
+        .students-table { margin-top: 18px; }
     </style>
 @endpush
 
@@ -119,7 +120,7 @@
             </tbody>
         </table>
 
-        <table>
+        <table class="students-table">
             <thead>
                 <tr>
                     <th class="sn">S/N</th>
