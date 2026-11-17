@@ -314,7 +314,7 @@
                         <h5 class="modal-title" id="approveRegistrationModalLabel">Approve registration</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="POST" action="{{ route('admin.competitions.registrations.approve', [$competition, $registration]) }}">
+                    <form method="POST" action="{{ route('admin.competitions.registrations.approve', [$competition, $registration]) }}" class="js-prevent-double-submit">
                         @csrf
                         <div class="modal-body">
                             <p class="small text-muted mb-3">
@@ -331,7 +331,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success">Approve</button>
+                            <button type="submit" class="btn btn-success" data-loading-text="Sending…">Approve</button>
                         </div>
                     </form>
                 </div>
@@ -370,7 +370,7 @@
                             <h5 class="modal-title" id="eligibilityReminderModalLabel">Send eligibility reminder</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form method="POST" action="{{ route('admin.competitions.registrations.eligibility-reminder', [$competition, $registration]) }}">
+                        <form method="POST" action="{{ route('admin.competitions.registrations.eligibility-reminder', [$competition, $registration]) }}" class="js-prevent-double-submit">
                             @csrf
                             <div class="modal-body">
                                 <p class="small text-muted mb-3">
@@ -387,7 +387,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-warning">Send reminder</button>
+                                <button type="submit" class="btn btn-warning" data-loading-text="Sending reminder…">Send reminder</button>
                             </div>
                         </form>
                     </div>
@@ -402,7 +402,7 @@
                         <h5 class="modal-title" id="overrideEligibilityModalLabel">Pass registration phase</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="POST" action="{{ route('admin.competitions.registrations.override-eligibility', [$competition, $registration]) }}">
+                    <form method="POST" action="{{ route('admin.competitions.registrations.override-eligibility', [$competition, $registration]) }}" class="js-prevent-double-submit">
                         @csrf
                         <div class="modal-body">
                             <div class="alert alert-warning small">
@@ -434,11 +434,48 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success">Confirm and pass phase</button>
+                            <button type="submit" class="btn btn-success" data-loading-text="Sending…">Confirm and pass phase</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     @endif
+
+    @push('scripts')
+        <script>
+            document.querySelectorAll('form.js-prevent-double-submit').forEach((form) => {
+                form.addEventListener('submit', function (event) {
+                    if (form.dataset.submitting === '1') {
+                        event.preventDefault();
+                        return;
+                    }
+
+                    form.dataset.submitting = '1';
+
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const cancelBtn = form.querySelector('[data-bs-dismiss="modal"]');
+                    const closeBtn = form.closest('.modal')?.querySelector('.btn-close');
+                    const loadingText = submitBtn?.getAttribute('data-loading-text') || 'Sending…';
+
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>' + loadingText;
+                    }
+
+                    // Disable after submit starts so the first request is not cancelled.
+                    window.setTimeout(() => {
+                        if (submitBtn) {
+                            submitBtn.disabled = true;
+                        }
+                        if (cancelBtn) {
+                            cancelBtn.disabled = true;
+                        }
+                        if (closeBtn) {
+                            closeBtn.disabled = true;
+                        }
+                    }, 0);
+                });
+            });
+        </script>
+    @endpush
 </x-admin-layout>
