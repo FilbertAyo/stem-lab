@@ -77,7 +77,10 @@ class CompetitionRegistration extends Model
             return false;
         }
 
-        if (! filled($this->resolvedTeacherEmail())) {
+        $hasEmail = filled($this->resolvedTeacherEmail());
+        $hasPhone = filled($this->resolvedTeacherPhone());
+
+        if (! $hasEmail && ! $hasPhone) {
             return false;
         }
 

@@ -18,6 +18,8 @@ use App\Models\TeacherClub;
 use App\Services\AdminActivityNotifier;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
+use App\Services\Sms\CompetitionSmsTemplates;
+use App\Services\Sms\SmsNotifier;
 use App\Services\StudentCsvBulkImportService;
 use App\Services\TeacherClubSharedContextService;
 use App\Support\AdminUrl;
@@ -1296,22 +1298,46 @@ class CompetitionController extends Controller
         CompetitionRegistration $registration,
         CompetitionIdea $idea,
     ): void {
-        $teacherEmail = $registration->resolvedTeacherEmail();
-        if (! filled($teacherEmail)) {
-            return;
-        }
-
         $competitionUrl = ClientUrl::route('client.competitions.show', [
             'competition' => $competition,
         ]).'?phase=idea_submission#idea-submission';
 
-        try {
-            Mail::to($teacherEmail)->send(
-                new CompetitionIdeaSubmittedMail($competition, $registration, $idea, $competitionUrl)
-            );
-        } catch (\Throwable $e) {
-            report($e);
+        $teacherEmail = $registration->resolvedTeacherEmail();
+        if (filled($teacherEmail)) {
+            try {
+                Mail::to($teacherEmail)->send(
+                    new CompetitionIdeaSubmittedMail($competition, $registration, $idea, $competitionUrl)
+                );
+            } catch (\Throwable $e) {
+                report($e);
+            }
         }
+
+        $this->sendIdeaSubmittedSms($competition, $registration, $idea, $competitionUrl);
+    }
+
+    private function sendIdeaSubmittedSms(
+        Competition $competition,
+        CompetitionRegistration $registration,
+        CompetitionIdea $idea,
+        string $competitionUrl,
+    ): void {
+        $message = CompetitionSmsTemplates::render(
+            CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SUBMITTED),
+            [
+                'teacher_name' => $registration->resolvedTeacherName() ?: 'Teacher',
+                'school_name' => $registration->resolvedSchoolName(),
+                'competition_name' => $competition->name,
+                'url' => $competitionUrl,
+            ]
+        );
+
+        app(SmsNotifier::class)->send(
+            $registration->resolvedTeacherPhone(),
+            $message,
+            CompetitionSmsTemplates::defaultSenderId(),
+            'idea-submitted-'.$idea->getKey()
+        );
     }
 
     private function resolveSchoolRegistration(

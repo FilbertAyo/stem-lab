@@ -28,18 +28,15 @@
                     <a href="{{ route('admin.competitions.registrations.index', $competition) }}" class="btn btn-outline-secondary">Back to list</a>
                     @if($registration->needsEligibilityCompletion())
                         @if($canSendEligibilityReminder)
-                            <form method="POST" action="{{ route('admin.competitions.registrations.eligibility-reminder', [$competition, $registration]) }}" class="d-inline">
-                                @csrf
-                                <button type="submit" class="btn btn-sm btn-warning">
-                                    Send eligibility reminder
-                                    @if($registration->eligibility_reminder_count > 0)
-                                        ({{ $registration->eligibility_reminder_count }}/{{ $maxEligibilityReminders }})
-                                    @endif
-                                </button>
-                            </form>
-                        @elseif(! $registration->resolvedTeacherEmail())
-                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Add a teacher email before sending reminders">
-                                No teacher email
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#eligibilityReminderModal">
+                                Send eligibility reminder
+                                @if($registration->eligibility_reminder_count > 0)
+                                    ({{ $registration->eligibility_reminder_count }}/{{ $maxEligibilityReminders }})
+                                @endif
+                            </button>
+                        @elseif(! $registration->resolvedTeacherEmail() && ! $registration->resolvedTeacherPhone())
+                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Add a teacher email or phone before sending reminders">
+                                No teacher contact
                             </button>
                         @else
                             <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Maximum reminders ({{ $maxEligibilityReminders }}) already sent">
@@ -51,10 +48,7 @@
                         </button>
                     @endif
                     @if($registration->status === 'pending')
-                        <form method="POST" action="{{ route('admin.competitions.registrations.approve', [$competition, $registration]) }}" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
-                        </form>
+                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#approveRegistrationModal">Approve</button>
                         <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rejectRegistrationModal">Reject</button>
                     @endif
                 </div>
@@ -305,7 +299,45 @@
         </div>
     </div>
 
+    @php
+        $smsCanSend = filled($smsPhoneNormalized ?? null);
+        $smsPhoneDisplay = $smsPhoneNormalized ?? ($smsTeacherPhone ?? null);
+        $smsSenderOptions = $smsAllowedSenders ?? ['ADILISHA', 'ADILISHAXR', 'STEMLABS'];
+        $smsSenderDefault = $smsDefaultSender ?? 'ADILISHA';
+    @endphp
+
     @if($registration->status === 'pending')
+        <div class="modal fade" id="approveRegistrationModal" tabindex="-1" aria-labelledby="approveRegistrationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="approveRegistrationModalLabel">Approve registration</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="{{ route('admin.competitions.registrations.approve', [$competition, $registration]) }}">
+                        @csrf
+                        <div class="modal-body">
+                            <p class="small text-muted mb-3">
+                                Approving will email the teacher (if an email is on file) and can also send the SMS below.
+                            </p>
+                            @include('admin.competitions.registrations.partials.sms-preview-fields', [
+                                'prefix' => 'approve',
+                                'phoneDisplay' => $smsPhoneDisplay,
+                                'canSendSms' => $smsCanSend,
+                                'message' => old('sms_message', $smsApprovalPreview ?? ''),
+                                'senderDefault' => $smsSenderDefault,
+                                'senderOptions' => $smsSenderOptions,
+                            ])
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success">Approve</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="rejectRegistrationModal" tabindex="-1" aria-labelledby="rejectRegistrationModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -330,8 +362,41 @@
     @endif
 
     @if($registration->status === 'draft')
+        @if($canSendEligibilityReminder)
+            <div class="modal fade" id="eligibilityReminderModal" tabindex="-1" aria-labelledby="eligibilityReminderModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="eligibilityReminderModalLabel">Send eligibility reminder</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="POST" action="{{ route('admin.competitions.registrations.eligibility-reminder', [$competition, $registration]) }}">
+                            @csrf
+                            <div class="modal-body">
+                                <p class="small text-muted mb-3">
+                                    Email is sent when a teacher email exists. Review and edit the SMS before sending.
+                                </p>
+                                @include('admin.competitions.registrations.partials.sms-preview-fields', [
+                                    'prefix' => 'reminder',
+                                    'phoneDisplay' => $smsPhoneDisplay,
+                                    'canSendSms' => $smsCanSend,
+                                    'message' => old('sms_message', $smsReminderPreview ?? ''),
+                                    'senderDefault' => $smsSenderDefault,
+                                    'senderOptions' => $smsSenderOptions,
+                                ])
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-warning">Send reminder</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="modal fade" id="overrideEligibilityModal" tabindex="-1" aria-labelledby="overrideEligibilityModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="overrideEligibilityModalLabel">Pass registration phase</h5>
@@ -356,6 +421,16 @@
                             @error('override_reason')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+
+                            <hr class="my-3">
+                            @include('admin.competitions.registrations.partials.sms-preview-fields', [
+                                'prefix' => 'override',
+                                'phoneDisplay' => $smsPhoneDisplay,
+                                'canSendSms' => $smsCanSend,
+                                'message' => old('sms_message', $smsApprovalPreview ?? ''),
+                                'senderDefault' => $smsSenderDefault,
+                                'senderOptions' => $smsSenderOptions,
+                            ])
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>

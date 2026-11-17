@@ -190,6 +190,11 @@
                 </a>
               </li>
               <li class="pc-item">
+                <a href="{{ route('admin.notification-settings.index') }}" class="pc-link">
+                  <span class="pc-mtext">Notification Settings</span>
+                </a>
+              </li>
+              <li class="pc-item">
             <a href="{{ route('admin.subscription-packages.index') }}" class="pc-link">
              
               <span class="pc-mtext">Subscription Packages</span>

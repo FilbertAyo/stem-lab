@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PlatformController as AdminPlatformController;
 use App\Http\Controllers\Admin\ProjectCategoryController as AdminProjectCategoryController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\SchoolController;
+use App\Http\Controllers\Admin\NotificationSettingsController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\SubscriptionPackageController;
@@ -271,6 +272,12 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/legal-notification-batch/{batchId}', [SettingsController::class, 'legalNotificationBatchStatus'])
                 ->name('legal-notification-batch');
         });
+
+        Route::prefix('notification-settings')->name('notification-settings.')->group(function () {
+            Route::get('/', [NotificationSettingsController::class, 'index'])->name('index');
+            Route::put('/', [NotificationSettingsController::class, 'update'])->name('update');
+        });
+
 
         // Audit Logs
         Route::get('activity-logs', [ActivityLogController::class, 'index'])

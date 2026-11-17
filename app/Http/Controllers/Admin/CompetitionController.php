@@ -28,7 +28,10 @@ use App\Models\SchoolClass;
 use App\Models\TeacherClub;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
+use App\Services\Sms\CompetitionSmsTemplates;
+use App\Services\Sms\SmsNotifier;
 use App\Support\ClientUrl;
+use App\Support\TanzaniaPhone;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -994,16 +997,50 @@ class CompetitionController extends Controller
             }
         }
 
+        $competitionUrl = ClientUrl::route('client.competitions.show', $competition);
+        $registerUrl = ClientUrl::route('client.competitions.register', $competition);
+        $smsTeacherPhone = $registration->resolvedTeacherPhone();
+        $smsPhoneNormalized = TanzaniaPhone::normalize($smsTeacherPhone);
+        $smsDefaultSender = CompetitionSmsTemplates::defaultSenderId();
+        $smsAllowedSenders = CompetitionSmsTemplates::allowedSenders();
+        $smsApprovalPreview = CompetitionSmsTemplates::render(
+            CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_REGISTRATION_APPROVED),
+            [
+                'teacher_name' => $registration->resolvedTeacherName() ?: 'Teacher',
+                'school_name' => $registration->resolvedSchoolName(),
+                'competition_name' => $competition->name,
+                'url' => $competitionUrl,
+            ]
+        );
+        $smsReminderPreview = CompetitionSmsTemplates::render(
+            CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_ELIGIBILITY_REMINDER),
+            [
+                'teacher_name' => $registration->resolvedTeacherName() ?: 'Teacher',
+                'school_name' => $registration->resolvedSchoolName(),
+                'competition_name' => $competition->name,
+                'url' => $registerUrl,
+            ]
+        );
+
         return view('admin.competitions.registrations.show', compact(
             'competition',
             'registration',
             'poolStudents',
             'poolEligibility',
+            'smsTeacherPhone',
+            'smsPhoneNormalized',
+            'smsDefaultSender',
+            'smsAllowedSenders',
+            'smsApprovalPreview',
+            'smsReminderPreview',
         ));
     }
 
-    public function approveRegistration(Competition $competition, CompetitionRegistration $registration): RedirectResponse
-    {
+    public function approveRegistration(
+        Request $request,
+        Competition $competition,
+        CompetitionRegistration $registration
+    ): RedirectResponse {
         if ($registration->competition_id !== $competition->id) {
             abort(404);
         }
@@ -1011,6 +1048,8 @@ class CompetitionController extends Controller
         if ($registration->status !== 'pending') {
             return back()->with('error', 'Only pending registrations can be approved.');
         }
+
+        $smsInput = $this->validatedSmsSendInput($request);
 
         $registration->loadCount('representativeStudents');
         $requiredReps = max(1, (int) ($competition->representative_count ?? 10));
@@ -1034,12 +1073,15 @@ class CompetitionController extends Controller
         );
 
         $emailSent = $this->sendRegistrationApprovedEmail($competition, $registration);
+        $smsResult = $this->sendRegistrationApprovedSms($competition, $registration, $smsInput);
 
-        $status = $emailSent
-            ? 'Registration approved successfully. Congratulations email sent to the teacher.'
-            : 'Registration approved successfully. No teacher email was available to notify.';
+        $parts = ['Registration approved successfully.'];
+        $parts[] = $emailSent
+            ? 'Congratulations email sent to the teacher.'
+            : 'No teacher email was available to notify.';
+        $parts[] = $this->smsStatusPhrase($smsResult);
 
-        return back()->with('status', $status);
+        return back()->with('status', implode(' ', $parts));
     }
 
     public function overrideRegistrationEligibility(
@@ -1058,6 +1100,7 @@ class CompetitionController extends Controller
         $validated = $request->validate([
             'override_reason' => ['required', 'string', 'max:1000'],
         ]);
+        $smsInput = $this->validatedSmsSendInput($request);
 
         $registration->update([
             'status' => 'approved',
@@ -1079,8 +1122,12 @@ class CompetitionController extends Controller
         );
 
         $this->sendRegistrationApprovedEmail($competition, $registration);
+        $smsResult = $this->sendRegistrationApprovedSms($competition, $registration, $smsInput);
 
-        return back()->with('status', 'Participant passed the registration phase by admin decision.');
+        return back()->with(
+            'status',
+            'Participant passed the registration phase by admin decision. '.$this->smsStatusPhrase($smsResult)
+        );
     }
 
     public function rejectRegistration(
@@ -1117,6 +1164,7 @@ class CompetitionController extends Controller
     }
 
     public function sendEligibilityReminder(
+        Request $request,
         Competition $competition,
         CompetitionRegistration $registration
     ): RedirectResponse {
@@ -1124,13 +1172,15 @@ class CompetitionController extends Controller
             abort(404);
         }
 
+        $smsInput = $this->validatedSmsSendInput($request);
+
         if (! $registration->canSendEligibilityReminder()) {
             if (! $registration->needsEligibilityCompletion()) {
                 return back()->with('error', 'Reminders are only for incomplete (draft) registrations.');
             }
 
-            if (! filled($registration->resolvedTeacherEmail())) {
-                return back()->with('error', 'This registration has no teacher email on file.');
+            if (! filled($registration->resolvedTeacherEmail()) && ! filled($registration->resolvedTeacherPhone())) {
+                return back()->with('error', 'This registration has no teacher email or phone on file.');
             }
 
             $max = CompetitionRegistration::maxEligibilityReminders();
@@ -1139,12 +1189,35 @@ class CompetitionController extends Controller
         }
 
         $registerUrl = ClientUrl::route('client.competitions.register', $competition);
-
         $teacherEmail = $registration->resolvedTeacherEmail();
+        $emailSent = false;
 
-        Mail::to($teacherEmail)->send(
-            new CompetitionEligibilityReminderMail($competition, $registration, $registerUrl)
-        );
+        if (filled($teacherEmail)) {
+            try {
+                Mail::to($teacherEmail)->send(
+                    new CompetitionEligibilityReminderMail($competition, $registration, $registerUrl)
+                );
+                $emailSent = true;
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
+
+        $smsResult = ['ok' => false, 'skipped' => true, 'reason' => 'not_requested'];
+        if ($smsInput['send_sms']) {
+            $smsResult = $this->dispatchCompetitionSms(
+                $competition,
+                $registration,
+                $smsInput['sms_message'],
+                $smsInput['sms_sender_id'],
+                'eligibility_reminder_sms',
+                'eligibility-reminder-'.$registration->ulid.'-'.((int) $registration->eligibility_reminder_count + 1)
+            );
+        }
+
+        if (! $emailSent && ! ($smsResult['ok'] ?? false)) {
+            return back()->with('error', 'Could not send reminder by email or SMS. Check teacher contact details and try again.');
+        }
 
         $registration->update([
             'eligibility_reminder_count' => (int) $registration->eligibility_reminder_count + 1,
@@ -1154,17 +1227,23 @@ class CompetitionController extends Controller
         $this->logStageEvent(
             $competition,
             'eligibility_reminder_sent',
-            "Eligibility reminder sent to {$registration->resolvedSchoolName()} ({$teacherEmail}).",
+            "Eligibility reminder sent to {$registration->resolvedSchoolName()}.",
             [
                 'registration_ulid' => $registration->ulid,
                 'reminder_count' => $registration->eligibility_reminder_count,
+                'email_sent' => $emailSent,
+                'teacher_email' => $teacherEmail ?: null,
+                'sms' => $smsResult,
             ]
         );
 
-        return back()->with(
-            'status',
-            'Reminder email sent to '.$teacherEmail.'.'
-        );
+        $parts = [];
+        if ($emailSent) {
+            $parts[] = 'Reminder email sent to '.$teacherEmail.'.';
+        }
+        $parts[] = $this->smsStatusPhrase($smsResult);
+
+        return back()->with('status', implode(' ', $parts));
     }
 
     public function ideas(Competition $competition): View
@@ -1542,6 +1621,112 @@ class CompetitionController extends Controller
         );
 
         return true;
+    }
+
+    /**
+     * @return array{send_sms: bool, sms_message: string, sms_sender_id: string}
+     */
+    private function validatedSmsSendInput(Request $request): array
+    {
+        $allowed = CompetitionSmsTemplates::allowedSenders();
+
+        $validated = $request->validate([
+            'send_sms' => ['nullable'],
+            'sms_message' => ['nullable', 'string', 'max:480'],
+            'sms_sender_id' => ['nullable', 'string', Rule::in($allowed)],
+        ]);
+
+        return [
+            'send_sms' => $request->boolean('send_sms'),
+            'sms_message' => trim((string) ($validated['sms_message'] ?? '')),
+            'sms_sender_id' => (string) ($validated['sms_sender_id'] ?? CompetitionSmsTemplates::defaultSenderId()),
+        ];
+    }
+
+    /**
+     * @param  array{send_sms: bool, sms_message: string, sms_sender_id: string}  $smsInput
+     * @return array<string, mixed>
+     */
+    private function sendRegistrationApprovedSms(
+        Competition $competition,
+        CompetitionRegistration $registration,
+        array $smsInput
+    ): array {
+        if (! $smsInput['send_sms']) {
+            return ['ok' => false, 'skipped' => true, 'reason' => 'not_requested'];
+        }
+
+        return $this->dispatchCompetitionSms(
+            $competition,
+            $registration,
+            $smsInput['sms_message'],
+            $smsInput['sms_sender_id'],
+            'registration_approved_sms',
+            'registration-approved-'.$registration->ulid
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function dispatchCompetitionSms(
+        Competition $competition,
+        CompetitionRegistration $registration,
+        string $message,
+        string $senderId,
+        string $eventPrefix,
+        ?string $idempotencyKey = null
+    ): array {
+        $phone = $registration->resolvedTeacherPhone();
+        $result = app(SmsNotifier::class)->send($phone, $message, $senderId, $idempotencyKey);
+
+        if ($result['ok'] ?? false) {
+            $this->logStageEvent(
+                $competition,
+                $eventPrefix.'_sent',
+                "SMS sent to {$registration->resolvedSchoolName()} ({$result['to']}).",
+                [
+                    'registration_ulid' => $registration->ulid,
+                    'to' => $result['to'] ?? null,
+                    'sender_id' => $result['sender_id'] ?? $senderId,
+                ]
+            );
+        } elseif (! ($result['skipped'] ?? false)) {
+            $this->logStageEvent(
+                $competition,
+                $eventPrefix.'_failed',
+                "Failed to send SMS to {$registration->resolvedSchoolName()}.",
+                [
+                    'registration_ulid' => $registration->ulid,
+                    'error' => $result['error'] ?? 'unknown',
+                    'sender_id' => $result['sender_id'] ?? $senderId,
+                ]
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param  array<string, mixed>  $smsResult
+     */
+    private function smsStatusPhrase(array $smsResult): string
+    {
+        if ($smsResult['ok'] ?? false) {
+            return 'SMS sent to '.($smsResult['to'] ?? 'teacher').'.';
+        }
+
+        if ($smsResult['skipped'] ?? false) {
+            return match ($smsResult['reason'] ?? '') {
+                'not_requested' => 'SMS was not requested.',
+                'invalid_phone' => 'SMS skipped (no valid teacher phone).',
+                'empty_message' => 'SMS skipped (empty message).',
+                'sms_disabled' => 'SMS skipped (SMS disabled or not configured).',
+                default => 'SMS skipped.',
+            };
+        }
+
+        return 'SMS failed: '.($smsResult['error'] ?? 'unknown error').'.';
     }
 
     private function logStageEvent(
