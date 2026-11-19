@@ -9,6 +9,11 @@
     <title>{{ config('app.name', 'Adilisha - Admin') }}</title>
 
     <link rel="icon" href="{{ asset('images/logo/favicon.png') }}" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
+        id="main-font-link">
     <link rel="stylesheet" href="{{ asset('admin/fonts/tabler-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/style.min.css') }}" id="main-style-link">
     <link rel="stylesheet" href="{{ asset('admin/css/style-preset.min.css') }}">
@@ -81,6 +86,10 @@
 
     <script>
         preset_change("preset-1");
+    </script>
+
+    <script>
+        font_change("Public-Sans");
     </script>
 
     @stack('scripts')
