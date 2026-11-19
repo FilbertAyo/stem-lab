@@ -4,12 +4,18 @@ namespace App\Services;
 
 use App\Models\SubscriptionPackage;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class SubscriptionSelectionService
 {
     public function paymentsEnabled(): bool
     {
         return (bool) config('subscriptions.payments_enabled', false);
+    }
+
+    public function entitlementsEnforced(): bool
+    {
+        return $this->paymentsEnabled();
     }
 
     public function canUserSelectPackage(User $user, string $slug): bool
@@ -40,9 +46,53 @@ class SubscriptionSelectionService
             abort(422, 'Public school access is granted through club membership.');
         }
 
-        $user->forceFill([
-            'subscription_tier' => $package->tier_key,
-        ])->save();
+        if ($package->slug === 'individual') {
+            abort(422, 'Individual packages require Snippe checkout.');
+        }
+
+        if ($package->slug === 'free-trial') {
+            return $this->activateFreeTrial($user, $package);
+        }
+
+        abort(422, 'Unsupported package selection.');
+    }
+
+    public function activateFreeTrial(User $user, ?SubscriptionPackage $package = null): SubscriptionPackage
+    {
+        $package ??= SubscriptionPackage::query()
+            ->active()
+            ->where('slug', 'free-trial')
+            ->firstOrFail();
+
+        if ($user->hasLockedSubscriptionPlan()) {
+            abort(403, 'You already have an active plan through your STEM club.');
+        }
+
+        if ($user->trial_used_at !== null) {
+            abort(422, 'You have already used your free trial.');
+        }
+
+        if ($user->hasActivePrepaidAccess()) {
+            abort(422, 'You already have an active subscription.');
+        }
+
+        $periodDays = max(1, (int) $package->billing_period_days ?: 7);
+
+        DB::transaction(function () use ($user, $periodDays): void {
+            /** @var User $locked */
+            $locked = User::query()->whereKey($user->id)->lockForUpdate()->firstOrFail();
+
+            if ($locked->trial_used_at !== null) {
+                abort(422, 'You have already used your free trial.');
+            }
+
+            $locked->forceFill([
+                'subscription_tier' => 'trial',
+                'subscription_expires_at' => now()->addDays($periodDays),
+                'trial_used_at' => now(),
+                'subscription_renewal_reminded_at' => null,
+            ])->save();
+        });
 
         return $package;
     }
@@ -51,6 +101,8 @@ class SubscriptionSelectionService
     {
         $user->forceFill([
             'subscription_tier' => 'public_school',
+            'subscription_expires_at' => null,
+            'subscription_renewal_reminded_at' => null,
         ])->save();
     }
 }

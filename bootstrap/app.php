@@ -20,8 +20,20 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('admin:send-attention-digest')
             ->dailyAt('08:00')
             ->timezone('Africa/Dar_es_Salaam');
+
+        $schedule->command('subscriptions:send-renewal-reminders')
+            ->dailyAt('09:00')
+            ->timezone('Africa/Dar_es_Salaam');
+
+        $schedule->command('subscriptions:process-expiries')
+            ->dailyAt('09:15')
+            ->timezone('Africa/Dar_es_Salaam');
     })
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/snippe',
+        ]);
+
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminOnly::class,
             'teacher' => \App\Http\Middleware\TeacherOnly::class,
@@ -33,6 +45,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'track.client.activity' => \App\Http\Middleware\TrackClientActivity::class,
             'student.onboarded' => \App\Http\Middleware\EnsureStudentOnboardingComplete::class,
             'club.linked.for.learning' => \App\Http\Middleware\EnsureClubLinkedForLearning::class,
+            'platform.access' => \App\Http\Middleware\EnsurePlatformAccess::class,
             'redirect.legacy.public-id' => \App\Http\Middleware\RedirectLegacyPublicIdUrls::class,
         ]);
     })

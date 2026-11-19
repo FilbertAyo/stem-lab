@@ -15,6 +15,9 @@ class SubscriptionPackage extends Model
         'price_heading',
         'price_subheading',
         'price_compare',
+        'price_amount_tzs',
+        'billing_period_days',
+        'requires_payment',
         'badge_label',
         'cta_label',
         'cta_action',
@@ -32,6 +35,9 @@ class SubscriptionPackage extends Model
             'features' => 'array',
             'linked_features' => 'array',
             'is_active' => 'boolean',
+            'requires_payment' => 'boolean',
+            'price_amount_tzs' => 'integer',
+            'billing_period_days' => 'integer',
             'sort_order' => 'integer',
         ];
     }

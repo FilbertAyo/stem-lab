@@ -8,6 +8,8 @@
   $activePackageSlug = $packageUser?->activeSubscriptionPackageSlug();
   $hasLockedPlan = $packageUser?->hasLockedSubscriptionPlan() ?? false;
   $paymentsEnabled = (bool) config('subscriptions.payments_enabled', false);
+  $trialUsed = $packageUser?->trial_used_at !== null;
+  $hasActivePrepaid = $packageUser?->hasActivePrepaidAccess() ?? false;
 @endphp
 
 <div class="col-12 mb-3" id="platform-subscription">
@@ -51,9 +53,21 @@
       $isActivePackage = $activePackageSlug === $package->slug;
       $ctaAction = $package->resolvedCtaAction($isUnlinkedStudent);
       $isPaidPackage = in_array($package->slug, ['free-trial', 'individual'], true);
+      $trialUnavailable = $package->slug === 'free-trial' && $trialUsed;
+      $canRenewIndividual = $package->slug === 'individual' && $paymentsEnabled && ! $hasLockedPlan && ! $isActivePackage;
       $packageActionDisabled = $isActivePackage
         || ($hasLockedPlan && ! $isActivePackage)
-        || ($isPaidPackage && ! $paymentsEnabled);
+        || ($isPaidPackage && ! $paymentsEnabled)
+        || $trialUnavailable;
+      $ctaLabel = $package->cta_label;
+      if ($canRenewIndividual && ($trialUsed || $packageUser?->subscription_tier === 'individual' || $packageUser?->subscription_tier === 'trial')) {
+          $ctaLabel = $hasActivePrepaid ? $package->cta_label : 'Renew with mobile money';
+      }
+      if ($package->slug === 'individual' && $paymentsEnabled && ! $hasLockedPlan && ! $isActivePackage && ! $hasActivePrepaid) {
+          $ctaLabel = $trialUsed || filled($packageUser?->subscription_tier)
+              ? 'Renew with mobile money'
+              : 'Pay with mobile money';
+      }
     @endphp
     <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
       <div class="card border shadow-none w-100 {{ $isActivePackage ? 'border-success-subtle' : '' }}" data-aos="fade-up" data-aos-delay="{{ $package->sort_order * 100 }}" data-aos-duration="1000">
@@ -96,7 +110,12 @@
               </ul>
             </div>
           @endif
-          @if ($isActivePackage)
+          @if ($isActivePackage && $package->slug === 'individual' && $paymentsEnabled && ! $hasLockedPlan)
+            <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="{{ $ctaAction }}" data-slug="{{ $package->slug }}">
+              <span class="fw-semibold">Extend with mobile money</span>
+              <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
+            </a>
+          @elseif ($isActivePackage)
             <button type="button" class="btn btn-outline-success d-inline-flex align-items-center gap-2 w-100 justify-content-center" disabled>
               <span class="fw-semibold">Current plan</span>
               <iconify-icon icon="lucide:check" class="fs-5"></iconify-icon>
@@ -106,6 +125,8 @@
               <span class="fw-semibold">
                 @if ($hasLockedPlan)
                   Included in your plan
+                @elseif ($trialUnavailable)
+                  Trial already used
                 @elseif ($isPaidPackage)
                   Coming soon
                 @else
@@ -115,7 +136,7 @@
             </button>
           @else
             <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="{{ $ctaAction }}" data-slug="{{ $package->slug }}">
-              <span class="fw-semibold">{{ $package->cta_label }}</span>
+              <span class="fw-semibold">{{ $ctaLabel }}</span>
               <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
             </a>
           @endif
@@ -206,7 +227,19 @@
   <input type="hidden" name="package" id="package-select-input" value="">
 </form>
 
-{{-- Toast: subscription action placeholder (replace with real flow later) --}}
+@if ($paymentsEnabled && $packageUser && ! $hasLockedPlan && $packageUser->subscription_expires_at)
+  <div class="col-12 mt-2">
+    <p class="small text-muted mb-0">
+      @if ($packageUser->hasActivePrepaidAccess())
+        Current prepaid access ends {{ $packageUser->subscription_expires_at->timezone(config('app.timezone'))->format('d M Y') }}.
+      @else
+        Your previous prepaid access ended {{ $packageUser->subscription_expires_at->timezone(config('app.timezone'))->format('d M Y') }}. Renew to continue.
+      @endif
+    </p>
+  </div>
+@endif
+
+{{-- Toast: subscription action feedback --}}
 <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;">
   <div id="package-action-toast" class="toast align-items-center border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">

@@ -62,6 +62,31 @@
 
                         <div class="row">
                             <div class="col-md-4 mb-3">
+                                <label for="price_amount_tzs" class="form-label">Charge amount (TZS)</label>
+                                <input type="number" min="0" class="form-control @error('price_amount_tzs') is-invalid @enderror" id="price_amount_tzs" name="price_amount_tzs" value="{{ old('price_amount_tzs', $package->price_amount_tzs) }}">
+                                <div class="form-text">Used for Snippe checkout. Minimum live charge is 500 TZS.</div>
+                                @error('price_amount_tzs')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="billing_period_days" class="form-label">Access period (days)</label>
+                                <input type="number" min="0" class="form-control @error('billing_period_days') is-invalid @enderror" id="billing_period_days" name="billing_period_days" value="{{ old('billing_period_days', $package->billing_period_days) }}">
+                                @error('billing_period_days')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label d-block">Requires payment</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="requires_payment" name="requires_payment" value="1" @checked(old('requires_payment', $package->requires_payment))>
+                                    <label class="form-check-label" for="requires_payment">Charge via Snippe</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
                                 <label for="badge_label" class="form-label">Badge label</label>
                                 <input type="text" class="form-control @error('badge_label') is-invalid @enderror" id="badge_label" name="badge_label" value="{{ old('badge_label', $package->badge_label) }}">
                                 @error('badge_label')

@@ -41,6 +41,9 @@ class User extends Authenticatable
         'role',
         'subscription_tier',
         'club_linked_at',
+        'subscription_expires_at',
+        'trial_used_at',
+        'subscription_renewal_reminded_at',
         'password',
         'is_active',
         'admin_alert_categories',
@@ -68,6 +71,9 @@ class User extends Authenticatable
             'date_of_birth' => 'date',
             'student_onboarding_completed_at' => 'datetime',
             'club_linked_at' => 'datetime',
+            'subscription_expires_at' => 'datetime',
+            'trial_used_at' => 'datetime',
+            'subscription_renewal_reminded_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
             'uses_pin' => 'boolean',
@@ -153,17 +159,40 @@ class User extends Authenticatable
         return $this->role === 'teacher' && $this->hasApprovedClubMembership();
     }
 
+    public function hasActivePrepaidAccess(): bool
+    {
+        if (! in_array($this->subscription_tier, ['trial', 'individual', 'pro'], true)) {
+            return false;
+        }
+
+        return $this->subscription_expires_at !== null
+            && $this->subscription_expires_at->isFuture();
+    }
+
+    public function hasPlatformAccess(): bool
+    {
+        if ($this->hasSubsidizedSchoolAccess()) {
+            return true;
+        }
+
+        return $this->hasActivePrepaidAccess();
+    }
+
     public function platformPlanLabel(): string
     {
         if ($this->hasSubsidizedSchoolAccess()) {
             return 'Free';
         }
 
-        if (in_array($this->subscription_tier, ['individual', 'pro'], true)) {
+        if ($this->hasActivePrepaidAccess() && in_array($this->subscription_tier, ['individual', 'pro'], true)) {
             return 'Pro';
         }
 
-        return 'Trial';
+        if ($this->hasActivePrepaidAccess() && $this->subscription_tier === 'trial') {
+            return 'Trial';
+        }
+
+        return 'No plan';
     }
 
     public function platformPlanBadgeClass(): string
@@ -172,11 +201,15 @@ class User extends Authenticatable
             return 'bg-success-subtle text-success-emphasis border border-success-subtle';
         }
 
-        if (in_array($this->subscription_tier, ['individual', 'pro'], true)) {
+        if ($this->hasActivePrepaidAccess() && in_array($this->subscription_tier, ['individual', 'pro'], true)) {
             return 'bg-dark text-white';
         }
 
-        return 'bg-light text-dark border';
+        if ($this->hasActivePrepaidAccess() && $this->subscription_tier === 'trial') {
+            return 'bg-light text-dark border';
+        }
+
+        return 'bg-warning-subtle text-warning-emphasis border border-warning-subtle';
     }
 
     /**
@@ -197,12 +230,21 @@ class User extends Authenticatable
             return 'public-school';
         }
 
+        if (! $this->hasActivePrepaidAccess() && ! $this->hasSubsidizedSchoolAccess()) {
+            return null;
+        }
+
         return match ($this->subscription_tier) {
             'trial' => 'free-trial',
             'individual', 'pro' => 'individual',
             'public_school' => 'public-school',
             default => null,
         };
+    }
+
+    public function subscriptionOrders()
+    {
+        return $this->hasMany(SubscriptionOrder::class);
     }
 
     public function hasActiveSubscriptionPackage(string $slug): bool

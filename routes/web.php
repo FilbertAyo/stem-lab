@@ -6,13 +6,14 @@ use App\Http\Controllers\Admin\ClubController;
 use App\Http\Controllers\Admin\CompetitionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\Model3dController as AdminModel3dController;
+use App\Http\Controllers\Admin\NotificationSettingsController;
 use App\Http\Controllers\Admin\PlatformController as AdminPlatformController;
 use App\Http\Controllers\Admin\ProjectCategoryController as AdminProjectCategoryController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\SchoolController;
-use App\Http\Controllers\Admin\NotificationSettingsController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\SubscriptionOrderController;
 use App\Http\Controllers\Admin\SubscriptionPackageController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VrExperimentController;
@@ -33,9 +34,13 @@ use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentCont
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicCompetitionController;
 use App\Http\Controllers\PublicCompetitionJoinController;
+use App\Http\Controllers\Webhooks\SnippeWebhookController;
 use App\Models\Model3d;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/webhooks/snippe', SnippeWebhookController::class)
+    ->name('webhooks.snippe');
 
 // Public landing and explore routes (track visitors, block on admin subdomain)
 Route::middleware(['block.client.on.admin', 'track.landing.visitor'])->group(function () {
@@ -264,6 +269,11 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::put('/{subscriptionPackage}', [SubscriptionPackageController::class, 'update'])->name('update');
         });
 
+        Route::prefix('subscription-orders')->name('subscription-orders.')->group(function () {
+            Route::get('/', [SubscriptionOrderController::class, 'index'])->name('index');
+            Route::get('/{subscriptionOrder}', [SubscriptionOrderController::class, 'show'])->name('show');
+        });
+
         // Settings routes
         Route::prefix('settings')->name('settings.')->group(function () {
             Route::get('/', [SettingsController::class, 'index'])->name('index');
@@ -277,7 +287,6 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/', [NotificationSettingsController::class, 'index'])->name('index');
             Route::put('/', [NotificationSettingsController::class, 'update'])->name('update');
         });
-
 
         // Audit Logs
         Route::get('activity-logs', [ActivityLogController::class, 'index'])
@@ -424,8 +433,12 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
 
         Route::post('/subscription-packages/select', [ClientSubscriptionPackageController::class, 'select'])
             ->name('client.subscription-packages.select');
+        Route::get('/subscription-packages/success/{subscriptionOrder}', [ClientSubscriptionPackageController::class, 'success'])
+            ->name('client.subscription-packages.success');
+        Route::get('/subscription-packages/cancel/{subscriptionOrder}', [ClientSubscriptionPackageController::class, 'cancel'])
+            ->name('client.subscription-packages.cancel');
 
-        Route::middleware('club.linked.for.learning')->group(function () {
+        Route::middleware('platform.access')->group(function () {
             Route::prefix('models/3d')->name('client.models.3d.')->middleware('redirect.legacy.public-id')->group(function () {
                 Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
 

@@ -201,6 +201,11 @@
             </a>
           </li>
           <li class="pc-item">
+            <a href="{{ route('admin.subscription-orders.index') }}" class="pc-link">
+              <span class="pc-mtext">Subscription Payments</span>
+            </a>
+          </li>
+          <li class="pc-item">
             <a href="{{ route('admin.database-backup.index') }}" class="pc-link">
             
               <span class="pc-mtext">Database Backup</span>

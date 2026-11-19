@@ -32,6 +32,9 @@ class SubscriptionPackageController extends Controller
             'price_heading' => ['nullable', 'string', 'max:255'],
             'price_subheading' => ['nullable', 'string', 'max:255'],
             'price_compare' => ['nullable', 'string', 'max:255'],
+            'price_amount_tzs' => ['nullable', 'integer', 'min:0'],
+            'billing_period_days' => ['nullable', 'integer', 'min:0', 'max:3650'],
+            'requires_payment' => ['nullable', 'boolean'],
             'badge_label' => ['nullable', 'string', 'max:255'],
             'cta_label' => ['required', 'string', 'max:255'],
             'cta_action' => ['required', 'string', 'max:64'],
@@ -46,6 +49,9 @@ class SubscriptionPackageController extends Controller
         $validated['features'] = $this->parseFeatureLines($validated['features'] ?? null);
         $validated['linked_features'] = $this->parseFeatureLines($validated['linked_features'] ?? null);
         $validated['is_active'] = $request->boolean('is_active');
+        $validated['requires_payment'] = $request->boolean('requires_payment');
+        $validated['price_amount_tzs'] = (int) ($validated['price_amount_tzs'] ?? 0);
+        $validated['billing_period_days'] = (int) ($validated['billing_period_days'] ?? 0);
 
         $subscriptionPackage->update($validated);
 
