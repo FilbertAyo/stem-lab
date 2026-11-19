@@ -32,6 +32,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -1033,49 +1034,79 @@ class CompetitionController extends Controller
         ]);
 
         $this->normalizeSubmitFinal($request);
+        $submitting = $request->boolean('submit_final');
+        $requiredText = $submitting ? ['required', 'string'] : ['nullable', 'string'];
 
-        $rules = [
-            'prototype_title' => ['required', 'string', 'max:255'],
-            'prototype_concept' => ['required', 'string'],
-            'prototype_objectives' => ['required', 'string'],
-            'prototype_design_description' => ['required', 'string'],
-            'prototype_materials' => ['required', 'string'],
-            'prototype_build_process' => ['required', 'string'],
+        $validator = Validator::make($request->all(), [
+            'prototype_title' => $submitting
+                ? ['required', 'string', 'max:255']
+                : ['nullable', 'string', 'max:255'],
+            'prototype_concept' => $requiredText,
+            'prototype_objectives' => $requiredText,
+            'prototype_design_description' => $requiredText,
+            'prototype_materials' => $requiredText,
+            'prototype_build_process' => $requiredText,
             'prototype_challenges' => ['nullable', 'string'],
             'prototype_test_results' => ['nullable', 'string'],
             'prototype_next_steps' => ['nullable', 'string'],
             'submit_final' => ['nullable', 'boolean'],
-        ];
+        ]);
 
-        $validated = $request->validate($rules);
+        if ($validator->fails()) {
+            return redirect()
+                ->route('client.competitions.show', $competition)
+                ->withFragment('prototype-development')
+                ->withErrors($validator)
+                ->withInput();
+        }
 
-        $prototype->fill([
+        $validated = $validator->validated();
+        $wasSubmitted = $prototype->exists && $prototype->status === 'submitted';
+
+        $attributes = [
             'competition_id' => $competition->id,
             'competition_phase_id' => $phase?->id,
             'competition_registration_id' => $registration->id,
             'competition_shortlist_id' => $shortlist?->id,
-            'prototype_title' => $validated['prototype_title'],
-            'prototype_concept' => $validated['prototype_concept'],
-            'prototype_objectives' => $validated['prototype_objectives'],
-            'prototype_design_description' => $validated['prototype_design_description'],
-            'prototype_materials' => $validated['prototype_materials'],
-            'prototype_build_process' => $validated['prototype_build_process'],
-            'prototype_challenges' => $validated['prototype_challenges'] ?? null,
-            'prototype_test_results' => $validated['prototype_test_results'] ?? null,
-            'prototype_next_steps' => $validated['prototype_next_steps'] ?? null,
-        ]);
+        ];
 
-        if ($request->boolean('submit_final')) {
+        foreach ([
+            'prototype_title',
+            'prototype_concept',
+            'prototype_objectives',
+            'prototype_design_description',
+            'prototype_materials',
+            'prototype_build_process',
+            'prototype_challenges',
+            'prototype_test_results',
+            'prototype_next_steps',
+        ] as $field) {
+            if (! array_key_exists($field, $validated)) {
+                continue;
+            }
+
+            $value = $validated[$field];
+            if (is_string($value)) {
+                $value = trim($value);
+                $value = $value === '' ? null : $value;
+            }
+
+            $attributes[$field] = $value;
+        }
+
+        $prototype->fill($attributes);
+
+        if ($submitting) {
             $prototype->status = 'submitted';
             $prototype->submitted_at = now();
             $prototype->submitted_by = $user->id;
-        } elseif (! $prototype->exists) {
+        } elseif (! $wasSubmitted) {
             $prototype->status = 'draft';
         }
 
         $prototype->save();
 
-        if ($request->boolean('submit_final')) {
+        if ($submitting) {
             $this->notifyAdminsOfCompetitionSubmission(
                 'prototype',
                 $competition,
@@ -1091,10 +1122,14 @@ class CompetitionController extends Controller
                 ->with('status', 'Prototype submitted successfully. Awaiting prototype shortlisting.');
         }
 
+        $draftStatus = $prototype->status === 'submitted'
+            ? 'Prototype answers saved. It remains submitted.'
+            : 'Prototype draft saved. It is not submitted yet.';
+
         return redirect()
             ->route('client.competitions.show', $competition)
             ->withFragment('prototype-development')
-            ->with('status', 'Prototype draft saved successfully.');
+            ->with('status', $draftStatus);
     }
 
     public function createPrototypeModification(Competition $competition): View|\Illuminate\Http\RedirectResponse
@@ -1313,22 +1348,23 @@ class CompetitionController extends Controller
             }
         }
 
-        $this->sendIdeaSubmittedSms($competition, $registration, $idea, $competitionUrl);
+        $this->sendIdeaSubmittedSms($competition, $registration, $idea);
     }
 
     private function sendIdeaSubmittedSms(
         Competition $competition,
         CompetitionRegistration $registration,
         CompetitionIdea $idea,
-        string $competitionUrl,
     ): void {
+        $smsUrl = $competition->smsUrl();
         $message = CompetitionSmsTemplates::render(
             CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SUBMITTED),
             [
                 'teacher_name' => $registration->resolvedTeacherName() ?: 'Teacher',
                 'school_name' => $registration->resolvedSchoolName(),
                 'competition_name' => $competition->name,
-                'url' => $competitionUrl,
+                'url' => $smsUrl,
+                'short_url' => $smsUrl,
             ]
         );
 

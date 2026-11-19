@@ -8,6 +8,7 @@ use App\Models\District;
 use App\Models\Region;
 use App\Models\School;
 use App\Models\TeacherClub;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -81,6 +82,16 @@ class PublicCompetitionController extends Controller
             'completedCompetitions',
             'stats'
         ));
+    }
+
+    /**
+     * Additive short link for SMS. The ULID competition URL stays canonical.
+     */
+    public function redirectShort(string $smsCode): RedirectResponse
+    {
+        $competition = Competition::query()->where('sms_code', $smsCode)->firstOrFail();
+
+        return redirect()->route('client.competitions.show', $competition, 302);
     }
 
     /**

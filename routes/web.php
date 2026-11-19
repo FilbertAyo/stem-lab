@@ -89,6 +89,9 @@ Route::middleware(['block.client.on.admin', 'track.landing.visitor'])->group(fun
     // Public Competitions (accessible without login)
     Route::get('/explore/competitions', [PublicCompetitionController::class, 'index'])->name('competitions.public');
     Route::get('/explore/competitions/{competition}', [PublicCompetitionController::class, 'show'])->name('competitions.public.show');
+    Route::get('/c/{smsCode}', [PublicCompetitionController::class, 'redirectShort'])
+        ->where('smsCode', '[a-z0-9]{6}')
+        ->name('competitions.short');
     Route::post('/explore/competitions/{competition}/join-as-teacher', [PublicCompetitionJoinController::class, 'store'])
         ->middleware(['guest', 'throttle:10,1'])
         ->name('competitions.public.join-as-teacher');
@@ -231,6 +234,8 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/{competition}/ideas/{idea}', [CompetitionController::class, 'showIdea'])->name('ideas.show');
             Route::post('/{competition}/ideas/{idea}/score', [CompetitionController::class, 'scoreIdea'])->name('ideas.score');
             Route::post('/{competition}/ideas/{idea}/shortlist', [CompetitionController::class, 'shortlistIdea'])->name('ideas.shortlist');
+            Route::post('/{competition}/ideas/{idea}/shortlist-reminder', [CompetitionController::class, 'sendShortlistReminder'])->name('ideas.shortlist-reminder');
+            Route::post('/{competition}/ideas/{idea}/feedback', [CompetitionController::class, 'updateIdeaFeedback'])->name('ideas.feedback');
         });
 
         // Progress & Tracking routes

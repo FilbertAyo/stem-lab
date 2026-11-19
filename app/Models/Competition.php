@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPublicUlid;
+use App\Support\ClientUrl;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class Competition extends Model
@@ -69,7 +71,53 @@ class Competition extends Model
             if (blank($competition->slug) && filled($competition->name)) {
                 $competition->slug = Str::slug($competition->name);
             }
+
+            if (blank($competition->sms_code) && Schema::hasColumn($competition->getTable(), 'sms_code')) {
+                $competition->sms_code = self::generateUniqueSmsCode();
+            }
         });
+    }
+
+    /**
+     * Canonical teacher URL. QR codes use this ULID path and it must keep working.
+     */
+    public function participantUrl(): string
+    {
+        return ClientUrl::route('client.competitions.show', $this);
+    }
+
+    /**
+     * Short link for SMS bodies. Falls back to the ULID URL until a code exists.
+     */
+    public function smsUrl(): string
+    {
+        if (filled($this->sms_code)) {
+            return ClientUrl::route('competitions.short', ['smsCode' => $this->sms_code]);
+        }
+
+        return $this->participantUrl();
+    }
+
+    public static function generateUniqueSmsCode(): string
+    {
+        $reserved = [
+            'create', 'export', 'delete', 'update', 'search', 'import', 'status', 'result', 'report',
+        ];
+
+        for ($attempt = 0; $attempt < 25; $attempt++) {
+            $candidate = strtolower(Str::random(6));
+
+            if (! preg_match('/[a-z]/', $candidate) || in_array($candidate, $reserved, true)) {
+                continue;
+            }
+
+            $exists = static::withTrashed()->where('sms_code', $candidate)->exists();
+            if (! $exists) {
+                return $candidate;
+            }
+        }
+
+        throw new \RuntimeException('Unable to generate a unique competition SMS code.');
     }
 
     public function club(): BelongsTo

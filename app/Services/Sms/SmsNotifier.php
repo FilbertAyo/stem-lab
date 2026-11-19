@@ -18,22 +18,24 @@ class SmsNotifier
     }
 
     /**
-     * @return array{ok: bool, skipped?: bool, reason?: string, to?: string, sender_id?: string, response?: array<string, mixed>, error?: string}
+     * @return array{ok: bool, skipped?: bool, reason?: string, to?: string, sender_id?: string, response?: array<string, mixed>, error?: string, segments?: int, credits?: int, encoding?: string}
      */
     public function send(?string $phone, string $message, ?string $senderId = null, ?string $idempotencyKey = null): array
     {
+        $message = trim($message);
+        $quote = $message === '' ? null : SmsCreditCalculator::quote($message, 1);
+
         if (! $this->enabled()) {
-            return ['ok' => false, 'skipped' => true, 'reason' => 'sms_disabled'];
+            return $this->withQuote(['ok' => false, 'skipped' => true, 'reason' => 'sms_disabled'], $quote);
         }
 
         $normalized = TanzaniaPhone::normalize($phone);
         if ($normalized === null) {
-            return ['ok' => false, 'skipped' => true, 'reason' => 'invalid_phone'];
+            return $this->withQuote(['ok' => false, 'skipped' => true, 'reason' => 'invalid_phone'], $quote);
         }
 
-        $message = trim($message);
         if ($message === '') {
-            return ['ok' => false, 'skipped' => true, 'reason' => 'empty_message'];
+            return $this->withQuote(['ok' => false, 'skipped' => true, 'reason' => 'empty_message'], $quote);
         }
 
         $sender = $this->resolveSender($senderId);
@@ -41,21 +43,21 @@ class SmsNotifier
         try {
             $response = $this->client->send($sender, $normalized, $message, $idempotencyKey);
 
-            return [
+            return $this->withQuote([
                 'ok' => true,
                 'to' => $normalized,
                 'sender_id' => $sender,
                 'response' => $response,
-            ];
+            ], $quote);
         } catch (Throwable $e) {
             report($e);
 
-            return [
+            return $this->withQuote([
                 'ok' => false,
                 'to' => $normalized,
                 'sender_id' => $sender,
                 'error' => $e->getMessage(),
-            ];
+            ], $quote);
         }
     }
 
@@ -133,6 +135,24 @@ class SmsNotifier
                 'error' => $e->getMessage(),
             ];
         }
+    }
+
+    /**
+     * @param  array<string, mixed>  $result
+     * @param  array{segments: int, credits: int, encoding: string}|null  $quote
+     * @return array<string, mixed>
+     */
+    private function withQuote(array $result, ?array $quote): array
+    {
+        if ($quote === null) {
+            return $result;
+        }
+
+        return array_merge($result, [
+            'segments' => $quote['segments'],
+            'credits' => $quote['credits'],
+            'encoding' => $quote['encoding'],
+        ]);
     }
 
     private function resolveSender(?string $senderId): string

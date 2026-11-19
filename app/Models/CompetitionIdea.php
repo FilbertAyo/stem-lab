@@ -26,6 +26,7 @@ class CompetitionIdea extends Model
         'community_district_id',
         'community_location',
         'supporting_notes',
+        'admin_feedback',
         'attachments_meta',
         'submitted_at',
         'reopened_at',

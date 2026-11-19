@@ -24,9 +24,11 @@ class NotificationSettingsController extends Controller
             'registration_approved' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_REGISTRATION_APPROVED),
             'eligibility_reminder' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_ELIGIBILITY_REMINDER),
             'idea_submitted' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SUBMITTED),
+            'idea_shortlisted' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SHORTLISTED),
+            'idea_shortlist_reminder' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SHORTLIST_REMINDER),
         ];
 
-        $placeholders = '{teacher_name}, {school_name}, {competition_name}, {url}';
+        $placeholders = '{teacher_name}, {school_name}, {competition_name}, {url}, {short_url}';
 
         return view('admin.notification-settings.index', compact(
             'balance',
@@ -47,6 +49,8 @@ class NotificationSettingsController extends Controller
             'sms_template_competition_registration_approved' => ['required', 'string', 'max:480'],
             'sms_template_competition_eligibility_reminder' => ['required', 'string', 'max:480'],
             'sms_template_competition_idea_submitted' => ['required', 'string', 'max:480'],
+            'sms_template_competition_idea_shortlisted' => ['required', 'string', 'max:480'],
+            'sms_template_competition_idea_shortlist_reminder' => ['required', 'string', 'max:480'],
         ]);
 
         Setting::set(
@@ -79,6 +83,22 @@ class NotificationSettingsController extends Controller
             'textarea',
             CompetitionSmsTemplates::GROUP,
             'SMS template: competition idea submitted'
+        );
+
+        Setting::set(
+            CompetitionSmsTemplates::KEY_IDEA_SHORTLISTED,
+            $validated['sms_template_competition_idea_shortlisted'],
+            'textarea',
+            CompetitionSmsTemplates::GROUP,
+            'SMS template: competition idea shortlisted'
+        );
+
+        Setting::set(
+            CompetitionSmsTemplates::KEY_IDEA_SHORTLIST_REMINDER,
+            $validated['sms_template_competition_idea_shortlist_reminder'],
+            'textarea',
+            CompetitionSmsTemplates::GROUP,
+            'SMS template: competition idea shortlist reminder'
         );
 
         return back()->with('status', 'Notification settings saved.');

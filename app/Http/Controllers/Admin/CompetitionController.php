@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\DispatchCompetitionShortlistNotifications;
 use App\Mail\CompetitionEligibilityReminderMail;
+use App\Mail\CompetitionIdeaShortlistedMail;
 use App\Mail\CompetitionRegistrationApprovedMail;
 use App\Models\Club;
 use App\Models\Competition;
@@ -997,8 +997,8 @@ class CompetitionController extends Controller
             }
         }
 
-        $competitionUrl = ClientUrl::route('client.competitions.show', $competition);
         $registerUrl = ClientUrl::route('client.competitions.register', $competition);
+        $smsCompetitionUrl = $competition->smsUrl();
         $smsTeacherPhone = $registration->resolvedTeacherPhone();
         $smsPhoneNormalized = TanzaniaPhone::normalize($smsTeacherPhone);
         $smsDefaultSender = CompetitionSmsTemplates::defaultSenderId();
@@ -1009,7 +1009,8 @@ class CompetitionController extends Controller
                 'teacher_name' => $registration->resolvedTeacherName() ?: 'Teacher',
                 'school_name' => $registration->resolvedSchoolName(),
                 'competition_name' => $competition->name,
-                'url' => $competitionUrl,
+                'url' => $smsCompetitionUrl,
+                'short_url' => $smsCompetitionUrl,
             ]
         );
         $smsReminderPreview = CompetitionSmsTemplates::render(
@@ -1019,6 +1020,7 @@ class CompetitionController extends Controller
                 'school_name' => $registration->resolvedSchoolName(),
                 'competition_name' => $competition->name,
                 'url' => $registerUrl,
+                'short_url' => $smsCompetitionUrl,
             ]
         );
 
@@ -1283,7 +1285,40 @@ class CompetitionController extends Controller
             'reopenedBy',
         ]);
 
-        return view('admin.competitions.ideas.show', compact('competition', 'idea'));
+        $registration = $idea->registration;
+        $smsPhoneNormalized = TanzaniaPhone::normalize($registration?->resolvedTeacherPhone());
+        $smsDefaultSender = CompetitionSmsTemplates::defaultSenderId();
+        $smsAllowedSenders = CompetitionSmsTemplates::allowedSenders();
+        $smsCompetitionUrl = $competition->smsUrl();
+        $smsTemplateVars = [
+            'teacher_name' => $registration?->resolvedTeacherName() ?: 'Teacher',
+            'school_name' => $registration?->resolvedSchoolName() ?: 'your school',
+            'competition_name' => $competition->name,
+            'url' => $smsCompetitionUrl,
+            'short_url' => $smsCompetitionUrl,
+        ];
+        $smsShortlistPreview = CompetitionSmsTemplates::render(
+            CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SHORTLISTED),
+            $smsTemplateVars
+        );
+        $smsReminderPreview = CompetitionSmsTemplates::render(
+            CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SHORTLIST_REMINDER),
+            $smsTemplateVars
+        );
+        $shortlistAlreadyNotified = (bool) $idea->shortlist?->hasSentShortlistNotification();
+        $canSendShortlistReminder = (bool) $idea->shortlist?->canSendShortlistReminder();
+
+        return view('admin.competitions.ideas.show', compact(
+            'competition',
+            'idea',
+            'smsPhoneNormalized',
+            'smsDefaultSender',
+            'smsAllowedSenders',
+            'smsShortlistPreview',
+            'smsReminderPreview',
+            'shortlistAlreadyNotified',
+            'canSendShortlistReminder',
+        ));
     }
 
     public function scoreIdea(Request $request, Competition $competition, CompetitionIdea $idea): RedirectResponse
@@ -1350,8 +1385,15 @@ class CompetitionController extends Controller
             'status' => ['required', Rule::in(['shortlisted', 'waitlist', 'rejected'])],
             'rank' => ['nullable', 'integer', 'min:1'],
         ]);
+        $smsInput = $this->validatedSmsSendInput($request);
 
-        CompetitionShortlist::updateOrCreate(
+        $existing = CompetitionShortlist::query()
+            ->where('competition_idea_id', $idea->id)
+            ->first();
+        $alreadyNotified = $existing?->hasSentShortlistNotification() ?? false;
+        $shouldNotify = $validated['status'] === 'shortlisted' && ! $alreadyNotified;
+
+        $shortlist = CompetitionShortlist::updateOrCreate(
             ['competition_idea_id' => $idea->id],
             [
                 'competition_id' => $competition->id,
@@ -1361,7 +1403,7 @@ class CompetitionController extends Controller
                 'region_id' => $idea->registration?->region_id,
                 'rank' => $validated['rank'] ?? null,
                 'status' => $validated['status'],
-                'decided_by' => request()->user()?->getKey(),
+                'decided_by' => $request->user()?->getKey(),
                 'decided_at' => now(),
             ]
         );
@@ -1377,13 +1419,189 @@ class CompetitionController extends Controller
             ['idea_ulid' => $idea->ulid, 'status' => $validated['status'], 'rank' => $validated['rank'] ?? null]
         );
 
-        DispatchCompetitionShortlistNotifications::dispatch(
-            $competition->id,
-            $idea->id,
-            $validated['status']
+        if (! $shouldNotify) {
+            $message = 'Shortlist status updated.';
+            if ($validated['status'] === 'shortlisted' && $alreadyNotified) {
+                $message .= ' Notification was not sent again. Use Reminder to resend.';
+            }
+
+            return back()->with('status', $message);
+        }
+
+        $idea->loadMissing(['registration.teacher', 'registration.school']);
+        $delivery = $this->deliverShortlistNotification(
+            $competition,
+            $idea,
+            $smsInput,
+            'idea-shortlisted-'.$idea->ulid,
+            false
         );
 
-        return back()->with('status', 'Shortlist status updated.');
+        if ($delivery['email_sent'] || ($delivery['sms']['ok'] ?? false)) {
+            $shortlist->update(['notified_at' => now()]);
+        }
+
+        return back()->with('status', 'Shortlist status updated. '.$delivery['summary']);
+    }
+
+    public function sendShortlistReminder(
+        Request $request,
+        Competition $competition,
+        CompetitionIdea $idea
+    ): RedirectResponse {
+        if ($idea->competition_id !== $competition->id) {
+            abort(404);
+        }
+
+        $smsInput = $this->validatedSmsSendInput($request);
+        $shortlist = CompetitionShortlist::query()
+            ->where('competition_idea_id', $idea->id)
+            ->first();
+
+        if (! $shortlist || $shortlist->status !== 'shortlisted') {
+            return back()->with('error', 'Reminders can only be sent for shortlisted ideas.');
+        }
+
+        if (! $shortlist->hasSentShortlistNotification()) {
+            return back()->with('error', 'Send the first shortlist notification before sending a reminder.');
+        }
+
+        if (! $shortlist->canSendShortlistReminder()) {
+            $max = CompetitionShortlist::maxReminders();
+
+            return back()->with('error', "Maximum of {$max} reminder(s) already sent for this shortlist.");
+        }
+
+        $registration = $idea->registration;
+        if (! filled($registration?->resolvedTeacherEmail()) && ! filled($registration?->resolvedTeacherPhone())) {
+            return back()->with('error', 'This idea has no teacher email or phone on file.');
+        }
+
+        $idea->loadMissing(['registration.teacher', 'registration.school']);
+        $delivery = $this->deliverShortlistNotification(
+            $competition,
+            $idea,
+            $smsInput,
+            'idea-shortlist-reminder-'.$idea->ulid.'-'.((int) $shortlist->reminder_count + 1),
+            true
+        );
+
+        if (! $delivery['email_sent'] && ! ($delivery['sms']['ok'] ?? false)) {
+            return back()->with('error', 'Could not send reminder by email or SMS. Check teacher contact details and try again.');
+        }
+
+        $shortlist->update([
+            'reminder_count' => (int) $shortlist->reminder_count + 1,
+            'last_reminder_sent_at' => now(),
+        ]);
+
+        return back()->with('status', $delivery['summary']);
+    }
+
+    public function updateIdeaFeedback(
+        Request $request,
+        Competition $competition,
+        CompetitionIdea $idea
+    ): RedirectResponse {
+        if ($idea->competition_id !== $competition->id) {
+            abort(404);
+        }
+
+        $validated = $request->validate([
+            'admin_feedback' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        $feedback = trim((string) ($validated['admin_feedback'] ?? ''));
+
+        $idea->update([
+            'admin_feedback' => $feedback === '' ? null : $feedback,
+        ]);
+
+        $this->logStageEvent(
+            $competition,
+            'idea_admin_feedback_saved',
+            "School feedback updated for {$idea->registration?->resolvedSchoolName()}.",
+            ['idea_ulid' => $idea->ulid, 'has_feedback' => $feedback !== '']
+        );
+
+        return back()->with('status', $feedback === '' ? 'School feedback cleared.' : 'School feedback saved.');
+    }
+
+    /**
+     * @param  array{send_sms: bool, sms_message: string, sms_sender_id: string}  $smsInput
+     * @return array{email_sent: bool, sms: array<string, mixed>, summary: string}
+     */
+    private function deliverShortlistNotification(
+        Competition $competition,
+        CompetitionIdea $idea,
+        array $smsInput,
+        string $idempotencyKey,
+        bool $isReminder
+    ): array {
+        $registration = $idea->registration;
+        $teacherEmail = $registration?->resolvedTeacherEmail() ?? '';
+        $emailSent = false;
+
+        if ($registration && filled($teacherEmail)) {
+            try {
+                Mail::to($teacherEmail)->send(
+                    new CompetitionIdeaShortlistedMail(
+                        $competition,
+                        $registration,
+                        $idea,
+                        $competition->participantUrl(),
+                        $isReminder
+                    )
+                );
+                $emailSent = true;
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
+
+        $smsResult = ['ok' => false, 'skipped' => true, 'reason' => 'not_requested'];
+        if ($smsInput['send_sms']) {
+            if ($registration) {
+                $smsResult = $this->dispatchCompetitionSms(
+                    $competition,
+                    $registration,
+                    $smsInput['sms_message'],
+                    $smsInput['sms_sender_id'],
+                    $isReminder ? 'idea_shortlist_reminder_sms' : 'idea_shortlisted_sms',
+                    $idempotencyKey
+                );
+            } else {
+                $smsResult = ['ok' => false, 'skipped' => true, 'reason' => 'invalid_phone'];
+            }
+        }
+
+        if ($emailSent) {
+            $emailPhrase = ($isReminder ? 'Reminder email' : 'Shortlist email').' sent to '.$teacherEmail.'.';
+        } elseif (! filled($teacherEmail)) {
+            $emailPhrase = 'No teacher email was available, so email was skipped.';
+        } else {
+            $emailPhrase = 'Email could not be sent.';
+        }
+
+        $summary = $emailPhrase.' '.$this->smsStatusPhrase($smsResult);
+
+        $this->logStageEvent(
+            $competition,
+            $isReminder ? 'idea_shortlist_reminder_sent' : 'idea_shortlist_notification_sent',
+            $summary,
+            [
+                'idea_ulid' => $idea->ulid,
+                'email_sent' => $emailSent,
+                'teacher_email' => filled($teacherEmail) ? $teacherEmail : null,
+                'sms' => $smsResult,
+            ]
+        );
+
+        return [
+            'email_sent' => $emailSent,
+            'sms' => $smsResult,
+            'summary' => $summary,
+        ];
     }
 
     private function competitionRegistrationsQuery(Request $request, Competition $competition): Builder
@@ -1713,7 +1931,12 @@ class CompetitionController extends Controller
     private function smsStatusPhrase(array $smsResult): string
     {
         if ($smsResult['ok'] ?? false) {
-            return 'SMS sent to '.($smsResult['to'] ?? 'teacher').'.';
+            $phrase = 'SMS sent to '.($smsResult['to'] ?? 'teacher').'.';
+            if (isset($smsResult['credits'])) {
+                $phrase .= ' Credits deducted: '.(int) $smsResult['credits'].'.';
+            }
+
+            return $phrase;
         }
 
         if ($smsResult['skipped'] ?? false) {

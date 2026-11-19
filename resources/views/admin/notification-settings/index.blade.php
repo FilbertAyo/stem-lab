@@ -124,6 +124,38 @@
                             <div class="form-text">Sent automatically when a teacher final-submits an idea (not edited at send time).</div>
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label" for="sms_template_competition_idea_shortlisted">Idea shortlisted SMS</label>
+                            <textarea
+                                class="form-control @error('sms_template_competition_idea_shortlisted') is-invalid @enderror"
+                                name="sms_template_competition_idea_shortlisted"
+                                id="sms_template_competition_idea_shortlisted"
+                                rows="3"
+                                maxlength="480"
+                                required
+                            >{{ old('sms_template_competition_idea_shortlisted', $templates['idea_shortlisted']) }}</textarea>
+                            @error('sms_template_competition_idea_shortlisted')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text">Default text when an admin shortlists an idea. They can still edit it before sending.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="sms_template_competition_idea_shortlist_reminder">Idea shortlist reminder SMS</label>
+                            <textarea
+                                class="form-control @error('sms_template_competition_idea_shortlist_reminder') is-invalid @enderror"
+                                name="sms_template_competition_idea_shortlist_reminder"
+                                id="sms_template_competition_idea_shortlist_reminder"
+                                rows="3"
+                                maxlength="480"
+                                required
+                            >{{ old('sms_template_competition_idea_shortlist_reminder', $templates['idea_shortlist_reminder']) }}</textarea>
+                            @error('sms_template_competition_idea_shortlist_reminder')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text">Default text for a later reminder. Admins edit it in the reminder dialog before it is sent.</div>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Save notification settings</button>
                     </form>
                 </div>

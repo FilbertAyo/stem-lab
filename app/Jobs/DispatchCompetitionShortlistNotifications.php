@@ -32,7 +32,8 @@ class DispatchCompetitionShortlistNotifications implements ShouldQueue
             return;
         }
 
-        // Placeholder for channel integrations (mail/sms/in-app) while keeping heavy dispatch async.
+        // Kept for any jobs already on the queue. New shortlist email and SMS are sent
+        // from the admin confirm action so the edited message is used and is not sent twice.
         Log::info('Competition shortlist notification queued', [
             'competition' => $competition->name,
             'competition_id' => $competition->id,
