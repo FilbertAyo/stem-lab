@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CompetitionRegistration;
+use App\Models\SubscriptionPackage;
 use App\Models\User;
 use App\Support\TanzaniaPhone;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -11,7 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -78,12 +81,75 @@ class UserController extends Controller
             'subscriptionOrders' => fn ($query) => $query->with('package')->latest('id')->limit(10),
         ]);
 
+        $packages = SubscriptionPackage::query()
+            ->ordered()
+            ->get()
+            ->keyBy('slug');
+
         return view('admin.users.show', [
             'user' => $user,
+            'packages' => $packages,
             'backRoute' => $user->role === 'student'
                 ? route('admin.users.students')
                 : route('admin.users.teachers'),
         ]);
+    }
+
+    /**
+     * Assign or clear a subscription plan for a teacher or student.
+     */
+    public function updateSubscription(Request $request, User $user): RedirectResponse
+    {
+        if (! in_array($user->role, ['teacher', 'student'], true)) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'Only teacher and student accounts can have plans managed here.');
+        }
+
+        $validated = $request->validate([
+            'plan' => ['required', Rule::in(['none', 'free-trial', 'individual', 'public-school'])],
+            'expires_at' => ['nullable', 'date'],
+            'mark_trial_used' => ['nullable', 'boolean'],
+        ]);
+
+        if ($validated['plan'] === 'none') {
+            $user->forceFill([
+                'subscription_tier' => null,
+                'subscription_expires_at' => null,
+                'subscription_renewal_reminded_at' => null,
+            ])->save();
+
+            return redirect()
+                ->route('admin.users.show', $user)
+                ->with('success', 'Plan removed. User now has no active plan.');
+        }
+
+        $package = SubscriptionPackage::query()
+            ->where('slug', $validated['plan'])
+            ->firstOrFail();
+
+        $expiresAt = null;
+        if (in_array($package->slug, ['free-trial', 'individual'], true)) {
+            $expiresAt = filled($validated['expires_at'] ?? null)
+                ? Carbon::parse($validated['expires_at'], config('app.timezone'))->endOfDay()
+                : now()->addDays(max(1, (int) $package->billing_period_days));
+        }
+
+        $update = [
+            'subscription_tier' => $package->tier_key,
+            'subscription_expires_at' => $expiresAt,
+            'subscription_renewal_reminded_at' => null,
+        ];
+
+        if ($package->slug === 'free-trial' && ($request->boolean('mark_trial_used') || $user->trial_used_at === null)) {
+            $update['trial_used_at'] = $user->trial_used_at ?? now();
+        }
+
+        $user->forceFill($update)->save();
+
+        return redirect()
+            ->route('admin.users.show', $user)
+            ->with('success', "Plan updated to {$package->name}.");
     }
 
     /**
@@ -370,7 +436,8 @@ class UserController extends Controller
             'teacher_phone' => $updateData['phone'],
         ]);
 
-        return $this->redirectToTeachersIndex($request)
+        return redirect()
+            ->route('admin.users.show', $user)
             ->with('success', 'Teacher updated successfully.');
     }
 

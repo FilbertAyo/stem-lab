@@ -67,6 +67,40 @@ test('students list links view to a dedicated show page with plan details', func
     $show->assertOk()
         ->assertSee($student->name)
         ->assertSee('Subscription plan')
-        ->assertSee('Individual')
-        ->assertSee('Access ends');
+        ->assertSee('Manage plan')
+        ->assertSee('Individual');
+});
+
+test('admin can assign and clear a user subscription plan from the show page', function () {
+    actingAsAdmin();
+    $this->seed(\Database\Seeders\SubscriptionPackageSeeder::class);
+
+    $student = User::factory()->create([
+        'role' => 'student',
+        'subscription_tier' => null,
+        'subscription_expires_at' => null,
+    ]);
+
+    $assign = $this->put(route('admin.users.subscription.update', $student), [
+        'plan' => 'individual',
+        'expires_at' => now()->addDays(20)->format('Y-m-d'),
+    ]);
+
+    $assign->assertRedirect(route('admin.users.show', $student));
+    $student->refresh();
+
+    expect($student->subscription_tier)->toBe('individual')
+        ->and($student->subscription_expires_at)->not->toBeNull()
+        ->and($student->hasActivePrepaidAccess())->toBeTrue();
+
+    $clear = $this->put(route('admin.users.subscription.update', $student), [
+        'plan' => 'none',
+    ]);
+
+    $clear->assertRedirect(route('admin.users.show', $student));
+    $student->refresh();
+
+    expect($student->subscription_tier)->toBeNull()
+        ->and($student->subscription_expires_at)->toBeNull()
+        ->and($student->adminPlanLabel())->toBe('No plan');
 });
