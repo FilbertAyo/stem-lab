@@ -9,16 +9,9 @@
     <title>{{ config('app.name', 'Adilisha - Admin') }}</title>
 
     <link rel="icon" href="{{ asset('images/logo/favicon.png') }}" type="image/x-icon">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
-        id="main-font-link">
     <link rel="stylesheet" href="{{ asset('admin/fonts/tabler-icons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/fonts/feather.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/fonts/fontawesome.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/fonts/material.css') }}">
-    <!-- [Template CSS Files] -->
-    <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}" id="main-style-link">
-    <link rel="stylesheet" href="{{ asset('admin/css/style-preset.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/style.min.css') }}" id="main-style-link">
+    <link rel="stylesheet" href="{{ asset('admin/css/style-preset.min.css') }}">
     @stack('styles')
 
 </head>
@@ -73,10 +66,6 @@
     <script src="{{ asset('admin/js/fonts/custom-font.js') }}"></script>
     <script src="{{ asset('admin/js/pcoded.js') }}"></script>
     <script src="{{ asset('admin/js/plugins/feather.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeo5GpG9fDgfz5xWsyhZPJfX2kwQ2vI5DkRtZB1z9+nJoZ+n" crossorigin="anonymous">
-    </script>
-
 
     <script>
         layout_change('light');
@@ -92,10 +81,6 @@
 
     <script>
         preset_change("preset-1");
-    </script>
-
-    <script>
-        font_change("Public-Sans");
     </script>
 
     @stack('scripts')
