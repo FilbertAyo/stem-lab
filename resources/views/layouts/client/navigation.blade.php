@@ -99,6 +99,18 @@
                 </a>
               </li>
               <li>
+                <a href="{{ route('client.billing.index') }}" class="dropdown-item d-flex align-items-center gap-2">
+                  <i class="bi bi-credit-card"></i>
+                  <span>My plan</span>
+                </a>
+              </li>
+              <li>
+                <a href="{{ route('client.billing.transactions') }}" class="dropdown-item d-flex align-items-center gap-2">
+                  <i class="bi bi-receipt"></i>
+                  <span>Billing history</span>
+                </a>
+              </li>
+              <li>
                 <form method="POST" action="{{ route('logout') }}">
                   @csrf
                   <button type="submit" class="dropdown-item d-flex align-items-center gap-2">

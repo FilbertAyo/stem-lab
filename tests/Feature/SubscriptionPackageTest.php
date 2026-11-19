@@ -16,15 +16,23 @@ function adminSubscriptionPackagesUrl(string $path = '/'): string
     return 'http://'.$host.'/subscription-packages'.$path;
 }
 
-test('subscription package seeder creates three packages with expected slugs', function () {
+test('subscription package seeder creates dashboard packages plus yearly checkout sku', function () {
     $this->seed(SubscriptionPackageSeeder::class);
 
-    expect(SubscriptionPackage::query()->count())->toBe(3)
-        ->and(SubscriptionPackage::query()->pluck('slug')->all())->toBe([
+    expect(SubscriptionPackage::query()->count())->toBe(4)
+        ->and(SubscriptionPackage::query()->pluck('slug')->all())->toContain(
             'free-trial',
             'individual',
+            'individual-yearly',
             'public-school',
-        ]);
+        );
+
+    $yearly = SubscriptionPackage::query()->where('slug', 'individual-yearly')->first();
+
+    expect($yearly)->not->toBeNull()
+        ->and($yearly->tier_key)->toBe('individual')
+        ->and($yearly->price_amount_tzs)->toBe(10000)
+        ->and($yearly->billing_period_days)->toBe(365);
 });
 
 test('admin can view subscription packages index', function () {
@@ -40,6 +48,8 @@ test('admin can view subscription packages index', function () {
         ->assertSee('Subscription Packages')
         ->assertSee('Free trial')
         ->assertSee('Individual')
+        ->assertSee('Individual yearly')
+        ->assertSee('Yearly checkout')
         ->assertSee('Public secondary school');
 });
 
@@ -68,5 +78,6 @@ test('client dashboard includes seeded package name', function () {
 
     $response->assertOk()
         ->assertSee('Platform subscription')
-        ->assertSee('Free trial');
+        ->assertSee('Free trial')
+        ->assertDontSee('Individual yearly');
 });

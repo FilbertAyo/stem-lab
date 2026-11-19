@@ -32,7 +32,7 @@ class SubscriptionPackageController extends Controller
             'package' => [
                 'required',
                 'string',
-                Rule::in(['free-trial', 'individual']),
+                Rule::in(['free-trial', 'individual', 'individual-yearly']),
             ],
         ]);
 
@@ -44,9 +44,9 @@ class SubscriptionPackageController extends Controller
                 ->with('error', 'You already have an active plan through your STEM club.');
         }
 
-        if ($validated['package'] === 'individual') {
+        if (in_array($validated['package'], ['individual', 'individual-yearly'], true)) {
             try {
-                $order = $checkoutService->startIndividualCheckout($user);
+                $order = $checkoutService->startIndividualCheckout($user, $validated['package']);
             } catch (Throwable $exception) {
                 report($exception);
 

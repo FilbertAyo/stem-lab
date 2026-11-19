@@ -91,8 +91,13 @@ class AppServiceProvider extends ServiceProvider
                 ->first()
                 ?? Club::query()->active()->ordered()->first();
 
+            $packages = SubscriptionPackage::query()->active()->ordered()->get();
+
             $view->with([
-                'subscriptionPackages' => SubscriptionPackage::query()->active()->ordered()->get(),
+                'subscriptionPackages' => $packages
+                    ->reject(fn (SubscriptionPackage $package): bool => $package->slug === 'individual-yearly')
+                    ->values(),
+                'yearlyPackage' => $packages->firstWhere('slug', 'individual-yearly'),
                 'publicSchoolClub' => $publicSchoolClub,
             ]);
         });

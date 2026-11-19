@@ -5,11 +5,22 @@
   $isLinkedStudent = $isStudent && $packageUser->hasPublicSchoolAccess();
   $isUnlinkedStudent = $isStudent && ! $packageUser->isClubLinked();
   $publicSchoolPackage = $subscriptionPackages->firstWhere('slug', 'public-school');
+  $yearlyPackage = $yearlyPackage ?? null;
+  $monthlyPackage = $subscriptionPackages->firstWhere('slug', 'individual');
+  $twelveMonthCost = $monthlyPackage ? ((int) $monthlyPackage->price_amount_tzs * 12) : 0;
+  $yearlyCharge = $yearlyPackage ? (int) $yearlyPackage->price_amount_tzs : 0;
+  $yearlySavings = max(0, $twelveMonthCost - $yearlyCharge);
   $activePackageSlug = $packageUser?->activeSubscriptionPackageSlug();
   $hasLockedPlan = $packageUser?->hasLockedSubscriptionPlan() ?? false;
   $paymentsEnabled = (bool) config('subscriptions.payments_enabled', false);
   $trialUsed = $packageUser?->trial_used_at !== null;
   $hasActivePrepaid = $packageUser?->hasActivePrepaidAccess() ?? false;
+  $expiresAt = $packageUser?->subscription_expires_at;
+  $secondsLeft = ($expiresAt && $expiresAt->isFuture()) ? ($expiresAt->getTimestamp() - time()) : 0;
+  $prepaidDaysLeft = $secondsLeft > 0 ? (int) ceil($secondsLeft / 86400) : 0;
+  $prepaidEndsToday = $secondsLeft > 0 && $prepaidDaysLeft <= 1;
+  $onTrial = $hasActivePrepaid && $packageUser?->subscription_tier === 'trial';
+  $dashboardPackages = $subscriptionPackages->reject(fn ($item) => $item->slug === 'individual-yearly');
 @endphp
 
 <div class="col-12 mb-3" id="platform-subscription">
@@ -17,6 +28,54 @@
    Platform subscription
   </h5>
 </div>
+
+@if ($paymentsEnabled && $packageUser && ! $isLinkedStudent)
+  <div class="col-12 mb-4">
+    @if ($hasLockedPlan)
+      <div class="alert alert-success d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-0">
+        <div>
+          <strong>Public-school access is active.</strong>
+          <span class="d-block small">Your STEM club covers platform access at no cost.</span>
+        </div>
+        <a href="{{ route('client.billing.index') }}" class="btn btn-sm btn-outline-success">My plan</a>
+      </div>
+    @elseif ($onTrial)
+      <div class="alert alert-info d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-0">
+        <div>
+          <strong>
+            @if ($prepaidEndsToday)
+              Your free trial ends today.
+            @else
+              {{ $prepaidDaysLeft }} {{ $prepaidDaysLeft === 1 ? 'day' : 'days' }} left on your free trial.
+            @endif
+          </strong>
+          @if ($expiresAt)
+            <span class="d-block small">Access continues until {{ $expiresAt->timezone(config('app.timezone'))->format('d M Y') }}. Pay anytime to keep using the platform.</span>
+          @endif
+        </div>
+        <a href="{{ route('client.billing.index') }}" class="btn btn-sm btn-dark">Pay now</a>
+      </div>
+    @elseif ($hasActivePrepaid)
+      <div class="alert alert-success d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-0">
+        <div>
+          <strong>Individual plan is active.</strong>
+          @if ($expiresAt)
+            <span class="d-block small">Prepaid access ends {{ $expiresAt->timezone(config('app.timezone'))->format('d M Y') }}.</span>
+          @endif
+        </div>
+        <a href="{{ route('client.billing.index') }}" class="btn btn-sm btn-outline-success">Manage billing</a>
+      </div>
+    @else
+      <div class="alert alert-warning d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-0">
+        <div>
+          <strong>Subscribe or join a public-school club to continue.</strong>
+          <span class="d-block small">Pay with mobile money, or get free access through an approved STEM club.</span>
+        </div>
+        <a href="{{ route('client.billing.index') }}" class="btn btn-sm btn-dark">See options</a>
+      </div>
+    @endif
+  </div>
+@endif
 
 @if($isLinkedStudent && $publicSchoolPackage)
   <div class="row">
@@ -48,29 +107,32 @@
   </div>
 @else
 <div class="row">
-  @foreach ($subscriptionPackages as $package)
+  @foreach ($dashboardPackages as $package)
     @php
       $isActivePackage = $activePackageSlug === $package->slug;
       $ctaAction = $package->resolvedCtaAction($isUnlinkedStudent);
+      $isIndividualCard = $package->slug === 'individual';
       $isPaidPackage = in_array($package->slug, ['free-trial', 'individual'], true);
       $trialUnavailable = $package->slug === 'free-trial' && $trialUsed;
-      $canRenewIndividual = $package->slug === 'individual' && $paymentsEnabled && ! $hasLockedPlan && ! $isActivePackage;
-      $packageActionDisabled = $isActivePackage
+      $canRenewIndividual = $isIndividualCard && $paymentsEnabled && ! $hasLockedPlan;
+      $packageActionDisabled = ($isActivePackage && ! $canRenewIndividual)
         || ($hasLockedPlan && ! $isActivePackage)
         || ($isPaidPackage && ! $paymentsEnabled)
-        || $trialUnavailable;
+        || $trialUnavailable
+        || ($package->slug === 'free-trial' && $hasActivePrepaid && ! $isActivePackage);
       $ctaLabel = $package->cta_label;
-      if ($canRenewIndividual && ($trialUsed || $packageUser?->subscription_tier === 'individual' || $packageUser?->subscription_tier === 'trial')) {
-          $ctaLabel = $hasActivePrepaid ? $package->cta_label : 'Renew with mobile money';
-      }
-      if ($package->slug === 'individual' && $paymentsEnabled && ! $hasLockedPlan && ! $isActivePackage && ! $hasActivePrepaid) {
-          $ctaLabel = $trialUsed || filled($packageUser?->subscription_tier)
-              ? 'Renew with mobile money'
-              : 'Pay with mobile money';
+      if ($isIndividualCard && $paymentsEnabled && ! $hasLockedPlan) {
+          if ($hasActivePrepaid) {
+              $ctaLabel = 'Extend with mobile money';
+          } elseif ($trialUsed || filled($packageUser?->subscription_tier)) {
+              $ctaLabel = 'Renew with mobile money';
+          } else {
+              $ctaLabel = 'Pay with mobile money';
+          }
       }
     @endphp
     <div class="col-lg-6 col-xl-4 mb-7 mb-xl-0 d-flex align-items-stretch">
-      <div class="card border shadow-none w-100 {{ $isActivePackage ? 'border-success-subtle' : '' }}" data-aos="fade-up" data-aos-delay="{{ $package->sort_order * 100 }}" data-aos-duration="1000">
+      <div class="card border shadow-none w-100 {{ $isActivePackage ? 'border-success-subtle' : '' }}" @if($isIndividualCard) data-individual-card @endif data-aos="fade-up" data-aos-delay="{{ $package->sort_order * 100 }}" data-aos-duration="1000">
         <div class="card-body p-7 p-xxl-5 d-flex flex-column gap-8">
           <div class="d-flex flex-column gap-6">
             <div class="hstack gap-3 flex-wrap">
@@ -78,23 +140,76 @@
               @if ($isActivePackage)
                 <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Your plan</span>
               @endif
-              @if ($package->badge_label)
+              @if ($package->slug === 'free-trial' && $onTrial)
+                <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">
+                  @if ($prepaidEndsToday)
+                    Ends today
+                  @else
+                    {{ $prepaidDaysLeft }} {{ $prepaidDaysLeft === 1 ? 'day' : 'days' }} left
+                  @endif
+                </span>
+              @endif
+              @if ($package->badge_label && ! $isIndividualCard)
                 <span class="badge text-bg-dark hstack gap-2"><iconify-icon icon="lucide:flame" class="fs-5"></iconify-icon>{{ $package->badge_label }}</span>
               @endif
-            </div>
-            <div class="hstack gap-2 @if($package->price_compare) flex-wrap @endif">
-              @if ($package->price_compare)
-                <h3 class="mb-0 text-opacity-50 text-dark"><del>{{ $package->price_compare }}</del></h3>
-              @endif
-              @if ($package->price_heading)
-                <h3 class="mb-0">{{ $package->price_heading }}</h3>
-              @endif
-              @if ($package->price_subheading)
-                <p class="mb-0">{{ $package->price_subheading }}</p>
+              @if ($isIndividualCard)
+                <span class="badge text-bg-dark hstack gap-2 js-individual-badge" data-monthly-badge="{{ $package->badge_label }}" data-yearly-badge="{{ $yearlyPackage?->badge_label }}" @if(! $package->badge_label) hidden @endif>
+                  <iconify-icon icon="lucide:flame" class="fs-5"></iconify-icon>
+                  <span>{{ $package->badge_label }}</span>
+                </span>
               @endif
             </div>
+            @if ($isIndividualCard && $yearlyPackage)
+              <div class="btn-group" role="group" aria-label="Billing period">
+                <button type="button" class="btn btn-sm btn-dark js-period-btn" data-period="monthly" aria-pressed="true">Monthly</button>
+                <button type="button" class="btn btn-sm btn-outline-dark js-period-btn" data-period="yearly" aria-pressed="false">Yearly</button>
+              </div>
+            @endif
+            @if ($isIndividualCard && $yearlyPackage)
+              <div class="js-period-copy" data-period="monthly">
+                <div class="hstack gap-2 @if($package->price_compare) flex-wrap @endif">
+                  @if ($package->price_compare)
+                    <h3 class="mb-0 text-opacity-50 text-dark"><del>{{ $package->price_compare }}</del></h3>
+                  @endif
+                  @if ($package->price_heading)
+                    <h3 class="mb-0">{{ $package->price_heading }}</h3>
+                  @endif
+                  @if ($package->price_subheading)
+                    <p class="mb-0">{{ $package->price_subheading }}</p>
+                  @endif
+                </div>
+              </div>
+              <div class="js-period-copy d-none" data-period="yearly">
+                <div class="hstack gap-2 flex-wrap">
+                  @if ($twelveMonthCost > 0)
+                    <h3 class="mb-0 text-opacity-50 text-dark"><del>{{ number_format($twelveMonthCost) }}</del></h3>
+                  @endif
+                  @if ($yearlyPackage->price_heading)
+                    <h3 class="mb-0">{{ $yearlyPackage->price_heading }}</h3>
+                  @endif
+                  @if ($yearlyPackage->price_subheading)
+                    <p class="mb-0">{{ $yearlyPackage->price_subheading }}</p>
+                  @endif
+                </div>
+                @if ($yearlySavings > 0)
+                  <p class="small text-success mb-0">Save {{ number_format($yearlySavings) }} TZS compared with 12 monthly payments.</p>
+                @endif
+              </div>
+            @else
+              <div class="hstack gap-2 @if($package->price_compare) flex-wrap @endif">
+                @if ($package->price_compare)
+                  <h3 class="mb-0 text-opacity-50 text-dark"><del>{{ $package->price_compare }}</del></h3>
+                @endif
+                @if ($package->price_heading)
+                  <h3 class="mb-0">{{ $package->price_heading }}</h3>
+                @endif
+                @if ($package->price_subheading)
+                  <p class="mb-0">{{ $package->price_subheading }}</p>
+                @endif
+              </div>
+            @endif
             @if ($package->description)
-              <p class="mb-0">{{ $package->description }}</p>
+              <p class="mb-0 js-period-description" data-monthly-description="{{ $package->description }}" @if($yearlyPackage) data-yearly-description="{{ $yearlyPackage->description }}" @endif>{{ $package->description }}</p>
             @endif
           </div>
           @if (! empty($package->features))
@@ -110,9 +225,9 @@
               </ul>
             </div>
           @endif
-          @if ($isActivePackage && $package->slug === 'individual' && $paymentsEnabled && ! $hasLockedPlan)
-            <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="{{ $ctaAction }}" data-slug="{{ $package->slug }}">
-              <span class="fw-semibold">Extend with mobile money</span>
+          @if ($isActivePackage && $isIndividualCard && $paymentsEnabled && ! $hasLockedPlan)
+            <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="{{ $ctaAction }}" data-slug="{{ $package->slug }}" @if($yearlyPackage) data-yearly-slug="{{ $yearlyPackage->slug }}" data-monthly-label="{{ $ctaLabel }}" data-yearly-label="Extend yearly" @endif>
+              <span class="fw-semibold js-package-cta-label">{{ $ctaLabel }}</span>
               <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
             </a>
           @elseif ($isActivePackage)
@@ -135,8 +250,8 @@
               </span>
             </button>
           @else
-            <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="{{ $ctaAction }}" data-slug="{{ $package->slug }}">
-              <span class="fw-semibold">{{ $ctaLabel }}</span>
+            <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="{{ $ctaAction }}" data-slug="{{ $package->slug }}" @if($isIndividualCard && $yearlyPackage) data-yearly-slug="{{ $yearlyPackage->slug }}" data-monthly-label="{{ $ctaLabel }}" data-yearly-label="{{ $hasActivePrepaid ? 'Extend yearly' : 'Pay yearly' }}" @endif>
+              <span class="fw-semibold js-package-cta-label">{{ $ctaLabel }}</span>
               <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
             </a>
           @endif
@@ -227,18 +342,6 @@
   <input type="hidden" name="package" id="package-select-input" value="">
 </form>
 
-@if ($paymentsEnabled && $packageUser && ! $hasLockedPlan && $packageUser->subscription_expires_at)
-  <div class="col-12 mt-2">
-    <p class="small text-muted mb-0">
-      @if ($packageUser->hasActivePrepaidAccess())
-        Current prepaid access ends {{ $packageUser->subscription_expires_at->timezone(config('app.timezone'))->format('d M Y') }}.
-      @else
-        Your previous prepaid access ended {{ $packageUser->subscription_expires_at->timezone(config('app.timezone'))->format('d M Y') }}. Renew to continue.
-      @endif
-    </p>
-  </div>
-@endif
-
 {{-- Toast: subscription action feedback --}}
 <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;">
   <div id="package-action-toast" class="toast align-items-center border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
@@ -279,6 +382,62 @@
     }
   }
 
+  document.querySelectorAll('[data-individual-card]').forEach(function(card) {
+    var buttons = card.querySelectorAll('.js-period-btn');
+    var copies = card.querySelectorAll('.js-period-copy');
+    var action = card.querySelector('.js-package-action');
+    var badge = card.querySelector('.js-individual-badge');
+    var description = card.querySelector('.js-period-description');
+
+    function setPeriod(period) {
+      buttons.forEach(function(btn) {
+        var active = btn.getAttribute('data-period') === period;
+        btn.classList.toggle('btn-dark', active);
+        btn.classList.toggle('btn-outline-dark', !active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      copies.forEach(function(copy) {
+        copy.classList.toggle('d-none', copy.getAttribute('data-period') !== period);
+      });
+      if (action) {
+        var yearlySlug = action.getAttribute('data-yearly-slug');
+        if (yearlySlug) {
+          action.setAttribute('data-slug', period === 'yearly' ? yearlySlug : 'individual');
+          var label = action.querySelector('.js-package-cta-label');
+          if (label) {
+            label.textContent = period === 'yearly'
+              ? (action.getAttribute('data-yearly-label') || 'Pay yearly')
+              : (action.getAttribute('data-monthly-label') || 'Pay with mobile money');
+          }
+        }
+      }
+      if (badge) {
+        var text = period === 'yearly' ? badge.getAttribute('data-yearly-badge') : badge.getAttribute('data-monthly-badge');
+        var span = badge.querySelector('span');
+        if (text) {
+          badge.hidden = false;
+          if (span) span.textContent = text;
+        } else {
+          badge.hidden = true;
+        }
+      }
+      if (description) {
+        var next = period === 'yearly'
+          ? description.getAttribute('data-yearly-description')
+          : description.getAttribute('data-monthly-description');
+        if (next) {
+          description.textContent = next;
+        }
+      }
+    }
+
+    buttons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        setPeriod(btn.getAttribute('data-period') || 'monthly');
+      });
+    });
+  });
+
   document.querySelectorAll('.js-package-action').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
@@ -305,14 +464,14 @@
         return;
       }
 
-      if (selectForm && selectInput && selectForm.getAttribute('data-disabled') !== '1' && (packageSlug === 'free-trial' || packageSlug === 'individual')) {
+      if (selectForm && selectInput && selectForm.getAttribute('data-disabled') !== '1' && (packageSlug === 'free-trial' || packageSlug === 'individual' || packageSlug === 'individual-yearly')) {
         selectInput.value = packageSlug;
         lockPackageActions();
         selectForm.submit();
         return;
       }
 
-      if (packageSlug === 'free-trial' || packageSlug === 'individual') {
+      if (packageSlug === 'free-trial' || packageSlug === 'individual' || packageSlug === 'individual-yearly') {
         return;
       }
 

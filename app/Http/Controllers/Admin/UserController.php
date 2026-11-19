@@ -107,7 +107,7 @@ class UserController extends Controller
         }
 
         $validated = $request->validate([
-            'plan' => ['required', Rule::in(['none', 'free-trial', 'individual', 'public-school'])],
+            'plan' => ['required', Rule::in(['none', 'free-trial', 'individual', 'individual-yearly', 'public-school'])],
             'expires_at' => ['nullable', 'date'],
             'mark_trial_used' => ['nullable', 'boolean'],
         ]);
@@ -129,7 +129,7 @@ class UserController extends Controller
             ->firstOrFail();
 
         $expiresAt = null;
-        if (in_array($package->slug, ['free-trial', 'individual'], true)) {
+        if (in_array($package->slug, ['free-trial', 'individual', 'individual-yearly'], true)) {
             $expiresAt = filled($validated['expires_at'] ?? null)
                 ? Carbon::parse($validated['expires_at'], config('app.timezone'))->endOfDay()
                 : now()->addDays(max(1, (int) $package->billing_period_days));

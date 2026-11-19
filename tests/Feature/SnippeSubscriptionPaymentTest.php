@@ -73,6 +73,39 @@ test('free trial can only be used once', function () {
         ->assertSessionHas('error');
 });
 
+test('yearly individual checkout charges yearly amount for 365 days', function () {
+    Http::fake([
+        'api.snippe.test/api/v1/sessions' => Http::response([
+            'code' => 201,
+            'data' => [
+                'reference' => 'sess_yearly123',
+                'checkout_url' => 'https://snippe.me/checkout/yearlytoken',
+                'short_code' => 'Yr12Cd',
+                'expires_at' => now()->addHour()->toIso8601String(),
+            ],
+        ], 201),
+    ]);
+
+    $teacher = User::factory()->create([
+        'role' => 'teacher',
+        'phone' => '+255712345678',
+    ]);
+
+    $response = $this->actingAs($teacher)
+        ->post(route('client.subscription-packages.select'), [
+            'package' => 'individual-yearly',
+        ]);
+
+    $response->assertRedirect('https://snippe.me/checkout/yearlytoken');
+
+    $order = SubscriptionOrder::query()->first();
+
+    expect($order)->not->toBeNull()
+        ->and($order->package_slug)->toBe('individual-yearly')
+        ->and($order->amount_tzs)->toBe(10000)
+        ->and($order->period_days)->toBe(365);
+});
+
 test('individual checkout redirects to snippe hosted session', function () {
     Http::fake([
         'api.snippe.test/api/v1/sessions' => Http::response([
@@ -225,11 +258,28 @@ test('unpaid users are blocked from learning when payments are enabled', functio
     $teacher = User::factory()->create([
         'role' => 'teacher',
         'subscription_tier' => null,
+        'trial_used_at' => now()->subDay(),
     ]);
 
     $response = $this->actingAs($teacher)->get(route('client.models.3d.index'));
 
-    $response->assertRedirect(route('dashboard').'#platform-subscription');
+    $response->assertRedirect(route('client.billing.index', ['paywall' => 1]));
+});
+
+test('unpaid teachers are blocked from competitions and weekly sessions', function () {
+    $teacher = User::factory()->create([
+        'role' => 'teacher',
+        'subscription_tier' => null,
+        'trial_used_at' => now()->subDay(),
+    ]);
+
+    $this->actingAs($teacher)
+        ->get(route('client.competitions.index'))
+        ->assertRedirect(route('client.billing.index', ['paywall' => 1]));
+
+    $this->actingAs($teacher)
+        ->get(route('client.weekly-sessions.index'))
+        ->assertRedirect(route('client.billing.index', ['paywall' => 1]));
 });
 
 test('public school club teachers keep free learning access', function () {

@@ -17,7 +17,7 @@ class SubscriptionCheckoutService
         private readonly SubscriptionSelectionService $selectionService,
     ) {}
 
-    public function startIndividualCheckout(User $user): SubscriptionOrder
+    public function startIndividualCheckout(User $user, string $slug = 'individual'): SubscriptionOrder
     {
         if (! $this->selectionService->paymentsEnabled()) {
             abort(403, 'Online subscription is not available yet.');
@@ -27,9 +27,13 @@ class SubscriptionCheckoutService
             abort(403, 'You already have an active plan through your STEM club.');
         }
 
+        if (! in_array($slug, ['individual', 'individual-yearly'], true)) {
+            abort(422, 'Unsupported checkout package.');
+        }
+
         $package = SubscriptionPackage::query()
             ->active()
-            ->where('slug', 'individual')
+            ->where('slug', $slug)
             ->firstOrFail();
 
         if (! $package->requires_payment || (int) $package->price_amount_tzs < 500) {
@@ -39,7 +43,7 @@ class SubscriptionCheckoutService
         return DB::transaction(function () use ($user, $package): SubscriptionOrder {
             $existing = SubscriptionOrder::query()
                 ->where('user_id', $user->id)
-                ->where('package_slug', 'individual')
+                ->where('package_slug', $package->slug)
                 ->open()
                 ->where(function ($query): void {
                     $query->whereNull('expires_at')

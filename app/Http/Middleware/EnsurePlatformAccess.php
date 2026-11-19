@@ -43,7 +43,7 @@ class EnsurePlatformAccess
         }
 
         return redirect()
-            ->to(route('dashboard').'#platform-subscription')
-            ->with('warning', 'Choose a package or link your STEM club to access learning content.');
+            ->route('client.billing.index', ['paywall' => 1])
+            ->with('warning', 'Subscribe or join a public-school STEM club to continue.');
     }
 }

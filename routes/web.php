@@ -28,6 +28,7 @@ use App\Http\Controllers\Client\MyStudentsController as ClientMyStudentsControll
 use App\Http\Controllers\Client\ProjectController as ClientProjectController;
 use App\Http\Controllers\Client\StudentClubController as ClientStudentClubController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
+use App\Http\Controllers\Client\BillingController as ClientBillingController;
 use App\Http\Controllers\Client\SubscriptionPackageController as ClientSubscriptionPackageController;
 use App\Http\Controllers\Client\TeacherNotificationController as ClientTeacherNotificationController;
 use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentController;
@@ -440,6 +441,9 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
         Route::get('/subscription-packages/cancel/{subscriptionOrder}', [ClientSubscriptionPackageController::class, 'cancel'])
             ->name('client.subscription-packages.cancel');
 
+        Route::get('/billing', [ClientBillingController::class, 'index'])->name('client.billing.index');
+        Route::get('/billing/transactions', [ClientBillingController::class, 'transactions'])->name('client.billing.transactions');
+
         Route::middleware('platform.access')->group(function () {
             Route::prefix('models/3d')->name('client.models.3d.')->middleware('redirect.legacy.public-id')->group(function () {
                 Route::get('/', [ClientModel3dController::class, 'index'])->name('index');
@@ -497,8 +501,41 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
 
         // Teacher-only routes
         Route::middleware('teacher')->group(function () {
-            Route::get('/my-students', [ClientMyStudentsController::class, 'index'])->name('client.my-students.index');
-            Route::get('/my-students/{student}', [ClientMyStudentsController::class, 'show'])->name('client.my-students.show');
+            Route::middleware('platform.access')->group(function () {
+                Route::get('/my-students', [ClientMyStudentsController::class, 'index'])->name('client.my-students.index');
+                Route::get('/my-students/{student}', [ClientMyStudentsController::class, 'show'])->name('client.my-students.show');
+
+                // Weekly Sessions routes
+                Route::prefix('weekly-sessions')->name('client.weekly-sessions.')->group(function () {
+                    Route::get('/', [\App\Http\Controllers\Client\WeeklySessionController::class, 'index'])->name('index');
+                    Route::get('/{weeklySession}', [\App\Http\Controllers\Client\WeeklySessionController::class, 'show'])->name('show');
+                    Route::get('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'createReport'])->name('report.create');
+                    Route::post('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'storeReport'])->name('report.store');
+                    Route::post('/{weeklySession}/report/upload-pdf', [\App\Http\Controllers\Client\WeeklySessionController::class, 'uploadPdfReport'])->name('report.upload-pdf');
+                    Route::get('/{weeklySession}/report/edit', [\App\Http\Controllers\Client\WeeklySessionController::class, 'editReport'])->name('report.edit');
+                    Route::put('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'updateReport'])->name('report.update');
+                });
+
+                // Competition routes for teachers
+                Route::prefix('competitions')->name('client.competitions.')->group(function () {
+                    Route::get('/', [ClientCompetitionController::class, 'index'])->name('index');
+                    Route::get('/{competition}/register/representatives', [ClientCompetitionController::class, 'registerRepresentatives'])->name('register.representatives');
+                    Route::post('/{competition}/register/representatives', [ClientCompetitionController::class, 'storeRegistrationRepresentatives'])->name('register.representatives.store');
+                    Route::post('/{competition}/register/bulk-students', [ClientCompetitionController::class, 'bulkImportStudents'])->name('register.bulk-students');
+                    Route::delete('/{competition}/register/pool-students', [ClientCompetitionController::class, 'clearPoolStudents'])->name('register.pool-students.clear');
+                    Route::get('/{competition}/register/csv-template', [ClientCompetitionController::class, 'downloadRegistrationCsvTemplate'])->name('register.csv-template');
+                    Route::get('/{competition}/register', [ClientCompetitionController::class, 'register'])->name('register');
+                    Route::post('/{competition}/register', [ClientCompetitionController::class, 'storeRegistration'])->name('register.store');
+                    Route::get('/{competition}/idea', [ClientCompetitionController::class, 'createIdea'])->name('idea');
+                    Route::post('/{competition}/idea', [ClientCompetitionController::class, 'storeIdea'])->name('idea.store');
+                    Route::get('/{competition}/prototype', [ClientCompetitionController::class, 'createPrototype'])->name('prototype');
+                    Route::post('/{competition}/prototype', [ClientCompetitionController::class, 'storePrototype'])->name('prototype.store');
+                    Route::get('/{competition}/prototype-modification', [ClientCompetitionController::class, 'createPrototypeModification'])->name('prototype-modification');
+                    Route::post('/{competition}/prototype-modification', [ClientCompetitionController::class, 'storePrototypeModification'])->name('prototype-modification.store');
+                    Route::delete('/{competition}/attachment', [ClientCompetitionController::class, 'deleteAttachment'])->name('attachment.delete');
+                    Route::get('/{competition}', [ClientCompetitionController::class, 'show'])->name('show');
+                });
+            });
 
             Route::prefix('notifications')->name('client.notifications.')->group(function () {
                 Route::get('/', [ClientTeacherNotificationController::class, 'index'])->name('index');
@@ -533,37 +570,6 @@ Route::middleware(['auth', 'track.client.activity'])->group(function () {
             Route::post('/students/credentials/bulk', [ClientStudentController::class, 'bulkProvision'])->name('client.students.credentials.bulk');
             Route::post('/students/{student}/credentials', [ClientStudentController::class, 'provision'])->name('client.students.credentials.store');
             Route::post('/students/{student}/credentials/reset', [ClientStudentController::class, 'resetPin'])->name('client.students.credentials.reset');
-
-            // Weekly Sessions routes
-            Route::prefix('weekly-sessions')->name('client.weekly-sessions.')->group(function () {
-                Route::get('/', [\App\Http\Controllers\Client\WeeklySessionController::class, 'index'])->name('index');
-                Route::get('/{weeklySession}', [\App\Http\Controllers\Client\WeeklySessionController::class, 'show'])->name('show');
-                Route::get('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'createReport'])->name('report.create');
-                Route::post('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'storeReport'])->name('report.store');
-                Route::post('/{weeklySession}/report/upload-pdf', [\App\Http\Controllers\Client\WeeklySessionController::class, 'uploadPdfReport'])->name('report.upload-pdf');
-                Route::get('/{weeklySession}/report/edit', [\App\Http\Controllers\Client\WeeklySessionController::class, 'editReport'])->name('report.edit');
-                Route::put('/{weeklySession}/report', [\App\Http\Controllers\Client\WeeklySessionController::class, 'updateReport'])->name('report.update');
-            });
-
-            // Competition routes for teachers
-            Route::prefix('competitions')->name('client.competitions.')->group(function () {
-                Route::get('/', [ClientCompetitionController::class, 'index'])->name('index');
-                Route::get('/{competition}/register/representatives', [ClientCompetitionController::class, 'registerRepresentatives'])->name('register.representatives');
-                Route::post('/{competition}/register/representatives', [ClientCompetitionController::class, 'storeRegistrationRepresentatives'])->name('register.representatives.store');
-                Route::post('/{competition}/register/bulk-students', [ClientCompetitionController::class, 'bulkImportStudents'])->name('register.bulk-students');
-                Route::delete('/{competition}/register/pool-students', [ClientCompetitionController::class, 'clearPoolStudents'])->name('register.pool-students.clear');
-                Route::get('/{competition}/register/csv-template', [ClientCompetitionController::class, 'downloadRegistrationCsvTemplate'])->name('register.csv-template');
-                Route::get('/{competition}/register', [ClientCompetitionController::class, 'register'])->name('register');
-                Route::post('/{competition}/register', [ClientCompetitionController::class, 'storeRegistration'])->name('register.store');
-                Route::get('/{competition}/idea', [ClientCompetitionController::class, 'createIdea'])->name('idea');
-                Route::post('/{competition}/idea', [ClientCompetitionController::class, 'storeIdea'])->name('idea.store');
-                Route::get('/{competition}/prototype', [ClientCompetitionController::class, 'createPrototype'])->name('prototype');
-                Route::post('/{competition}/prototype', [ClientCompetitionController::class, 'storePrototype'])->name('prototype.store');
-                Route::get('/{competition}/prototype-modification', [ClientCompetitionController::class, 'createPrototypeModification'])->name('prototype-modification');
-                Route::post('/{competition}/prototype-modification', [ClientCompetitionController::class, 'storePrototypeModification'])->name('prototype-modification.store');
-                Route::delete('/{competition}/attachment', [ClientCompetitionController::class, 'deleteAttachment'])->name('attachment.delete');
-                Route::get('/{competition}', [ClientCompetitionController::class, 'show'])->name('show');
-            });
         });
     });
 });

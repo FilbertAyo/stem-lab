@@ -28,7 +28,7 @@ class SubscriptionSelectionService
             return false;
         }
 
-        return in_array($slug, ['free-trial', 'individual'], true);
+        return in_array($slug, ['free-trial', 'individual', 'individual-yearly'], true);
     }
 
     public function selectBySlug(User $user, string $slug): SubscriptionPackage
@@ -46,7 +46,7 @@ class SubscriptionSelectionService
             abort(422, 'Public school access is granted through club membership.');
         }
 
-        if ($package->slug === 'individual') {
+        if (in_array($package->slug, ['individual', 'individual-yearly'], true)) {
             abort(422, 'Individual packages require Snippe checkout.');
         }
 
@@ -95,6 +95,36 @@ class SubscriptionSelectionService
         });
 
         return $package;
+    }
+
+    /**
+     * Start a 7-day trial for a newly registered user. Never throws — signup must succeed.
+     */
+    public function grantTrialOnSignup(User $user): void
+    {
+        if (! $this->paymentsEnabled()) {
+            return;
+        }
+
+        if ($user->hasLockedSubscriptionPlan() || $user->trial_used_at !== null || $user->hasActivePrepaidAccess()) {
+            return;
+        }
+
+        $package = SubscriptionPackage::query()
+            ->active()
+            ->where('slug', 'free-trial')
+            ->first();
+
+        if (! $package) {
+            return;
+        }
+
+        try {
+            $this->activateFreeTrial($user, $package);
+            $user->refresh();
+        } catch (\Throwable) {
+            // Registration must not fail because trial activation failed.
+        }
     }
 
     public function applyPublicSchoolAccess(User $user): void

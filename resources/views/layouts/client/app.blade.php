@@ -39,6 +39,7 @@
           <!-- Left Sidebar (hidden on profile, dashboard, VR experiments, 3D models, projects — full width) -->
           @if (!request()->routeIs('profile.*')
                && !request()->routeIs('dashboard')
+               && !request()->routeIs('client.billing.*')
                && !request()->routeIs('client.vr-experiments.*')
                && !request()->routeIs('client.models.3d.*')
                && !request()->routeIs('client.projects.*'))

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SmileyTutorCredential;
 use App\Models\User;
 use App\Models\Visitor;
+use App\Services\SubscriptionSelectionService;
 use App\Support\TanzaniaPhone;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -84,6 +85,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
+
+        app(SubscriptionSelectionService::class)->grantTrialOnSignup($user);
 
         // Assign a SmileyTutor credential so the learner can practice math (username/password for tutor-web.net).
         SmileyTutorCredential::assignToUser($user);

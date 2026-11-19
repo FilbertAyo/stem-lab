@@ -179,6 +179,9 @@
                                             <option value="individual" @selected($selectedPlan === 'individual')>
                                                 Individual @if(isset($packages['individual'])) ({{ $packages['individual']->billing_period_days }} days) @endif
                                             </option>
+                                            <option value="individual-yearly" @selected($selectedPlan === 'individual-yearly')>
+                                                Individual yearly @if(isset($packages['individual-yearly'])) ({{ $packages['individual-yearly']->billing_period_days }} days) @endif
+                                            </option>
                                             <option value="public-school" @selected($selectedPlan === 'public-school')>
                                                 Public school (free)
                                             </option>
@@ -342,7 +345,7 @@
             function syncPlanFields() {
                 if (!planSelect) return;
                 const plan = planSelect.value;
-                const needsExpiry = plan === 'free-trial' || plan === 'individual';
+                const needsExpiry = plan === 'free-trial' || plan === 'individual' || plan === 'individual-yearly';
                 if (expiresField) {
                     expiresField.style.display = needsExpiry ? '' : 'none';
                 }

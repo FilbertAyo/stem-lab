@@ -104,3 +104,27 @@ test('admin can assign and clear a user subscription plan from the show page', f
         ->and($student->subscription_expires_at)->toBeNull()
         ->and($student->adminPlanLabel())->toBe('No plan');
 });
+
+test('admin can assign the yearly individual plan', function () {
+    actingAsAdmin();
+    $this->seed(\Database\Seeders\SubscriptionPackageSeeder::class);
+
+    $student = User::factory()->create([
+        'role' => 'student',
+        'subscription_tier' => null,
+        'subscription_expires_at' => null,
+    ]);
+
+    $this->get(route('admin.users.show', $student))
+        ->assertOk()
+        ->assertSee('Individual yearly');
+
+    $this->put(route('admin.users.subscription.update', $student), [
+        'plan' => 'individual-yearly',
+    ])->assertRedirect(route('admin.users.show', $student));
+
+    $student->refresh();
+
+    expect($student->subscription_tier)->toBe('individual')
+        ->and($student->subscription_expires_at?->isAfter(now()->addDays(360)))->toBeTrue();
+});
