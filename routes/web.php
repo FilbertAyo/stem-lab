@@ -249,6 +249,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::post('/', [AdminUserController::class, 'store'])->name('store');
 
             Route::middleware('redirect.legacy.public-id')->group(function () {
+                Route::get('/{user}', [AdminUserController::class, 'show'])->name('show');
                 Route::put('/{user}', [AdminUserController::class, 'update'])->name('update');
                 Route::post('/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('toggle-status');
                 Route::delete('/{user}', [AdminUserController::class, 'destroy'])->name('destroy');

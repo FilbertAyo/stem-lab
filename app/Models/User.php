@@ -247,6 +247,64 @@ class User extends Authenticatable
         return $this->hasMany(SubscriptionOrder::class);
     }
 
+    /**
+     * School name(s) linked via approved teacher club or student roster membership.
+     */
+    public function resolvedSchoolLabel(): string
+    {
+        if ($this->role === 'teacher') {
+            $names = $this->relationLoaded('teacherClubs')
+                ? $this->teacherClubs
+                : $this->teacherClubs()->with('school')->get();
+
+            $labels = $names
+                ->where('status', 'approved')
+                ->map(fn (TeacherClub $membership) => $membership->school?->name)
+                ->filter()
+                ->unique()
+                ->values();
+
+            return $labels->isEmpty() ? '—' : $labels->implode(', ');
+        }
+
+        if ($this->role === 'student') {
+            $roster = $this->relationLoaded('linkedRosterStudent')
+                ? $this->linkedRosterStudent
+                : $this->linkedRosterStudent()->with('teacherClub.school')->first();
+
+            return $roster?->teacherClub?->school?->name ?: '—';
+        }
+
+        return '—';
+    }
+
+    /**
+     * Short plan label for admin list tables.
+     */
+    public function adminPlanLabel(): string
+    {
+        if ($this->hasSubsidizedSchoolAccess()) {
+            return 'Free (public school)';
+        }
+
+        if ($this->hasActivePrepaidAccess()) {
+            return match ($this->subscription_tier) {
+                'trial' => 'Trial',
+                'individual', 'pro' => 'Individual',
+                default => $this->platformPlanLabel(),
+            };
+        }
+
+        if (in_array($this->subscription_tier, ['trial', 'individual', 'pro'], true)
+            && $this->subscription_expires_at
+            && $this->subscription_expires_at->isPast()
+        ) {
+            return 'Expired';
+        }
+
+        return 'No plan';
+    }
+
     public function hasActiveSubscriptionPackage(string $slug): bool
     {
         return $this->activeSubscriptionPackageSlug() === $slug;

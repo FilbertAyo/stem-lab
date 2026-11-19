@@ -59,6 +59,34 @@ class UserController extends Controller
     }
 
     /**
+     * Display a teacher or student profile with plan and school details.
+     */
+    public function show(User $user): View|RedirectResponse
+    {
+        if (! in_array($user->role, ['teacher', 'student'], true)) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'Only teacher and student accounts can be viewed here.');
+        }
+
+        $user->load([
+            'teacherClubs' => fn ($query) => $query->with(['school', 'club'])->latest('id'),
+            'linkedRosterStudent.teacherClub.school',
+            'linkedRosterStudent.teacherClub.club',
+            'linkedRosterStudent.schoolClass',
+            'schoolClass',
+            'subscriptionOrders' => fn ($query) => $query->with('package')->latest('id')->limit(10),
+        ]);
+
+        return view('admin.users.show', [
+            'user' => $user,
+            'backRoute' => $user->role === 'student'
+                ? route('admin.users.students')
+                : route('admin.users.teachers'),
+        ]);
+    }
+
+    /**
      * Download students list as PDF.
      */
     public function exportStudents(Request $request): Response
@@ -81,6 +109,14 @@ class UserController extends Controller
     {
         return User::query()
             ->where('role', $role)
+            ->when($role === 'teacher', function (Builder $query): void {
+                $query->with(['teacherClubs' => fn ($relation) => $relation
+                    ->where('status', 'approved')
+                    ->with('school')]);
+            })
+            ->when($role === 'student', function (Builder $query): void {
+                $query->with(['linkedRosterStudent.teacherClub.school']);
+            })
             ->tap(fn (Builder $query) => $this->applyNameEmailSearch($query, $request))
             ->when($applyDateRange, fn (Builder $query) => $this->applyCreatedAtDateRange($query, $request))
             ->orderBy('created_at', 'desc');
