@@ -19,12 +19,12 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="schoolsMapModalLabel">
                         Schools Map
-                        <span class="text-muted fw-normal fs-6">({{ $mapSchools->count() }} {{ $mapSchools->count() === 1 ? 'school' : 'schools' }})</span>
+                        <span class="text-muted fw-normal fs-6">({{ $mapSchoolCount }} {{ $mapSchoolCount === 1 ? 'school' : 'schools' }})</span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @if($mapSchools->isEmpty())
+                    @if($mapSchoolCount === 0)
                         <div class="map-empty text-center text-muted">
                             <i class="ti ti-map-off map-empty-icon"></i>
                             <p class="mb-0 mt-2">No schools with coordinates yet. Add latitude and longitude when creating or editing a school.</p>
@@ -291,17 +291,8 @@
     @endforeach
 
     @push('scripts')
+    <script src="{{ asset('admin/js/plugins/apexcharts.min.js') }}"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script type="application/json" id="schools-map-data">
-        {!! json_encode($mapSchools->map(fn ($s) => [
-            'id' => $s->id,
-            'name' => $s->name,
-            'latitude' => (float) $s->latitude,
-            'longitude' => (float) $s->longitude,
-            'district' => $s->district,
-            'ward' => $s->ward,
-        ])->values()) !!}
-    </script>
     <script type="application/json" id="visitor-week-chart-data">
         {!! json_encode($visitorChartData) !!}
     </script>
@@ -315,13 +306,23 @@
                     var mapEl = document.getElementById('schools-map');
                     if (!mapEl || typeof L === 'undefined') return;
 
-                    var schools = [];
-                    try {
-                        schools = JSON.parse(document.getElementById('schools-map-data').textContent);
-                    } catch (e) {
-                        schools = [];
+                    if (schoolsMap) {
+                        setTimeout(function () {
+                            schoolsMap.invalidateSize();
+                        }, 100);
+                        return;
                     }
 
+                    fetch(@json(route('admin.dashboard.schools-map')), {
+                        headers: { 'Accept': 'application/json' },
+                        credentials: 'same-origin',
+                    }).then(function (response) {
+                        if (!response.ok) {
+                            return [];
+                        }
+                        return response.json();
+                    }).then(function (schools) {
+                    schools = Array.isArray(schools) ? schools : [];
                     if (!schoolsMap) {
                         schoolsMap = L.map('schools-map').setView([-6.3690, 34.8888], 6);
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -366,6 +367,7 @@
                     setTimeout(function () {
                         schoolsMap.invalidateSize();
                     }, 100);
+                    }).catch(function () {});
                 });
             }
 

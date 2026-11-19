@@ -814,24 +814,34 @@ class CompetitionController extends Controller
     public function registrations(Request $request, Competition $competition): View
     {
         $registrations = $this->competitionRegistrationsQuery($request, $competition)
-            ->with(['teacher', 'school.regionModel', 'school.districtModel', 'region', 'districtModel', 'representativeStudents.student.schoolClass', 'teacherClub'])
+            ->with(['teacher', 'school.regionModel', 'school.districtModel', 'region', 'districtModel', 'teacherClub'])
+            ->withCount('representativeStudents')
             ->orderByRaw("CASE WHEN status = 'draft' THEN 0 ELSE 1 END")
             ->latest()
             ->paginate(20)
             ->withQueryString();
 
         $eligibilityPool = app(CompetitionEligibilityPoolService::class);
+        $competition->loadMissing('classRequirements');
+        $poolSummaries = [];
         foreach ($registrations as $registration) {
             if (
-                $registration->teacherClub
-                && in_array($registration->status, ['draft', 'rejected'], true)
+                ! $registration->teacherClub
+                || ! in_array($registration->status, ['draft', 'rejected'], true)
             ) {
-                $eligibilityPool->applyPoolToOpenRegistration(
-                    $registration,
-                    $registration->teacherClub,
-                    $eligibilityPool->computePool($competition, $registration->teacherClub),
-                );
+                continue;
             }
+
+            $clubId = (int) $registration->teacherClub->id;
+            if (! array_key_exists($clubId, $poolSummaries)) {
+                $poolSummaries[$clubId] = $eligibilityPool->summarizePool($competition, $registration->teacherClub);
+            }
+
+            $eligibilityPool->applyPoolToOpenRegistration(
+                $registration,
+                $registration->teacherClub,
+                $poolSummaries[$clubId],
+            );
         }
 
         $enrollableSchools = $this->enrollableSchoolsForCompetition($competition);

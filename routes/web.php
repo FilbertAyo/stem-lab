@@ -118,6 +118,7 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
 
     Route::middleware(['auth', 'admin', 'track.admin.activity'])->group(function () {
         Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('dashboard/schools-map', [AdminDashboardController::class, 'schoolsMap'])->name('dashboard.schools-map');
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
         Route::prefix('classes')->name('classes.')->group(function () {

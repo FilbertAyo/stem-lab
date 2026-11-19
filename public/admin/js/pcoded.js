@@ -1,14 +1,19 @@
 // 'use strict';
 var flg = '0';
 document.addEventListener('DOMContentLoaded', function () {
-  // feather icon start
-  feather.replace();
-  // feather icon end
-
-  // remove pre-loader start
+  // Remove the pre-loader even if a later icon or menu script throws.
   setTimeout(function () {
-    document.querySelector('.loader-bg').remove();
+    var loader = document.querySelector('.loader-bg');
+    if (loader) {
+      loader.remove();
+    }
   }, 400);
+
+  try {
+    if (typeof feather !== 'undefined') {
+      feather.replace();
+    }
+  } catch (error) {}
 
   // remove pre-loader end
   if (document.querySelector('body').hasAttribute('data-pc-layout')) {
@@ -269,20 +274,30 @@ window.addEventListener('load', function () {
 });
 
 // active menu item list start
-var elem = document.querySelectorAll('.pc-sidebar .pc-navbar a');
-for (var l = 0; l < elem.length; l++) {
-  var pageUrl = window.location.href.split(/[?#]/)[0];
-  if (elem[l].href == pageUrl && elem[l].getAttribute('href') != '') {
-    elem[l].parentNode.classList.add('active');
+try {
+  var elem = document.querySelectorAll('.pc-sidebar .pc-navbar a');
+  for (var l = 0; l < elem.length; l++) {
+    var pageUrl = window.location.href.split(/[?#]/)[0];
+    if (elem[l].href == pageUrl && elem[l].getAttribute('href') != '') {
+      elem[l].parentNode.classList.add('active');
 
-    elem[l].parentNode.parentNode.parentNode.classList.add('pc-trigger');
-    elem[l].parentNode.parentNode.parentNode.classList.add('active');
-    elem[l].parentNode.parentNode.style.display = 'block';
+      if (elem[l].parentNode.parentNode && elem[l].parentNode.parentNode.parentNode) {
+        elem[l].parentNode.parentNode.parentNode.classList.add('pc-trigger');
+        elem[l].parentNode.parentNode.parentNode.classList.add('active');
+        elem[l].parentNode.parentNode.style.display = 'block';
+      }
 
-    elem[l].parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('pc-trigger');
-    elem[l].parentNode.parentNode.parentNode.parentNode.style.display = 'block';
+      var upper = elem[l].parentNode.parentNode
+        && elem[l].parentNode.parentNode.parentNode
+        && elem[l].parentNode.parentNode.parentNode.parentNode
+        && elem[l].parentNode.parentNode.parentNode.parentNode.parentNode;
+      if (upper && upper.classList) {
+        upper.classList.add('pc-trigger');
+        elem[l].parentNode.parentNode.parentNode.parentNode.style.display = 'block';
+      }
+    }
   }
-}
+} catch (error) {}
 
 // like event
 var tc = document.querySelectorAll('.prod-likes .form-check-input');

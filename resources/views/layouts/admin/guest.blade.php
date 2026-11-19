@@ -51,8 +51,6 @@
         </div>
     </div>
 
-    <script src="{{ asset('admin/js/plugins/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('admin/js/pages/dashboard-default.js') }}"></script>
     <script src="{{ asset('admin/js/plugins/popper.min.js') }}"></script>
     <script src="{{ asset('admin/js/plugins/simplebar.min.js') }}"></script>
     <script src="{{ asset('admin/js/plugins/bootstrap.min.js') }}"></script>

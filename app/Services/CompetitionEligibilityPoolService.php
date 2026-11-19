@@ -27,13 +27,7 @@ class CompetitionEligibilityPoolService
      */
     public function computePool(Competition $competition, TeacherClub $teacherClub): array
     {
-        $allowedClassIds = $competition->classRequirements()
-            ->pluck('school_class_id')
-            ->filter()
-            ->map(fn ($id) => (int) $id)
-            ->unique()
-            ->values()
-            ->all();
+        $allowedClassIds = $this->allowedClassIds($competition);
 
         $teacherClubIds = $this->coMemberTeacherClubIds($teacherClub);
 
@@ -60,6 +54,35 @@ class CompetitionEligibilityPoolService
             'min' => $bounds['min'],
             'max' => $bounds['max'],
             'allowed_class_ids' => $allowedClassIds,
+        ];
+    }
+
+    /**
+     * Count-only pool summary for list pages. Does not load student rows.
+     *
+     * @return array{count: int, girls_count: int, girls_ratio: float, eligible: bool}
+     */
+    public function summarizePool(Competition $competition, TeacherClub $teacherClub): array
+    {
+        $allowedClassIds = $this->allowedClassIds($competition);
+        $teacherClubIds = $this->coMemberTeacherClubIds($teacherClub);
+
+        $row = Student::query()
+            ->whereIn('teacher_club_id', $teacherClubIds)
+            ->when($allowedClassIds !== [], fn ($query) => $query->whereIn('school_class_id', $allowedClassIds))
+            ->selectRaw('COUNT(*) as pool_count, SUM(CASE WHEN gender = ? THEN 1 ELSE 0 END) as girls_count', ['female'])
+            ->first();
+
+        $count = (int) ($row->pool_count ?? 0);
+        $girlsCount = (int) ($row->girls_count ?? 0);
+        $girlsRatio = $count > 0 ? ($girlsCount / $count) * 100 : 0.0;
+        $error = $this->eligibilityError($competition, $count, $girlsRatio);
+
+        return [
+            'count' => $count,
+            'girls_count' => $girlsCount,
+            'girls_ratio' => round($girlsRatio, 2),
+            'eligible' => $error === null,
         ];
     }
 
@@ -153,7 +176,34 @@ class CompetitionEligibilityPoolService
             ]);
         }
 
+        $nextStatus = (string) ($attributes['status'] ?? $registration->status);
+        $unchanged = (int) $registration->student_count_snapshot === (int) $attributes['student_count_snapshot']
+            && (int) $registration->girls_count_snapshot === (int) $attributes['girls_count_snapshot']
+            && round((float) $registration->girls_ratio_snapshot, 2) === round((float) $attributes['girls_ratio_snapshot'], 2)
+            && (bool) $registration->eligibility_met === (bool) $attributes['eligibility_met']
+            && $registration->status === $nextStatus;
+
+        if ($unchanged) {
+            return;
+        }
+
         $registration->forceFill($attributes)->save();
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function allowedClassIds(Competition $competition): array
+    {
+        $competition->loadMissing('classRequirements');
+
+        return $competition->classRequirements
+            ->pluck('school_class_id')
+            ->filter()
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values()
+            ->all();
     }
 
     /**

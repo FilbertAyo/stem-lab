@@ -139,7 +139,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <span class="badge bg-light text-dark">{{ $registration->representativeStudents->count() }}/{{ max(1, (int) ($competition->representative_count ?? 10)) }}</span>
+                                            <span class="badge bg-light text-dark">{{ (int) $registration->representative_students_count }}/{{ max(1, (int) ($competition->representative_count ?? 10)) }}</span>
                                         </td>
                                         <td>
                                             @if($registration->teacherClub?->created_at)

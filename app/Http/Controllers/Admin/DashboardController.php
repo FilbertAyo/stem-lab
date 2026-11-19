@@ -13,7 +13,9 @@ use App\Models\Visitor;
 use App\Models\VisitorWeeklyStat;
 use App\Models\VrAssessmentAttempt;
 use App\Models\VrExperiment;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -24,42 +26,44 @@ class DashboardController extends Controller
      */
     public function index(): View
     {
-        $stats = [
-            'total_admins' => User::where('role', 'admin')->count(),
-            'total_teachers' => User::where('role', 'teacher')->count(),
-            'total_students' => User::where('role', 'student')->count(),
-            'students_in_club' => Student::count(),
-            'total_3d_models' => Model3d::count(),
-            'active_3d_models' => Model3d::where('is_active', true)->count(),
-            'total_vr_experiments' => VrExperiment::count(),
-            'active_vr_experiments' => VrExperiment::where('is_active', true)->count(),
-            'total_competitions' => Competition::count(),
-            'active_competitions' => Competition::where('is_active', true)->count(),
-            'total_schools' => School::count(),
-            'total_visitors' => Visitor::count(),
-            'visitors_today' => Visitor::whereDate('last_seen_at', today())->count(),
-            'total_landing_views' => Visitor::sum('landing_views'),
-            'visitors_not_converted' => Visitor::notConverted()->count(),
-            'active_learners' => 14400,
-            'active_clubs' => Club::active()->count(),
-            'subscribers' => 100,
-        ];
+        $stats = Cache::remember('admin.dashboard.stats', 60, function (): array {
+            return [
+                'total_admins' => User::where('role', 'admin')->count(),
+                'total_teachers' => User::where('role', 'teacher')->count(),
+                'total_students' => User::where('role', 'student')->count(),
+                'students_in_club' => Student::count(),
+                'total_3d_models' => Model3d::count(),
+                'active_3d_models' => Model3d::where('is_active', true)->count(),
+                'total_vr_experiments' => VrExperiment::count(),
+                'active_vr_experiments' => VrExperiment::where('is_active', true)->count(),
+                'total_competitions' => Competition::count(),
+                'active_competitions' => Competition::where('is_active', true)->count(),
+                'total_schools' => School::count(),
+                'total_visitors' => Visitor::count(),
+                'visitors_today' => Visitor::whereDate('last_seen_at', today())->count(),
+                'total_landing_views' => (int) Visitor::sum('landing_views'),
+                'visitors_not_converted' => Visitor::notConverted()->count(),
+                'active_learners' => 14400,
+                'active_clubs' => Club::active()->count(),
+                'subscribers' => 100,
+            ];
+        });
 
-        // Get latest active admin user (based on session last_activity)
+        // Latest admin who has a session today. Filter by the small admin id
+        // list so this does not scan every session row and its payload.
         $latestActiveAdmin = null;
-
-        // Try to get admin with recent session activity (today)
         $todayTimestamp = now()->startOfDay()->timestamp;
-        $recentSession = DB::table('sessions')
-            ->join('users', 'sessions.user_id', '=', 'users.id')
-            ->where('users.role', 'admin')
-            ->where('sessions.last_activity', '>=', $todayTimestamp)
-            ->orderBy('sessions.last_activity', 'desc')
-            ->select('users.*', 'sessions.last_activity')
-            ->first();
+        $adminIds = User::query()->where('role', 'admin')->pluck('id');
+        $recentSession = $adminIds->isEmpty()
+            ? null
+            : DB::table('sessions')
+                ->whereIn('user_id', $adminIds)
+                ->where('last_activity', '>=', $todayTimestamp)
+                ->orderByDesc('last_activity')
+                ->first(['user_id', 'last_activity']);
 
         if ($recentSession) {
-            $adminUser = User::find($recentSession->id);
+            $adminUser = User::find($recentSession->user_id);
             $latestActiveAdmin = [
                 'user' => $adminUser,
                 'last_activity' => Carbon::createFromTimestamp($recentSession->last_activity),
@@ -173,20 +177,7 @@ class DashboardController extends Controller
             ->sortByDesc('time')
             ->take(10);
 
-        // Weekly visitor data for charts (last 12 weeks)
-        $chartWeeks = 12;
-        $visitorChartData = [
-            'labels' => [],
-            'unique_visitors' => [],
-            'landing_views' => [],
-        ];
-        for ($i = $chartWeeks - 1; $i >= 0; $i--) {
-            $weekStart = Carbon::now()->subWeeks($i)->startOfWeek();
-            $weekStr = $weekStart->toDateString();
-            $visitorChartData['labels'][] = $weekStart->format('d M');
-            $visitorChartData['unique_visitors'][] = VisitorWeeklyStat::where('week_start', $weekStr)->count();
-            $visitorChartData['landing_views'][] = (int) VisitorWeeklyStat::where('week_start', $weekStr)->sum('views');
-        }
+        $visitorChartData = $this->visitorChartData();
 
         $dashboardCompetitions = Competition::query()
             ->with(['club', 'phases' => fn ($query) => $query->orderBy('sequence')])
@@ -194,11 +185,12 @@ class DashboardController extends Controller
             ->limit(8)
             ->get();
 
-        $mapSchools = School::query()
-            ->whereNotNull('latitude')
-            ->whereNotNull('longitude')
-            ->orderBy('name')
-            ->get(['id', 'name', 'latitude', 'longitude', 'district', 'ward']);
+        $mapSchoolCount = Cache::remember('admin.dashboard.schools-map-count', 300, function (): int {
+            return School::query()
+                ->whereNotNull('latitude')
+                ->whereNotNull('longitude')
+                ->count();
+        });
 
         return view('admin.dashboard', compact(
             'stats',
@@ -206,7 +198,65 @@ class DashboardController extends Controller
             'recentActivities',
             'visitorChartData',
             'dashboardCompetitions',
-            'mapSchools'
+            'mapSchoolCount'
         ));
+    }
+
+    /**
+     * School pins for the dashboard map. Loaded when the modal opens so the
+     * dashboard HTML does not wait on every school row.
+     */
+    public function schoolsMap(): JsonResponse
+    {
+        $schools = Cache::remember('admin.dashboard.schools-map', 300, function () {
+            return School::query()
+                ->whereNotNull('latitude')
+                ->whereNotNull('longitude')
+                ->orderBy('name')
+                ->get(['id', 'name', 'latitude', 'longitude', 'district', 'ward'])
+                ->map(fn (School $school): array => [
+                    'id' => $school->id,
+                    'name' => $school->name,
+                    'latitude' => (float) $school->latitude,
+                    'longitude' => (float) $school->longitude,
+                    'district' => $school->district,
+                    'ward' => $school->ward,
+                ])
+                ->values();
+        });
+
+        return response()->json($schools);
+    }
+
+    /**
+     * @return array{labels: list<string>, unique_visitors: list<int>, landing_views: list<int>}
+     */
+    private function visitorChartData(): array
+    {
+        $chartWeeks = 12;
+        $rangeStart = Carbon::now()->subWeeks($chartWeeks - 1)->startOfWeek();
+        $rows = VisitorWeeklyStat::query()
+            ->where('week_start', '>=', $rangeStart->toDateString())
+            ->selectRaw('week_start, COUNT(*) as unique_visitors, COALESCE(SUM(views), 0) as landing_views')
+            ->groupBy('week_start')
+            ->get()
+            ->keyBy(fn ($row): string => Carbon::parse($row->week_start)->toDateString());
+
+        $visitorChartData = [
+            'labels' => [],
+            'unique_visitors' => [],
+            'landing_views' => [],
+        ];
+
+        for ($i = $chartWeeks - 1; $i >= 0; $i--) {
+            $weekStart = Carbon::now()->subWeeks($i)->startOfWeek();
+            $weekStr = $weekStart->toDateString();
+            $row = $rows->get($weekStr);
+            $visitorChartData['labels'][] = $weekStart->format('d M');
+            $visitorChartData['unique_visitors'][] = (int) ($row->unique_visitors ?? 0);
+            $visitorChartData['landing_views'][] = (int) ($row->landing_views ?? 0);
+        }
+
+        return $visitorChartData;
     }
 }
