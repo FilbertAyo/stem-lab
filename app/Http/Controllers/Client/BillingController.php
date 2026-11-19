@@ -22,12 +22,19 @@ class BillingController extends Controller
             ->first()
             ?? Club::query()->active()->ordered()->first();
 
+        $recentOrders = $user->subscriptionOrders()
+            ->with('package')
+            ->latest('id')
+            ->limit(5)
+            ->get();
+
         return view('client.back.billing.index', [
             'user' => $user,
             'packages' => $packages,
             'monthlyPackage' => $packages->get('individual'),
             'yearlyPackage' => $packages->get('individual-yearly'),
             'publicSchoolClub' => $publicSchoolClub,
+            'recentOrders' => $recentOrders,
             'showPaywall' => $request->boolean('paywall') && ! $user->hasPlatformAccess(),
         ]);
     }

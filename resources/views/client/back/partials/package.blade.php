@@ -24,58 +24,13 @@
 @endphp
 
 <div class="col-12 mb-3" id="platform-subscription">
-  <h5 class="text-muted mb-0 fw-semibold">
-   Platform subscription
-  </h5>
-</div>
-
-@if ($paymentsEnabled && $packageUser && ! $isLinkedStudent)
-  <div class="col-12 mb-4">
-    @if ($hasLockedPlan)
-      <div class="alert alert-success d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-0">
-        <div>
-          <strong>Public-school access is active.</strong>
-          <span class="d-block small">Your STEM club covers platform access at no cost.</span>
-        </div>
-        <a href="{{ route('client.billing.index') }}" class="btn btn-sm btn-outline-success">My plan</a>
-      </div>
-    @elseif ($onTrial)
-      <div class="alert alert-info d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-0">
-        <div>
-          <strong>
-            @if ($prepaidEndsToday)
-              Your free trial ends today.
-            @else
-              {{ $prepaidDaysLeft }} {{ $prepaidDaysLeft === 1 ? 'day' : 'days' }} left on your free trial.
-            @endif
-          </strong>
-          @if ($expiresAt)
-            <span class="d-block small">Access continues until {{ $expiresAt->timezone(config('app.timezone'))->format('d M Y') }}. Pay anytime to keep using the platform.</span>
-          @endif
-        </div>
-        <a href="{{ route('client.billing.index') }}" class="btn btn-sm btn-dark">Pay now</a>
-      </div>
-    @elseif ($hasActivePrepaid)
-      <div class="alert alert-success d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-0">
-        <div>
-          <strong>Individual plan is active.</strong>
-          @if ($expiresAt)
-            <span class="d-block small">Prepaid access ends {{ $expiresAt->timezone(config('app.timezone'))->format('d M Y') }}.</span>
-          @endif
-        </div>
-        <a href="{{ route('client.billing.index') }}" class="btn btn-sm btn-outline-success">Manage billing</a>
-      </div>
-    @else
-      <div class="alert alert-warning d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-0">
-        <div>
-          <strong>Subscribe or join a public-school club to continue.</strong>
-          <span class="d-block small">Pay with mobile money, or get free access through an approved STEM club.</span>
-        </div>
-        <a href="{{ route('client.billing.index') }}" class="btn btn-sm btn-dark">See options</a>
-      </div>
-    @endif
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+    <h5 class="text-muted mb-0 fw-semibold">
+     Platform subscription
+    </h5>
+    <a href="{{ route('client.billing.index') }}" class="small text-decoration-none">My plan</a>
   </div>
-@endif
+</div>
 
 @if($isLinkedStudent && $publicSchoolPackage)
   <div class="row">

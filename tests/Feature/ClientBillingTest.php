@@ -60,7 +60,8 @@ test('client billing page shows current plan options', function () {
         ->assertOk()
         ->assertSee('My plan')
         ->assertSee('Pay with mobile money')
-        ->assertSee('Billing history');
+        ->assertSee('Billing history')
+        ->assertSee('Coming soon');
 });
 
 test('client transactions page lists only the authenticated user orders', function () {
