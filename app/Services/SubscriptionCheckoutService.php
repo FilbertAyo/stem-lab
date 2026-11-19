@@ -15,6 +15,7 @@ class SubscriptionCheckoutService
     public function __construct(
         private readonly SnippeClient $snippeClient,
         private readonly SubscriptionSelectionService $selectionService,
+        private readonly SubscriptionMailer $subscriptionMailer,
     ) {}
 
     public function startIndividualCheckout(User $user, string $slug = 'individual'): SubscriptionOrder
@@ -54,7 +55,11 @@ class SubscriptionCheckoutService
                 ->first();
 
             if ($existing && filled($existing->checkout_url)) {
-                return $existing;
+                if (! filled(data_get($existing->metadata, 'payment_due_notified_at'))) {
+                    $this->subscriptionMailer->sendPaymentDue($existing);
+                }
+
+                return $existing->fresh() ?? $existing;
             }
 
             if ($existing) {
@@ -100,7 +105,14 @@ class SubscriptionCheckoutService
                 throw new RuntimeException('Snippe did not return a checkout URL.');
             }
 
-            return $order->fresh() ?? $order;
+            $fresh = $order->fresh() ?? $order;
+            $alreadyNotified = filled(data_get($fresh->metadata, 'payment_due_notified_at'));
+
+            if (! $alreadyNotified) {
+                $this->subscriptionMailer->sendPaymentDue($fresh);
+            }
+
+            return $fresh->fresh() ?? $fresh;
         });
     }
 

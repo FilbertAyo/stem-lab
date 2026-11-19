@@ -28,6 +28,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('subscriptions:process-expiries')
             ->dailyAt('09:15')
             ->timezone('Africa/Dar_es_Salaam');
+
+        $schedule->command('subscriptions:send-payment-reminders')
+            ->hourly()
+            ->timezone('Africa/Dar_es_Salaam');
     })
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->validateCsrfTokens(except: [

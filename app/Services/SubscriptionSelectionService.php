@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class SubscriptionSelectionService
 {
+    public function __construct(
+        private readonly SubscriptionMailer $subscriptionMailer,
+    ) {}
+
     public function paymentsEnabled(): bool
     {
         return (bool) config('subscriptions.payments_enabled', false);
@@ -93,6 +97,9 @@ class SubscriptionSelectionService
                 'subscription_renewal_reminded_at' => null,
             ])->save();
         });
+
+        $user->refresh();
+        $this->subscriptionMailer->sendActivated($user, $package->name);
 
         return $package;
     }

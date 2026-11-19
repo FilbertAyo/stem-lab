@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\SubscriptionIssueController;
 use App\Http\Controllers\Admin\SubscriptionOrderController;
 use App\Http\Controllers\Admin\SubscriptionPackageController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -275,6 +276,10 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
         Route::prefix('subscription-orders')->name('subscription-orders.')->group(function () {
             Route::get('/', [SubscriptionOrderController::class, 'index'])->name('index');
             Route::get('/{subscriptionOrder}', [SubscriptionOrderController::class, 'show'])->name('show');
+        });
+
+        Route::prefix('subscription-issues')->name('subscription-issues.')->group(function () {
+            Route::get('/', [SubscriptionIssueController::class, 'index'])->name('index');
         });
 
         // Settings routes

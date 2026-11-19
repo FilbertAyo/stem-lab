@@ -20,4 +20,15 @@ return [
     |--------------------------------------------------------------------------
     */
     'renewal_reminder_days' => (int) env('SUBSCRIPTION_RENEWAL_REMINDER_DAYS', 3),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Open checkout payment reminders
+    |--------------------------------------------------------------------------
+    |
+    | Reminder emails for unpaid Snippe checkouts when the session expires
+    | within this many hours (or has already expired).
+    |
+    */
+    'payment_reminder_hours' => (int) env('SUBSCRIPTION_PAYMENT_REMINDER_HOURS', 6),
 ];
