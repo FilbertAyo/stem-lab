@@ -254,19 +254,28 @@ test('invalid snippe webhook signature is rejected', function () {
     $response->assertStatus(400);
 });
 
-test('unpaid users are blocked from learning when payments are enabled', function () {
+test('unpaid users can browse catalogs and are asked for a package when opening an item', function () {
     $teacher = User::factory()->create([
         'role' => 'teacher',
         'subscription_tier' => null,
         'trial_used_at' => now()->subDay(),
     ]);
 
-    $response = $this->actingAs($teacher)->get(route('client.models.3d.index'));
+    $this->actingAs($teacher)
+        ->get(route('client.models.3d.index'))
+        ->assertOk()
+        ->assertSee('Choose a package to continue')
+        ->assertSee('id="access-packages-modal"', false);
 
-    $response->assertRedirect(route('client.billing.index', ['paywall' => 1]));
+    $this->actingAs($teacher)
+        ->get(route('client.vr-experiments.math'))
+        ->assertRedirect(route('client.vr-experiments.index'))
+        ->assertSessionHas('open_packages', true);
 });
 
-test('unpaid teachers are blocked from competitions and weekly sessions', function () {
+test('unpaid teachers can browse competitions and weekly sessions until they open one', function () {
+    ['competition' => $competition] = createCompetitionFixture();
+
     $teacher = User::factory()->create([
         'role' => 'teacher',
         'subscription_tier' => null,
@@ -275,11 +284,17 @@ test('unpaid teachers are blocked from competitions and weekly sessions', functi
 
     $this->actingAs($teacher)
         ->get(route('client.competitions.index'))
-        ->assertRedirect(route('client.billing.index', ['paywall' => 1]));
+        ->assertOk()
+        ->assertSee('id="access-packages-modal"', false);
+
+    $this->actingAs($teacher)
+        ->get(route('client.competitions.show', $competition))
+        ->assertRedirect(route('client.competitions.index'))
+        ->assertSessionHas('open_packages', true);
 
     $this->actingAs($teacher)
         ->get(route('client.weekly-sessions.index'))
-        ->assertRedirect(route('client.billing.index', ['paywall' => 1]));
+        ->assertOk();
 });
 
 test('public school club teachers keep free learning access', function () {

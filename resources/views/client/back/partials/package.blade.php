@@ -21,8 +21,10 @@
   $prepaidEndsToday = $secondsLeft > 0 && $prepaidDaysLeft <= 1;
   $onTrial = $hasActivePrepaid && $packageUser?->subscription_tier === 'trial';
   $dashboardPackages = $subscriptionPackages->reject(fn ($item) => $item->slug === 'individual-yearly');
+  $embedInModal = $embedInModal ?? false;
 @endphp
 
+@unless ($embedInModal)
 <div class="col-12 mb-3" id="platform-subscription">
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
     <h5 class="text-muted mb-0 fw-semibold">
@@ -33,6 +35,7 @@
     @endunless
   </div>
 </div>
+@endunless
 
 @if($isLinkedStudent && $publicSchoolPackage)
   <div class="row">
@@ -220,6 +223,7 @@
 </div>
 @endif
 
+@push('modals')
 {{-- Modal: Public secondary school – teachers --}}
 <div class="modal fade" id="public-school-modal-teacher" tabindex="-1" aria-labelledby="public-school-modal-teacher-label" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -299,6 +303,7 @@
   @csrf
   <input type="hidden" name="package" id="package-select-input" value="">
 </form>
+@endpush
 
 {{-- Toast: subscription action feedback --}}
 <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;">

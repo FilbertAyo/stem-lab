@@ -51,6 +51,20 @@
     </button>
   </div>
 
+  @php
+    $viewer = auth()->user();
+    $offerPackagesInModal = $viewer
+        && config('subscriptions.payments_enabled')
+        && ! $viewer->hasPlatformAccess()
+        && ! request()->routeIs('dashboard')
+        && ! request()->routeIs('client.billing.*');
+  @endphp
+  @if ($offerPackagesInModal)
+    @include('client.back.partials.access-packages-modal')
+  @endif
+
+  @stack('modals')
+
   @include('layouts.client.partials.scripts', ['bootstrap' => true])
   <div class="dashboard-nav-backdrop" id="dashboardNavBackdrop" aria-hidden="true"></div>
   <script>

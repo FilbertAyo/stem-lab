@@ -49,8 +49,51 @@ class EnsurePlatformAccess
             return $next($request);
         }
 
+        if ($this->isCatalogIndex($request)) {
+            return $next($request);
+        }
+
+        $catalog = $this->catalogIndexRoute($request);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Choose a package to open this.',
+            ], 402);
+        }
+
         return redirect()
-            ->route('client.billing.index', ['paywall' => 1])
-            ->with('warning', 'Subscribe or join a public-school STEM club to continue.');
+            ->route($catalog)
+            ->with('open_packages', true);
+    }
+
+    /**
+     * Listing pages stay open. Opening an item is what asks for a package.
+     */
+    private function isCatalogIndex(Request $request): bool
+    {
+        return in_array($request->route()?->getName(), [
+            'client.vr-experiments.index',
+            'client.models.3d.index',
+            'client.projects.index',
+            'client.vr-assessments.index',
+            'client.weekly-sessions.index',
+            'client.competitions.index',
+            'client.my-students.index',
+        ], true);
+    }
+
+    private function catalogIndexRoute(Request $request): string
+    {
+        $name = (string) $request->route()?->getName();
+
+        return match (true) {
+            str_starts_with($name, 'client.models.3d.') => 'client.models.3d.index',
+            str_starts_with($name, 'client.projects.') => 'client.projects.index',
+            str_starts_with($name, 'client.vr-assessments.') => 'client.vr-assessments.index',
+            str_starts_with($name, 'client.weekly-sessions.') => 'client.weekly-sessions.index',
+            str_starts_with($name, 'client.competitions.') => 'client.competitions.index',
+            str_starts_with($name, 'client.my-students.') => 'client.my-students.index',
+            default => 'client.vr-experiments.index',
+        };
     }
 }
