@@ -226,6 +226,8 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::post('/{competition}/registrations/{registration}/reject', [CompetitionController::class, 'rejectRegistration'])->name('registrations.reject');
             Route::post('/{competition}/registrations/{registration}/eligibility-reminder', [CompetitionController::class, 'sendEligibilityReminder'])->name('registrations.eligibility-reminder');
             Route::get('/{competition}/ideas', [CompetitionController::class, 'ideas'])->name('ideas.index');
+            Route::get('/{competition}/ideas/pending/{registration}', [CompetitionController::class, 'showPendingIdea'])->name('ideas.pending');
+            Route::post('/{competition}/ideas/pending/{registration}/reminder', [CompetitionController::class, 'sendIdeaSubmissionReminder'])->name('ideas.submission-reminder');
             Route::get('/{competition}/ideas/{idea}', [CompetitionController::class, 'showIdea'])->name('ideas.show');
             Route::post('/{competition}/ideas/{idea}/score', [CompetitionController::class, 'scoreIdea'])->name('ideas.score');
             Route::post('/{competition}/ideas/{idea}/shortlist', [CompetitionController::class, 'shortlistIdea'])->name('ideas.shortlist');

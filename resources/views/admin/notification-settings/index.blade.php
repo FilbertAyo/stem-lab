@@ -125,6 +125,22 @@
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label" for="sms_template_competition_idea_submission_reminder">Idea submission reminder SMS</label>
+                            <textarea
+                                class="form-control @error('sms_template_competition_idea_submission_reminder') is-invalid @enderror"
+                                name="sms_template_competition_idea_submission_reminder"
+                                id="sms_template_competition_idea_submission_reminder"
+                                rows="3"
+                                maxlength="480"
+                                required
+                            >{{ old('sms_template_competition_idea_submission_reminder', $templates['idea_submission_reminder']) }}</textarea>
+                            @error('sms_template_competition_idea_submission_reminder')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text">Default text when reminding approved schools that have not submitted an idea yet.</div>
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label" for="sms_template_competition_idea_shortlisted">Idea shortlisted SMS</label>
                             <textarea
                                 class="form-control @error('sms_template_competition_idea_shortlisted') is-invalid @enderror"

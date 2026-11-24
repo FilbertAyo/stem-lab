@@ -15,6 +15,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Idea submission reminders (admin → teacher)
+    |--------------------------------------------------------------------------
+    |
+    | Max nudges an admin may send per approved registration that has not
+    | final-submitted an idea yet (no idea row, or draft only).
+    |
+    */
+    'max_idea_submission_reminders' => (int) env('COMPETITION_MAX_IDEA_SUBMISSION_REMINDERS', 3),
+
+    /*
+    |--------------------------------------------------------------------------
     | Shortlist reminders (admin → teacher)
     |--------------------------------------------------------------------------
     |

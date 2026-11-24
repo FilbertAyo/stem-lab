@@ -39,6 +39,8 @@ class CompetitionRegistration extends Model
         'approved_by',
         'eligibility_reminder_count',
         'last_eligibility_reminder_sent_at',
+        'idea_submission_reminder_count',
+        'last_idea_submission_reminder_sent_at',
     ];
 
     protected $casts = [
@@ -50,6 +52,8 @@ class CompetitionRegistration extends Model
         'approved_at' => 'datetime',
         'eligibility_reminder_count' => 'integer',
         'last_eligibility_reminder_sent_at' => 'datetime',
+        'idea_submission_reminder_count' => 'integer',
+        'last_idea_submission_reminder_sent_at' => 'datetime',
     ];
 
     public static function maxEligibilityReminders(): int
@@ -57,9 +61,28 @@ class CompetitionRegistration extends Model
         return max(1, (int) config('competitions.max_eligibility_reminders', 3));
     }
 
+    public static function maxIdeaSubmissionReminders(): int
+    {
+        return max(1, (int) config('competitions.max_idea_submission_reminders', 3));
+    }
+
     public function needsEligibilityCompletion(): bool
     {
         return $this->status === 'draft';
+    }
+
+    /**
+     * Approved schools that have not final-submitted an idea (none, or draft only).
+     */
+    public function needsIdeaSubmission(): bool
+    {
+        if ($this->status !== 'approved') {
+            return false;
+        }
+
+        $idea = $this->relationLoaded('idea') ? $this->idea : $this->idea()->first();
+
+        return ! $idea || $idea->status === 'draft';
     }
 
     /**
@@ -85,6 +108,22 @@ class CompetitionRegistration extends Model
         }
 
         return (int) $this->eligibility_reminder_count < self::maxEligibilityReminders();
+    }
+
+    public function canSendIdeaSubmissionReminder(): bool
+    {
+        if (! $this->needsIdeaSubmission()) {
+            return false;
+        }
+
+        $hasEmail = filled($this->resolvedTeacherEmail());
+        $hasPhone = filled($this->resolvedTeacherPhone());
+
+        if (! $hasEmail && ! $hasPhone) {
+            return false;
+        }
+
+        return (int) $this->idea_submission_reminder_count < self::maxIdeaSubmissionReminders();
     }
 
     public function resolvedTeacherName(): string

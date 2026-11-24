@@ -24,6 +24,7 @@ class NotificationSettingsController extends Controller
             'registration_approved' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_REGISTRATION_APPROVED),
             'eligibility_reminder' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_ELIGIBILITY_REMINDER),
             'idea_submitted' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SUBMITTED),
+            'idea_submission_reminder' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SUBMISSION_REMINDER),
             'idea_shortlisted' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SHORTLISTED),
             'idea_shortlist_reminder' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SHORTLIST_REMINDER),
         ];
@@ -49,6 +50,7 @@ class NotificationSettingsController extends Controller
             'sms_template_competition_registration_approved' => ['required', 'string', 'max:480'],
             'sms_template_competition_eligibility_reminder' => ['required', 'string', 'max:480'],
             'sms_template_competition_idea_submitted' => ['required', 'string', 'max:480'],
+            'sms_template_competition_idea_submission_reminder' => ['required', 'string', 'max:480'],
             'sms_template_competition_idea_shortlisted' => ['required', 'string', 'max:480'],
             'sms_template_competition_idea_shortlist_reminder' => ['required', 'string', 'max:480'],
         ]);
@@ -83,6 +85,14 @@ class NotificationSettingsController extends Controller
             'textarea',
             CompetitionSmsTemplates::GROUP,
             'SMS template: competition idea submitted'
+        );
+
+        Setting::set(
+            CompetitionSmsTemplates::KEY_IDEA_SUBMISSION_REMINDER,
+            $validated['sms_template_competition_idea_submission_reminder'],
+            'textarea',
+            CompetitionSmsTemplates::GROUP,
+            'SMS template: competition idea submission reminder'
         );
 
         Setting::set(

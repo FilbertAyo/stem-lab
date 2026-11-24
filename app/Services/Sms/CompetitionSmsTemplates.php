@@ -12,6 +12,8 @@ class CompetitionSmsTemplates
 
     public const KEY_IDEA_SUBMITTED = 'sms_template_competition_idea_submitted';
 
+    public const KEY_IDEA_SUBMISSION_REMINDER = 'sms_template_competition_idea_submission_reminder';
+
     public const KEY_IDEA_SHORTLISTED = 'sms_template_competition_idea_shortlisted';
 
     public const KEY_IDEA_SHORTLIST_REMINDER = 'sms_template_competition_idea_shortlist_reminder';
@@ -26,6 +28,7 @@ class CompetitionSmsTemplates
             self::KEY_REGISTRATION_APPROVED => 'Hi {teacher_name}, {school_name} is approved for {competition_name}. Continue to idea submission: {url}',
             self::KEY_ELIGIBILITY_REMINDER => 'Hi {teacher_name}, complete eligibility for {competition_name} ({school_name}): {url}',
             self::KEY_IDEA_SUBMITTED => 'Hi {teacher_name}, idea for {competition_name} ({school_name}) was submitted. View: {url}',
+            self::KEY_IDEA_SUBMISSION_REMINDER => 'Hi {teacher_name}, reminder: submit your idea for {competition_name} ({school_name}): {url}',
             self::KEY_IDEA_SHORTLISTED => 'Hi {teacher_name}, {school_name} is shortlisted for {competition_name}. Continue prototype work: {url}',
             self::KEY_IDEA_SHORTLIST_REMINDER => 'Hi {teacher_name}, reminder: {school_name} is shortlisted for {competition_name}. Continue here: {url}',
         ];

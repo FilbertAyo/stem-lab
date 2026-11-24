@@ -19,25 +19,27 @@
     $showShortlistNotify = ! $alreadyNotified && $shortlistDecision === 'shortlisted';
     $teacherEmail = $registration?->resolvedTeacherEmail();
     $maxShortlistReminders = \App\Models\CompetitionShortlist::maxReminders();
+    $pendingIdeaCount = (int) ($pendingIdeaCount ?? 0);
 @endphp
 
 <x-admin-layout>
     <div class="row">
         <div class="col-12">
-            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
                 <div>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-2">
                             <li class="breadcrumb-item"><a href="{{ route('admin.competitions.index') }}">Competitions</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('admin.competitions.show', $competition) }}">{{ $competition->name }}</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Ideas</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.competitions.ideas.index', $competition) }}">Ideas</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ \Illuminate\Support\Str::limit($idea->problem_title ?: 'Untitled', 40) }}</li>
                         </ol>
                     </nav>
                     <h4 class="mb-2">{{ $idea->problem_title ?: 'Untitled idea' }}</h4>
                     <p class="mb-0">
                         <span class="badge bg-{{ $statusBadge }}">{{ $statusLabel }}</span>
-                        @if($idea->ulid)
-                            <span class="ms-2 font-monospace">ULID {{ $idea->ulid }}</span>
+                        @if($idea->submitted_at)
+                            <span class="ms-2 text-muted small">Submitted {{ $idea->submitted_at->timezone(config('app.timezone'))->format('j M Y, H:i') }}</span>
                         @endif
                     </p>
                 </div>
@@ -47,7 +49,7 @@
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#shortlistFromShowModal">Shortlist</button>
                     @if($canRemind)
                         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#shortlistReminderModal">
-                            Send reminder
+                            Shortlist reminder
                             @if(($idea->shortlist?->reminder_count ?? 0) > 0)
                                 ({{ $idea->shortlist->reminder_count }}/{{ $maxShortlistReminders }})
                             @endif
@@ -58,10 +60,28 @@
                 </div>
             </div>
 
+            @if($pendingIdeaCount > 0)
+                <div class="alert alert-warning d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4" role="status">
+                    <div>
+                        <strong>{{ $pendingIdeaCount }}</strong>
+                        {{ $pendingIdeaCount === 1 ? 'school has' : 'schools have' }}
+                        not submitted an idea yet. You can view them and send email/SMS reminders.
+                    </div>
+                    <a href="{{ route('admin.competitions.ideas.index', [$competition, 'tab' => 'pending']) }}" class="btn btn-sm btn-warning">
+                        View &amp; remind
+                    </a>
+                </div>
+            @endif
+
             <div class="row g-4">
                 <div class="col-lg-5">
                     <div class="card mb-4">
-                        <div class="card-header"><strong>School</strong></div>
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <strong>School</strong>
+                            @if($registration)
+                                <a href="{{ route('admin.competitions.registrations.show', [$competition, $registration]) }}" class="small">Registration</a>
+                            @endif
+                        </div>
                         <div class="card-body">
                             <dl class="row mb-0">
                                 <dt class="col-sm-4">School</dt>

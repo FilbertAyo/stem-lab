@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Mail\CompetitionEligibilityReminderMail;
 use App\Mail\CompetitionIdeaShortlistedMail;
+use App\Mail\CompetitionIdeaSubmissionReminderMail;
 use App\Mail\CompetitionRegistrationApprovedMail;
 use App\Models\Club;
 use App\Models\Competition;
@@ -1139,21 +1140,213 @@ class CompetitionController extends Controller
         return back()->with('status', implode(' ', $parts));
     }
 
-    public function ideas(Competition $competition): View
+    public function ideas(Request $request, Competition $competition): View
     {
-        $ideas = $competition->ideas()
-            ->with([
-                'registration.school',
-                'registration.teacher',
-                'communityRegion',
-                'communityDistrict',
-                'scores',
-                'shortlist',
-            ])
-            ->latest()
-            ->paginate(20);
+        $tab = (string) $request->input('tab', 'submitted');
+        if (! in_array($tab, ['submitted', 'pending'], true)) {
+            $tab = 'submitted';
+        }
 
-        return view('admin.competitions.ideas.index', compact('competition', 'ideas'));
+        $submittedCount = $competition->ideas()
+            ->where('status', '!=', 'draft')
+            ->count();
+
+        $pendingRegistrationsQuery = $this->pendingIdeaRegistrationsQuery($competition);
+        $pendingCount = (clone $pendingRegistrationsQuery)->count();
+
+        $ideas = null;
+        $pendingRegistrations = null;
+        $smsDefaultSender = CompetitionSmsTemplates::defaultSenderId();
+        $smsAllowedSenders = CompetitionSmsTemplates::allowedSenders();
+        $ideaSubmissionSmsPreviews = [];
+
+        if ($tab === 'pending') {
+            $pendingRegistrations = $pendingRegistrationsQuery
+                ->with(['school', 'teacher', 'region', 'teacherClub', 'idea'])
+                ->latest('approved_at')
+                ->paginate(20)
+                ->withQueryString();
+
+            $smsCompetitionUrl = $competition->smsUrl();
+            $competitionUrl = $competition->participantUrl().'#idea-submission';
+
+            foreach ($pendingRegistrations as $registration) {
+                $ideaSubmissionSmsPreviews[$registration->id] = [
+                    'phone' => $registration->resolvedTeacherPhone(),
+                    'normalized' => TanzaniaPhone::normalize($registration->resolvedTeacherPhone()),
+                    'preview' => CompetitionSmsTemplates::render(
+                        CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SUBMISSION_REMINDER),
+                        [
+                            'teacher_name' => $registration->resolvedTeacherName() ?: 'Teacher',
+                            'school_name' => $registration->resolvedSchoolName() ?: 'your school',
+                            'competition_name' => $competition->name,
+                            'url' => $competitionUrl,
+                            'short_url' => $smsCompetitionUrl,
+                        ]
+                    ),
+                ];
+            }
+        } else {
+            $ideas = $competition->ideas()
+                ->where('status', '!=', 'draft')
+                ->with([
+                    'registration.school',
+                    'registration.teacher',
+                    'communityRegion',
+                    'communityDistrict',
+                    'scores',
+                    'shortlist',
+                ])
+                ->latest()
+                ->paginate(20)
+                ->withQueryString();
+        }
+
+        return view('admin.competitions.ideas.index', compact(
+            'competition',
+            'tab',
+            'ideas',
+            'pendingRegistrations',
+            'submittedCount',
+            'pendingCount',
+            'smsDefaultSender',
+            'smsAllowedSenders',
+            'ideaSubmissionSmsPreviews',
+        ));
+    }
+
+    public function showPendingIdea(Competition $competition, CompetitionRegistration $registration): View
+    {
+        if ($registration->competition_id !== $competition->id) {
+            abort(404);
+        }
+
+        if (! $registration->needsIdeaSubmission()) {
+            if ($registration->idea && $registration->idea->status !== 'draft') {
+                return redirect()->route('admin.competitions.ideas.show', [$competition, $registration->idea]);
+            }
+
+            abort(404);
+        }
+
+        $registration->load([
+            'school.regionModel',
+            'school.districtModel',
+            'region',
+            'districtModel',
+            'teacher',
+            'teacherClub',
+            'idea',
+            'representativeStudents.student.schoolClass',
+        ]);
+
+        $smsPhoneNormalized = TanzaniaPhone::normalize($registration->resolvedTeacherPhone());
+        $smsDefaultSender = CompetitionSmsTemplates::defaultSenderId();
+        $smsAllowedSenders = CompetitionSmsTemplates::allowedSenders();
+        $competitionUrl = $competition->participantUrl().'#idea-submission';
+        $smsCompetitionUrl = $competition->smsUrl();
+        $smsIdeaSubmissionPreview = CompetitionSmsTemplates::render(
+            CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SUBMISSION_REMINDER),
+            [
+                'teacher_name' => $registration->resolvedTeacherName() ?: 'Teacher',
+                'school_name' => $registration->resolvedSchoolName() ?: 'your school',
+                'competition_name' => $competition->name,
+                'url' => $competitionUrl,
+                'short_url' => $smsCompetitionUrl,
+            ]
+        );
+
+        return view('admin.competitions.ideas.pending-show', compact(
+            'competition',
+            'registration',
+            'smsPhoneNormalized',
+            'smsDefaultSender',
+            'smsAllowedSenders',
+            'smsIdeaSubmissionPreview',
+        ));
+    }
+
+    public function sendIdeaSubmissionReminder(
+        Request $request,
+        Competition $competition,
+        CompetitionRegistration $registration
+    ): RedirectResponse {
+        if ($registration->competition_id !== $competition->id) {
+            abort(404);
+        }
+
+        $smsInput = $this->validatedSmsSendInput($request);
+
+        if (! $registration->canSendIdeaSubmissionReminder()) {
+            if (! $registration->needsIdeaSubmission()) {
+                return back()->with('error', 'Reminders are only for approved schools that have not submitted an idea.');
+            }
+
+            if (! filled($registration->resolvedTeacherEmail()) && ! filled($registration->resolvedTeacherPhone())) {
+                return back()->with('error', 'This registration has no teacher email or phone on file.');
+            }
+
+            $max = CompetitionRegistration::maxIdeaSubmissionReminders();
+
+            return back()->with('error', "Maximum of {$max} reminder(s) already sent for this participant.");
+        }
+
+        $competitionUrl = $competition->participantUrl().'#idea-submission';
+        $teacherEmail = $registration->resolvedTeacherEmail();
+        $emailSent = false;
+
+        if (filled($teacherEmail)) {
+            try {
+                Mail::to($teacherEmail)->send(
+                    new CompetitionIdeaSubmissionReminderMail($competition, $registration, $competitionUrl)
+                );
+                $emailSent = true;
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
+
+        $smsResult = ['ok' => false, 'skipped' => true, 'reason' => 'not_requested'];
+        if ($smsInput['send_sms']) {
+            $smsResult = $this->dispatchCompetitionSms(
+                $competition,
+                $registration,
+                $smsInput['sms_message'],
+                $smsInput['sms_sender_id'],
+                'idea_submission_reminder_sms',
+                'idea-submission-reminder-'.$registration->ulid.'-'.((int) $registration->idea_submission_reminder_count + 1)
+            );
+        }
+
+        if (! $emailSent && ! ($smsResult['ok'] ?? false)) {
+            return back()->with('error', 'Could not send reminder by email or SMS. Check teacher contact details and try again.');
+        }
+
+        $registration->update([
+            'idea_submission_reminder_count' => (int) $registration->idea_submission_reminder_count + 1,
+            'last_idea_submission_reminder_sent_at' => now(),
+        ]);
+
+        $this->logStageEvent(
+            $competition,
+            'idea_submission_reminder_sent',
+            "Idea submission reminder sent to {$registration->resolvedSchoolName()}.",
+            [
+                'registration_ulid' => $registration->ulid,
+                'reminder_count' => $registration->idea_submission_reminder_count,
+                'email_sent' => $emailSent,
+                'teacher_email' => $teacherEmail ?: null,
+                'sms' => $smsResult,
+            ]
+        );
+
+        $parts = [];
+        if ($emailSent) {
+            $parts[] = 'Reminder email sent to '.$teacherEmail.'.';
+        }
+        $parts[] = $this->smsStatusPhrase($smsResult);
+
+        return back()->with('status', implode(' ', $parts));
     }
 
     public function showIdea(Competition $competition, CompetitionIdea $idea): View
@@ -1198,6 +1391,7 @@ class CompetitionController extends Controller
         );
         $shortlistAlreadyNotified = (bool) $idea->shortlist?->hasSentShortlistNotification();
         $canSendShortlistReminder = (bool) $idea->shortlist?->canSendShortlistReminder();
+        $pendingIdeaCount = $this->pendingIdeaRegistrationsQuery($competition)->count();
 
         return view('admin.competitions.ideas.show', compact(
             'competition',
@@ -1209,7 +1403,24 @@ class CompetitionController extends Controller
             'smsReminderPreview',
             'shortlistAlreadyNotified',
             'canSendShortlistReminder',
+            'pendingIdeaCount',
         ));
+    }
+
+    /**
+     * Approved registrations with no idea, or only a draft idea.
+     */
+    private function pendingIdeaRegistrationsQuery(Competition $competition): Builder
+    {
+        return CompetitionRegistration::query()
+            ->where('competition_id', $competition->id)
+            ->where('status', 'approved')
+            ->where(function (Builder $query) {
+                $query->whereDoesntHave('idea')
+                    ->orWhereHas('idea', function (Builder $ideaQuery) {
+                        $ideaQuery->where('status', 'draft');
+                    });
+            });
     }
 
     public function scoreIdea(Request $request, Competition $competition, CompetitionIdea $idea): RedirectResponse
