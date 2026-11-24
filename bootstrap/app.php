@@ -38,6 +38,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'webhooks/snippe',
         ]);
 
+        $middleware->web(append: [
+            \App\Http\Middleware\ForceApplicationUrlRoot::class,
+        ]);
+
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminOnly::class,
             'teacher' => \App\Http\Middleware\TeacherOnly::class,

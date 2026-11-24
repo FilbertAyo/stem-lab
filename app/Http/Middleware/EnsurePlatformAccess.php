@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use App\Services\SubscriptionSelectionService;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsurePlatformAccess
@@ -21,9 +23,14 @@ class EnsurePlatformAccess
     {
         $user = $request->user();
 
-        if (! $user) {
+        if (! $user instanceof User) {
             return $next($request);
         }
+
+        // Always re-read entitlement fields so admin plan grants apply immediately
+        // in the student's next request (no stale in-memory attributes).
+        $user->refresh();
+        Auth::setUser($user);
 
         if ($user->role === 'student'
             && $user->subscription_tier === 'public_school'

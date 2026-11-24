@@ -79,6 +79,7 @@ test('admin can assign and clear a user subscription plan from the show page', f
         'role' => 'student',
         'subscription_tier' => null,
         'subscription_expires_at' => null,
+        'student_onboarding_completed_at' => now(),
     ]);
 
     $assign = $this->put(route('admin.users.subscription.update', $student), [
@@ -91,7 +92,9 @@ test('admin can assign and clear a user subscription plan from the show page', f
 
     expect($student->subscription_tier)->toBe('individual')
         ->and($student->subscription_expires_at)->not->toBeNull()
-        ->and($student->hasActivePrepaidAccess())->toBeTrue();
+        ->and($student->hasActivePrepaidAccess())->toBeTrue()
+        ->and($student->hasPlatformAccess())->toBeTrue()
+        ->and($student->trial_used_at)->not->toBeNull();
 
     $clear = $this->put(route('admin.users.subscription.update', $student), [
         'plan' => 'none',
@@ -103,6 +106,41 @@ test('admin can assign and clear a user subscription plan from the show page', f
     expect($student->subscription_tier)->toBeNull()
         ->and($student->subscription_expires_at)->toBeNull()
         ->and($student->adminPlanLabel())->toBe('No plan');
+});
+
+test('admin-granted individual plan unlocks labs when payments are enabled', function () {
+    config(['subscriptions.payments_enabled' => true]);
+    actingAsAdmin();
+    $this->seed(\Database\Seeders\SubscriptionPackageSeeder::class);
+
+    $student = User::factory()->create([
+        'role' => 'student',
+        'subscription_tier' => null,
+        'subscription_expires_at' => null,
+        'trial_used_at' => now()->subDay(),
+        'student_onboarding_completed_at' => now(),
+        'gender' => 'female',
+        'date_of_birth' => '2010-01-01',
+    ]);
+
+    $this->put(route('admin.users.subscription.update', $student), [
+        'plan' => 'individual',
+        'expires_at' => now()->addDays(30)->format('Y-m-d'),
+    ])->assertRedirect(route('admin.users.show', $student));
+
+    $student = $student->fresh();
+    expect($student->hasPlatformAccess())->toBeTrue();
+
+    // Hit learning on the client host (admin domain uses the same path for ops routes).
+    $this->actingAs($student)
+        ->get('http://localhost/vr-experiments')
+        ->assertOk();
+
+    $this->actingAs($student)
+        ->get('http://localhost/billing?paywall=1')
+        ->assertOk()
+        ->assertDontSee('Your trial has ended')
+        ->assertDontSee('Access paused');
 });
 
 test('admin can assign the yearly individual plan', function () {

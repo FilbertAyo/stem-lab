@@ -31,7 +31,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -113,11 +112,7 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        // Ensure admin routes generate URLs with admin subdomain
-        // This is handled automatically by Route::domain(), but we ensure it's set correctly
-        if (request()->getHost() === parse_url(config('app.admin_url'), PHP_URL_HOST)) {
-            URL::forceRootUrl(config('app.admin_url'));
-        }
+        // URL root for admin vs client is enforced per-request in ForceApplicationUrlRoot.
     }
 
     /**

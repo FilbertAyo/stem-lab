@@ -59,7 +59,8 @@ test('client billing page shows current plan options', function () {
         ->get(route('client.billing.index'))
         ->assertOk()
         ->assertSee('My plan')
-        ->assertSee('Pay with mobile money')
+        ->assertSee('Platform subscription')
+        ->assertSee('Individual')
         ->assertSee('Billing history')
         ->assertSee('Coming soon');
 });
@@ -129,8 +130,9 @@ test('paywall page is shown for unpaid users redirected from learning', function
         ->get(route('client.billing.index', ['paywall' => 1]))
         ->assertOk()
         ->assertSee('Your trial has ended')
-        ->assertSee('Pay with mobile money')
-        ->assertSee('Get free school access');
+        ->assertSee('Platform subscription')
+        ->assertSee('Individual')
+        ->assertSee('Pay with mobile money');
 });
 
 test('club teachers still reach competitions when payments are enabled', function () {

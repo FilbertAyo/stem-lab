@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use App\Models\Club;
-use App\Models\SubscriptionPackage;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -12,15 +11,9 @@ class BillingController extends Controller
 {
     public function index(Request $request): View
     {
+        /** @var User $user */
         $user = $request->user();
-        $packages = SubscriptionPackage::query()->active()->ordered()->get()->keyBy('slug');
-
-        $publicSchoolClub = Club::query()
-            ->active()
-            ->where('name', 'like', '%Chomoza%')
-            ->ordered()
-            ->first()
-            ?? Club::query()->active()->ordered()->first();
+        $user->refresh();
 
         $recentOrders = $user->subscriptionOrders()
             ->with('package')
@@ -30,10 +23,6 @@ class BillingController extends Controller
 
         return view('client.back.billing.index', [
             'user' => $user,
-            'packages' => $packages,
-            'monthlyPackage' => $packages->get('individual'),
-            'yearlyPackage' => $packages->get('individual-yearly'),
-            'publicSchoolClub' => $publicSchoolClub,
             'recentOrders' => $recentOrders,
             'showPaywall' => $request->boolean('paywall') && ! $user->hasPlatformAccess(),
         ]);

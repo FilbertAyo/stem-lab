@@ -128,21 +128,40 @@ class UserController extends Controller
             ->where('slug', $validated['plan'])
             ->firstOrFail();
 
+        $tierKey = filled($package->tier_key)
+            ? (string) $package->tier_key
+            : match ($package->slug) {
+                'free-trial' => 'trial',
+                'individual', 'individual-yearly' => 'individual',
+                'public-school' => 'public_school',
+                default => throw new \InvalidArgumentException("Unsupported package slug [{$package->slug}]."),
+            };
+
         $expiresAt = null;
         if (in_array($package->slug, ['free-trial', 'individual', 'individual-yearly'], true)) {
             $expiresAt = filled($validated['expires_at'] ?? null)
                 ? Carbon::parse($validated['expires_at'], config('app.timezone'))->endOfDay()
-                : now()->addDays(max(1, (int) $package->billing_period_days));
+                : now()->addDays(max(1, (int) $package->billing_period_days))->endOfDay();
+
+            // Prepaid plans must always have a usable end date or Labs will paywall.
+            if ($expiresAt->isPast()) {
+                $expiresAt = now()->addDays(max(1, (int) $package->billing_period_days))->endOfDay();
+            }
         }
 
         $update = [
-            'subscription_tier' => $package->tier_key,
+            'subscription_tier' => $tierKey,
             'subscription_expires_at' => $expiresAt,
             'subscription_renewal_reminded_at' => null,
         ];
 
         if ($package->slug === 'free-trial' && ($request->boolean('mark_trial_used') || $user->trial_used_at === null)) {
             $update['trial_used_at'] = $user->trial_used_at ?? now();
+        }
+
+        // Admin-granted prepaid access should not leave trial CTAs available.
+        if (in_array($package->slug, ['individual', 'individual-yearly'], true) && $user->trial_used_at === null) {
+            $update['trial_used_at'] = now();
         }
 
         $user->forceFill($update)->save();

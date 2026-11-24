@@ -16,7 +16,7 @@
   $trialUsed = $packageUser?->trial_used_at !== null;
   $hasActivePrepaid = $packageUser?->hasActivePrepaidAccess() ?? false;
   $expiresAt = $packageUser?->subscription_expires_at;
-  $secondsLeft = ($expiresAt && $expiresAt->isFuture()) ? ($expiresAt->getTimestamp() - time()) : 0;
+  $secondsLeft = ($expiresAt && ! $expiresAt->isPast()) ? ($expiresAt->getTimestamp() - time()) : 0;
   $prepaidDaysLeft = $secondsLeft > 0 ? (int) ceil($secondsLeft / 86400) : 0;
   $prepaidEndsToday = $secondsLeft > 0 && $prepaidDaysLeft <= 1;
   $onTrial = $hasActivePrepaid && $packageUser?->subscription_tier === 'trial';
@@ -28,7 +28,9 @@
     <h5 class="text-muted mb-0 fw-semibold">
      Platform subscription
     </h5>
-    <a href="{{ route('client.billing.index') }}" class="small text-decoration-none">My plan</a>
+    @unless (request()->routeIs('client.billing.index'))
+      <a href="{{ route('client.billing.index') }}" class="small text-decoration-none">My plan</a>
+    @endunless
   </div>
 </div>
 
@@ -180,16 +182,17 @@
               </ul>
             </div>
           @endif
-          @if ($isActivePackage && $isIndividualCard && $paymentsEnabled && ! $hasLockedPlan)
-            <a href="#" class="btn btn-dark d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action" data-package="{{ $ctaAction }}" data-slug="{{ $package->slug }}" @if($yearlyPackage) data-yearly-slug="{{ $yearlyPackage->slug }}" data-monthly-label="{{ $ctaLabel }}" data-yearly-label="Extend yearly" @endif>
-              <span class="fw-semibold js-package-cta-label">{{ $ctaLabel }}</span>
-              <iconify-icon icon="lucide:arrow-up-right" class="fs-5"></iconify-icon>
-            </a>
-          @elseif ($isActivePackage)
+          @if ($isActivePackage)
             <button type="button" class="btn btn-outline-success d-inline-flex align-items-center gap-2 w-100 justify-content-center" disabled>
               <span class="fw-semibold">Current plan</span>
               <iconify-icon icon="lucide:check" class="fs-5"></iconify-icon>
             </button>
+            @if ($isIndividualCard && $paymentsEnabled && ! $hasLockedPlan)
+              <a href="#" class="btn btn-link text-decoration-none d-inline-flex align-items-center gap-2 w-100 justify-content-center js-package-action px-0" data-package="{{ $ctaAction }}" data-slug="{{ $package->slug }}" @if($yearlyPackage) data-yearly-slug="{{ $yearlyPackage->slug }}" data-monthly-label="{{ $ctaLabel }}" data-yearly-label="Extend yearly" @endif>
+                <span class="fw-semibold js-package-cta-label small">{{ $ctaLabel }}</span>
+                <iconify-icon icon="lucide:arrow-up-right" class="fs-6"></iconify-icon>
+              </a>
+            @endif
           @elseif ($packageActionDisabled)
             <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center gap-2 w-100 justify-content-center" disabled>
               <span class="fw-semibold">

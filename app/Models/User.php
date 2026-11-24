@@ -131,6 +131,17 @@ class User extends Authenticatable
 
     private ?bool $approvedClubMembershipMemo = null;
 
+    /**
+     * Clear request-scoped entitlement memos after a DB refresh.
+     */
+    public function refresh(): static
+    {
+        $this->clubLinkedMemo = null;
+        $this->approvedClubMembershipMemo = null;
+
+        return parent::refresh();
+    }
+
     public function isClubLinked(): bool
     {
         return $this->clubLinkedMemo ??= (
@@ -171,8 +182,12 @@ class User extends Authenticatable
             return false;
         }
 
-        return $this->subscription_expires_at !== null
-            && $this->subscription_expires_at->isFuture();
+        if ($this->subscription_expires_at === null) {
+            return false;
+        }
+
+        // Treat "now" as still active so end-of-second edge cases do not false-paywall.
+        return ! $this->subscription_expires_at->isPast();
     }
 
     public function hasPlatformAccess(): bool
@@ -191,7 +206,7 @@ class User extends Authenticatable
         }
 
         if ($this->hasActivePrepaidAccess() && in_array($this->subscription_tier, ['individual', 'pro'], true)) {
-            return 'Pro';
+            return 'Individual';
         }
 
         if ($this->hasActivePrepaidAccess() && $this->subscription_tier === 'trial') {
