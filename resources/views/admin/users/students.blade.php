@@ -53,9 +53,14 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-info" title="View Details">
-                                                <i class="ti ti-eye"></i>
-                                            </a>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.users.show', $user),
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

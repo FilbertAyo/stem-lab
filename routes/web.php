@@ -48,9 +48,7 @@ Route::post('/webhooks/snippe', SnippeWebhookController::class)
 Route::middleware(['block.client.on.admin', 'track.landing.visitor'])->group(function () {
     // Root: redirect admin subdomain to login; show landing page on main domain
     Route::get('/', function () {
-        $competitions = \App\Http\Controllers\PublicCompetitionController::getFeaturedCompetitions(3);
-
-        return view('client.front.welcome', compact('competitions'));
+        return view('client.front.welcome');
     });
 
     Route::get('/privacy-policy', function () {

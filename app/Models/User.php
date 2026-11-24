@@ -127,10 +127,16 @@ class User extends Authenticatable
         return $this->hasOne(Student::class);
     }
 
+    private ?bool $clubLinkedMemo = null;
+
+    private ?bool $approvedClubMembershipMemo = null;
+
     public function isClubLinked(): bool
     {
-        return $this->club_linked_at !== null
-            && $this->linkedRosterStudent()->exists();
+        return $this->clubLinkedMemo ??= (
+            $this->club_linked_at !== null
+            && $this->linkedRosterStudent()->exists()
+        );
     }
 
     public function hasPublicSchoolAccess(): bool
@@ -144,7 +150,7 @@ class User extends Authenticatable
             return $this->teacherClubs->contains(fn (TeacherClub $membership) => $membership->status === 'approved');
         }
 
-        return $this->teacherClubs()->where('status', 'approved')->exists();
+        return $this->approvedClubMembershipMemo ??= $this->teacherClubs()->where('status', 'approved')->exists();
     }
 
     /**
@@ -431,20 +437,24 @@ class User extends Authenticatable
             return collect();
         }
 
-        $ids = collect();
-        foreach ($memberships as $membership) {
-            $query = TeacherClub::query()
-                ->where('club_id', $membership->club_id)
-                ->where('status', 'approved');
-            if ($membership->school_id === null) {
-                $query->whereNull('school_id');
-            } else {
-                $query->where('school_id', $membership->school_id);
-            }
-            $ids = $ids->merge($query->pluck('id'));
-        }
+        return TeacherClub::query()
+            ->where('status', 'approved')
+            ->where(function ($query) use ($memberships): void {
+                foreach ($memberships as $membership) {
+                    $query->orWhere(function ($inner) use ($membership): void {
+                        $inner->where('club_id', $membership->club_id);
 
-        return $ids->unique()->values();
+                        if ($membership->school_id === null) {
+                            $inner->whereNull('school_id');
+                        } else {
+                            $inner->where('school_id', $membership->school_id);
+                        }
+                    });
+                }
+            })
+            ->pluck('id')
+            ->unique()
+            ->values();
     }
 
     /**

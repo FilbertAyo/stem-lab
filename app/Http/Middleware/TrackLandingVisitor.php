@@ -15,7 +15,11 @@ class TrackLandingVisitor
 {
     private const COOKIE_NAME = 'stem_visitor';
 
+    private const SEEN_COOKIE = 'stem_visitor_seen';
+
     private const COOKIE_LIFETIME_MINUTES = 1051200; // 2 years
+
+    private const TRACK_INTERVAL_SECONDS = 1800;
 
     /**
      * Track unique landing/page visitors via cookie. Only runs on main domain, GET requests.
@@ -31,8 +35,13 @@ class TrackLandingVisitor
             return $next($request);
         }
 
-        $token = $request->cookie(self::COOKIE_NAME);
         $now = now();
+        $seenAt = (int) $request->cookie(self::SEEN_COOKIE);
+        if ($seenAt > 0 && ($now->getTimestamp() - $seenAt) < self::TRACK_INTERVAL_SECONDS) {
+            return $next($request);
+        }
+
+        $token = $request->cookie(self::COOKIE_NAME);
 
         if (empty($token)) {
             $token = Str::random(40);
@@ -46,7 +55,7 @@ class TrackLandingVisitor
 
             $response = $next($request);
 
-            return $response->cookie(
+            return $this->rememberSeen($response->cookie(
                 self::COOKIE_NAME,
                 $token,
                 self::COOKIE_LIFETIME_MINUTES,
@@ -56,7 +65,7 @@ class TrackLandingVisitor
                 true,
                 false,
                 'lax'
-            );
+            ), $now);
         }
 
         $visitor = Visitor::where('visitor_token', $token)->first();
@@ -68,7 +77,24 @@ class TrackLandingVisitor
             $this->recordWeeklyStat($visitor->id);
         }
 
-        return $next($request);
+        $response = $next($request);
+
+        return $visitor ? $this->rememberSeen($response, $now) : $response;
+    }
+
+    private function rememberSeen(Response $response, Carbon $now): Response
+    {
+        return $response->cookie(
+            self::SEEN_COOKIE,
+            (string) $now->getTimestamp(),
+            self::COOKIE_LIFETIME_MINUTES,
+            '/',
+            null,
+            request()->secure(),
+            true,
+            false,
+            'lax'
+        );
     }
 
     private function recordWeeklyStat(int $visitorId): void

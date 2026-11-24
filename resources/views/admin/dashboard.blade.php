@@ -202,15 +202,24 @@
                                     <td class="text-muted">{{ $competition->club?->name ?? '—' }}</td>
                                     <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ $competition->phases->count() }}</span></td>
                                     <td class="text-end">
-                                        <button
-                                            class="btn btn-outline-success btn-sm py-0 px-2"
-                                            type="button"
-                                            data-bs-toggle="offcanvas"
-                                            data-bs-target="#competitionPhasesCanvas{{ $competition->id }}"
-                                            aria-controls="competitionPhasesCanvas{{ $competition->id }}"
-                                        >
-                                            View phases
-                                        </button>
+                                        <x-admin.table-actions :actions="[
+                                            [
+                                                'type' => 'button',
+                                                'label' => 'View phases',
+                                                'icon' => 'ti ti-list-check',
+                                                'attributes' => [
+                                                    'data-bs-toggle' => 'offcanvas',
+                                                    'data-bs-target' => '#competitionPhasesCanvas'.$competition->id,
+                                                    'aria-controls' => 'competitionPhasesCanvas'.$competition->id,
+                                                ],
+                                            ],
+                                            [
+                                                'type' => 'link',
+                                                'label' => 'Open competition',
+                                                'icon' => 'ti ti-external-link',
+                                                'url' => route('admin.competitions.show', $competition),
+                                            ],
+                                        ]" />
                                     </td>
                                 </tr>
                             @endforeach

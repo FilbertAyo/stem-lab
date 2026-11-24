@@ -90,31 +90,32 @@
                                         </td>
                                         <td>{{ $user->created_at->format('M d, Y') }}</td>
                                         <td>
-                                            <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-sm btn-primary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editAdminModal"
-                                                    data-user-id="{{ $user->id }}"
-                                                    data-user-route-key="{{ $user->getRouteKey() }}"
-                                                    data-user-name="{{ $user->name }}"
-                                                    data-user-email="{{ $user->email }}"
-                                                    data-alert-categories='@json(is_array($user->admin_alert_categories) ? $user->admin_alert_categories : [])'
-                                                    title="Edit">
-                                                    <i class="ti ti-edit"></i>
-                                                </button>
-                                                <form action="{{ route('admin.users.toggle-status', $user) }}" method="POST" class="d-inline"
-                                                    onsubmit="return confirm('Are you sure you want to {{ $user->is_active ? 'disable' : 'enable' }} this admin user?');">
-                                                    @csrf
-                                                    @if(request()->filled('q'))
-                                                        <input type="hidden" name="q" value="{{ request('q') }}">
-                                                    @endif
-                                                    <button type="submit" class="btn btn-sm {{ $user->is_active ? 'btn-warning' : 'btn-success' }}"
-                                                        title="{{ $user->is_active ? 'Disable' : 'Enable' }}"
-                                                        {{ $user->id === auth()->id() ? 'disabled' : '' }}>
-                                                        <i class="ti ti-{{ $user->is_active ? 'ban' : 'check' }}"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'button',
+                                                    'label' => 'Edit',
+                                                    'icon' => 'ti ti-edit',
+                                                    'attributes' => [
+                                                        'data-bs-toggle' => 'modal',
+                                                        'data-bs-target' => '#editAdminModal',
+                                                        'data-user-id' => $user->id,
+                                                        'data-user-route-key' => $user->getRouteKey(),
+                                                        'data-user-name' => $user->name,
+                                                        'data-user-email' => $user->email,
+                                                        'data-alert-categories' => json_encode(is_array($user->admin_alert_categories) ? $user->admin_alert_categories : []),
+                                                    ],
+                                                ],
+                                                [
+                                                    'type' => 'form',
+                                                    'label' => $user->is_active ? 'Disable' : 'Enable',
+                                                    'icon' => $user->is_active ? 'ti ti-ban' : 'ti ti-check',
+                                                    'url' => route('admin.users.toggle-status', $user),
+                                                    'confirm' => 'Are you sure you want to '.($user->is_active ? 'disable' : 'enable').' this admin user?',
+                                                    'danger' => $user->is_active,
+                                                    'disabled' => $user->id === auth()->id(),
+                                                    'hidden' => request()->filled('q') ? ['q' => request('q')] : [],
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

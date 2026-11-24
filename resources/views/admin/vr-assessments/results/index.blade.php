@@ -107,11 +107,14 @@
                                             <br><small class="text-muted">{{ $attempt->completed_at->format('H:i A') }}</small>
                                         </td>
                                         <td>
-                                            <a href="{{ route('admin.vr-assessments.results.show', $attempt) }}"
-                                               class="btn btn-sm btn-info"
-                                               title="View Details">
-                                                <i class="ti ti-eye"></i> View
-                                            </a>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.vr-assessments.results.show', $attempt),
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

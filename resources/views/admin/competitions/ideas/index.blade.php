@@ -50,7 +50,14 @@
                                             @endif
                                         </td>
                                         <td class="text-nowrap">
-                                            <a href="{{ route('admin.competitions.ideas.show', [$competition, $idea]) }}" class="btn btn-sm btn-outline-secondary">View</a>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.competitions.ideas.show', [$competition, $idea]),
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
 

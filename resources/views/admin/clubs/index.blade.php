@@ -46,39 +46,14 @@
                                             </span>
                                         </td>
                                      <td class="text-center">
-                                            <div class="btn-group" role="group">
-                                                <a
-                                                    href="{{ route('admin.clubs.show', $club) }}"
-                                                    class="btn btn-sm btn-outline-info"
-                                                    title="View Details"
-                                                >
-                                                    <i class="ti ti-eye"></i>
-                                                </a>
-                                                <!-- <button
-                                                    class="btn btn-sm btn-outline-primary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editClubModal"
-                                                    data-action="{{ route('admin.clubs.update', $club) }}"
-                                                    data-name="{{ $club->name }}"
-                                                    data-description="{{ $club->description }}"
-                                                    data-active="{{ $club->is_active ? '1' : '0' }}"
-                                                    data-image="{{ $club->image_path ? Storage::url($club->image_path) : '' }}"
-                                                    title="Edit"
-                                                >
-                                                    <i class="ti ti-edit"></i>
-                                                </button>
-                                                <button
-                                                    class="btn btn-sm {{ $club->is_active ? 'btn-outline-warning' : 'btn-outline-success' }}"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#clubStatusModal"
-                                                    data-action="{{ route('admin.clubs.toggle-status', $club) }}"
-                                                    data-name="{{ $club->name }}"
-                                                    data-status="{{ $club->is_active ? 'disable' : 'enable' }}"
-                                                    title="{{ $club->is_active ? 'Disable' : 'Enable' }}"
-                                                >
-                                                    <i class="ti {{ $club->is_active ? 'ti-ban' : 'ti-check' }}"></i>
-                                                </button> -->
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.clubs.show', $club),
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

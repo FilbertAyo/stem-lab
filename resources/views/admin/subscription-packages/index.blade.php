@@ -65,12 +65,14 @@
                                             </span>
                                         </td>
                                         <td class="text-center">
-                                            <a
-                                                href="{{ route('admin.subscription-packages.edit', $package) }}"
-                                                class="btn btn-sm btn-outline-primary"
-                                            >
-                                                <i class="ti ti-edit"></i> Edit
-                                            </a>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'Edit',
+                                                    'icon' => 'ti ti-edit',
+                                                    'url' => route('admin.subscription-packages.edit', $package),
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

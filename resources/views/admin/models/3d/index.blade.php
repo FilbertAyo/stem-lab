@@ -92,35 +92,35 @@
                                             @include('admin.partials.ownership-meta', ['record' => $model, 'compact' => true, 'class' => ''])
                                         </td>
                                         <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.models.3d.show', $model) }}"
-                                                   class="btn btn-sm btn-info"
-                                                   title="View Details">
-                                                    <i class="ti ti-eye"></i>
-                                                </a>
-                                                <a href="{{ route('admin.models.3d.questions.index', $model) }}"
-                                                   class="btn btn-sm btn-warning"
-                                                   title="Manage Questions">
-                                                    <i class="ti ti-question-mark"></i>
-                                                </a>
-                                                <a href="{{ route('admin.models.3d.edit', $model) }}"
-                                                   class="btn btn-sm btn-primary"
-                                                   title="Edit">
-                                                    <i class="ti ti-edit"></i>
-                                                </a>
-                                                <form action="{{ route('admin.models.3d.destroy', $model) }}"
-                                                      method="POST"
-                                                      class="d-inline"
-                                                      onsubmit="return confirm('Are you sure you want to delete this 3D model? This will also delete the GLB file and thumbnail. This action cannot be undone.');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                            class="btn btn-sm btn-danger"
-                                                            title="Delete">
-                                                        <i class="ti ti-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.models.3d.show', $model),
+                                                ],
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'Manage Questions',
+                                                    'icon' => 'ti ti-question-mark',
+                                                    'url' => route('admin.models.3d.questions.index', $model),
+                                                ],
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'Edit',
+                                                    'icon' => 'ti ti-edit',
+                                                    'url' => route('admin.models.3d.edit', $model),
+                                                ],
+                                                [
+                                                    'type' => 'form',
+                                                    'label' => 'Delete',
+                                                    'icon' => 'ti ti-trash',
+                                                    'url' => route('admin.models.3d.destroy', $model),
+                                                    'method' => 'DELETE',
+                                                    'confirm' => 'Are you sure you want to delete this 3D model? This will also delete the GLB file and thumbnail. This action cannot be undone.',
+                                                    'danger' => true,
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

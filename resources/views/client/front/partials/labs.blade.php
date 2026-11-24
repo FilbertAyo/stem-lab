@@ -29,7 +29,7 @@
             <div class="item" style="padding: 0 15px;">
               <div class="portfolio d-flex flex-column gap-6" style="min-height: 500px;">
                 <div class="portfolio-img position-relative overflow-hidden" style="min-height: 350px;">
-                  <img src="{{ asset('images/labs/physics.jpg') }}" alt="Physics" class="img-fluid" style="height: 100%; object-fit: cover;">
+                  <img src="{{ asset('images/labs/physics.jpg') }}" alt="Physics" class="img-fluid" style="height: 100%; object-fit: cover;" fetchpriority="high" decoding="async">
               
                 </div>
                 <div class="portfolio-details d-flex flex-column gap-3">
@@ -45,7 +45,7 @@
             <div class="item" style="padding: 0 15px;">
               <div class="portfolio d-flex flex-column gap-6" style="min-height: 500px;">
                 <div class="portfolio-img position-relative overflow-hidden" style="min-height: 350px;">
-                  <img src="{{ asset('images/labs/chemistry.jpg') }}" alt="Chemistry" class="img-fluid" style="height: 100%; object-fit: cover;">
+                  <img src="{{ asset('images/labs/chemistry.jpg') }}" alt="Chemistry" class="img-fluid" style="height: 100%; object-fit: cover;" loading="lazy" decoding="async">
                  
                 </div>
                 <div class="portfolio-details d-flex flex-column gap-3">
@@ -60,7 +60,7 @@
             <div class="item" style="padding: 0 15px;">
               <div class="portfolio d-flex flex-column gap-6" style="min-height: 500px;">
                 <div class="portfolio-img position-relative overflow-hidden" style="min-height: 350px;">
-                  <img src="{{ asset('images/labs/biology.jpg') }}" alt="Biology" class="img-fluid" style="height: 100%; object-fit: cover;">
+                  <img src="{{ asset('images/labs/biology.jpg') }}" alt="Biology" class="img-fluid" style="height: 100%; object-fit: cover;" loading="lazy" decoding="async">
                  
                 </div>
                 <div class="portfolio-details d-flex flex-column gap-3">
@@ -75,7 +75,7 @@
             <div class="item" style="padding: 0 15px;">
               <div class="portfolio d-flex flex-column gap-6" style="min-height: 500px;">
                 <div class="portfolio-img position-relative overflow-hidden" style="min-height: 350px;">
-                  <img src="{{ asset('images/labs/mathematics.jpg') }}" alt="Mathematics" class="img-fluid" style="height: 100%; object-fit: cover;">
+                  <img src="{{ asset('images/labs/mathematics.jpg') }}" alt="Mathematics" class="img-fluid" style="height: 100%; object-fit: cover;" loading="lazy" decoding="async">
                  
                 </div>
                 <div class="portfolio-details d-flex flex-column gap-3">
@@ -90,7 +90,7 @@
             <div class="item" style="padding: 0 15px;">
               <div class="portfolio d-flex flex-column gap-6" style="min-height: 500px;">
                 <div class="portfolio-img position-relative overflow-hidden" style="min-height: 350px;">
-                  <img src="{{ asset('images/labs/coding.jpg') }}" alt="Coding" class="img-fluid" style="height: 100%; object-fit: cover;">
+                  <img src="{{ asset('images/labs/coding.jpg') }}" alt="Coding" class="img-fluid" style="height: 100%; object-fit: cover;" loading="lazy" decoding="async">
                  
                 </div>
                 <div class="portfolio-details d-flex flex-column gap-3">
@@ -105,7 +105,7 @@
             <div class="item" style="padding: 0 15px;">
               <div class="portfolio d-flex flex-column gap-6" style="min-height: 500px;">
                 <div class="portfolio-img position-relative overflow-hidden" style="min-height: 350px;">
-                  <img src="{{ asset('images/labs/aviation.jpg') }}" alt="Aviation" class="img-fluid" style="height: 100%; object-fit: cover;">
+                  <img src="{{ asset('images/labs/aviation.jpg') }}" alt="Aviation" class="img-fluid" style="height: 100%; object-fit: cover;" loading="lazy" decoding="async">
                  
                 </div>
                 <div class="portfolio-details d-flex flex-column gap-3">
@@ -120,7 +120,7 @@
             <div class="item" style="padding: 0 15px;">
               <div class="portfolio d-flex flex-column gap-6" style="min-height: 500px;">
                 <div class="portfolio-img position-relative overflow-hidden" style="min-height: 350px;">
-                  <img src="{{ asset('images/labs/robotics.jpg') }}" alt="Robotics" class="img-fluid" style="height: 100%; object-fit: cover;">
+                  <img src="{{ asset('images/labs/robotics.jpg') }}" alt="Robotics" class="img-fluid" style="height: 100%; object-fit: cover;" loading="lazy" decoding="async">
                  
                 </div>
                 <div class="portfolio-details d-flex flex-column gap-3">

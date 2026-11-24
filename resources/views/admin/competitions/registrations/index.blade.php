@@ -178,8 +178,14 @@
                                             <span class="badge bg-{{ $badge }}">{{ $statusLabel }}</span>
                                         </td>
                                         <td class="text-end text-nowrap">
-                                            <a href="{{ route('admin.competitions.registrations.show', [$competition, $registration]) }}" class="btn btn-sm btn-outline-primary">View</a>
-                                         
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.competitions.registrations.show', [$competition, $registration]),
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

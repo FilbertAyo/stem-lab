@@ -122,18 +122,26 @@
                                             </div>
                                         </td>
                                         <td class="text-center">
-                                            <div class="btn-group" role="group">
-                                                <button form="update-category-{{ $category->id }}" type="submit" class="btn btn-sm btn-outline-primary" title="Save">
-                                                    <i class="ti ti-device-floppy"></i>
-                                                </button>
-                                                <form action="{{ route('admin.project-categories.destroy', $category) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete category &quot;{{ $category->name }}&quot;? Projects using it will become uncategorized.');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
-                                                        <i class="ti ti-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'button',
+                                                    'label' => 'Save',
+                                                    'icon' => 'ti ti-device-floppy',
+                                                    'buttonType' => 'submit',
+                                                    'attributes' => [
+                                                        'form' => 'update-category-'.$category->id,
+                                                    ],
+                                                ],
+                                                [
+                                                    'type' => 'form',
+                                                    'label' => 'Delete',
+                                                    'icon' => 'ti ti-trash',
+                                                    'url' => route('admin.project-categories.destroy', $category),
+                                                    'method' => 'DELETE',
+                                                    'confirm' => 'Delete category '.$category->name.'? Projects using it will become uncategorized.',
+                                                    'danger' => true,
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

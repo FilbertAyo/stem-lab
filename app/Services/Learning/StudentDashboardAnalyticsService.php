@@ -21,21 +21,25 @@ class StudentDashboardAnalyticsService
     {
         $userId = $user->id;
 
-        $totalAnswers = ModelQuestionAnswer::query()->where('user_id', $userId)->count();
-        $correctAnswers = ModelQuestionAnswer::query()
+        $answerStats = ModelQuestionAnswer::query()
             ->where('user_id', $userId)
-            ->where('is_correct', true)
-            ->count();
+            ->selectRaw('COUNT(*) as total_answers, SUM(CASE WHEN is_correct = 1 THEN 1 ELSE 0 END) as correct_answers, COUNT(DISTINCT model_id) as models_attempted')
+            ->first();
+
+        $totalAnswers = (int) ($answerStats->total_answers ?? 0);
+        $correctAnswers = (int) ($answerStats->correct_answers ?? 0);
         $accuracy = $totalAnswers > 0
             ? round(($correctAnswers / $totalAnswers) * 100, 1)
             : 0.0;
 
         $modelProgress = $this->modelProgress($userId);
-        $modelsAttempted = ModelQuestionAnswer::query()
-            ->where('user_id', $userId)
-            ->distinct()
-            ->count('model_id');
+        $modelsAttempted = (int) ($answerStats->models_attempted ?? 0);
         $modelsCompleted = $this->completedModelCount($userId);
+
+        $vrStats = VrAssessmentAttempt::query()
+            ->where('user_id', $userId)
+            ->selectRaw('SUM(CASE WHEN completed_at IS NOT NULL THEN 1 ELSE 0 END) as completed_count, SUM(CASE WHEN passed = 1 THEN 1 ELSE 0 END) as passed_count, AVG(CASE WHEN completed_at IS NOT NULL THEN score END) as avg_score')
+            ->first();
 
         $vrAttempts = VrAssessmentAttempt::query()
             ->where('user_id', $userId)
@@ -45,19 +49,10 @@ class StudentDashboardAnalyticsService
             ->limit(8)
             ->get();
 
-        $vrAttemptsCount = VrAssessmentAttempt::query()
-            ->where('user_id', $userId)
-            ->whereNotNull('completed_at')
-            ->count();
-        $vrPassed = VrAssessmentAttempt::query()
-            ->where('user_id', $userId)
-            ->where('passed', true)
-            ->count();
-        $avgVrScore = $vrAttemptsCount > 0
-            ? round((float) VrAssessmentAttempt::query()
-                ->where('user_id', $userId)
-                ->whereNotNull('completed_at')
-                ->avg('score'), 1)
+        $vrAttemptsCount = (int) ($vrStats->completed_count ?? 0);
+        $vrPassed = (int) ($vrStats->passed_count ?? 0);
+        $avgVrScore = $vrAttemptsCount > 0 && $vrStats?->avg_score !== null
+            ? round((float) $vrStats->avg_score, 1)
             : null;
 
         $resourcesAccessed = StudentLearningEvent::query()

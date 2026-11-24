@@ -27,16 +27,16 @@
               <div class="col-xl-4">
                 <div class="tab-content" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="1000">
                   <div class="tab-pane active" id="one" role="tabpanel" aria-labelledby="one-tab" tabindex="0">
-                    <img src="{{ asset('client/assets/images/xr3.jpg') }}" alt="services" class="img-fluid">
+                    <img src="{{ asset('client/assets/images/xr3.jpg') }}" alt="services" class="img-fluid" loading="lazy" decoding="async">
                   </div>
                   <div class="tab-pane" id="two" role="tabpanel" aria-labelledby="two-tab" tabindex="0">
-                    <img src="{{ asset('client/assets/images/xr4.jpg') }}" alt="services" class="img-fluid">
+                    <img src="{{ asset('client/assets/images/xr4.jpg') }}" alt="services" class="img-fluid" loading="lazy" decoding="async">
                   </div>
                   <div class="tab-pane" id="three" role="tabpanel" aria-labelledby="three-tab" tabindex="0">
-                    <img src="{{ asset('client/assets/images/xr2.jpg') }}" alt="services" class="img-fluid">
+                    <img src="{{ asset('client/assets/images/xr2.jpg') }}" alt="services" class="img-fluid" loading="lazy" decoding="async">
                   </div>
                   <div class="tab-pane" id="four" role="tabpanel" aria-labelledby="four-tab" tabindex="0">
-                    <img src="{{ asset('client/assets/images/xr5.jpg') }}" alt="services" class="img-fluid">
+                    <img src="{{ asset('client/assets/images/xr5.jpg') }}" alt="services" class="img-fluid" loading="lazy" decoding="async">
                   </div>
                 </div>
               </div>

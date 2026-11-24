@@ -120,28 +120,29 @@
                                             @include('admin.partials.ownership-meta', ['record' => $session, 'compact' => true, 'class' => ''])
                                         </td>
                                         <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.weekly-sessions.show', $session) }}" 
-                                                   class="btn btn-sm btn-outline-info" 
-                                                   title="View">
-                                                    <i class="ti ti-eye"></i>
-                                                </a>
-                                                <a href="{{ route('admin.weekly-sessions.edit', $session) }}" 
-                                                   class="btn btn-sm btn-outline-primary" 
-                                                   title="Edit">
-                                                    <i class="ti ti-edit"></i>
-                                                </a>
-                                                <form action="{{ route('admin.weekly-sessions.destroy', $session) }}" 
-                                                      method="POST" 
-                                                      class="d-inline"
-                                                      onsubmit="return confirm('Are you sure you want to delete this session?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
-                                                        <i class="ti ti-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.weekly-sessions.show', $session),
+                                                ],
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'Edit',
+                                                    'icon' => 'ti ti-edit',
+                                                    'url' => route('admin.weekly-sessions.edit', $session),
+                                                ],
+                                                [
+                                                    'type' => 'form',
+                                                    'label' => 'Delete',
+                                                    'icon' => 'ti ti-trash',
+                                                    'url' => route('admin.weekly-sessions.destroy', $session),
+                                                    'method' => 'DELETE',
+                                                    'confirm' => 'Are you sure you want to delete this session?',
+                                                    'danger' => true,
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

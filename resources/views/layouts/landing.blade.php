@@ -14,13 +14,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/logo/favicon.png') }}" media="(prefers-color-scheme: light)">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/logo/favicon.png') }}" media="(prefers-color-scheme: dark)">
   <link rel="shortcut icon" type="image/png" href="{{ asset('client/assets/images/logos/favicon.svg') }}" />
-  <link rel="stylesheet" href="{{ asset('client/assets/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('client/assets/libs/aos-master/dist/aos.css') }}">
-  <link rel="stylesheet" href="{{ asset('client/assets/css/styles.css') }}" />
-  <link rel="stylesheet" href="{{ asset('client/assets/css/client-layout-width.css') }}" />
-  <link rel="stylesheet" href="{{ asset('client/assets/css/client-button-sizing.css') }}" />
-  <link rel="stylesheet" href="{{ asset('client/assets/css/client-form-controls.css') }}" />
-  <link rel="stylesheet" href="{{ asset('client/assets/css/client-modal-sizing.css') }}" />
+  @include('layouts.client.partials.styles', ['carousel' => true, 'animations' => true])
 
   @stack('head')
   @stack('styles')
@@ -48,13 +42,12 @@
   </div>
 
 
-    <script src="{{ asset('client/assets/libs/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('client/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('client/assets/libs/owl.carousel/dist/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('client/assets/libs/aos-master/dist/aos.js') }}"></script>
-    <script src="{{ asset('client/assets/js/custom.js') }}"></script>
-  <!-- solar icons -->
-  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+  @include('layouts.client.partials.scripts', [
+      'jquery' => true,
+      'bootstrap' => true,
+      'carousel' => true,
+      'animations' => true,
+  ])
   @stack('scripts')
 </body>
 

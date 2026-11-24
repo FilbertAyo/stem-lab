@@ -74,23 +74,23 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.database-backup.download', $backup['filename']) }}" 
-                                                   class="btn btn-sm btn-success" 
-                                                   title="Download Backup">
-                                                    <i class="ti ti-download"></i>
-                                                </a>
-                                                <form action="{{ route('admin.database-backup.destroy', $backup['filename']) }}" 
-                                                      method="POST" 
-                                                      class="d-inline"
-                                                      onsubmit="return confirm('Are you sure you want to delete this backup? This action cannot be undone.');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete Backup">
-                                                        <i class="ti ti-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'Download',
+                                                    'icon' => 'ti ti-download',
+                                                    'url' => route('admin.database-backup.download', $backup['filename']),
+                                                ],
+                                                [
+                                                    'type' => 'form',
+                                                    'label' => 'Delete',
+                                                    'icon' => 'ti ti-trash',
+                                                    'url' => route('admin.database-backup.destroy', $backup['filename']),
+                                                    'method' => 'DELETE',
+                                                    'confirm' => 'Are you sure you want to delete this backup? This action cannot be undone.',
+                                                    'danger' => true,
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

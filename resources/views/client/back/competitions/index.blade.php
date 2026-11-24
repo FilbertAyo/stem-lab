@@ -34,7 +34,9 @@
                                         <img src="{{ Storage::url($competition->cover_image) }}"
                                              class="img-fluid rounded-start h-100"
                                              alt="{{ $competition->name }}"
-                                             style="object-fit: cover; min-height: 200px;">
+                                             style="object-fit: cover; min-height: 200px;"
+                                             loading="lazy"
+                                             decoding="async">
                                     @else
                                         <div class="bg-light rounded-start d-flex align-items-center justify-content-center h-100" style="min-height: 200px;">
                                             <i class="bi bi-trophy display-4 text-muted"></i>

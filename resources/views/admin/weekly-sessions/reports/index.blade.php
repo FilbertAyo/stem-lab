@@ -235,9 +235,14 @@
                                         </td>
                                         <td class="text-center">
                                             @if($report->weeklySession)
-                                                <a href="{{ route('admin.weekly-sessions.reports.show', $report) }}" class="btn btn-sm btn-outline-primary">
-                                                    <i class="ti ti-eye"></i> View
-                                                </a>
+                                                <x-admin.table-actions :actions="[
+                                                    [
+                                                        'type' => 'link',
+                                                        'label' => 'View',
+                                                        'icon' => 'ti ti-eye',
+                                                        'url' => route('admin.weekly-sessions.reports.show', $report),
+                                                    ],
+                                                ]" />
                                             @else
                                                 <span class="text-muted">Quick Report</span>
                                             @endif

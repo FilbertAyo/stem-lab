@@ -11,7 +11,8 @@
           <a href="{{ route('client.projects.index') }}" class="{{ request()->routeIs('client.projects.*') ? 'active' : '' }}">Projects</a>
 
           @php($isTeacher = Auth::user()->role === 'teacher')
-          @php($unreadNotificationCount = $isTeacher ? Auth::user()->unreadNotifications()->count() : 0)
+          @php($unreadNotifications = $isTeacher ? Auth::user()->unreadNotifications()->latest()->limit(5)->get() : collect())
+          @php($unreadNotificationCount = $isTeacher ? ($unreadNotifications->count() < 5 ? $unreadNotifications->count() : Auth::user()->unreadNotifications()->count()) : 0)
           <a href="{{ $isTeacher ? route('client.my-students.index') : route('client.vr-assessments.index') }}"
              class="{{ request()->routeIs('client.my-students.*')
                         || request()->routeIs('client.notifications.*')
@@ -46,7 +47,7 @@
                   <span class="fw-semibold">Notifications</span>
                   <a href="{{ route('client.notifications.index') }}" class="small">View all</a>
                 </li>
-                @forelse(Auth::user()->unreadNotifications()->limit(5)->get() as $notification)
+                @forelse($unreadNotifications as $notification)
                   @php($data = $notification->data)
                   <li>
                     <form method="POST" action="{{ route('client.notifications.read', $notification->id) }}">

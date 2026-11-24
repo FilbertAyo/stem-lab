@@ -148,26 +148,29 @@
                                             @include('admin.partials.ownership-meta', ['record' => $project, 'compact' => true, 'class' => ''])
                                         </td>
                                         <td class="text-center">
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.projects.show', $project) }}" class="btn btn-sm btn-outline-info" title="View">
-                                                    <i class="ti ti-eye"></i>
-                                                </a>
-                                                <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-sm btn-outline-primary" title="Edit">
-                                                    <i class="ti ti-edit"></i>
-                                                </a>
-                                                <form
-                                                    action="{{ route('admin.projects.destroy', $project) }}"
-                                                    method="POST"
-                                                    class="d-inline"
-                                                    onsubmit="return confirm('Delete this project? This cannot be undone.');"
-                                                >
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-sm btn-outline-danger" type="submit" title="Delete">
-                                                        <i class="ti ti-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.projects.show', $project),
+                                                ],
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'Edit',
+                                                    'icon' => 'ti ti-edit',
+                                                    'url' => route('admin.projects.edit', $project),
+                                                ],
+                                                [
+                                                    'type' => 'form',
+                                                    'label' => 'Delete',
+                                                    'icon' => 'ti ti-trash',
+                                                    'url' => route('admin.projects.destroy', $project),
+                                                    'method' => 'DELETE',
+                                                    'confirm' => 'Delete this project? This cannot be undone.',
+                                                    'danger' => true,
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

@@ -102,25 +102,23 @@
                                                 <span class="badge bg-dark">{{ $question->points }} pts</span>
                                             </td>
                                             <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('admin.vr-assessments.questions.edit', [$questionBank, $question]) }}"
-                                                       class="btn btn-sm btn-primary"
-                                                       title="Edit">
-                                                        <i class="ti ti-edit"></i>
-                                                    </a>
-                                                    <form action="{{ route('admin.vr-assessments.questions.destroy', [$questionBank, $question]) }}"
-                                                          method="POST"
-                                                          class="d-inline"
-                                                          onsubmit="return confirm('Are you sure you want to delete this question?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                                class="btn btn-sm btn-danger"
-                                                                title="Delete">
-                                                            <i class="ti ti-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
+                                                <x-admin.table-actions :actions="[
+                                                    [
+                                                        'type' => 'link',
+                                                        'label' => 'Edit',
+                                                        'icon' => 'ti ti-edit',
+                                                        'url' => route('admin.vr-assessments.questions.edit', [$questionBank, $question]),
+                                                    ],
+                                                    [
+                                                        'type' => 'form',
+                                                        'label' => 'Delete',
+                                                        'icon' => 'ti ti-trash',
+                                                        'url' => route('admin.vr-assessments.questions.destroy', [$questionBank, $question]),
+                                                        'method' => 'DELETE',
+                                                        'confirm' => 'Are you sure you want to delete this question?',
+                                                        'danger' => true,
+                                                    ],
+                                                ]" />
                                             </td>
                                         </tr>
                                     @endforeach

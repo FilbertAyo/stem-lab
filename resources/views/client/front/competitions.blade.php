@@ -75,7 +75,7 @@
             <div class="card competition-card-link h-100 d-flex flex-column position-relative shadow-sm cursor-pointer" data-aos="fade-up" data-aos-delay="{{ ($index % 2 == 0) ? 100 : 200 }}" data-aos-duration="1000">
               <div class="overflow-hidden">
                 @if($competition->cover_image)
-                  <img src="{{ Storage::url($competition->cover_image) }}" alt="" class="card-img-top img-fluid w-100">
+                  <img src="{{ Storage::url($competition->cover_image) }}" alt="" class="card-img-top img-fluid w-100" loading="lazy" decoding="async">
                 @endif
               </div>
               <div class="card-body d-flex flex-column gap-3 portfolio-details">
@@ -126,7 +126,7 @@
             <div class="card competition-card-link h-100 d-flex flex-column position-relative shadow-sm cursor-pointer" data-aos="fade-up" data-aos-delay="{{ ($index % 2 == 0) ? 300 : 400 }}" data-aos-duration="1000" style="opacity: 0.9;">
               <div class="overflow-hidden">
                 @if($competition->cover_image)
-                  <img src="{{ Storage::url($competition->cover_image) }}" alt="" class="card-img-top img-fluid w-100" style="filter: grayscale(20%);">
+                  <img src="{{ Storage::url($competition->cover_image) }}" alt="" class="card-img-top img-fluid w-100" loading="lazy" decoding="async" style="filter: grayscale(20%);">
                 @else
                   <div class="w-100" style="height: 400px; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); display: flex; align-items: center; justify-content: center;">
                     <iconify-icon icon="lucide:clock" class="fs-1 text-white"></iconify-icon>
@@ -169,7 +169,7 @@
             <div class="card competition-card-link h-100 d-flex flex-column position-relative shadow-sm cursor-pointer" data-aos="fade-up" data-aos-delay="{{ ($index % 2 == 0) ? 500 : 600 }}" data-aos-duration="1000" style="opacity: 0.85;">
               <div class="overflow-hidden">
                 @if($competition->cover_image)
-                  <img src="{{ Storage::url($competition->cover_image) }}" alt="" class="card-img-top img-fluid w-100" style="filter: grayscale(40%);">
+                  <img src="{{ Storage::url($competition->cover_image) }}" alt="" class="card-img-top img-fluid w-100" loading="lazy" decoding="async" style="filter: grayscale(40%);">
                 @else
                   <div class="w-100" style="height: 400px; background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%); display: flex; align-items: center; justify-content: center;">
                     <iconify-icon icon="lucide:trophy" class="fs-1 text-white"></iconify-icon>

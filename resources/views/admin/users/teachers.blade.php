@@ -55,21 +55,27 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-sm btn-primary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editTeacherModal"
-                                                    data-user-route-key="{{ $user->getRouteKey() }}"
-                                                    data-user-name="{{ $user->name }}"
-                                                    data-user-email="{{ $user->email }}"
-                                                    data-user-phone="{{ $user->phone ?? '' }}"
-                                                    title="Edit">
-                                                    <i class="ti ti-edit"></i>
-                                                </button>
-                                                <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-info" title="View Details">
-                                                    <i class="ti ti-eye"></i>
-                                                </a>
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.users.show', $user),
+                                                ],
+                                                [
+                                                    'type' => 'button',
+                                                    'label' => 'Edit',
+                                                    'icon' => 'ti ti-edit',
+                                                    'attributes' => [
+                                                        'data-bs-toggle' => 'modal',
+                                                        'data-bs-target' => '#editTeacherModal',
+                                                        'data-user-route-key' => $user->getRouteKey(),
+                                                        'data-user-name' => $user->name,
+                                                        'data-user-email' => $user->email,
+                                                        'data-user-phone' => $user->phone ?? '',
+                                                    ],
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

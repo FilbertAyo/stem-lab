@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Competition;
 use App\Models\CompetitionRegistration;
 use App\Models\ModelQuestionAnswer;
-use App\Models\Student;
 use App\Models\VrAssessmentAttempt;
 use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\Learning\StudentDashboardAnalyticsService;
@@ -25,15 +24,32 @@ class DashboardController extends Controller
         $user = Auth::user();
         $userId = $user->id;
 
-        // Get user's model question answers
-        $totalAnswers = ModelQuestionAnswer::where('user_id', $userId)->count();
-        $correctAnswers = ModelQuestionAnswer::where('user_id', $userId)->where('is_correct', true)->count();
-        $modelsCompleted = ModelQuestionAnswer::where('user_id', $userId)->distinct('model_id')->count('model_id');
+        $totalAnswers = 0;
+        $correctAnswers = 0;
+        $modelsCompleted = 0;
+        $totalVrAttempts = 0;
+        $completedVrAttempts = 0;
+        $passedVrAttempts = 0;
 
-        // Get user's VR assessment attempts
-        $totalVrAttempts = VrAssessmentAttempt::where('user_id', $userId)->count();
-        $completedVrAttempts = VrAssessmentAttempt::where('user_id', $userId)->whereNotNull('completed_at')->count();
-        $passedVrAttempts = VrAssessmentAttempt::where('user_id', $userId)->where('passed', true)->count();
+        // Students render the analytics panel. Teachers render club and competition cards.
+        // Other roles still need the compact learning counts on the stat cards.
+        if (! in_array($user->role, ['student', 'teacher'], true)) {
+            $answerStats = ModelQuestionAnswer::query()
+                ->where('user_id', $userId)
+                ->selectRaw('COUNT(*) as total_answers, SUM(CASE WHEN is_correct = 1 THEN 1 ELSE 0 END) as correct_answers, COUNT(DISTINCT model_id) as models_completed')
+                ->first();
+            $vrStats = VrAssessmentAttempt::query()
+                ->where('user_id', $userId)
+                ->selectRaw('COUNT(*) as total_vr_attempts, SUM(CASE WHEN completed_at IS NOT NULL THEN 1 ELSE 0 END) as completed_vr_attempts, SUM(CASE WHEN passed = 1 THEN 1 ELSE 0 END) as passed_vr_attempts')
+                ->first();
+
+            $totalAnswers = (int) ($answerStats->total_answers ?? 0);
+            $correctAnswers = (int) ($answerStats->correct_answers ?? 0);
+            $modelsCompleted = (int) ($answerStats->models_completed ?? 0);
+            $totalVrAttempts = (int) ($vrStats->total_vr_attempts ?? 0);
+            $completedVrAttempts = (int) ($vrStats->completed_vr_attempts ?? 0);
+            $passedVrAttempts = (int) ($vrStats->passed_vr_attempts ?? 0);
+        }
 
         $competitions = collect();
         $competitionReminders = collect();
@@ -42,25 +58,19 @@ class DashboardController extends Controller
         $totalStudents = 0;
 
         if ($user->role === 'teacher') {
-            $teacherClubs = $user->teacherClubs()->pluck('id');
-            $teacherClubIds = $user->teacherClubs()
+            $approvedTeacherClubs = $user->teacherClubs()
                 ->where('status', 'approved')
+                ->with(['user', 'school'])
+                ->get();
+
+            $teacherClubIds = $approvedTeacherClubs
                 ->pluck('club_id')
                 ->unique()
                 ->filter()
                 ->values();
 
-            if ($teacherClubs->isNotEmpty()) {
-                // Students for any approved teacher at the same club + school as this user
-                $totalStudents = Student::whereIn('teacher_club_id', $user->approvedCoMemberTeacherClubIds())->count();
-            }
-
             if ($teacherClubIds->isNotEmpty()) {
-                $approvedTeacherClubs = $user->teacherClubs()
-                    ->where('status', 'approved')
-                    ->with(['user', 'school'])
-                    ->get()
-                    ->keyBy('club_id');
+                $approvedTeacherClubs = $approvedTeacherClubs->keyBy('club_id');
 
                 $competitions = Competition::query()
                     ->active()

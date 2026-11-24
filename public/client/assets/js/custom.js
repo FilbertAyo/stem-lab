@@ -125,88 +125,70 @@
     };
 })();
 
-$(function () {
+document.addEventListener('DOMContentLoaded', function () {
+    var headers = document.querySelectorAll('header');
+    if (headers.length) {
+        var syncHeader = function () {
+            var fixed = window.scrollY >= 60;
+            headers.forEach(function (header) {
+                header.classList.toggle('fixed-header', fixed);
+            });
+        };
+        syncHeader();
+        window.addEventListener('scroll', syncHeader, { passive: true });
+    }
 
-    // Header Scroll
-    $(window).scroll(function () {
-        if ($(window).scrollTop() >= 60) {
-            $("header").addClass("fixed-header");
-        } else {
-            $("header").removeClass("fixed-header");
-        }
-    });
-
-
-    // Featured Owl Carousel
-    $('.featured-projects-slider .owl-carousel').owlCarousel({
-        center: true,
-        loop: true,
-        margin: 30,
-        nav: false,
-        dots: false,
-        autoplay: true,
-        autoplayTimeout: 5000,
-        autoplayHoverPause: false,
-        smartSpeed: 1000,
-        slideSpeed: 1000,
-        responsive: {
-            0: {
-                items: 1
-            },
-            768: {
-                items: 2
-            },
-            1200: {
-                items: 2
+    if (window.jQuery && jQuery.fn && typeof jQuery.fn.owlCarousel === 'function') {
+        jQuery('.featured-projects-slider .owl-carousel').owlCarousel({
+            center: true,
+            loop: true,
+            margin: 30,
+            nav: false,
+            dots: false,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplayHoverPause: false,
+            smartSpeed: 1000,
+            slideSpeed: 1000,
+            responsive: {
+                0: { items: 1 },
+                768: { items: 2 },
+                1200: { items: 2 }
             }
-        }
-    })
-
-
-    // Count
-    $('.count').each(function () {
-		$(this).prop('Counter', 0).animate({
-			Counter: $(this).text()
-		}, {
-			duration: 1000,
-			easing: 'swing',
-			step: function (now) {
-				$(this).text(Math.ceil(now));
-			}
-		});
-	});
-
-
-    // ScrollToTop
-    function scrollToTop() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
         });
     }
 
-    const btn = document.getElementById("scrollToTopBtn");
-    if (btn) {
-        btn.addEventListener("click", scrollToTop);
+    if (window.jQuery) {
+        jQuery('.count').each(function () {
+            var counter = jQuery(this);
+            counter.prop('Counter', 0).animate({
+                Counter: counter.text()
+            }, {
+                duration: 1000,
+                easing: 'swing',
+                step: function (now) {
+                    counter.text(Math.ceil(now));
+                }
+            });
+        });
     }
 
-    window.onscroll = function () {
-        const scrollBtn = document.getElementById("scrollToTopBtn");
-        if (!scrollBtn) {
-            return;
-        }
-        if (document.documentElement.scrollTop > 100 || document.body.scrollTop > 100) {
-            scrollBtn.style.display = "flex";
-        } else {
-            scrollBtn.style.display = "none";
-        }
-    };
+    var scrollBtn = document.getElementById('scrollToTopBtn');
+    if (scrollBtn) {
+        scrollBtn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
 
+        var syncScrollBtn = function () {
+            var visible = document.documentElement.scrollTop > 100 || document.body.scrollTop > 100;
+            scrollBtn.style.display = visible ? 'flex' : 'none';
+        };
+        syncScrollBtn();
+        window.addEventListener('scroll', syncScrollBtn, { passive: true });
+    }
 
-    // Aos
-	AOS.init({
-		once: true,
-	});
-
+    if (window.AOS) {
+        AOS.init({ once: true });
+    }
 });
 

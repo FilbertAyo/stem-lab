@@ -75,28 +75,30 @@
                                             </span>
                                         </td>
                                         <td class="text-center">
-                                            <div class="btn-group btn-group-sm">
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-outline-primary"
-                                                    title="Edit"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editPlatformModal"
-                                                    data-edit-platform="{{ $platform->id }}"
-                                                    data-edit-name="{{ $platform->name }}"
-                                                    data-edit-icon="{{ $platform->icon }}"
-                                                    data-edit-is-active="{{ $platform->is_active ? 1 : 0 }}"
-                                                >
-                                                    <i class="ti ti-edit"></i>
-                                                </button>
-                                                <form action="{{ route('admin.platforms.destroy', $platform) }}" method="POST" class="d-inline" onsubmit="return confirm('Remove this platform? Projects using it will be unlinked.');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-outline-danger" title="Delete">
-                                                        <i class="ti ti-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'button',
+                                                    'label' => 'Edit',
+                                                    'icon' => 'ti ti-edit',
+                                                    'attributes' => [
+                                                        'data-bs-toggle' => 'modal',
+                                                        'data-bs-target' => '#editPlatformModal',
+                                                        'data-edit-platform' => $platform->id,
+                                                        'data-edit-name' => $platform->name,
+                                                        'data-edit-icon' => $platform->icon,
+                                                        'data-edit-is-active' => $platform->is_active ? 1 : 0,
+                                                    ],
+                                                ],
+                                                [
+                                                    'type' => 'form',
+                                                    'label' => 'Delete',
+                                                    'icon' => 'ti ti-trash',
+                                                    'url' => route('admin.platforms.destroy', $platform),
+                                                    'method' => 'DELETE',
+                                                    'confirm' => 'Remove this platform? Projects using it will be unlinked.',
+                                                    'danger' => true,
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

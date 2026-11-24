@@ -66,10 +66,14 @@
                                                 </span>
                                             </td>
                                             <td style="min-width: 120px;">
-                                                <a href="{{ route('admin.competitions.prototype-shortlisting.show', [$competition, $submission]) }}"
-                                                   class="btn btn-sm btn-outline-secondary">
-                                                    View
-                                                </a>
+                                                <x-admin.table-actions :actions="[
+                                                    [
+                                                        'type' => 'link',
+                                                        'label' => 'View',
+                                                        'icon' => 'ti ti-eye',
+                                                        'url' => route('admin.competitions.prototype-shortlisting.show', [$competition, $submission]),
+                                                    ],
+                                                ]" />
                                             </td>
                                         </tr>
                                     @endforeach

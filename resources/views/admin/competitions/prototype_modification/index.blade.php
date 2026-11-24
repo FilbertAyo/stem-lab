@@ -58,10 +58,14 @@
                                                 <span class="badge bg-{{ $badge }}">{{ $status ? ucfirst($status) : 'Pending' }}</span>
                                             </td>
                                             <td>
-                                                <a href="{{ route('admin.competitions.prototype-modification.show', [$competition, $modification]) }}"
-                                                   class="btn btn-sm btn-outline-secondary">
-                                                    View
-                                                </a>
+                                                <x-admin.table-actions :actions="[
+                                                    [
+                                                        'type' => 'link',
+                                                        'label' => 'View',
+                                                        'icon' => 'ti ti-eye',
+                                                        'url' => route('admin.competitions.prototype-modification.show', [$competition, $modification]),
+                                                    ],
+                                                ]" />
                                             </td>
                                         </tr>
                                     @endforeach

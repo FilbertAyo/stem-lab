@@ -1,6 +1,6 @@
-<section class="banner-section position-relative d-flex align-items-end min-vh-100">
-      <video class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" autoplay muted loop playsinline>
-        <source src="{{ asset('images/hero.mp4') }}" type="video/mp4" />
+<section class="banner-section position-relative d-flex align-items-end min-vh-100" style="background-color: #0f2749;">
+      <video id="hero-video" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" muted loop playsinline preload="none">
+        <source data-src="{{ asset('images/hero.mp4') }}" type="video/mp4" />
       </video>
       <div class="container">
         <div class="d-flex flex-column gap-4 pb-8 position-relative z-1">
@@ -26,3 +26,30 @@
         </div>
       </div>
     </section>
+    <script>
+      (function () {
+        var video = document.getElementById('hero-video');
+        var source = video && video.querySelector('source');
+        if (!video || !source) return;
+
+        var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (connection && (connection.saveData || connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g')) return;
+
+        function startHeroVideo() {
+          if (source.getAttribute('src')) return;
+          source.src = source.getAttribute('data-src');
+          video.load();
+          var play = video.play();
+          if (play && typeof play.catch === 'function') play.catch(function () {});
+        }
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(startHeroVideo, { timeout: 1500 });
+        } else {
+          window.addEventListener('load', function () {
+            setTimeout(startHeroVideo, 300);
+          });
+        }
+      })();
+    </script>

@@ -140,14 +140,19 @@
                                                     <td>{{ $leader->school->name ?? 'N/A' }}</td>
                                                     <td>@if($leader->club_code)<code>{{ $leader->club_code }}</code>@else<span class="text-muted">—</span>@endif</td>
                                                     <td class="text-end">
-                                                        <button class="btn btn-sm btn-outline-primary"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#transferLeadershipModal"
-                                                                data-school-id="{{ $leader->school_id }}"
-                                                                data-school-name="{{ $leader->school->name ?? 'N/A' }}">
-                                                            <i class="ti ti-arrow-right me-1"></i>
-                                                            Transfer
-                                                        </button>
+                                                        <x-admin.table-actions :actions="[
+                                                            [
+                                                                'type' => 'button',
+                                                                'label' => 'Transfer',
+                                                                'icon' => 'ti ti-arrow-right',
+                                                                'attributes' => [
+                                                                    'data-bs-toggle' => 'modal',
+                                                                    'data-bs-target' => '#transferLeadershipModal',
+                                                                    'data-school-id' => $leader->school_id,
+                                                                    'data-school-name' => $leader->school->name ?? 'N/A',
+                                                                ],
+                                                            ],
+                                                        ]" />
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -303,20 +308,23 @@
                                                     <td>@if($request->club_code)<code>{{ $request->club_code }}</code>@else<span class="text-muted">—</span>@endif</td>
                                                     <td>{{ $request->created_at->format('M d, Y') }}</td>
                                                     <td class="text-end">
-                                                        <form method="POST" action="{{ route('admin.clubs.approve-request', $request) }}" class="d-inline me-1">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Approve this request?')">
-                                                                <i class="ti ti-check me-1"></i>
-                                                                Approve
-                                                            </button>
-                                                        </form>
-                                                        <form method="POST" action="{{ route('admin.clubs.reject-request', $request) }}" class="d-inline">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Reject this request?')">
-                                                                <i class="ti ti-x me-1"></i>
-                                                                Reject
-                                                            </button>
-                                                        </form>
+                                                        <x-admin.table-actions :actions="[
+                                                            [
+                                                                'type' => 'form',
+                                                                'label' => 'Approve',
+                                                                'icon' => 'ti ti-check',
+                                                                'url' => route('admin.clubs.approve-request', $request),
+                                                                'confirm' => 'Approve this request?',
+                                                            ],
+                                                            [
+                                                                'type' => 'form',
+                                                                'label' => 'Reject',
+                                                                'icon' => 'ti ti-x',
+                                                                'url' => route('admin.clubs.reject-request', $request),
+                                                                'confirm' => 'Reject this request?',
+                                                                'danger' => true,
+                                                            ],
+                                                        ]" />
                                                     </td>
                                                 </tr>
                                             @endforeach

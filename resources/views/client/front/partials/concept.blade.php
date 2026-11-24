@@ -1,5 +1,5 @@
 <section class="about-img">
-      <img src="{{ asset('images/vr-img.jpg') }}" alt="" class="w-100 object-fit-cover">
+      <img src="{{ asset('images/vr-img.jpg') }}" alt="" class="w-100 object-fit-cover" loading="lazy" decoding="async">
       <div class="marquee w-100 d-flex align-items-center overflow-hidden bg-secondary py-4">
         <div class="marquee-content d-flex align-items-center gap-8">
           <div class="hstack gap-4 flex-shrink-0">

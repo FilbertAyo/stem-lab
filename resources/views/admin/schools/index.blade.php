@@ -170,65 +170,55 @@
                                             <span class="fw-semibold">{{ $school->students_count }}</span>
                                         </td>
                                         <td class="text-center">
-                                            <div class="btn-group" role="group">
-                                                @if($school->needs_review)
-                                                    <form method="POST" action="{{ route('admin.schools.mark-reviewed', $school) }}" class="d-inline">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-sm btn-warning" title="Mark reviewed">
-                                                            <i class="ti ti-check"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                                <a
-                                                    href="{{ route('admin.schools.show', $school) }}"
-                                                    class="btn btn-sm btn-outline-info"
-                                                    title="View Details"
-                                                >
-                                                    <i class="ti ti-eye"></i>
-                                                </a>
-                                                <button
-                                                    class="btn btn-sm btn-outline-primary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editSchoolModal"
-                                                    data-action="{{ route('admin.schools.update', $school) }}"
-                                                    data-name="{{ $school->name }}" 
-                                                    data-latitude="{{ $school->latitude }}"
-                                                    data-longitude="{{ $school->longitude }}"
-                                                    data-phone="{{ $school->phone }}"
-                                                    data-email="{{ $school->email }}"
-                                                    data-district-id="{{ $school->district_id }}"
-                                                    data-region-id="{{ $school->region_id }}"
-                                                    data-ward="{{ $school->ward }}"
-                                                    data-active="{{ $school->is_active ? '1' : '0' }}"
-                                                    data-created-by="{{ $school->createdByName() }}"
-                                                    data-updated-by="{{ $school->updatedByName() }}"
-                                                    data-updated-at="{{ $school->updated_at?->format('M j, Y g:i A') ?? '—' }}"
-                                                    title="Edit"
-                                                >
-                                                    <i class="ti ti-edit"></i>
-                                                </button>
-                                                <button
-                                                    class="btn btn-sm {{ $school->is_active ? 'btn-outline-warning' : 'btn-outline-success' }}"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#schoolStatusModal"
-                                                    data-action="{{ route('admin.schools.toggle-status', $school) }}"
-                                                    data-name="{{ $school->name }}"
-                                                    data-status="{{ $school->is_active ? 'disable' : 'enable' }}"
-                                                    title="{{ $school->is_active ? 'Disable' : 'Enable' }}"
-                                                >
-                                                    <i class="ti {{ $school->is_active ? 'ti-ban' : 'ti-check' }}"></i>
-                                                </button>
-                                                <!-- <button
-                                                    class="btn btn-sm btn-outline-danger"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#deleteSchoolModal"
-                                                    data-action="{{ route('admin.schools.destroy', $school) }}"
-                                                    data-name="{{ $school->name }}"
-                                                    title="Delete School"
-                                                >
-                                                    <i class="ti ti-trash"></i>
-                                                </button> -->
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'form',
+                                                    'label' => 'Mark reviewed',
+                                                    'icon' => 'ti ti-check',
+                                                    'url' => route('admin.schools.mark-reviewed', $school),
+                                                    'show' => (bool) $school->needs_review,
+                                                ],
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.schools.show', $school),
+                                                ],
+                                                [
+                                                    'type' => 'button',
+                                                    'label' => 'Edit',
+                                                    'icon' => 'ti ti-edit',
+                                                    'attributes' => [
+                                                        'data-bs-toggle' => 'modal',
+                                                        'data-bs-target' => '#editSchoolModal',
+                                                        'data-action' => route('admin.schools.update', $school),
+                                                        'data-name' => $school->name,
+                                                        'data-latitude' => $school->latitude,
+                                                        'data-longitude' => $school->longitude,
+                                                        'data-phone' => $school->phone,
+                                                        'data-email' => $school->email,
+                                                        'data-district-id' => $school->district_id,
+                                                        'data-region-id' => $school->region_id,
+                                                        'data-ward' => $school->ward,
+                                                        'data-active' => $school->is_active ? '1' : '0',
+                                                        'data-created-by' => $school->createdByName(),
+                                                        'data-updated-by' => $school->updatedByName(),
+                                                        'data-updated-at' => $school->updated_at?->format('M j, Y g:i A') ?? '—',
+                                                    ],
+                                                ],
+                                                [
+                                                    'type' => 'button',
+                                                    'label' => $school->is_active ? 'Disable' : 'Enable',
+                                                    'icon' => $school->is_active ? 'ti ti-ban' : 'ti ti-check',
+                                                    'attributes' => [
+                                                        'data-bs-toggle' => 'modal',
+                                                        'data-bs-target' => '#schoolStatusModal',
+                                                        'data-action' => route('admin.schools.toggle-status', $school),
+                                                        'data-name' => $school->name,
+                                                        'data-status' => $school->is_active ? 'disable' : 'enable',
+                                                    ],
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

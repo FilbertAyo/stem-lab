@@ -92,40 +92,35 @@
                                             @include('admin.partials.ownership-meta', ['record' => $bank, 'compact' => true, 'class' => ''])
                                         </td>
                                         <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.vr-assessments.question-banks.show', $bank) }}"
-                                                   class="btn btn-sm btn-info"
-                                                   title="View & Manage Questions">
-                                                    <i class="ti ti-eye"></i>
-                                                </a>
-                                                <a href="{{ route('admin.vr-assessments.question-banks.edit', $bank) }}"
-                                                   class="btn btn-sm btn-primary"
-                                                   title="Edit">
-                                                    <i class="ti ti-edit"></i>
-                                                </a>
-                                                <form action="{{ route('admin.vr-assessments.question-banks.toggle-status', $bank) }}"
-                                                      method="POST"
-                                                      class="d-inline">
-                                                    @csrf
-                                                    <button type="submit"
-                                                            class="btn btn-sm {{ $bank->is_active ? 'btn-warning' : 'btn-success' }}"
-                                                            title="{{ $bank->is_active ? 'Deactivate' : 'Activate' }}">
-                                                        <i class="ti ti-{{ $bank->is_active ? 'player-pause' : 'player-play' }}"></i>
-                                                    </button>
-                                                </form>
-                                                <form action="{{ route('admin.vr-assessments.question-banks.destroy', $bank) }}"
-                                                      method="POST"
-                                                      class="d-inline"
-                                                      onsubmit="return confirm('Are you sure you want to delete this question bank? All questions will be deleted.');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                            class="btn btn-sm btn-danger"
-                                                            title="Delete">
-                                                        <i class="ti ti-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View & Manage Questions',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.vr-assessments.question-banks.show', $bank),
+                                                ],
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'Edit',
+                                                    'icon' => 'ti ti-edit',
+                                                    'url' => route('admin.vr-assessments.question-banks.edit', $bank),
+                                                ],
+                                                [
+                                                    'type' => 'form',
+                                                    'label' => $bank->is_active ? 'Deactivate' : 'Activate',
+                                                    'icon' => $bank->is_active ? 'ti ti-player-pause' : 'ti ti-player-play',
+                                                    'url' => route('admin.vr-assessments.question-banks.toggle-status', $bank),
+                                                ],
+                                                [
+                                                    'type' => 'form',
+                                                    'label' => 'Delete',
+                                                    'icon' => 'ti ti-trash',
+                                                    'url' => route('admin.vr-assessments.question-banks.destroy', $bank),
+                                                    'method' => 'DELETE',
+                                                    'confirm' => 'Are you sure you want to delete this question bank? All questions will be deleted.',
+                                                    'danger' => true,
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

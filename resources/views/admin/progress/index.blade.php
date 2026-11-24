@@ -168,21 +168,26 @@
                                             <small>{{ $progress->last_answered->format('M d, Y H:i') }}</small>
                                         </td>
                                         <td>
-                                            <a href="{{ route('admin.progress.detail', [$progress->user, $progress->model3d]) }}"
-                                               class="btn btn-sm btn-primary"
-                                               title="View Details">
-                                                <i class="ti ti-eye"></i> 
-                                            </a>
-                                            <a href="{{ route('admin.progress.student', $progress->user) }}"
-                                               class="btn btn-sm btn-info"
-                                               title="View All Student Progress">
-                                                <i class="ti ti-user"></i>
-                                            </a>
-                                            <a href="{{ route('admin.progress.model', $progress->model3d) }}"
-                                               class="btn btn-sm btn-warning"
-                                               title="View All Model Progress">
-                                                <i class="ti ti-package"></i>
-                                            </a>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View Details',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.progress.detail', [$progress->user, $progress->model3d]),
+                                                ],
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'Student Progress',
+                                                    'icon' => 'ti ti-user',
+                                                    'url' => route('admin.progress.student', $progress->user),
+                                                ],
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'Model Progress',
+                                                    'icon' => 'ti ti-package',
+                                                    'url' => route('admin.progress.model', $progress->model3d),
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

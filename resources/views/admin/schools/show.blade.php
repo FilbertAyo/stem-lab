@@ -323,35 +323,40 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            <div class="d-flex flex-wrap gap-1">
-                                                                @if(! $student->isLinked())
-                                                                    <button
-                                                                        type="submit"
-                                                                        form="create-login-{{ $student->id }}"
-                                                                        class="btn btn-sm btn-outline-primary"
-                                                                    >
-                                                                        Create login
-                                                                    </button>
-                                                                @elseif($student->user?->usesPinLogin())
-                                                                    <button
-                                                                        type="submit"
-                                                                        form="reset-pin-{{ $student->id }}"
-                                                                        class="btn btn-sm btn-outline-secondary"
-                                                                        onclick="return confirm('This will replace the current PIN for {{ $student->name }}. Continue?')"
-                                                                    >
-                                                                        Reset PIN
-                                                                    </button>
-                                                                @endif
-                                                                <button
-                                                                    type="submit"
-                                                                    form="delete-student-{{ $student->id }}"
-                                                                    class="btn btn-sm btn-outline-danger"
-                                                                    title="Delete student"
-                                                                    onclick="return confirm('Are you sure you want to delete {{ $student->name }}? This action cannot be undone.')"
-                                                                >
-                                                                    Delete
-                                                                </button>
-                                                            </div>
+                                                            <x-admin.table-actions :actions="[
+                                                                [
+                                                                    'type' => 'button',
+                                                                    'label' => 'Create login',
+                                                                    'icon' => 'ti ti-user-plus',
+                                                                    'buttonType' => 'submit',
+                                                                    'show' => ! $student->isLinked(),
+                                                                    'attributes' => [
+                                                                        'form' => 'create-login-'.$student->id,
+                                                                    ],
+                                                                ],
+                                                                [
+                                                                    'type' => 'button',
+                                                                    'label' => 'Reset PIN',
+                                                                    'icon' => 'ti ti-key',
+                                                                    'buttonType' => 'submit',
+                                                                    'show' => $student->isLinked() && ($student->user?->usesPinLogin() ?? false),
+                                                                    'attributes' => [
+                                                                        'form' => 'reset-pin-'.$student->id,
+                                                                        'onclick' => 'return confirm('.json_encode('This will replace the current PIN for '.$student->name.'. Continue?').')',
+                                                                    ],
+                                                                ],
+                                                                [
+                                                                    'type' => 'button',
+                                                                    'label' => 'Delete',
+                                                                    'icon' => 'ti ti-trash',
+                                                                    'buttonType' => 'submit',
+                                                                    'danger' => true,
+                                                                    'attributes' => [
+                                                                        'form' => 'delete-student-'.$student->id,
+                                                                        'onclick' => 'return confirm('.json_encode('Are you sure you want to delete '.$student->name.'? This action cannot be undone.').')',
+                                                                    ],
+                                                                ],
+                                                            ]" />
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -525,26 +530,15 @@
                                                         @if($teacherClubs->isEmpty())
                                                             <span class="text-muted">—</span>
                                                         @else
-                                                            <div class="d-flex flex-column gap-2">
-                                                                @foreach($teacherClubs as $tc)
-                                                                    <form
-                                                                        action="{{ route('admin.schools.remove-teacher-from-club', $tc) }}"
-                                                                        method="POST"
-                                                                        class="d-inline"
-                                                                        onsubmit="return confirm('Are you sure you want to remove this teacher from this club? This action cannot be undone.')"
-                                                                    >
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        <button
-                                                                            type="submit"
-                                                                            class="btn btn-sm btn-outline-danger"
-                                                                            title="Remove from {{ $tc->club->name ?? 'club' }}"
-                                                                        >
-                                                                            Remove
-                                                                        </button>
-                                                                    </form>
-                                                                @endforeach
-                                                            </div>
+                                                            <x-admin.table-actions :actions="$teacherClubs->map(fn ($tc) => [
+                                                                'type' => 'form',
+                                                                'label' => 'Remove from '.($tc->club->name ?? 'club'),
+                                                                'icon' => 'ti ti-user-minus',
+                                                                'url' => route('admin.schools.remove-teacher-from-club', $tc),
+                                                                'method' => 'DELETE',
+                                                                'confirm' => 'Are you sure you want to remove this teacher from this club? This action cannot be undone.',
+                                                                'danger' => true,
+                                                            ])->values()->all()" />
                                                         @endif
                                                     </td>
                                                 </tr>

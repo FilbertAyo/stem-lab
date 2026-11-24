@@ -26,30 +26,45 @@ class TeacherClubAnalyticsService
      */
     public function aggregate(User $teacher, ?int $teacherClubId = null): array
     {
-        $students = $this->scopeService
-            ->studentsQuery($teacher, $teacherClubId)
-            ->with('progressSummary')
-            ->get();
+        $clubIds = $teacher->approvedCoMemberTeacherClubIds();
 
-        $summaries = $students
-            ->map(fn (Student $student) => $student->progressSummary)
-            ->filter();
+        if ($teacherClubId !== null) {
+            abort_unless($clubIds->contains($teacherClubId), 403);
+            $clubIds = collect([$teacherClubId]);
+        }
 
-        $registered = $students->filter(fn (Student $s) => $s->isLinked())->count();
+        if ($clubIds->isEmpty()) {
+            return [
+                'total_roster' => 0,
+                'registered' => 0,
+                'active' => 0,
+                'needs_attention' => 0,
+                'avg_vr_score' => null,
+            ];
+        }
+
+        $students = Student::query()->whereIn('teacher_club_id', $clubIds);
+        $totalRoster = (clone $students)->count();
+        $registered = (clone $students)->whereNotNull('user_id')->count();
+
+        $summaries = StudentProgressSummary::query()
+            ->whereIn('student_id', (clone $students)->select('id'))
+            ->get(['last_activity_at', 'attention_flags', 'avg_vr_score']);
+
         $active = $summaries->filter(
-            fn (?StudentProgressSummary $summary) => $summary && $this->summaryService->isActive($summary->last_activity_at)
+            fn (StudentProgressSummary $summary) => $this->summaryService->isActive($summary->last_activity_at)
         )->count();
 
         $needsAttention = $summaries->filter(
-            fn (?StudentProgressSummary $summary) => $summary && $summary->needsAttention()
+            fn (StudentProgressSummary $summary) => $summary->needsAttention()
         )->count();
 
         $avgScores = $summaries
-            ->filter(fn (?StudentProgressSummary $summary) => $summary && $summary->avg_vr_score !== null)
+            ->filter(fn (StudentProgressSummary $summary) => $summary->avg_vr_score !== null)
             ->pluck('avg_vr_score');
 
         return [
-            'total_roster' => $students->count(),
+            'total_roster' => $totalRoster,
             'registered' => $registered,
             'active' => $active,
             'needs_attention' => $needsAttention,

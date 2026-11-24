@@ -49,7 +49,14 @@
                                         <td>{{ number_format($order->amount_tzs) }} {{ $order->currency }}</td>
                                         <td><span class="badge bg-secondary">{{ $order->status }}</span></td>
                                         <td class="text-center">
-                                            <a href="{{ route('admin.subscription-orders.show', $order) }}" class="btn btn-sm btn-outline-primary">View</a>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.subscription-orders.show', $order),
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

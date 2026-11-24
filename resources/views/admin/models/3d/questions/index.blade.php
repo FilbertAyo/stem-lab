@@ -79,25 +79,23 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('admin.models.3d.questions.edit', [$model3d, $question]) }}"
-                                                       class="btn btn-sm btn-primary"
-                                                       title="Edit">
-                                                        <i class="ti ti-edit"></i>
-                                                    </a>
-                                                    <form action="{{ route('admin.models.3d.questions.destroy', [$model3d, $question]) }}"
-                                                          method="POST"
-                                                          class="d-inline"
-                                                          onsubmit="return confirm('Are you sure you want to delete this question?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                                class="btn btn-sm btn-danger"
-                                                                title="Delete">
-                                                            <i class="ti ti-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
+                                                <x-admin.table-actions :actions="[
+                                                    [
+                                                        'type' => 'link',
+                                                        'label' => 'Edit',
+                                                        'icon' => 'ti ti-edit',
+                                                        'url' => route('admin.models.3d.questions.edit', [$model3d, $question]),
+                                                    ],
+                                                    [
+                                                        'type' => 'form',
+                                                        'label' => 'Delete',
+                                                        'icon' => 'ti ti-trash',
+                                                        'url' => route('admin.models.3d.questions.destroy', [$model3d, $question]),
+                                                        'method' => 'DELETE',
+                                                        'confirm' => 'Are you sure you want to delete this question?',
+                                                        'danger' => true,
+                                                    ],
+                                                ]" />
                                             </td>
                                         </tr>
                                     @endforeach

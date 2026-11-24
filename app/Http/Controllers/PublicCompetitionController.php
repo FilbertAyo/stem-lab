@@ -153,16 +153,4 @@ class PublicCompetitionController extends Controller
         ));
     }
 
-    /**
-     * Get featured competitions for landing page.
-     */
-    public static function getFeaturedCompetitions(int $limit = 3)
-    {
-        return Competition::active()
-            ->published()
-            ->with(['club', 'phases'])
-            ->orderBy('competition_start')
-            ->limit($limit)
-            ->get();
-    }
 }

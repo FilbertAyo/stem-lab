@@ -101,25 +101,23 @@
                                             @include('admin.partials.ownership-meta', ['record' => $experiment, 'compact' => true, 'class' => ''])
                                         </td>
                                         <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.vr-experiments.edit', $experiment) }}"
-                                                   class="btn btn-sm btn-primary"
-                                                   title="Edit">
-                                                    <i class="ti ti-edit"></i>
-                                                </a>
-                                                <form action="{{ route('admin.vr-experiments.destroy', $experiment) }}"
-                                                      method="POST"
-                                                      class="d-inline"
-                                                      onsubmit="return confirm('Are you sure you want to delete this VR experiment? This action cannot be undone.');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                            class="btn btn-sm btn-danger"
-                                                            title="Delete">
-                                                        <i class="ti ti-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'Edit',
+                                                    'icon' => 'ti ti-edit',
+                                                    'url' => route('admin.vr-experiments.edit', $experiment),
+                                                ],
+                                                [
+                                                    'type' => 'form',
+                                                    'label' => 'Delete',
+                                                    'icon' => 'ti ti-trash',
+                                                    'url' => route('admin.vr-experiments.destroy', $experiment),
+                                                    'method' => 'DELETE',
+                                                    'confirm' => 'Are you sure you want to delete this VR experiment? This action cannot be undone.',
+                                                    'danger' => true,
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty

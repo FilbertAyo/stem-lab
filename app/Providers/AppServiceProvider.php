@@ -84,21 +84,32 @@ class AppServiceProvider extends ServiceProvider
         $this->registerModelEvents();
 
         View::composer('client.back.partials.package', function ($view): void {
-            $publicSchoolClub = Club::query()
-                ->active()
-                ->where('name', 'like', '%Chomoza%')
-                ->ordered()
-                ->first()
-                ?? Club::query()->active()->ordered()->first();
+            $resolveCatalog = function (): array {
+                $publicSchoolClub = Club::query()
+                    ->active()
+                    ->where('name', 'like', '%Chomoza%')
+                    ->ordered()
+                    ->first()
+                    ?? Club::query()->active()->ordered()->first();
 
-            $packages = SubscriptionPackage::query()->active()->ordered()->get();
+                return [
+                    'packages' => SubscriptionPackage::query()->active()->ordered()->get(),
+                    'club' => $publicSchoolClub,
+                ];
+            };
+
+            $catalog = app()->runningUnitTests()
+                ? $resolveCatalog()
+                : Cache::remember('client.subscription_catalog', CacheService::TTL_SHORT, $resolveCatalog);
+
+            $packages = $catalog['packages'];
 
             $view->with([
                 'subscriptionPackages' => $packages
                     ->reject(fn (SubscriptionPackage $package): bool => $package->slug === 'individual-yearly')
                     ->values(),
                 'yearlyPackage' => $packages->firstWhere('slug', 'individual-yearly'),
-                'publicSchoolClub' => $publicSchoolClub,
+                'publicSchoolClub' => $catalog['club'],
             ]);
         });
 
@@ -153,10 +164,20 @@ class AppServiceProvider extends ServiceProvider
         // Club events
         Club::saved(function () {
             Cache::forget('active_clubs');
+            Cache::forget('client.subscription_catalog');
         });
 
         Club::deleted(function () {
             Cache::forget('active_clubs');
+            Cache::forget('client.subscription_catalog');
+        });
+
+        SubscriptionPackage::saved(function () {
+            Cache::forget('client.subscription_catalog');
+        });
+
+        SubscriptionPackage::deleted(function () {
+            Cache::forget('client.subscription_catalog');
         });
     }
 

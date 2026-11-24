@@ -176,22 +176,32 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.competitions.show', $competition) }}" 
-                                                   class="btn btn-sm btn-outline-info" title="View">
-                                                    <i class="ti ti-eye"></i>
-                                                </a>
-                                                <a href="{{ route('admin.competitions.edit', $competition) }}" 
-                                                   class="btn btn-sm btn-outline-primary" title="Edit">
-                                                    <i class="ti ti-edit"></i>
-                                                </a>
-                                                <button type="button" class="btn btn-sm btn-outline-danger" 
-                                                        data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                                        data-action="{{ route('admin.competitions.destroy', $competition) }}"
-                                                        data-name="{{ $competition->name }}" title="Delete">
-                                                    <i class="ti ti-trash"></i>
-                                                </button>
-                                            </div>
+                                            <x-admin.table-actions :actions="[
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'View',
+                                                    'icon' => 'ti ti-eye',
+                                                    'url' => route('admin.competitions.show', $competition),
+                                                ],
+                                                [
+                                                    'type' => 'link',
+                                                    'label' => 'Edit',
+                                                    'icon' => 'ti ti-edit',
+                                                    'url' => route('admin.competitions.edit', $competition),
+                                                ],
+                                                [
+                                                    'type' => 'button',
+                                                    'label' => 'Delete',
+                                                    'icon' => 'ti ti-trash',
+                                                    'danger' => true,
+                                                    'attributes' => [
+                                                        'data-bs-toggle' => 'modal',
+                                                        'data-bs-target' => '#deleteModal',
+                                                        'data-action' => route('admin.competitions.destroy', $competition),
+                                                        'data-name' => $competition->name,
+                                                    ],
+                                                ],
+                                            ]" />
                                         </td>
                                     </tr>
                                 @empty
