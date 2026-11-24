@@ -4,13 +4,6 @@
     $prototypeShortlistStatus = $prototypeShortlist?->status;
     $modification = $idea?->prototypeModification;
     $modificationStatus = $modification?->status;
-    $teacherUserId = auth()->id();
-    $modificationEvidenceIdentifier = implode('-', array_filter([
-        (string) $teacherUserId,
-        (string) ($competition?->ulid ?? ''),
-        (string) ($idea?->ulid ?? ''),
-        'mod',
-    ], fn (string $v): bool => $v !== ''));
 @endphp
 
 <div id="prototype-modification" class="row">
@@ -45,7 +38,7 @@
                         <span class="badge bg-{{ $badge[0] }}">{{ $badge[1] }}</span>
                     </div>
 
-                    <form method="POST" action="{{ route('client.competitions.prototype-modification.store', $competition) }}">
+                    <form method="POST" action="{{ route('client.competitions.prototype-modification.store', $competition) }}" enctype="multipart/form-data" data-prototype-media>
                         @csrf
 
                         <div class="mb-3">
@@ -103,22 +96,11 @@
                             @error('prototype_next_steps')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
-                        @if(filled($prototypeModificationEvidenceFormUrl))
-                            <div class="alert alert-light border mb-4">
-                                <div class="small text-muted mb-1"><strong>Google Form link (modification evidence)</strong></div>
-                                <a href="{{ $prototypeModificationEvidenceFormUrl }}"
-                                   target="_blank"
-                                   rel="noopener noreferrer"
-                                   class="btn btn-sm btn-primary text-white mb-2">
-                                    Open Google Form
-                                </a>
-                                <div class="small text-muted mb-1"><strong>Google Form identifier</strong></div>
-                                <div class="input-group bg-white" style="max-width: 720px;">
-                                    <input id="modificationEvidenceIdentifierInput" type="text" class="form-control font-monospace" value="{{ $modificationEvidenceIdentifier }}" readonly>
-                                    <button type="button" class="btn btn-sm btn-dark" id="copyModificationEvidenceIdentifierBtn">Copy ID</button>
-                                </div>
-                            </div>
-                        @endif
+                        @include('partials.prototype-media-fields', [
+                            'media' => $modification,
+                            'disabled' => false,
+                            'fieldId' => 'prototypeModification',
+                        ])
 
                         <div class="d-flex flex-wrap gap-2 mt-2">
                             <button type="submit" class="btn btn-sm btn-dark" name="submit_final" value="0" data-submit-intent="draft">Save draft</button>
@@ -130,22 +112,4 @@
         </div>
     </div>
 </div>
-
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const btn = document.getElementById('copyModificationEvidenceIdentifierBtn');
-            const input = document.getElementById('modificationEvidenceIdentifierInput');
-            if (!btn || !input) return;
-            btn.addEventListener('click', async function () {
-                try {
-                    await navigator.clipboard.writeText(input.value || '');
-                } catch (e) {
-                    input.select();
-                    document.execCommand('copy');
-                }
-            });
-        });
-    </script>
-@endpush
 

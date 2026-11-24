@@ -9,11 +9,6 @@
                     </p>
                 </div>
                 <div class="d-flex gap-2">
-                    @if(filled($googleFormUrl))
-                        <a href="{{ $googleFormUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
-                            Open Google Form
-                        </a>
-                    @endif
                     <a href="{{ route('admin.competitions.prototype-shortlisting.index', $competition) }}" class="btn btn-outline-secondary btn-sm">
                         Back to list
                     </a>
@@ -33,14 +28,6 @@
                     : ($status === 'waitlist'
                         ? 'warning'
                         : ($status === 'rejected' ? 'danger' : 'light'));
-
-                $teacherUserId = $submission->submitted_by;
-                $tokenParts = array_filter([
-                    (string) $teacherUserId,
-                    (string) ($competition->ulid ?? ''),
-                    (string) ($submission->idea?->ulid ?? ''),
-                ], fn (string $v): bool => $v !== '');
-                $token = implode('-', $tokenParts);
 
                 $mentors = $submission->prototypeShortlist?->mentors ?? collect();
                 $canAddMentors = ($status ?? null) === 'shortlisted';
@@ -92,16 +79,9 @@
                         </div>
 
                         <div class="col-lg-5">
-                            <h6 class="text-uppercase text-muted small mb-3">Evidence lookup</h6>
-
-                            <div class="alert alert-light border mb-3">
-                                <div class="small text-muted mb-1"><strong>Google Form identifier</strong></div>
-                                <div class="mb-2">
-                                    <span class="badge bg-primary font-monospace">{{ $token }}</span>
-                                </div>
-                                <div class="form-text">
-                                    Use this identifier in the organisers' Google Form to find the uploaded video/pictures for this submission.
-                                </div>
+                            <h6 class="text-uppercase text-muted small mb-3">Prototype media</h6>
+                            <div class="border rounded p-3 mb-3">
+                                @include('partials.prototype-media-display', ['media' => $submission])
                             </div>
 
                             @if($shortlist?->feedback)

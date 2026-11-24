@@ -18,7 +18,7 @@
     </p>
     <p style="margin: 0 0 24px 0;">
         When the prototype development phase is open, continue on the competition page. Describe what you built,
-        and submit video evidence through the Google Form link on that page.
+        and upload the demo video and photos there.
     </p>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>

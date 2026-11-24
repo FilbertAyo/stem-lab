@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CompetitionPrototypeSubmission extends Model
@@ -31,6 +32,7 @@ class CompetitionPrototypeSubmission extends Model
         'prototype_challenges',
         'prototype_test_results',
         'prototype_next_steps',
+        'video_path',
         'prototype_media_upload_link',
         'prototype_media_notes',
     ];
@@ -78,5 +80,9 @@ class CompetitionPrototypeSubmission extends Model
     {
         return $this->hasOne(CompetitionPrototypeModification::class, 'competition_prototype_submission_id');
     }
-}
 
+    public function images(): MorphMany
+    {
+        return $this->morphMany(CompetitionPrototypeImage::class, 'imageable')->orderBy('sort_order');
+    }
+}

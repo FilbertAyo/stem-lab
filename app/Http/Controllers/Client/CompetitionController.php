@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Mail\CompetitionIdeaSubmittedMail;
 use App\Models\Competition;
 use App\Models\CompetitionIdea;
-use App\Models\CompetitionPhaseEvidenceForm;
 use App\Models\CompetitionPrototypeModification;
 use App\Models\CompetitionPrototypeSubmission;
 use App\Models\CompetitionRegistration;
@@ -16,6 +15,7 @@ use App\Models\Region;
 use App\Models\SchoolClass;
 use App\Models\TeacherClub;
 use App\Services\AdminActivityNotifier;
+use App\Services\Competition\PrototypeMediaService;
 use App\Services\CompetitionEligibilityPoolService;
 use App\Services\CompetitionParticipantRegistrationService;
 use App\Services\Sms\CompetitionSmsTemplates;
@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -115,8 +116,10 @@ class CompetitionController extends Controller
                 'shortlist',
                 'communityRegion',
                 'communityDistrict',
+                'prototypeSubmission.images',
                 'prototypeSubmission.prototypeShortlist.mentors',
                 'prototypeSubmission.modification.modificationShortlist',
+                'prototypeModification.images',
                 'prototypeModification.modificationShortlist',
             ])->first();
         }
@@ -127,22 +130,6 @@ class CompetitionController extends Controller
             'classRequirements.schoolClass',
             'shortlists.idea.registration.school',
         ]);
-
-        $prototypeEvidenceFormUrl = null;
-        $prototypePhaseId = $competition->phases->firstWhere('phase_key', 'prototype_development')?->id;
-        if ($prototypePhaseId) {
-            $prototypeEvidenceFormUrl = CompetitionPhaseEvidenceForm::query()
-                ->where('competition_phase_id', $prototypePhaseId)
-                ->value('google_form_url');
-        }
-
-        $prototypeModificationEvidenceFormUrl = null;
-        $prototypeModificationPhaseId = $competition->phases->firstWhere('phase_key', 'prototype_modification')?->id;
-        if ($prototypeModificationPhaseId) {
-            $prototypeModificationEvidenceFormUrl = CompetitionPhaseEvidenceForm::query()
-                ->where('competition_phase_id', $prototypeModificationPhaseId)
-                ->value('google_form_url');
-        }
 
         if ($teacherClub) {
             $poolStudents = $eligibilityPool->computePool($competition, $teacherClub)['students'];
@@ -185,8 +172,6 @@ class CompetitionController extends Controller
             'poolStudents',
             'regions',
             'districtsByRegion',
-            'prototypeEvidenceFormUrl',
-            'prototypeModificationEvidenceFormUrl',
             'participantPhaseView',
             'registrationApproved',
             'ideaSubmitted',
@@ -1036,6 +1021,7 @@ class CompetitionController extends Controller
         $this->normalizeSubmitFinal($request);
         $submitting = $request->boolean('submit_final');
         $requiredText = $submitting ? ['required', 'string'] : ['nullable', 'string'];
+        $media = app(PrototypeMediaService::class);
 
         $validator = Validator::make($request->all(), [
             'prototype_title' => $submitting
@@ -1050,7 +1036,8 @@ class CompetitionController extends Controller
             'prototype_test_results' => ['nullable', 'string'],
             'prototype_next_steps' => ['nullable', 'string'],
             'submit_final' => ['nullable', 'boolean'],
-        ]);
+            ...$media->rules($submitting && blank($prototype->video_path)),
+        ], $media->messages());
 
         if ($validator->fails()) {
             return redirect()
@@ -1104,7 +1091,21 @@ class CompetitionController extends Controller
             $prototype->status = 'draft';
         }
 
-        $prototype->save();
+        $saved = $this->syncPrototypeMedia(
+            $media,
+            $prototype,
+            'competition-prototypes',
+            $request,
+            $request->exists('prototype_media_notes')
+                ? ($validated['prototype_media_notes'] ?? null)
+                : $prototype->prototype_media_notes,
+            $submitting,
+            $competition,
+            'prototype-development',
+        );
+        if ($saved instanceof RedirectResponse) {
+            return $saved;
+        }
 
         if ($submitting) {
             $this->notifyAdminsOfCompetitionSubmission(
@@ -1196,8 +1197,10 @@ class CompetitionController extends Controller
         ]);
 
         $this->normalizeSubmitFinal($request);
+        $submitting = $request->boolean('submit_final');
+        $media = app(PrototypeMediaService::class);
 
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'prototype_title' => ['required', 'string', 'max:255'],
             'prototype_concept' => ['required', 'string'],
             'prototype_objectives' => ['required', 'string'],
@@ -1208,7 +1211,18 @@ class CompetitionController extends Controller
             'prototype_test_results' => ['nullable', 'string'],
             'prototype_next_steps' => ['nullable', 'string'],
             'submit_final' => ['nullable', 'boolean'],
-        ]);
+            ...$media->rules($submitting && blank($modification->video_path)),
+        ], $media->messages());
+
+        if ($validator->fails()) {
+            return redirect()
+                ->route('client.competitions.show', $competition)
+                ->withFragment('prototype-modification')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $validated = $validator->validated();
 
         $modification->fill([
             'competition_id' => $competition->id,
@@ -1227,7 +1241,7 @@ class CompetitionController extends Controller
             'prototype_next_steps' => $validated['prototype_next_steps'] ?? null,
         ]);
 
-        if ($request->boolean('submit_final')) {
+        if ($submitting) {
             $modification->status = 'submitted';
             $modification->submitted_at = now();
             $modification->submitted_by = $user->id;
@@ -1235,9 +1249,23 @@ class CompetitionController extends Controller
             $modification->status = 'draft';
         }
 
-        $modification->save();
+        $saved = $this->syncPrototypeMedia(
+            $media,
+            $modification,
+            'competition-prototype-modifications',
+            $request,
+            $request->exists('prototype_media_notes')
+                ? ($validated['prototype_media_notes'] ?? null)
+                : $modification->prototype_media_notes,
+            $submitting,
+            $competition,
+            'prototype-modification',
+        );
+        if ($saved instanceof RedirectResponse) {
+            return $saved;
+        }
 
-        if ($request->boolean('submit_final')) {
+        if ($submitting) {
             $this->notifyAdminsOfCompetitionSubmission(
                 'prototype_modification',
                 $competition,
@@ -1257,6 +1285,47 @@ class CompetitionController extends Controller
             ->route('client.competitions.show', $competition)
             ->withFragment('prototype-modification')
             ->with('status', 'Prototype modification draft saved successfully.');
+    }
+
+    private function syncPrototypeMedia(
+        PrototypeMediaService $media,
+        CompetitionPrototypeSubmission|CompetitionPrototypeModification $owner,
+        string $directory,
+        Request $request,
+        ?string $notes,
+        bool $submitting,
+        Competition $competition,
+        string $fragment,
+    ): ?RedirectResponse {
+        $images = $request->file('prototype_images', []);
+        if (! is_array($images)) {
+            $images = $images ? [$images] : [];
+        }
+
+        $removeIds = $request->input('remove_image_ids', []);
+        if (! is_array($removeIds)) {
+            $removeIds = [];
+        }
+
+        try {
+            $media->sync(
+                $owner,
+                $directory,
+                $request->file('prototype_video'),
+                $images,
+                $removeIds,
+                $notes,
+                $submitting,
+            );
+        } catch (ValidationException $exception) {
+            return redirect()
+                ->route('client.competitions.show', $competition)
+                ->withFragment($fragment)
+                ->withErrors($exception->errors())
+                ->withInput();
+        }
+
+        return null;
     }
 
     /**

@@ -12,7 +12,6 @@ use App\Models\CompetitionClassRequirement;
 use App\Models\CompetitionIdea;
 use App\Models\CompetitionIdeaScore;
 use App\Models\CompetitionPhase;
-use App\Models\CompetitionPhaseEvidenceForm;
 use App\Models\CompetitionPrototypeModification;
 use App\Models\CompetitionPrototypeModificationShortlist;
 use App\Models\CompetitionPrototypeShortlist;
@@ -140,85 +139,7 @@ class CompetitionController extends Controller
             'classRequirements.schoolClass',
         ]);
 
-        $prototypePhaseId = $competition->phases
-            ->firstWhere('phase_key', 'prototype_development')?->id;
-        $prototypeModificationPhaseId = $competition->phases
-            ->firstWhere('phase_key', 'prototype_modification')?->id;
-
-        $prototypeEvidenceFormUrl = $prototypePhaseId
-            ? CompetitionPhaseEvidenceForm::query()
-                ->where('competition_phase_id', $prototypePhaseId)
-                ->value('google_form_url')
-            : null;
-        $prototypeModificationEvidenceFormUrl = $prototypeModificationPhaseId
-            ? CompetitionPhaseEvidenceForm::query()
-                ->where('competition_phase_id', $prototypeModificationPhaseId)
-                ->value('google_form_url')
-            : null;
-
-        return view('admin.competitions.show', compact(
-            'competition',
-            'prototypeEvidenceFormUrl',
-            'prototypeModificationEvidenceFormUrl',
-        ));
-    }
-
-    public function updatePrototypeEvidenceFormLink(
-        \Illuminate\Http\Request $request,
-        Competition $competition
-    ): RedirectResponse {
-        $validated = $request->validate([
-            'google_form_url' => ['nullable', 'string', 'max:2048', 'url'],
-        ]);
-
-        $phase = $competition->phases()
-            ->where('phase_key', 'prototype_development')
-            ->first();
-
-        if (! $phase) {
-            abort(404, 'Prototype development phase not configured.');
-        }
-
-        CompetitionPhaseEvidenceForm::query()->updateOrCreate(
-            ['competition_phase_id' => $phase->id],
-            [
-                'google_form_url' => $validated['google_form_url'] ?? null,
-                'updated_by' => $request->user()?->getKey(),
-            ]
-        );
-
-        return redirect()
-            ->route('admin.competitions.show', $competition)
-            ->with('status', 'Prototype evidence Google Form link updated.');
-    }
-
-    public function updatePrototypeModificationEvidenceFormLink(
-        Request $request,
-        Competition $competition
-    ): RedirectResponse {
-        $validated = $request->validate([
-            'google_form_url' => ['nullable', 'string', 'max:2048', 'url'],
-        ]);
-
-        $phase = $competition->phases()
-            ->where('phase_key', 'prototype_modification')
-            ->first();
-
-        if (! $phase) {
-            abort(404, 'Prototype modification phase not configured.');
-        }
-
-        CompetitionPhaseEvidenceForm::query()->updateOrCreate(
-            ['competition_phase_id' => $phase->id],
-            [
-                'google_form_url' => $validated['google_form_url'] ?? null,
-                'updated_by' => $request->user()?->getKey(),
-            ]
-        );
-
-        return redirect()
-            ->route('admin.competitions.show', $competition)
-            ->with('status', 'Prototype modification evidence Google Form link updated.');
+        return view('admin.competitions.show', compact('competition'));
     }
 
     public function prototypeShortlistingIndex(Competition $competition): View|RedirectResponse
@@ -252,12 +173,6 @@ class CompetitionController extends Controller
             ->values()
             ->all();
 
-        $googleFormUrl = CompetitionPhaseEvidenceForm::query()
-            ->where('competition_phase_id', $competition->phases()
-                ->where('phase_key', 'prototype_development')
-                ->value('id'))
-            ->value('google_form_url');
-
         $submissionsQuery = CompetitionPrototypeSubmission::query()
             ->where('competition_id', $competition->id)
             ->where('status', 'submitted')
@@ -287,7 +202,6 @@ class CompetitionController extends Controller
             'phaseId',
             'assignments',
             'regionIds',
-            'googleFormUrl',
             'submissions'
         ));
     }
@@ -337,21 +251,15 @@ class CompetitionController extends Controller
             'registration.region',
             'registration.school',
             'submittedBy',
+            'images',
             'prototypeShortlist',
             'prototypeShortlist.mentors',
         ]);
 
-        $googleFormUrl = CompetitionPhaseEvidenceForm::query()
-            ->where('competition_phase_id', $competition->phases()
-                ->where('phase_key', 'prototype_development')
-                ->value('id'))
-            ->value('google_form_url');
-
         return view('admin.competitions.prototype_shortlisting.show', compact(
             'competition',
             'submission',
-            'phaseId',
-            'googleFormUrl'
+            'phaseId'
         ));
     }
 
@@ -500,10 +408,6 @@ class CompetitionController extends Controller
 
         $regionIds = $assignments->pluck('region_id')->filter()->unique()->values()->all();
 
-        $googleFormUrl = CompetitionPhaseEvidenceForm::query()
-            ->where('competition_phase_id', $phaseId)
-            ->value('google_form_url');
-
         $modsQuery = CompetitionPrototypeModification::query()
             ->where('competition_id', $competition->id)
             ->where('status', 'submitted')
@@ -532,7 +436,6 @@ class CompetitionController extends Controller
             'phaseId',
             'assignments',
             'regionIds',
-            'googleFormUrl',
             'modifications'
         ));
     }
@@ -582,18 +485,14 @@ class CompetitionController extends Controller
             'registration.school',
             'submittedBy',
             'prototypeSubmission',
+            'images',
             'modificationShortlist',
         ]);
-
-        $googleFormUrl = CompetitionPhaseEvidenceForm::query()
-            ->where('competition_phase_id', $phaseId)
-            ->value('google_form_url');
 
         return view('admin.competitions.prototype_modification.show', compact(
             'competition',
             'modification',
-            'phaseId',
-            'googleFormUrl'
+            'phaseId'
         ));
     }
 
@@ -717,29 +616,11 @@ class CompetitionController extends Controller
             })
             ->toArray());
 
-        $prototypePhaseId = $competition->phases
-            ->firstWhere('phase_key', 'prototype_development')?->id;
-        $prototypeModificationPhaseId = $competition->phases
-            ->firstWhere('phase_key', 'prototype_modification')?->id;
-
-        $prototypeEvidenceFormUrl = $prototypePhaseId
-            ? CompetitionPhaseEvidenceForm::query()
-                ->where('competition_phase_id', $prototypePhaseId)
-                ->value('google_form_url')
-            : null;
-        $prototypeModificationEvidenceFormUrl = $prototypeModificationPhaseId
-            ? CompetitionPhaseEvidenceForm::query()
-                ->where('competition_phase_id', $prototypeModificationPhaseId)
-                ->value('google_form_url')
-            : null;
-
         return view('admin.competitions.edit', compact(
             'competition',
             'clubs',
             'classes',
-            'oldPhases',
-            'prototypeEvidenceFormUrl',
-            'prototypeModificationEvidenceFormUrl'
+            'oldPhases'
         ));
     }
 

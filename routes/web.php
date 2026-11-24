@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\VrExperimentController;
 use App\Http\Controllers\Admin\WeeklySessionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\StudentOnboardingController;
+use App\Http\Controllers\Client\BillingController as ClientBillingController;
 use App\Http\Controllers\Client\ClubController as ClientClubController;
 use App\Http\Controllers\Client\CompetitionController as ClientCompetitionController;
 use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
@@ -29,7 +30,6 @@ use App\Http\Controllers\Client\MyStudentsController as ClientMyStudentsControll
 use App\Http\Controllers\Client\ProjectController as ClientProjectController;
 use App\Http\Controllers\Client\StudentClubController as ClientStudentClubController;
 use App\Http\Controllers\Client\StudentController as ClientStudentController;
-use App\Http\Controllers\Client\BillingController as ClientBillingController;
 use App\Http\Controllers\Client\SubscriptionPackageController as ClientSubscriptionPackageController;
 use App\Http\Controllers\Client\TeacherNotificationController as ClientTeacherNotificationController;
 use App\Http\Controllers\Client\VrExperimentController as ClientVrExperimentController;
@@ -200,10 +200,6 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/{competition}', [CompetitionController::class, 'show'])->name('show');
             Route::get('/{competition}/edit', [CompetitionController::class, 'edit'])->name('edit');
             Route::put('/{competition}', [CompetitionController::class, 'update'])->name('update');
-            Route::post('/{competition}/prototype-evidence-link', [CompetitionController::class, 'updatePrototypeEvidenceFormLink'])
-                ->name('prototype-evidence-link.update');
-            Route::post('/{competition}/prototype-modification-evidence-link', [CompetitionController::class, 'updatePrototypeModificationEvidenceFormLink'])
-                ->name('prototype-modification-evidence-link.update');
             Route::get('/{competition}/prototype-shortlisting', [CompetitionController::class, 'prototypeShortlistingIndex'])
                 ->name('prototype-shortlisting.index');
             Route::get('/{competition}/prototype-shortlisting/submissions/{submission}', [CompetitionController::class, 'prototypeShortlistingShow'])

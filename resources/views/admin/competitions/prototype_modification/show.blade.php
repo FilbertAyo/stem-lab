@@ -7,11 +7,6 @@
                     <p class="text-muted mb-0">School: {{ $modification->registration?->resolvedSchoolName() ?? '—' }}</p>
                 </div>
                 <div class="d-flex gap-2">
-                    @if(filled($googleFormUrl))
-                        <a href="{{ $googleFormUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
-                            Open Google Form
-                        </a>
-                    @endif
                     <a href="{{ route('admin.competitions.prototype-modification.index', $competition) }}" class="btn btn-outline-secondary btn-sm">
                         Back to list
                     </a>
@@ -29,13 +24,6 @@
                         ? 'warning'
                         : ($status === 'rejected' ? 'danger' : 'light'));
 
-                $teacherUserId = $modification->submitted_by;
-                $tokenParts = array_filter([
-                    (string) $teacherUserId,
-                    (string) ($competition->ulid ?? ''),
-                    (string) ($modification->idea?->ulid ?? ''),
-                ], fn (string $v): bool => $v !== '');
-                $token = implode('-', $tokenParts);
             @endphp
 
             <div class="card mb-3">
@@ -79,10 +67,9 @@
                         </div>
 
                         <div class="col-lg-5">
-                            <h6 class="text-uppercase text-muted small mb-3">Evidence lookup</h6>
-                            <div class="alert alert-light border mb-3">
-                                <div class="small text-muted mb-1"><strong>Google Form identifier</strong></div>
-                                <span class="badge bg-primary font-monospace">{{ $token }}</span>
+                            <h6 class="text-uppercase text-muted small mb-3">Prototype media</h6>
+                            <div class="border rounded p-3 mb-3">
+                                @include('partials.prototype-media-display', ['media' => $modification])
                             </div>
 
                             <h6 class="text-uppercase text-muted small mb-2">Shortlist decision</h6>

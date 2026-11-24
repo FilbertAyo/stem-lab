@@ -8,12 +8,6 @@
     $prototype = $idea?->prototypeSubmission;
     $prototypeStatus = $prototype?->status;
     $repTotal = $registration?->representativeStudents->count() ?? 0;
-    $teacherUserId = auth()->id();
-    $prototypeEvidenceIdentifier = implode('-', array_filter([
-        (string) $teacherUserId,
-        (string) ($competition?->ulid ?? ''),
-        (string) ($idea?->ulid ?? ''),
-    ], fn (string $v): bool => $v !== ''));
     $requiredPrototypeFields = [
         'prototype_title' => 'Prototype title',
         'prototype_concept' => 'What you built',
@@ -101,36 +95,6 @@
                         </div>
                     @endif
 
-                    <div class="border rounded p-3 p-md-4 mb-4">
-                        <h6 class="fw-semibold mb-2">Video evidence</h6>
-                        <p class="mb-3">
-                            Write your answers in the form below. Submit the video and pictures on the Google Form. Paste the identifier so the organisers can match the upload to this school.
-                        </p>
-                        @if(filled($prototypeEvidenceFormUrl))
-                            <a href="{{ $prototypeEvidenceFormUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary text-white mb-3">
-                                Open Google Form
-                            </a>
-                        @else
-                            <div class="alert alert-info mb-3">
-                                The organisers have not shared the Google Form link yet. You can still save your written answers.
-                            </div>
-                        @endif
-                        <label class="form-label" for="prototypeEvidenceIdentifierInput">Google Form identifier</label>
-                        <div class="input-group mb-2">
-                            <input
-                                id="prototypeEvidenceIdentifierInput"
-                                type="text"
-                                class="form-control font-monospace"
-                                value="{{ $prototypeEvidenceIdentifier }}"
-                                readonly
-                            >
-                            <button type="button" class="btn btn-dark" id="copyPrototypeEvidenceIdentifierBtn">
-                                Copy ID
-                            </button>
-                        </div>
-                        <div id="copyPrototypeEvidenceIdentifierFeedback" class="mt-2" aria-live="polite"></div>
-                    </div>
-
                     @if($prototype && $prototypeStatus === 'submitted' && ! $canEdit)
                         <dl class="row mb-0">
                             <dt class="col-sm-4">Prototype title</dt>
@@ -152,11 +116,17 @@
                             <dt class="col-sm-4">Next steps</dt>
                             <dd class="col-sm-8 text-break mb-0">{!! nl2br(e($prototype->prototype_next_steps ?: '—')) !!}</dd>
                         </dl>
+                        <div class="border rounded p-3 p-md-4 mt-4">
+                            <h6 class="fw-semibold mb-3">Video and photos</h6>
+                            @include('partials.prototype-media-display', ['media' => $prototype])
+                        </div>
                     @else
                         <form
                             method="POST"
                             action="{{ route('client.competitions.prototype.store', $competition) }}"
                             id="prototype-form"
+                            enctype="multipart/form-data"
+                            data-prototype-media
                             data-already-submitted="{{ $prototypeStatus === 'submitted' ? '1' : '0' }}"
                         >
                             @csrf
@@ -245,6 +215,12 @@
                                 @error('prototype_next_steps')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
+                            @include('partials.prototype-media-fields', [
+                                'media' => $prototype,
+                                'disabled' => ! $canEdit,
+                                'fieldId' => 'prototypeDevelopment',
+                            ])
+
                             @if($canEdit)
                                 <div class="d-flex flex-wrap gap-2 mt-2">
                                     <button type="submit" class="btn btn-dark" name="submit_final" value="0" data-submit-intent="draft">Save draft</button>
@@ -304,42 +280,6 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const btn = document.getElementById('copyPrototypeEvidenceIdentifierBtn');
-            const input = document.getElementById('prototypeEvidenceIdentifierInput');
-            const feedback = document.getElementById('copyPrototypeEvidenceIdentifierFeedback');
-
-            function setFeedback(message, type) {
-                if (!feedback) return;
-                feedback.textContent = message;
-                feedback.classList.remove('text-success', 'text-danger');
-                feedback.classList.add(type === 'success' ? 'text-success' : 'text-danger');
-            }
-
-            if (btn && input) {
-                btn.addEventListener('click', async function () {
-                    const token = input.value || '';
-                    if (!token) {
-                        setFeedback('Nothing to copy.', 'error');
-                        return;
-                    }
-
-                    try {
-                        await navigator.clipboard.writeText(token);
-                        setFeedback('Copied.', 'success');
-                    } catch (e) {
-                        input.focus();
-                        input.select();
-                        try {
-                            document.execCommand('copy');
-                            setFeedback('Copied.', 'success');
-                        } catch (err) {
-                            setFeedback('Copy failed. Please copy manually.', 'error');
-                        }
-                        window.getSelection && window.getSelection().removeAllRanges();
-                    }
-                });
-            }
-
             const form = document.getElementById('prototype-form');
             if (!form) return;
 

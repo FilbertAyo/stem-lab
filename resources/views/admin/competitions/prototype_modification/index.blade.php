@@ -6,14 +6,7 @@
                     <h5 class="mb-0">Prototype Modification Review - {{ $competition->name }}</h5>
                     <p class="text-muted mb-0">Submitted modification forms ready for shortlisting.</p>
                 </div>
-                <div class="d-flex gap-2">
-                    @if(filled($googleFormUrl))
-                        <a href="{{ $googleFormUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
-                            Open Google Form
-                        </a>
-                    @endif
-                    <a href="{{ route('admin.competitions.show', $competition) }}" class="btn btn-outline-secondary btn-sm">Back</a>
-                </div>
+                <a href="{{ route('admin.competitions.show', $competition) }}" class="btn btn-outline-secondary btn-sm">Back</a>
             </div>
 
             
