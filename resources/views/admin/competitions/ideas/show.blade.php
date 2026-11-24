@@ -11,7 +11,6 @@
     $showShortlistNotify = ! $alreadyNotified && $shortlistDecision === 'shortlisted';
     $teacherEmail = $registration?->resolvedTeacherEmail();
     $maxShortlistReminders = \App\Models\CompetitionShortlist::maxReminders();
-    $pendingIdeaCount = (int) ($pendingIdeaCount ?? 0);
 @endphp
 
 <x-admin-layout>
@@ -50,19 +49,6 @@
                     @endif
                 </div>
             </div>
-
-            @if($pendingIdeaCount > 0)
-                <div class="alert alert-warning d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4" role="status">
-                    <div>
-                        <strong>{{ $pendingIdeaCount }}</strong>
-                        {{ $pendingIdeaCount === 1 ? 'school has' : 'schools have' }}
-                        not submitted an idea yet. You can view them and send email/SMS reminders.
-                    </div>
-                    <a href="{{ route('admin.competitions.ideas.index', [$competition, 'tab' => 'pending']) }}" class="btn btn-sm btn-warning">
-                        View &amp; remind
-                    </a>
-                </div>
-            @endif
 
             <div class="row g-4">
                 <div class="col-lg-5">

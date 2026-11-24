@@ -1390,7 +1390,6 @@ class CompetitionController extends Controller
         );
         $shortlistAlreadyNotified = (bool) $idea->shortlist?->hasSentShortlistNotification();
         $canSendShortlistReminder = (bool) $idea->shortlist?->canSendShortlistReminder();
-        $pendingIdeaCount = $this->pendingIdeaRegistrationsQuery($competition)->count();
 
         return view('admin.competitions.ideas.show', compact(
             'competition',
@@ -1402,7 +1401,6 @@ class CompetitionController extends Controller
             'smsReminderPreview',
             'shortlistAlreadyNotified',
             'canSendShortlistReminder',
-            'pendingIdeaCount',
         ));
     }
 

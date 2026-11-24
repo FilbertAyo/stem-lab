@@ -128,7 +128,7 @@ test('idea submission reminder is blocked after max sends', function () {
     Mail::assertNothingSent();
 });
 
-test('idea show page links to pending schools that need reminders', function () {
+test('idea show page does not show the pending schools banner', function () {
     ['school' => $school, 'competition' => $competition] = createCompetitionFixture();
     $submittedClub = createTeacherClubForCompetition($competition, $school);
     $submittedRegistration = app(CompetitionParticipantRegistrationService::class)
@@ -170,6 +170,6 @@ test('idea show page links to pending schools that need reminders', function () 
         ->get('http://'.$host.'/competitions/'.$competition->ulid.'/ideas/'.$idea->ulid);
 
     $response->assertOk();
-    $response->assertSee('not submitted an idea yet');
-    $response->assertSee('View &amp; remind', false);
+    $response->assertDontSee('not submitted an idea yet');
+    $response->assertDontSee('View & remind');
 });
