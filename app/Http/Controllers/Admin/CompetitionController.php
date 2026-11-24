@@ -911,7 +911,8 @@ class CompetitionController extends Controller
                 'teacher_name' => $registration->resolvedTeacherName() ?: 'Teacher',
                 'school_name' => $registration->resolvedSchoolName(),
                 'competition_name' => $competition->name,
-                'url' => $registerUrl,
+                // Always use the short SMS link for {url}/{short_url} to keep SMS segments low.
+                'url' => $smsCompetitionUrl,
                 'short_url' => $smsCompetitionUrl,
             ]
         );
@@ -1168,7 +1169,6 @@ class CompetitionController extends Controller
                 ->withQueryString();
 
             $smsCompetitionUrl = $competition->smsUrl();
-            $competitionUrl = $competition->participantUrl().'#idea-submission';
 
             foreach ($pendingRegistrations as $registration) {
                 $ideaSubmissionSmsPreviews[$registration->id] = [
@@ -1180,7 +1180,7 @@ class CompetitionController extends Controller
                             'teacher_name' => $registration->resolvedTeacherName() ?: 'Teacher',
                             'school_name' => $registration->resolvedSchoolName() ?: 'your school',
                             'competition_name' => $competition->name,
-                            'url' => $competitionUrl,
+                            'url' => $smsCompetitionUrl,
                             'short_url' => $smsCompetitionUrl,
                         ]
                     ),
@@ -1243,7 +1243,6 @@ class CompetitionController extends Controller
         $smsPhoneNormalized = TanzaniaPhone::normalize($registration->resolvedTeacherPhone());
         $smsDefaultSender = CompetitionSmsTemplates::defaultSenderId();
         $smsAllowedSenders = CompetitionSmsTemplates::allowedSenders();
-        $competitionUrl = $competition->participantUrl().'#idea-submission';
         $smsCompetitionUrl = $competition->smsUrl();
         $smsIdeaSubmissionPreview = CompetitionSmsTemplates::render(
             CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SUBMISSION_REMINDER),
@@ -1251,7 +1250,7 @@ class CompetitionController extends Controller
                 'teacher_name' => $registration->resolvedTeacherName() ?: 'Teacher',
                 'school_name' => $registration->resolvedSchoolName() ?: 'your school',
                 'competition_name' => $competition->name,
-                'url' => $competitionUrl,
+                'url' => $smsCompetitionUrl,
                 'short_url' => $smsCompetitionUrl,
             ]
         );

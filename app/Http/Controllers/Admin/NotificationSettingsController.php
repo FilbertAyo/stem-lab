@@ -29,7 +29,7 @@ class NotificationSettingsController extends Controller
             'idea_shortlist_reminder' => CompetitionSmsTemplates::template(CompetitionSmsTemplates::KEY_IDEA_SHORTLIST_REMINDER),
         ];
 
-        $placeholders = '{teacher_name}, {school_name}, {competition_name}, {url}, {short_url}';
+        $placeholders = '{teacher_name}, {school_name}, {competition_name}, {short_url} (prefer), {url} (also short)';
 
         return view('admin.notification-settings.index', compact(
             'balance',

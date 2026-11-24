@@ -25,12 +25,12 @@ class CompetitionSmsTemplates
     public static function defaults(): array
     {
         return [
-            self::KEY_REGISTRATION_APPROVED => 'Hi {teacher_name}, {school_name} is approved for {competition_name}. Continue to idea submission: {url}',
-            self::KEY_ELIGIBILITY_REMINDER => 'Hi {teacher_name}, complete eligibility for {competition_name} ({school_name}): {url}',
-            self::KEY_IDEA_SUBMITTED => 'Hi {teacher_name}, idea for {competition_name} ({school_name}) was submitted. View: {url}',
-            self::KEY_IDEA_SUBMISSION_REMINDER => 'Hi {teacher_name}, reminder: submit your idea for {competition_name} ({school_name}): {url}',
-            self::KEY_IDEA_SHORTLISTED => 'Hi {teacher_name}, {school_name} is shortlisted for {competition_name}. Continue prototype work: {url}',
-            self::KEY_IDEA_SHORTLIST_REMINDER => 'Hi {teacher_name}, reminder: {school_name} is shortlisted for {competition_name}. Continue here: {url}',
+            self::KEY_REGISTRATION_APPROVED => 'Hi {teacher_name}, {school_name} is approved for {competition_name}. Continue to idea submission: {short_url}',
+            self::KEY_ELIGIBILITY_REMINDER => 'Hi {teacher_name}, complete eligibility for {competition_name} ({school_name}): {short_url}',
+            self::KEY_IDEA_SUBMITTED => 'Hi {teacher_name}, idea for {competition_name} ({school_name}) was submitted. View: {short_url}',
+            self::KEY_IDEA_SUBMISSION_REMINDER => 'Hi {teacher_name}, reminder: submit your idea for {competition_name} ({school_name}): {short_url}',
+            self::KEY_IDEA_SHORTLISTED => 'Hi {teacher_name}, {school_name} is shortlisted for {competition_name}. Continue prototype work: {short_url}',
+            self::KEY_IDEA_SHORTLIST_REMINDER => 'Hi {teacher_name}, reminder: {school_name} is shortlisted for {competition_name}. Continue here: {short_url}',
         ];
     }
 
@@ -47,15 +47,16 @@ class CompetitionSmsTemplates
      */
     public static function render(string $template, array $vars): string
     {
-        $url = (string) ($vars['url'] ?? '');
-        $shortUrl = (string) ($vars['short_url'] ?? $url);
+        $shortUrl = (string) ($vars['short_url'] ?? $vars['url'] ?? '');
+        // Prefer the short SMS link for both placeholders so legacy {url} templates stay credit-safe.
+        $url = $shortUrl !== '' ? $shortUrl : (string) ($vars['url'] ?? '');
 
         $replacements = [
             '{teacher_name}' => (string) ($vars['teacher_name'] ?? 'Teacher'),
             '{school_name}' => (string) ($vars['school_name'] ?? 'your school'),
             '{competition_name}' => (string) ($vars['competition_name'] ?? 'the competition'),
             '{url}' => $url,
-            '{short_url}' => $shortUrl,
+            '{short_url}' => $shortUrl !== '' ? $shortUrl : $url,
         ];
 
         return strtr($template, $replacements);

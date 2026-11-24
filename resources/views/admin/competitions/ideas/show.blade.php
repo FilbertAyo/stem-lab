@@ -1,14 +1,6 @@
 @php
     $registration = $idea->registration;
     $school = $registration?->school;
-    $statusLabel = ucfirst(str_replace('_', ' ', (string) $idea->status));
-    $statusBadge = match ($idea->status) {
-        'shortlisted' => 'success',
-        'not_shortlisted' => 'danger',
-        'submitted' => 'primary',
-        'draft' => 'secondary',
-        default => 'secondary',
-    };
     $smsCanSend = filled($smsPhoneNormalized ?? null);
     $smsPhoneDisplay = $smsPhoneNormalized ?? ($registration?->resolvedTeacherPhone());
     $smsSenderOptions = $smsAllowedSenders ?? ['ADILISHA', 'ADILISHAXR', 'STEMLABS'];
@@ -26,7 +18,7 @@
     <div class="row">
         <div class="col-12">
             <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
-                <div>
+                <div class="flex-grow-1 min-w-0 pe-lg-3" style="max-width: min(100%, 42rem);">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-2">
                             <li class="breadcrumb-item"><a href="{{ route('admin.competitions.index') }}">Competitions</a></li>
@@ -35,15 +27,14 @@
                             <li class="breadcrumb-item active" aria-current="page">{{ \Illuminate\Support\Str::limit($idea->problem_title ?: 'Untitled', 40) }}</li>
                         </ol>
                     </nav>
-                    <h4 class="mb-2">{{ $idea->problem_title ?: 'Untitled idea' }}</h4>
-                    <p class="mb-0">
-                        <span class="badge bg-{{ $statusBadge }}">{{ $statusLabel }}</span>
-                        @if($idea->submitted_at)
-                            <span class="ms-2 text-muted small">Submitted {{ $idea->submitted_at->timezone(config('app.timezone'))->format('j M Y, H:i') }}</span>
-                        @endif
-                    </p>
+                    <h5 class="mb-1 fs-6 fw-semibold text-break">{{ $idea->problem_title ?: 'Untitled idea' }}</h5>
+                    @if($idea->submitted_at)
+                        <p class="mb-0 text-muted small">
+                            Submitted {{ $idea->submitted_at->timezone(config('app.timezone'))->format('j M Y, H:i') }}
+                        </p>
+                    @endif
                 </div>
-                <div class="d-flex flex-wrap gap-2">
+                <div class="d-flex flex-wrap gap-2 flex-shrink-0">
                     <a href="{{ route('admin.competitions.ideas.index', $competition) }}" class="btn btn-outline-secondary">Back to list</a>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scoreFromShowModal">Score</button>
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#shortlistFromShowModal">Shortlist</button>
