@@ -248,6 +248,8 @@ Route::domain(parse_url(config('app.admin_url'), PHP_URL_HOST) ?? 'admin.adilish
             Route::get('/students/export', [AdminUserController::class, 'exportStudents'])->name('students.export');
             Route::get('/teachers', [AdminUserController::class, 'teachers'])->name('teachers');
             Route::get('/teachers/export', [AdminUserController::class, 'exportTeachers'])->name('teachers.export');
+            Route::get('/parents', [AdminUserController::class, 'parents'])->name('parents');
+            Route::get('/parents/export', [AdminUserController::class, 'exportParents'])->name('parents.export');
             Route::post('/', [AdminUserController::class, 'store'])->name('store');
 
             Route::middleware('redirect.legacy.public-id')->group(function () {

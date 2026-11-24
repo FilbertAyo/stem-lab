@@ -48,6 +48,28 @@ test('teachers list shows school and plan instead of role and created at', funct
         ->assertDontSee('Created At');
 });
 
+test('parents list is available under user management', function () {
+    actingAsAdmin();
+
+    $parent = User::factory()->create([
+        'role' => 'parent',
+        'subscription_tier' => 'individual',
+        'subscription_expires_at' => now()->addDays(10),
+    ]);
+
+    $this->get(route('admin.users.parents'))
+        ->assertOk()
+        ->assertSee('Parents Management')
+        ->assertSee($parent->name)
+        ->assertSee(route('admin.users.show', $parent), false)
+        ->assertSee('Individual');
+
+    $this->get(route('admin.users.show', $parent))
+        ->assertOk()
+        ->assertSee('Parent')
+        ->assertSee('Manage plan');
+});
+
 test('students list links view to a dedicated show page with plan details', function () {
     actingAsAdmin();
 

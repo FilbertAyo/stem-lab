@@ -173,6 +173,12 @@
                   <span class="pc-mtext">Teachers</span>
                 </a>
               </li>
+              <li class="pc-item">
+                <a href="{{ route('admin.users.parents') }}" class="pc-link">
+                  <span class="pc-micon"><i class="ti ti-users-group"></i></span>
+                  <span class="pc-mtext">Parents</span>
+                </a>
+              </li>
             </ul>
           </li>
 

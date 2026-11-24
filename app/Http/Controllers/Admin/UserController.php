@@ -62,14 +62,26 @@ class UserController extends Controller
     }
 
     /**
-     * Display a teacher or student profile with plan and school details.
+     * Display a listing of parents.
+     */
+    public function parents(Request $request): View
+    {
+        $users = $this->usersQueryForRole($request, 'parent')
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.users.parents', compact('users'));
+    }
+
+    /**
+     * Display a teacher, student, or parent profile with plan and school details.
      */
     public function show(User $user): View|RedirectResponse
     {
-        if (! in_array($user->role, ['teacher', 'student'], true)) {
+        if (! in_array($user->role, ['teacher', 'student', 'parent'], true)) {
             return redirect()
                 ->route('admin.users.index')
-                ->with('error', 'Only teacher and student accounts can be viewed here.');
+                ->with('error', 'Only teacher, student, and parent accounts can be viewed here.');
         }
 
         $user->load([
@@ -89,21 +101,23 @@ class UserController extends Controller
         return view('admin.users.show', [
             'user' => $user,
             'packages' => $packages,
-            'backRoute' => $user->role === 'student'
-                ? route('admin.users.students')
-                : route('admin.users.teachers'),
+            'backRoute' => match ($user->role) {
+                'student' => route('admin.users.students'),
+                'parent' => route('admin.users.parents'),
+                default => route('admin.users.teachers'),
+            },
         ]);
     }
 
     /**
-     * Assign or clear a subscription plan for a teacher or student.
+     * Assign or clear a subscription plan for a teacher, student, or parent.
      */
     public function updateSubscription(Request $request, User $user): RedirectResponse
     {
-        if (! in_array($user->role, ['teacher', 'student'], true)) {
+        if (! in_array($user->role, ['teacher', 'student', 'parent'], true)) {
             return redirect()
                 ->route('admin.users.index')
-                ->with('error', 'Only teacher and student accounts can have plans managed here.');
+                ->with('error', 'Only teacher, student, and parent accounts can have plans managed here.');
         }
 
         $validated = $request->validate([
@@ -185,6 +199,14 @@ class UserController extends Controller
     public function exportTeachers(Request $request): Response
     {
         return $this->exportUsers($request, 'teacher', 'teachers', 'Teachers');
+    }
+
+    /**
+     * Download parents list as PDF.
+     */
+    public function exportParents(Request $request): Response
+    {
+        return $this->exportUsers($request, 'parent', 'parents', 'Parents');
     }
 
     /**
@@ -307,6 +329,11 @@ class UserController extends Controller
     protected function redirectToStudentsIndex(Request $request): RedirectResponse
     {
         return redirect()->route('admin.users.students', $this->listFilterQuery($request));
+    }
+
+    protected function redirectToParentsIndex(Request $request): RedirectResponse
+    {
+        return redirect()->route('admin.users.parents', $this->listFilterQuery($request));
     }
 
     /**
@@ -492,11 +519,11 @@ class UserController extends Controller
     }
 
     /**
-     * Delete a teacher or student user.
+     * Delete a teacher, student, or parent user.
      */
     public function destroy(Request $request, User $user): RedirectResponse
     {
-        if (! in_array($user->role, ['teacher', 'student'], true)) {
+        if (! in_array($user->role, ['teacher', 'student', 'parent'], true)) {
             return $this->redirectForDeletedUserRole($request, $user->role)
                 ->with('error', 'This account cannot be deleted from here.');
         }
@@ -506,13 +533,16 @@ class UserController extends Controller
                 ->with('error', 'You cannot delete your own account.');
         }
 
+        $role = $user->role;
         $user->delete();
 
-        $message = $user->role === 'student'
-            ? 'Student deleted successfully.'
-            : 'Teacher deleted successfully.';
+        $message = match ($role) {
+            'student' => 'Student deleted successfully.',
+            'parent' => 'Parent deleted successfully.',
+            default => 'Teacher deleted successfully.',
+        };
 
-        return $this->redirectForDeletedUserRole($request, $user->role)
+        return $this->redirectForDeletedUserRole($request, $role)
             ->with('success', $message);
     }
 
@@ -520,6 +550,7 @@ class UserController extends Controller
     {
         return match ($role) {
             'student' => $this->redirectToStudentsIndex($request),
+            'parent' => $this->redirectToParentsIndex($request),
             'teacher' => $this->redirectToTeachersIndex($request),
             default => $this->redirectToTeachersIndex($request),
         };

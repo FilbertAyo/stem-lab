@@ -25,7 +25,11 @@
                     <div>
                         <div class="d-flex align-items-center flex-wrap gap-2 mb-1">
                             <h4 class="mb-0">{{ $user->name }}</h4>
-                            <span class="badge {{ $user->role === 'teacher' ? 'bg-info' : 'bg-success' }}">{{ ucfirst($user->role) }}</span>
+                            <span class="badge {{ match ($user->role) {
+                                'teacher' => 'bg-info',
+                                'parent' => 'bg-secondary',
+                                default => 'bg-success',
+                            } }}">{{ ucfirst($user->role) }}</span>
                             @if ($user->is_active ?? true)
                                 <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Active</span>
                             @else
@@ -262,37 +266,37 @@
                                         </table>
                                     </div>
                                 @endif
-                            @else
-                                @if ($roster)
-                                    <div class="row g-3">
-                                        <div class="col-md-4">
-                                            <div class="small text-muted">Roster name</div>
-                                            <div>{{ $roster->name }}</div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="small text-muted">Admission number</div>
-                                            <div><code>{{ $roster->admission_number }}</code></div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="small text-muted">Class</div>
-                                            <div>{{ $roster->schoolClass?->name ?: ($user->schoolClass?->name ?: '—') }}</div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="small text-muted">Club</div>
-                                            <div>{{ $roster->teacherClub?->club?->name ?: '—' }}</div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="small text-muted">School</div>
-                                            <div>{{ $roster->teacherClub?->school?->name ?: '—' }}</div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="small text-muted">Linked at</div>
-                                            <div>{{ $roster->linked_at?->timezone($timezone)->format('d M Y H:i') ?: '—' }}</div>
-                                        </div>
+                            @elseif ($user->role === 'parent')
+                                <p class="text-muted mb-0">Parent accounts are not linked to a STEM club roster.</p>
+                            @elseif ($roster)
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="small text-muted">Roster name</div>
+                                        <div>{{ $roster->name }}</div>
                                     </div>
-                                @else
-                                    <p class="text-muted mb-0">Student is not linked to a STEM club roster.</p>
-                                @endif
+                                    <div class="col-md-4">
+                                        <div class="small text-muted">Admission number</div>
+                                        <div><code>{{ $roster->admission_number }}</code></div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="small text-muted">Class</div>
+                                        <div>{{ $roster->schoolClass?->name ?: ($user->schoolClass?->name ?: '—') }}</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="small text-muted">Club</div>
+                                        <div>{{ $roster->teacherClub?->club?->name ?: '—' }}</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="small text-muted">School</div>
+                                        <div>{{ $roster->teacherClub?->school?->name ?: '—' }}</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="small text-muted">Linked at</div>
+                                        <div>{{ $roster->linked_at?->timezone($timezone)->format('d M Y H:i') ?: '—' }}</div>
+                                    </div>
+                                </div>
+                            @else
+                                <p class="text-muted mb-0">Student is not linked to a STEM club roster.</p>
                             @endif
                         </div>
                     </div>
